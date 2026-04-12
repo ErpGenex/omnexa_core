@@ -83,7 +83,8 @@ app_license = "mit"
 # ------------
 
 # before_install = "omnexa_core.install.before_install"
-# after_install = "omnexa_core.install.after_install"
+after_install = "omnexa_core.install.after_install"
+after_migrate = "omnexa_core.install.after_migrate"
 
 # Uninstallation
 # ------------

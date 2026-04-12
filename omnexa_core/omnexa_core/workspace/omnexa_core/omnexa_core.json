@@ -1,0 +1,77 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"omx-core-h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Omnexa Core</b></span>\",\"col\":12}},{\"id\":\"omx-core-c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Company & compliance\",\"col\":4}}]",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "organization",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Omnexa Core",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Company & compliance",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Company",
+   "link_count": 0,
+   "link_to": "Company",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tax Authority Profile",
+   "link_count": 0,
+   "link_to": "Tax Authority Profile",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Signing Profile",
+   "link_count": 0,
+   "link_to": "Signing Profile",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "E-Document Submission",
+   "link_count": 0,
+   "link_to": "E-Document Submission",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-04-13 15:30:00",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "Omnexa Core",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 5.0,
+ "shortcuts": [],
+ "title": "Omnexa Core"
+}
