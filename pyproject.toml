@@ -3,7 +3,7 @@ name = "omnexa_core"
 authors = [
     { name = "Omnexa", email = "dev@omnexa.local"}
 ]
-description = "Core platform for OmnexaERP"
+description = "Core platform for ErpGenEx (omnexa_core)"
 requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]

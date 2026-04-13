@@ -9,6 +9,7 @@
   "company",
   "reference_doctype",
   "reference_name",
+  "authority_operation",
   "payload_section",
   "payload_hash",
   "signed_body_ref",
@@ -45,6 +46,13 @@
    "label": "Reference Name",
    "options": "reference_doctype",
    "reqd": 1
+  },
+  {
+   "default": "submit",
+   "fieldname": "authority_operation",
+   "fieldtype": "Select",
+   "label": "Authority Operation",
+   "options": "submit\ncancel\ndownload"
   },
   {
    "fieldname": "payload_section",
@@ -106,7 +114,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-12 22:30:00",
+ "modified": "2026-04-14 22:00:00",
  "modified_by": "Administrator",
  "module": "Omnexa Core",
  "name": "E-Document Submission",

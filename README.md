@@ -1,6 +1,6 @@
 ### Omnexa Core
 
-Core platform for OmnexaERP
+Core platform for **ErpGenEx** (`omnexa_core`)
 
 ### Installation
 
