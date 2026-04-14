@@ -4,7 +4,12 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from omnexa_core.omnexa_core.localization import format_bilingual_text, get_print_label
+from omnexa_core.omnexa_core.localization import (
+	format_bilingual_text,
+	format_currency_for_display,
+	format_date_for_locale,
+	get_print_label,
+)
 
 
 class TestLocalization(FrappeTestCase):
@@ -24,3 +29,13 @@ class TestLocalization(FrappeTestCase):
 			self.assertEqual(get_print_label("unknown_custom_label"), "Unknown Custom Label")
 		finally:
 			frappe.local.lang = old_lang
+
+	def test_format_currency_for_display_non_empty(self):
+		out = format_currency_for_display(1234.5, currency="EGP")
+		self.assertIsInstance(out, str)
+		self.assertGreater(len(out), 0)
+
+	def test_format_date_for_locale_returns_string(self):
+		out = format_date_for_locale("2026-04-13")
+		self.assertIsInstance(out, str)
+		self.assertGreater(len(out), 0)

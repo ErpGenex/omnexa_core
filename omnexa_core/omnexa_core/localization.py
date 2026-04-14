@@ -1,7 +1,9 @@
 # Copyright (c) 2026, Omnexa and contributors
 # License: MIT. See license.txt
+"""Bilingual print labels plus MVP currency/date formatting (system locale)."""
 
 import frappe
+from frappe.utils import fmt_money, formatdate
 
 
 PRINT_LABELS = {
@@ -52,3 +54,22 @@ def get_print_label(label_key: str, lang: str | None = None, separator: str = " 
 		lang=lang,
 		separator=separator,
 	)
+
+
+def format_currency_for_display(
+	amount: float | int | str | None,
+	currency: str | None = None,
+	precision: int | None = None,
+) -> str:
+	"""
+	Format money using site/System Settings (number format, currency symbol).
+
+	MVP locale surface for statutory print and web; extends with explicit
+	``currency`` when the document row differs from company default.
+	"""
+	return fmt_money(amount, currency=currency, precision=precision)
+
+
+def format_date_for_locale(value) -> str:
+	"""Format a date-like value using Frappe user/system date format."""
+	return formatdate(value)

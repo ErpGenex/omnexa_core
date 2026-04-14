@@ -140,3 +140,109 @@ class TestOmnexaLicense(FrappeTestCase):
 				frappe.local.conf["omnexa_license_enforce"] = old_enf
 			if old_lic is not None:
 				frappe.local.conf["omnexa_licenses"] = old_lic
+
+	def test_jwt_audience_verified_when_expected_aud_set(self):
+		import jwt
+
+		priv, pub_pem = _rsa_pair()
+		app = "omnexa_einvoice"
+		now = datetime.now(timezone.utc)
+		payload = {
+			"app": app,
+			"aud": "https://shop.example",
+			"iat": now,
+			"exp": now + timedelta(days=30),
+			"sub": "cust-1",
+		}
+		token = jwt.encode(payload, priv, algorithm="RS256")
+		if isinstance(token, bytes):
+			token = token.decode("utf-8")
+
+		old = {}
+		for k in (
+			"omnexa_licenses",
+			"omnexa_license_public_key_pem",
+			"omnexa_license_expected_aud",
+		):
+			old[k] = frappe.local.conf.get(k)
+		try:
+			frappe.local.conf["omnexa_licenses"] = {app: token}
+			frappe.local.conf["omnexa_license_public_key_pem"] = pub_pem
+			frappe.local.conf["omnexa_license_expected_aud"] = "https://shop.example"
+			r = verify_app_license(app)
+			self.assertEqual(r.status, "licensed")
+		finally:
+			for k, v in old.items():
+				if v is None:
+					frappe.local.conf.pop(k, None)
+				else:
+					frappe.local.conf[k] = v
+
+	def test_jwt_wrong_audience_invalid_when_expected_aud_set(self):
+		import jwt
+
+		priv, pub_pem = _rsa_pair()
+		app = "omnexa_einvoice"
+		now = datetime.now(timezone.utc)
+		payload = {
+			"app": app,
+			"aud": "https://other.example",
+			"iat": now,
+			"exp": now + timedelta(days=30),
+			"sub": "cust-1",
+		}
+		token = jwt.encode(payload, priv, algorithm="RS256")
+		if isinstance(token, bytes):
+			token = token.decode("utf-8")
+
+		old = {}
+		for k in (
+			"omnexa_licenses",
+			"omnexa_license_public_key_pem",
+			"omnexa_license_expected_aud",
+		):
+			old[k] = frappe.local.conf.get(k)
+		try:
+			frappe.local.conf["omnexa_licenses"] = {app: token}
+			frappe.local.conf["omnexa_license_public_key_pem"] = pub_pem
+			frappe.local.conf["omnexa_license_expected_aud"] = "https://shop.example"
+			r = verify_app_license(app)
+			self.assertEqual(r.status, "invalid")
+		finally:
+			for k, v in old.items():
+				if v is None:
+					frappe.local.conf.pop(k, None)
+				else:
+					frappe.local.conf[k] = v
+
+	def test_jwt_kid_selects_public_key_from_map(self):
+		import jwt
+
+		priv, pub_pem = _rsa_pair()
+		app = "omnexa_einvoice"
+		now = datetime.now(timezone.utc)
+		payload = {
+			"app": app,
+			"iat": now,
+			"exp": now + timedelta(days=30),
+			"sub": "cust-1",
+		}
+		token = jwt.encode(payload, priv, algorithm="RS256", headers={"kid": "shop-2026-1"})
+		if isinstance(token, bytes):
+			token = token.decode("utf-8")
+
+		old = {}
+		for k in ("omnexa_licenses", "omnexa_license_public_key_pem", "omnexa_license_public_keys_by_kid"):
+			old[k] = frappe.local.conf.get(k)
+		try:
+			frappe.local.conf["omnexa_licenses"] = {app: token}
+			frappe.local.conf.pop("omnexa_license_public_key_pem", None)
+			frappe.local.conf["omnexa_license_public_keys_by_kid"] = {"shop-2026-1": pub_pem}
+			r = verify_app_license(app)
+			self.assertEqual(r.status, "licensed")
+		finally:
+			for k, v in old.items():
+				if v is None:
+					frappe.local.conf.pop(k, None)
+				else:
+					frappe.local.conf[k] = v
