@@ -1,0 +1,47 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"egx-market-h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Marketplace</b></span>\",\"col\":12}},{\"id\":\"egx-market-c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Apps & licensing\",\"col\":12}}]",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "briefcase",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Marketplace",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Apps & licensing",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ErpGenEx Marketplace",
+   "link_count": 0,
+   "link_to": "erpgenex-marketplace",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-04-16 21:05:00",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "Marketplace",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 6.5,
+ "shortcuts": [],
+ "title": "Marketplace"
+}

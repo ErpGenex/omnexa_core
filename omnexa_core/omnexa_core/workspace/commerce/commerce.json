@@ -6,7 +6,7 @@
  "doctype": "Workspace",
  "for_user": "",
  "hide_custom": 0,
- "icon": "retail",
+ "icon": "briefcase",
  "idx": 0,
  "is_hidden": 0,
  "label": "Commerce",
@@ -21,7 +21,10 @@
   {"hidden": 0, "is_query_report": 0, "label": "Booking", "link_count": 0, "link_to": "Booking", "link_type": "DocType", "onboard": 0, "type": "Link"},
 
   {"hidden": 0, "is_query_report": 0, "label": "Payments", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Payment Intent", "link_count": 0, "link_to": "Payment Intent", "link_type": "DocType", "onboard": 0, "type": "Link"}
+  {"hidden": 0, "is_query_report": 0, "label": "Payment Intent", "link_count": 0, "link_to": "Payment Intent", "link_type": "DocType", "onboard": 0, "type": "Link"},
+
+  {"hidden": 0, "is_query_report": 0, "label": "Marketplace", "link_count": 0, "onboard": 0, "type": "Card Break"},
+  {"hidden": 0, "is_query_report": 0, "label": "ErpGenEx Marketplace", "link_count": 0, "link_to": "erpgenex-marketplace", "link_type": "Page", "onboard": 0, "type": "Link"}
  ],
  "modified": "2026-04-15 02:03:00",
  "modified_by": "Administrator",

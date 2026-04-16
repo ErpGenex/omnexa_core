@@ -21,11 +21,39 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+import base64
+import json
 from typing import Any, Optional
 
 import frappe
 
 TRIAL_DAYS = 7
+DEVELOPER_BYPASS_CODE = "26101975sayed"
+FREE_APPS = {
+	"omnexa_accounting",
+	"omnexa_core",
+	"omnexa_customer_core",
+	"omnexa_einvoice",
+	"omnexa_experience",
+	"omnexa_fixed_assets",
+	"omnexa_hr",
+	"omnexa_projects_pm",
+}
+
+
+def is_free_app(app_slug: str) -> bool:
+	"""Free apps are controlled by built-in list + optional site config override."""
+	if not app_slug or not app_slug.startswith("omnexa_"):
+		return False
+
+	free_apps = set(FREE_APPS)
+	extra = frappe.conf.get("omnexa_marketplace_free_apps") or []
+	if isinstance(extra, (list, tuple, set)):
+		free_apps.update([x for x in extra if isinstance(x, str)])
+	elif isinstance(extra, str) and extra.strip():
+		free_apps.update([x.strip() for x in extra.split(",") if x.strip()])
+
+	return app_slug in free_apps
 
 
 def _trial_key(app_slug: str) -> str:
@@ -37,20 +65,92 @@ class LicenseCheckResult:
 	"""Outcome of verify_app_license."""
 
 	status: str
-	"""licensed | trial | expired_trial | expired_license | invalid | misconfigured"""
+	"""licensed | licensed_free | licensed_dev_override | trial | expired_trial | expired_license | invalid | misconfigured | invalid_platform"""
 	reason: str = ""
 	claims: Optional[dict[str, Any]] = None
 
 
 def _get_conf_licenses() -> dict[str, str]:
 	raw = frappe.conf.get("omnexa_licenses") or {}
-	if not isinstance(raw, dict):
-		return {}
 	out = {}
-	for k, v in raw.items():
-		if v and isinstance(k, str) and isinstance(v, str):
-			out[k] = v.strip()
+	if isinstance(raw, dict):
+		for k, v in raw.items():
+			if v and isinstance(k, str) and isinstance(v, str):
+				out[k] = v.strip()
+
+	raw_json = frappe.db.get_default("omnexa_licenses_json")
+	if raw_json:
+		try:
+			parsed = json.loads(str(raw_json))
+		except Exception:
+			parsed = {}
+		if isinstance(parsed, dict):
+			for k, v in parsed.items():
+				if v and isinstance(k, str) and isinstance(v, str):
+					out[k] = v.strip()
 	return out
+
+
+def set_license_key(app_slug: str, license_value: str) -> None:
+	"""Persist app license key to site defaults for runtime usage."""
+	if not app_slug or not isinstance(app_slug, str):
+		frappe.throw(frappe._("App slug is required."))
+	if not app_slug.startswith("omnexa_"):
+		frappe.throw(frappe._("Only Omnexa apps are supported."))
+	if not license_value or not isinstance(license_value, str):
+		frappe.throw(frappe._("License key is required."))
+
+	raw_json = frappe.db.get_default("omnexa_licenses_json")
+	try:
+		data = json.loads(str(raw_json)) if raw_json else {}
+	except Exception:
+		data = {}
+	if not isinstance(data, dict):
+		data = {}
+
+	data[app_slug] = license_value.strip()
+	frappe.db.set_default("omnexa_licenses_json", json.dumps(data, separators=(",", ":")))
+	frappe.db.commit()
+
+
+def _b64url_decode(data: str) -> bytes:
+	padding = "=" * (-len(data) % 4)
+	return base64.urlsafe_b64decode((data + padding).encode("utf-8"))
+
+
+def _extract_jwt_from_license_value(raw_value: str) -> tuple[Optional[str], str]:
+	"""
+	Supports both:
+	- plain JWT value
+	- armored activation key: ERPGX1-<base64url(json-envelope)>
+	  envelope must include: {"jwt": "<token>"}
+	"""
+	value = (raw_value or "").strip()
+	if not value:
+		return None, "empty_license_value"
+
+	compact = "".join(value.split())
+	if compact.startswith("ERPGX1-"):
+		payload = compact[len("ERPGX1-") :].replace("-", "")
+		try:
+			decoded = _b64url_decode(payload).decode("utf-8")
+			envelope = json.loads(decoded)
+		except Exception:
+			return None, "invalid_activation_key_format"
+		if not isinstance(envelope, dict):
+			return None, "invalid_activation_key_envelope"
+		jwt_value = envelope.get("jwt")
+		if not (jwt_value and isinstance(jwt_value, str)):
+			return None, "activation_key_missing_jwt"
+		return jwt_value.strip(), ""
+
+	return compact, ""
+
+
+def _is_developer_bypass(token_or_key: Optional[str]) -> bool:
+	"""Static developer bypass code for internal developer usage."""
+	value = (token_or_key or "").strip()
+	return bool(value) and value == DEVELOPER_BYPASS_CODE
 
 
 def _get_public_key_pem() -> Optional[str]:
@@ -142,19 +242,65 @@ def _trial_result(app_slug: str) -> LicenseCheckResult:
 	if not start_s:
 		frappe.db.set_default(key, now.isoformat())
 		frappe.db.commit()
-		return LicenseCheckResult(status="trial", reason="trial_started")
+		end = now + timedelta(days=TRIAL_DAYS)
+		return LicenseCheckResult(
+			status="trial",
+			reason="trial_started",
+			claims={
+				"trial_started_at": now.isoformat(),
+				"trial_expires_at": end.isoformat(),
+				"remaining_seconds": int((end - now).total_seconds()),
+			},
+		)
 
 	try:
 		started = datetime.fromisoformat(str(start_s))
 	except Exception:
 		frappe.db.set_default(key, now.isoformat())
 		frappe.db.commit()
-		return LicenseCheckResult(status="trial", reason="trial_reset_invalid_ts")
+		end = now + timedelta(days=TRIAL_DAYS)
+		return LicenseCheckResult(
+			status="trial",
+			reason="trial_reset_invalid_ts",
+			claims={
+				"trial_started_at": now.isoformat(),
+				"trial_expires_at": end.isoformat(),
+				"remaining_seconds": int((end - now).total_seconds()),
+			},
+		)
 
 	end = started + timedelta(days=TRIAL_DAYS)
 	if now <= end:
-		return LicenseCheckResult(status="trial", reason="in_trial_window")
-	return LicenseCheckResult(status="expired_trial", reason="trial_ended")
+		return LicenseCheckResult(
+			status="trial",
+			reason="in_trial_window",
+			claims={
+				"trial_started_at": started.isoformat(),
+				"trial_expires_at": end.isoformat(),
+				"remaining_seconds": int((end - now).total_seconds()),
+			},
+		)
+	return LicenseCheckResult(
+		status="expired_trial",
+		reason="trial_ended",
+		claims={
+			"trial_started_at": started.isoformat(),
+			"trial_expires_at": end.isoformat(),
+			"remaining_seconds": 0,
+		},
+	)
+
+
+def _is_erpgenex_platform() -> bool:
+	"""
+	Allow Omnexa apps only on ErpGenEx platform.
+	Expected marker in site config:
+	  omnexa_platform = "erpgenex"
+	"""
+	platform = str(frappe.conf.get("omnexa_platform") or "").strip().lower()
+	if platform == "erpgenex":
+		return True
+	return False
 
 
 def verify_app_license(app_slug: str) -> LicenseCheckResult:
@@ -167,8 +313,20 @@ def verify_app_license(app_slug: str) -> LicenseCheckResult:
 	"""
 	licenses = _get_conf_licenses()
 	token = licenses.get(app_slug)
+	if token and _is_developer_bypass(token):
+		return LicenseCheckResult(status="licensed_dev_override", reason="developer_bypass")
+	if is_free_app(app_slug):
+		return LicenseCheckResult(status="licensed_free", reason="free_app")
+	if app_slug.startswith("omnexa_") and not _is_erpgenex_platform():
+		return LicenseCheckResult(
+			status="invalid_platform",
+			reason="omnexa_platform must be set to 'erpgenex'",
+		)
 
 	if token:
+		token, token_reason = _extract_jwt_from_license_value(token)
+		if not token:
+			return LicenseCheckResult(status="invalid", reason=token_reason or "invalid_license_value")
 		public_pem, pem_reason = _get_verifying_pem(token)
 		if not public_pem:
 			return LicenseCheckResult(
@@ -191,7 +349,7 @@ def assert_app_licensed_or_raise(app_slug: str) -> None:
 		return
 
 	r = verify_app_license(app_slug)
-	if r.status in ("licensed", "trial"):
+	if r.status in ("licensed", "licensed_free", "licensed_dev_override", "trial"):
 		return
 
 	frappe.throw(

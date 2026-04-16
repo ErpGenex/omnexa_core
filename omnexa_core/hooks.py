@@ -202,7 +202,7 @@ doc_events = {
 
 # Request Events
 # ----------------
-# before_request = ["omnexa_core.utils.before_request"]
+before_request = ["omnexa_core.omnexa_core.license_gate.before_request"]
 # after_request = ["omnexa_core.utils.after_request"]
 
 # Job Events
