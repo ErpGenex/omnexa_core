@@ -86,7 +86,7 @@ def _approved_repo_for_app(app_slug: str) -> str:
 	repos = frappe.conf.get("omnexa_marketplace_repos") or {}
 	if isinstance(repos, dict) and isinstance(repos.get(app_slug), str) and repos.get(app_slug).strip():
 		return repos.get(app_slug).strip()
-	base = str(frappe.conf.get("omnexa_marketplace_github_org") or "https://github.com/erpgenex").rstrip("/")
+	base = str(frappe.conf.get("omnexa_marketplace_github_org") or "https://github.com/ErpGenex").rstrip("/")
 	return f"{base}/{app_slug}.git"
 
 
