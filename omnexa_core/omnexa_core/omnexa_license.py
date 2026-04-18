@@ -113,6 +113,27 @@ def set_license_key(app_slug: str, license_value: str) -> None:
 	frappe.db.commit()
 
 
+def clear_license_key(app_slug: str) -> None:
+	"""Remove one app entry from ``omnexa_licenses_json`` (used when activation fails)."""
+	if not app_slug or not isinstance(app_slug, str) or not app_slug.startswith("omnexa_"):
+		return
+	raw_json = frappe.db.get_default("omnexa_licenses_json")
+	try:
+		data = json.loads(str(raw_json)) if raw_json else {}
+	except Exception:
+		data = {}
+	if not isinstance(data, dict):
+		data = {}
+	data.pop(app_slug, None)
+	frappe.db.set_default("omnexa_licenses_json", json.dumps(data, separators=(",", ":")))
+	frappe.db.commit()
+
+
+def get_stored_license_key(app_slug: str) -> str | None:
+	"""Return the saved license string for an app, if any."""
+	return _get_conf_licenses().get(app_slug)
+
+
 def _b64url_decode(data: str) -> bytes:
 	padding = "=" * (-len(data) % 4)
 	return base64.urlsafe_b64decode((data + padding).encode("utf-8"))

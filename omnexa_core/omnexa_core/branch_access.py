@@ -56,6 +56,12 @@ def get_default_company(user: str | None = None) -> str | None:
 		)
 		if len(companies) == 1:
 			return companies[0].company
+
+	# 3) exactly one company on the site (common single-tenant installs)
+	cos = frappe.get_all("Company", pluck="name", limit=2)
+	if len(cos) == 1:
+		return cos[0]
+
 	return None
 
 

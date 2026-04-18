@@ -6,13 +6,20 @@ import hmac
 import os
 import subprocess
 import time
+from datetime import datetime, timezone
 from urllib.parse import urlencode
 
 import frappe
 from frappe.utils import get_app_version, get_bench_path
 from frappe.utils.backups import new_backup
 
-from omnexa_core.omnexa_core.omnexa_license import is_free_app, set_license_key, verify_app_license
+from omnexa_core.omnexa_core.omnexa_license import (
+	clear_license_key,
+	get_stored_license_key,
+	is_free_app,
+	set_license_key,
+	verify_app_license,
+)
 
 
 def _platform_base_url() -> str:
@@ -69,9 +76,56 @@ def _catalog_seed() -> list[dict]:
 			"title": _title_from_slug(app_slug),
 			"price_type": "free" if is_free_app(app_slug) else "paid",
 			"icon_url": _guess_icon_path(app_slug),
+			"activity": _activity_for_app(app_slug),
 		}
 		for app_slug in omnexa_apps
 	]
+
+
+def _activity_for_app(app_slug: str) -> str:
+	"""Resolve app activity/domain for marketplace filtering."""
+	custom = frappe.conf.get("omnexa_marketplace_activity_map") or {}
+	if isinstance(custom, dict):
+		val = custom.get(app_slug)
+		if isinstance(val, str) and val.strip():
+			return val.strip()
+
+	parts = [p for p in app_slug.replace("omnexa_", "").split("_") if p]
+	if not parts:
+		return "General"
+	if "finance" in parts:
+		return "Finance"
+	if "risk" in parts:
+		return "Risk"
+	if "rental" in parts or "vehicle" in parts:
+		return "Mobility"
+	if "healthcare" in parts:
+		return "Healthcare"
+	if "education" in parts:
+		return "Education"
+	if "construction" in parts:
+		return "Construction"
+	if "agriculture" in parts:
+		return "Agriculture"
+	if "manufacturing" in parts:
+		return "Manufacturing"
+	if "trading" in parts:
+		return "Trading"
+	if "tourism" in parts:
+		return "Tourism"
+	if "restaurant" in parts:
+		return "Restaurant"
+	return parts[0].capitalize()
+
+
+def _app_updated_at(app_slug: str) -> str:
+	"""Best-effort app update timestamp (UTC ISO) from app directory mtime."""
+	try:
+		app_path = frappe.get_app_path(app_slug)
+		ts = os.path.getmtime(app_path)
+		return datetime.fromtimestamp(ts, tz=timezone.utc).isoformat()
+	except Exception:
+		return ""
 
 
 def _is_truthy(value) -> bool:
@@ -80,6 +134,14 @@ def _is_truthy(value) -> bool:
 
 def _auto_install_enabled() -> bool:
 	return _is_truthy(frappe.conf.get("omnexa_marketplace_auto_install"))
+
+
+def _bundle_mode_enabled() -> bool:
+	"""
+	When enabled, marketplace actions do not require per-app license purchase/activation.
+	This supports a single bundle/commercial model for all Omnexa apps on the site.
+	"""
+	return _is_truthy(frappe.conf.get("omnexa_marketplace_bundle_mode"))
 
 
 def _approved_repo_for_app(app_slug: str) -> str:
@@ -111,6 +173,37 @@ def _run_bench_cmd(args: list[str]) -> tuple[bool, str]:
 		return p.returncode == 0, output[-3000:]
 	except Exception:
 		return False, frappe.get_traceback()[-3000:]
+
+
+def _git_pull_app(app_slug: str) -> tuple[bool, str]:
+	"""Pull latest commits for ``apps/<app_slug>`` (must be a git checkout)."""
+	app_root = os.path.join(get_bench_path(), "apps", app_slug)
+	git_dir = os.path.join(app_root, ".git")
+	if not os.path.isdir(app_root) or not os.path.isdir(git_dir):
+		return False, "missing_app_or_git"
+	try:
+		p = subprocess.run(
+			["git", "-C", app_root, "pull"],
+			capture_output=True,
+			text=True,
+			check=False,
+			timeout=600,
+		)
+		output = (p.stdout or "") + "\n" + (p.stderr or "")
+		return p.returncode == 0, output[-3000:]
+	except Exception:
+		return False, frappe.get_traceback()[-3000:]
+
+
+def _license_allows_marketplace_action(app_slug: str) -> None:
+	if _bundle_mode_enabled():
+		return
+	st = verify_app_license(app_slug).status
+	if st not in ("licensed", "licensed_free", "licensed_dev_override", "trial"):
+		frappe.throw(
+			frappe._("A valid license or trial is required for this action."),
+			title=frappe._("License"),
+		)
 
 
 def _ensure_app_present_from_repo(app_slug: str, repo_url: str, branch: str | None = None) -> dict:
@@ -193,9 +286,10 @@ def _install_app_if_needed(app_slug: str, repo_url: str, require_confirmation: b
 def get_marketplace_catalog():
 	"""Return catalog for desk marketplace page."""
 	items = []
+	bundle_mode = _bundle_mode_enabled()
 	for row in _catalog_seed():
 		app = row["app_slug"]
-		status = verify_app_license(app).status
+		status = "licensed_bundle" if bundle_mode else verify_app_license(app).status
 		items.append(
 			{
 				**row,
@@ -204,6 +298,7 @@ def get_marketplace_catalog():
 				"license_status": status,
 				"approved_repo": _approved_repo_for_app(app),
 				"current_version": get_app_version(app) if app in (frappe.get_installed_apps() or []) else "",
+				"updated_at": _app_updated_at(app),
 				"whats_new": _app_highlights(app),
 			}
 		)
@@ -228,12 +323,17 @@ def get_checkout_url(app_slug: str, months: int = 12):
 
 @frappe.whitelist()
 def activate_app_license(app_slug: str, activation_key: str):
-	"""Save customer key (or developer code) and return validation status."""
+	"""Save customer key (or developer code) only when verification accepts it."""
+	previous = get_stored_license_key(app_slug)
 	set_license_key(app_slug=app_slug, license_value=activation_key)
 	status = verify_app_license(app_slug)
 	if status.status not in ("licensed", "licensed_free", "licensed_dev_override", "trial"):
+		if previous:
+			set_license_key(app_slug=app_slug, license_value=previous)
+		else:
+			clear_license_key(app_slug)
 		frappe.throw(
-			frappe._("License key saved but not valid: {0}").format(status.status),
+			frappe._("License key was not accepted: {0}").format(status.status),
 			title=frappe._("License"),
 		)
 	install_result = {"installed": False, "message": "auto_install_disabled"}
@@ -243,6 +343,7 @@ def activate_app_license(app_slug: str, activation_key: str):
 			repo_url=_approved_repo_for_app(app_slug),
 			require_confirmation=False,
 		)
+	frappe.clear_cache()
 	return {"status": status.status, "reason": status.reason, "install": install_result}
 
 
@@ -261,10 +362,81 @@ def get_install_plan(app_slug: str):
 
 
 @frappe.whitelist()
+def get_update_plan(app_slug: str):
+	"""Return metadata for updating an already-installed app from its Git remote."""
+	if not app_slug or not app_slug.startswith("omnexa_"):
+		frappe.throw(frappe._("Invalid app slug."))
+	installed = frappe.get_installed_apps() or []
+	if app_slug not in installed:
+		frappe.throw(frappe._("App must be installed before it can be updated from here."))
+	return {
+		"app_slug": app_slug,
+		"repo_url": _approved_repo_for_app(app_slug),
+		"current_version": get_app_version(app_slug),
+		"whats_new": _app_highlights(app_slug),
+		"warning": "A full backup will be created, then git pull, migrate this site, and build assets for this app.",
+	}
+
+
+@frappe.whitelist()
+def update_app_now(app_slug: str, confirm_update: int = 0):
+	"""Pull latest code for an installed app, migrate current site, and build assets."""
+	if not app_slug or not app_slug.startswith("omnexa_"):
+		frappe.throw(frappe._("Invalid app slug."))
+	if not _is_truthy(confirm_update):
+		return {"updated": False, "message": "confirmation_required"}
+
+	_license_allows_marketplace_action(app_slug)
+	installed = frappe.get_installed_apps() or []
+	if app_slug not in installed:
+		frappe.throw(frappe._("App is not installed on this site."))
+
+	backup_state = _backup_before_install()
+	if not backup_state.get("ok"):
+		return {"updated": False, "message": "backup_failed"}
+
+	ok_pull, out_pull = _git_pull_app(app_slug)
+	if not ok_pull:
+		return {
+			"updated": False,
+			"message": "git_pull_failed",
+			"output": out_pull,
+			"backup": backup_state,
+		}
+
+	site = getattr(frappe.local, "site", None) or getattr(frappe.conf, "site_name", None)
+	if not site:
+		return {"updated": False, "message": "missing_site_context", "backup": backup_state}
+
+	ok_mig, out_mig = _run_bench_cmd(["--site", site, "migrate"])
+	if not ok_mig:
+		return {
+			"updated": False,
+			"message": "migrate_failed",
+			"output": out_mig,
+			"backup": backup_state,
+			"pulled": True,
+		}
+
+	ok_build, out_build = _run_bench_cmd(["build", "--app", app_slug])
+	frappe.clear_cache()
+	version = get_app_version(app_slug)
+	return {
+		"updated": True,
+		"message": "updated_now",
+		"version": version,
+		"backup": backup_state,
+		"build_ok": ok_build,
+		"build_log_tail": out_build[-1500:] if out_build else "",
+	}
+
+
+@frappe.whitelist()
 def install_app_now(app_slug: str, confirm_install: int = 0):
 	"""Manual install action from marketplace UI."""
 	if not app_slug or not app_slug.startswith("omnexa_"):
 		frappe.throw(frappe._("Invalid app slug."))
+	_license_allows_marketplace_action(app_slug)
 	repo_url = _approved_repo_for_app(app_slug)
 	confirmed = _is_truthy(confirm_install)
 	return _install_app_if_needed(app_slug, repo_url=repo_url, require_confirmation=not confirmed)

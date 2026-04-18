@@ -1,36 +1,141 @@
 {
- "charts": [],
- "content": "[{\"id\":\"egx-com-h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Commerce</b></span>\",\"col\":12}},{\"id\":\"egx-com-c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Catalog & orders\",\"col\":4}},{\"id\":\"egx-com-c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Booking\",\"col\":4}},{\"id\":\"egx-com-c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Payments\",\"col\":4}}]",
+ "charts": [
+  {
+   "chart_name": "Commerce \u00b7 Web Order Mix",
+   "label": "Web Order Mix"
+  },
+  {
+   "chart_name": "Commerce \u00b7 Booking Mix",
+   "label": "Booking Mix"
+  }
+ ],
+ "content": "[{\"id\":\"commerce-h\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Commerce</b></span>\",\"col\":12}},{\"id\":\"commerce-nc0\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Catalog Item\",\"col\":4}},{\"id\":\"commerce-nc1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Web Order\",\"col\":4}},{\"id\":\"commerce-nc2\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Experience Tenant Theme\",\"col\":4}},{\"id\":\"commerce-nc3\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Bookable Resource\",\"col\":4}},{\"id\":\"commerce-nc4\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Booking\",\"col\":4}},{\"id\":\"commerce-nc5\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Payment Intent\",\"col\":4}},{\"id\":\"commerce-ch0\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Web Order Mix\",\"col\":4}},{\"id\":\"commerce-ch1\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Booking Mix\",\"col\":4}},{\"id\":\"commerce-ops\",\"type\":\"header\",\"data\":{\"text\":\"<b>Quick Actions</b>\",\"col\":12}},{\"id\":\"commerce-sc0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Catalog Item\",\"col\":3}},{\"id\":\"commerce-sc1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Web Order\",\"col\":3}},{\"id\":\"commerce-sc2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Experience Tenant Theme\",\"col\":3}},{\"id\":\"commerce-sc3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Bookable Resource\",\"col\":3}},{\"id\":\"commerce-sc4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Booking\",\"col\":3}},{\"id\":\"commerce-sc5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Payment Intent\",\"col\":3}}]",
+ "creation": "2026-04-15 00:12:38.110041",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
  "hide_custom": 0,
- "icon": "briefcase",
+ "icon": "retail",
  "idx": 0,
  "is_hidden": 0,
  "label": "Commerce",
  "links": [
-  {"hidden": 0, "is_query_report": 0, "label": "Catalog & orders", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Catalog Item", "link_count": 0, "link_to": "Catalog Item", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Web Order", "link_count": 0, "link_to": "Web Order", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Experience Tenant Theme", "link_count": 0, "link_to": "Experience Tenant Theme", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Booking", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Bookable Resource", "link_count": 0, "link_to": "Bookable Resource", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Booking", "link_count": 0, "link_to": "Booking", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Payments", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Payment Intent", "link_count": 0, "link_to": "Payment Intent", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Marketplace", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "ErpGenEx Marketplace", "link_count": 0, "link_to": "erpgenex-marketplace", "link_type": "Page", "onboard": 0, "type": "Link"}
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Catalog & orders",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Catalog Item",
+   "link_count": 0,
+   "link_to": "Catalog Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Web Order",
+   "link_count": 0,
+   "link_to": "Web Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Experience Tenant Theme",
+   "link_count": 0,
+   "link_to": "Experience Tenant Theme",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Booking",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Bookable Resource",
+   "link_count": 0,
+   "link_to": "Bookable Resource",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Booking",
+   "link_count": 0,
+   "link_to": "Booking",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payments",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Intent",
+   "link_count": 0,
+   "link_to": "Payment Intent",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
  ],
- "modified": "2026-04-15 02:03:00",
+ "modified": "2026-04-17 23:45:47.297797",
  "modified_by": "Administrator",
  "module": "Omnexa Core",
  "name": "Commerce",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Catalog Item",
+   "number_card_name": "Catalog Item"
+  },
+  {
+   "label": "Web Order",
+   "number_card_name": "Web Order"
+  },
+  {
+   "label": "Experience Tenant Theme",
+   "number_card_name": "Experience Tenant Theme"
+  },
+  {
+   "label": "Bookable Resource",
+   "number_card_name": "Bookable Resource"
+  },
+  {
+   "label": "Booking",
+   "number_card_name": "Booking"
+  },
+  {
+   "label": "Payment Intent",
+   "number_card_name": "Payment Intent"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
@@ -38,6 +143,49 @@
  "restrict_to_domain": "",
  "roles": [],
  "sequence_id": 7.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "color": "Cyan",
+   "doc_view": "List",
+   "label": "Catalog Item",
+   "link_to": "Catalog Item",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "Web Order",
+   "link_to": "Web Order",
+   "type": "DocType"
+  },
+  {
+   "color": "Purple",
+   "doc_view": "List",
+   "label": "Experience Tenant Theme",
+   "link_to": "Experience Tenant Theme",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "Bookable Resource",
+   "link_to": "Bookable Resource",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "Booking",
+   "link_to": "Booking",
+   "type": "DocType"
+  },
+  {
+   "color": "Red",
+   "doc_view": "List",
+   "label": "Payment Intent",
+   "link_to": "Payment Intent",
+   "type": "DocType"
+  }
+ ],
  "title": "Commerce"
 }

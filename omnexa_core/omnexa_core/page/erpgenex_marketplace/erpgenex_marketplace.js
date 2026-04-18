@@ -8,12 +8,37 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	const $container = $(`
 		<div class="erpgenex-marketplace">
 			<div class="mb-3 text-muted" data-section="meta"></div>
+			<div class="row g-2 mb-3" data-section="filters">
+				<div class="col-md-3">
+					<input type="text" class="form-control form-control-sm" data-filter="search" placeholder="${__("Search by name / version")}">
+				</div>
+				<div class="col-md-2">
+					<select class="form-select form-select-sm" data-filter="activity">
+						<option value="">${__("All Activities")}</option>
+					</select>
+				</div>
+				<div class="col-md-2">
+					<input type="text" class="form-control form-control-sm" data-filter="version" placeholder="${__("Version")}">
+				</div>
+				<div class="col-md-2">
+					<input type="date" class="form-control form-control-sm" data-filter="updated_from" title="${__("Updated from")}">
+				</div>
+				<div class="col-md-2">
+					<input type="date" class="form-control form-control-sm" data-filter="updated_to" title="${__("Updated to")}">
+				</div>
+				<div class="col-md-1">
+					<button class="btn btn-sm btn-light w-100" data-action="reset-filters">${__("Reset")}</button>
+				</div>
+			</div>
 			<div class="table-responsive">
 				<table class="table table-sm table-hover">
 					<thead>
 						<tr>
 							<th>${__("Icon")}</th>
 							<th>${__("App")}</th>
+							<th>${__("Activity")}</th>
+							<th>${__("Version")}</th>
+							<th>${__("Updated")}</th>
 							<th>${__("Type")}</th>
 							<th>${__("Install")}</th>
 							<th>${__("License Status")}</th>
@@ -21,52 +46,136 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 						</tr>
 					</thead>
 					<tbody data-section="rows">
-						<tr><td colspan="6" class="text-muted">${__("Loading...")}</td></tr>
+						<tr><td colspan="9" class="text-muted">${__("Loading...")}</td></tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
 	`);
 	$(page.body).append($container);
+	let allItems = [];
+
+	/** License or developer bypass accepted — hide Buy / Activate; allow Install from public repo. */
+	function is_license_gate_passed(status) {
+		return ["licensed", "licensed_free", "licensed_dev_override", "licensed_bundle"].includes(
+			String(status || "")
+		);
+	}
 
 	function renderRow(item) {
 		const status = frappe.utils.escape_html(item.license_status || "");
 		const title = frappe.utils.escape_html(item.title || item.app_slug);
 		const appSlug = frappe.utils.escape_html(item.app_slug);
+		const activity = frappe.utils.escape_html(item.activity || "General");
+		const version = frappe.utils.escape_html(item.current_version || "N/A");
+		const updated = frappe.utils.escape_html(formatDate(item.updated_at));
 		const type = item.is_free ? __("Free") : __("Paid");
 		const iconUrl = frappe.utils.escape_html(item.icon_url || "/assets/frappe/images/frappe-framework-logo.svg");
 		const installState = item.is_installed ? __("Installed") : __("Not Installed");
 		const installBadge = item.is_installed
 			? `<span class="badge bg-success-subtle text-success">${installState}</span>`
 			: `<span class="badge bg-warning-subtle text-warning">${installState}</span>`;
+		const gate = is_license_gate_passed(item.license_status);
+		const actions = [];
+		// Public repos: anyone with server access can install once license gate passes (free apps always pass when licensed_free).
+		if (item.is_free || gate) {
+			if (item.is_installed) {
+				actions.push(
+					`<button class="btn btn-sm btn-outline-primary me-2" data-action="update" data-app="${appSlug}">${__("Update")}</button>`
+				);
+			} else {
+				actions.push(
+					`<button class="btn btn-sm btn-outline-primary me-2" data-action="install" data-app="${appSlug}">${__("Install")}</button>`
+				);
+			}
+		}
+		if (!item.is_free && !gate) {
+			actions.push(
+				`<button class="btn btn-sm btn-primary me-2" data-action="buy" data-app="${appSlug}">${__("Buy")}</button>`
+			);
+		}
+		if (!gate) {
+			actions.push(
+				`<button class="btn btn-sm btn-secondary" data-action="activate" data-app="${appSlug}">${__("Activate Key")}</button>`
+			);
+		}
 		return `
 			<tr data-app="${appSlug}">
 				<td><img src="${iconUrl}" style="width:24px;height:24px;object-fit:contain;" alt="${title}"/></td>
 				<td><strong>${title}</strong><div class="text-muted small">${appSlug}</div></td>
+				<td>${activity}</td>
+				<td>${version}</td>
+				<td>${updated}</td>
 				<td>${type}</td>
 				<td>${installBadge}</td>
 				<td>${status}</td>
-				<td>
-					${item.is_free ? `<button class="btn btn-sm btn-outline-primary me-2" data-action="install" data-app="${appSlug}">${__("Install")}</button>` : `<button class="btn btn-sm btn-primary me-2" data-action="buy" data-app="${appSlug}">${__("Buy")}</button>`}
-					<button class="btn btn-sm btn-secondary" data-action="activate" data-app="${appSlug}">${__("Activate Key")}</button>
-				</td>
+				<td>${actions.join("")}</td>
 			</tr>`;
+	}
+
+	function formatDate(value) {
+		if (!value) return "N/A";
+		const d = new Date(value);
+		if (Number.isNaN(d.getTime())) return "N/A";
+		return frappe.datetime.str_to_user(d.toISOString().slice(0, 10));
+	}
+
+	function updateActivityFilterOptions(items) {
+		const $activity = $container.find('[data-filter="activity"]');
+		const selected = $activity.val() || "";
+		const activities = Array.from(
+			new Set((items || []).map((x) => String(x.activity || "General").trim()).filter(Boolean))
+		).sort();
+		$activity.empty();
+		$activity.append(`<option value="">${__("All Activities")}</option>`);
+		activities.forEach((a) => $activity.append(`<option value="${frappe.utils.escape_html(a)}">${frappe.utils.escape_html(a)}</option>`));
+		if (selected && activities.includes(selected)) $activity.val(selected);
+	}
+
+	function applyFiltersAndRender() {
+		const q = String($container.find('[data-filter="search"]').val() || "").trim().toLowerCase();
+		const activity = String($container.find('[data-filter="activity"]').val() || "").trim();
+		const version = String($container.find('[data-filter="version"]').val() || "").trim().toLowerCase();
+		const from = String($container.find('[data-filter="updated_from"]').val() || "").trim();
+		const to = String($container.find('[data-filter="updated_to"]').val() || "").trim();
+
+		const rows = (allItems || []).filter((item) => {
+			const haystack = `${item.title || ""} ${item.app_slug || ""} ${item.current_version || ""}`.toLowerCase();
+			if (q && !haystack.includes(q)) return false;
+			if (activity && String(item.activity || "General").trim() !== activity) return false;
+			if (version && !String(item.current_version || "").toLowerCase().includes(version)) return false;
+			const day = item.updated_at ? String(item.updated_at).slice(0, 10) : "";
+			if (from && (!day || day < from)) return false;
+			if (to && (!day || day > to)) return false;
+			return true;
+		});
+
+		if (!rows.length) {
+			$container.find('[data-section="rows"]').html(`<tr><td colspan="9" class="text-muted">${__("No apps match current filters.")}</td></tr>`);
+			return;
+		}
+		$container.find('[data-section="rows"]').html(rows.map(renderRow).join(""));
 	}
 
 	async function loadCatalog() {
 		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_marketplace_catalog");
 		const payload = (r && r.message) || {};
 		const items = payload.items || [];
+		allItems = items;
+		updateActivityFilterOptions(items);
 		$container.find('[data-section="meta"]').html(
-			`${__("Marketplace")}: <a href="${frappe.utils.escape_html(payload.platform_url || "https://erpgenex.com")}" target="_blank">` +
-				`${frappe.utils.escape_html(payload.platform_url || "https://erpgenex.com")}</a> - ${__("Support")}: ` +
-				`${frappe.utils.escape_html(payload.support_email || "info@erpgenex.com")}`
+			`<div class="mb-2">${__(
+				"Install uses the official public GitHub repository for each app. No GitHub login is required on this server."
+			)}</div>` +
+				`<div>${__("Marketplace")}: <a href="${frappe.utils.escape_html(payload.platform_url || "https://erpgenex.com")}" target="_blank">` +
+				`${frappe.utils.escape_html(payload.platform_url || "https://erpgenex.com")}</a> — ${__("Support")}: ` +
+				`${frappe.utils.escape_html(payload.support_email || "info@erpgenex.com")}</div>`
 		);
 		if (!items.length) {
-			$container.find('[data-section="rows"]').html(`<tr><td colspan="6" class="text-muted">${__("No apps found.")}</td></tr>`);
+			$container.find('[data-section="rows"]').html(`<tr><td colspan="9" class="text-muted">${__("No apps found.")}</td></tr>`);
 			return;
 		}
-		$container.find('[data-section="rows"]').html(items.map(renderRow).join(""));
+		applyFiltersAndRender();
 	}
 
 	async function onBuy(appSlug) {
@@ -117,22 +226,96 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		await loadCatalog();
 	}
 
-	async function onActivate(appSlug) {
-		const data = await frappe.prompt(
-			[{ fieldname: "activation_key", fieldtype: "Small Text", label: __("Activation Key"), reqd: 1 }],
-			(values) => values,
-			__("Activate License"),
-			__("Save")
-		);
-		if (!data || !data.activation_key) return;
-		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.activate_app_license", {
+	async function onUpdate(appSlug) {
+		const planResp = await frappe.call("omnexa_core.omnexa_core.marketplace.get_update_plan", {
 			app_slug: appSlug,
-			activation_key: data.activation_key,
+		});
+		const plan = (planResp && planResp.message) || {};
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				`${__("Pull the latest code for this app, run migrate on this site, and rebuild assets?")}<br><br>` +
+					`<b>${__("Repo")}:</b> ${frappe.utils.escape_html(plan.repo_url || "")}<br>` +
+					`<b>${__("Current Version")}:</b> ${frappe.utils.escape_html(plan.current_version || "N/A")}<br>` +
+					`<b>${__("What's New")}:</b> ${frappe.utils.escape_html(plan.whats_new || "")}<br><br>` +
+					`<span class="text-muted">${frappe.utils.escape_html(plan.warning || "")}</span>`,
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) return;
+		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.update_app_now", {
+			app_slug: appSlug,
+			confirm_update: 1,
 		});
 		const result = (r && r.message) || {};
-		const installMsg = result.install ? ` (${__("install")}: ${result.install.message || "n/a"})` : "";
-		frappe.show_alert({ message: __("License activated") + installMsg, indicator: "green" });
+		if (result.updated) {
+			const version = result.version || "N/A";
+			const buildNote = result.build_ok
+				? ""
+				: `<br><span class="text-warning">${__("Asset build reported a problem; check bench logs.")}</span>`;
+			frappe.show_alert({ message: __("App updated: {0}", [appSlug]), indicator: "green" });
+			frappe.msgprint({
+				title: __("Update completed"),
+				indicator: "green",
+				message:
+					`<b>${__("Version")}:</b> ${frappe.utils.escape_html(version)}` +
+					buildNote,
+			});
+		} else {
+			frappe.msgprint(
+				`${__("Update status")}: ${frappe.utils.escape_html(result.message || "unknown")}` +
+					(result.output ? `<pre class="small">${frappe.utils.escape_html(result.output)}</pre>` : "")
+			);
+		}
 		await loadCatalog();
+	}
+
+	/** ``frappe.prompt`` returns a Dialog, not a Promise — use callback style only. */
+	function onActivate(appSlug) {
+		frappe.prompt(
+			[
+				{
+					fieldname: "activation_key",
+					fieldtype: "Password",
+					label: __("License or developer key"),
+					reqd: 1,
+				},
+			],
+			function (values) {
+				if (!values || !values.activation_key) {
+					return;
+				}
+				const key = String(values.activation_key).trim();
+				if (!key) {
+					return;
+				}
+				frappe.call({
+					method: "omnexa_core.omnexa_core.marketplace.activate_app_license",
+					args: {
+						app_slug: appSlug,
+						activation_key: key,
+					},
+					freeze: true,
+					freeze_message: __("Validating license..."),
+					callback: function (r) {
+						if (r.exc) {
+							return;
+						}
+						const result = r.message || {};
+						const installMsg = result.install
+							? ` (${__("install")}: ${result.install.message || "n/a"})`
+							: "";
+						frappe.show_alert({
+							message: __("License activated") + installMsg,
+							indicator: "green",
+						});
+						loadCatalog();
+					},
+				});
+			},
+			__("Activate license"),
+			__("Save")
+		);
 	}
 
 	$container.on("click", '[data-action="buy"]', async function () {
@@ -141,8 +324,22 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	$container.on("click", '[data-action="install"]', async function () {
 		await onInstall($(this).data("app"));
 	});
-	$container.on("click", '[data-action="activate"]', async function () {
-		await onActivate($(this).data("app"));
+	$container.on("click", '[data-action="update"]', async function () {
+		await onUpdate($(this).data("app"));
+	});
+	$container.on("click", '[data-action="activate"]', function () {
+		onActivate($(this).data("app"));
+	});
+	$container.on("input change", "[data-filter]", function () {
+		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="reset-filters"]', function () {
+		$container.find('[data-filter="search"]').val("");
+		$container.find('[data-filter="activity"]').val("");
+		$container.find('[data-filter="version"]').val("");
+		$container.find('[data-filter="updated_from"]').val("");
+		$container.find('[data-filter="updated_to"]').val("");
+		applyFiltersAndRender();
 	});
 
 	loadCatalog();

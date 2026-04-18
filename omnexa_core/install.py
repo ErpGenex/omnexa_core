@@ -10,6 +10,36 @@ def after_install():
 
 def after_migrate():
 	ensure_omnexa_roles()
+	remove_legacy_people_workspace()
+	remove_legacy_finance_workspace()
+	try:
+		from omnexa_core.omnexa_core.workspace_control_tower import sync_all_workspace_kpi_layout
+
+		sync_all_workspace_kpi_layout()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: sync_all_workspace_kpi_layout")
+
+
+def remove_legacy_people_workspace():
+	"""Single HR desk: drop duplicate Omnexa Core workspace `People` (use `/app/hr`)."""
+	if not frappe.db.exists("Workspace", "People"):
+		return
+	try:
+		frappe.delete_doc("Workspace", "People", force=1, ignore_permissions=True)
+		frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: remove_legacy_people_workspace")
+
+
+def remove_legacy_finance_workspace():
+	"""Single finance desk: `Finance` duplicated links already on Accounting (`/app/accounting`)."""
+	if not frappe.db.exists("Workspace", "Finance"):
+		return
+	try:
+		frappe.delete_doc("Workspace", "Finance", force=1, ignore_permissions=True)
+		frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: remove_legacy_finance_workspace")
 
 
 def ensure_omnexa_roles():

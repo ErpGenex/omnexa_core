@@ -1,6 +1,20 @@
 {
- "charts": [],
- "content": "[{\"id\":\"egx-audit-h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Audit</b></span>\",\"col\":12}},{\"id\":\"egx-audit-c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Engagements\",\"col\":4}},{\"id\":\"egx-audit-c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Evidence & findings\",\"col\":4}},{\"id\":\"egx-audit-c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Reference reports\",\"col\":4}}]",
+ "charts": [
+  {
+   "chart_name": "Audit \u00b7 Status Bar",
+   "label": "Status Bar"
+  },
+  {
+   "chart_name": "Audit \u00b7 Audit Engagement Mix",
+   "label": "Audit Engagement Mix"
+  },
+  {
+   "chart_name": "Audit \u00b7 Audit Opinion Draft Mix",
+   "label": "Audit Opinion Draft Mix"
+  }
+ ],
+ "content": "[{\"id\":\"audit-h\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Audit</b></span>\",\"col\":12}},{\"id\":\"audit-nc0\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Audit Engagement\",\"col\":4}},{\"id\":\"audit-nc1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Audit Opinion Draft\",\"col\":4}},{\"id\":\"audit-nc2\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Audit Balance Snapshot\",\"col\":4}},{\"id\":\"audit-nc3\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Audit Finding\",\"col\":4}},{\"id\":\"audit-nc4\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Audit Evidence\",\"col\":4}},{\"id\":\"audit-ch0\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Status Bar\",\"col\":4}},{\"id\":\"audit-ch1\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Audit Engagement Mix\",\"col\":4}},{\"id\":\"audit-ch2\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Audit Opinion Draft Mix\",\"col\":4}},{\"id\":\"audit-ops\",\"type\":\"header\",\"data\":{\"text\":\"<b>Quick Actions</b>\",\"col\":12}},{\"id\":\"audit-sc0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit Engagement\",\"col\":3}},{\"id\":\"audit-sc1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit Opinion Draft\",\"col\":3}},{\"id\":\"audit-sc2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit Balance Snapshot\",\"col\":3}},{\"id\":\"audit-sc3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit Finding\",\"col\":3}},{\"id\":\"audit-sc4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit Evidence\",\"col\":3}},{\"id\":\"audit-sc5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Ledger\",\"col\":3}},{\"id\":\"audit-sc6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Journal\",\"col\":3}}]",
+ "creation": "2026-04-15 00:12:39.154212",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -11,24 +25,129 @@
  "is_hidden": 0,
  "label": "Audit",
  "links": [
-  {"hidden": 0, "is_query_report": 0, "label": "Engagements", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Audit Engagement", "link_count": 0, "link_to": "Audit Engagement", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Audit Opinion Draft", "link_count": 0, "link_to": "Audit Opinion Draft", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Audit Balance Snapshot", "link_count": 0, "link_to": "Audit Balance Snapshot", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Evidence & findings", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Audit Finding", "link_count": 0, "link_to": "Audit Finding", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Audit Evidence", "link_count": 0, "link_to": "Audit Evidence", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Reference reports", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "General Ledger", "link_count": 0, "link_to": "General Ledger", "link_type": "Report", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "General Journal", "link_count": 0, "link_to": "General Journal", "link_type": "Report", "onboard": 0, "type": "Link"}
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engagements",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Audit Engagement",
+   "link_count": 0,
+   "link_to": "Audit Engagement",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Audit Opinion Draft",
+   "link_count": 0,
+   "link_to": "Audit Opinion Draft",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Audit Balance Snapshot",
+   "link_count": 0,
+   "link_to": "Audit Balance Snapshot",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Evidence & findings",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Audit Finding",
+   "link_count": 0,
+   "link_to": "Audit Finding",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Audit Evidence",
+   "link_count": 0,
+   "link_to": "Audit Evidence",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reference reports",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "General Ledger",
+   "link_count": 0,
+   "link_to": "General Ledger",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Journal Entry",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "General Journal",
+   "link_count": 0,
+   "link_to": "General Journal",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Journal Entry",
+   "type": "Link"
+  }
  ],
- "modified": "2026-04-15 02:05:00",
+ "modified": "2026-04-17 23:45:46.451843",
  "modified_by": "Administrator",
  "module": "Omnexa Core",
  "name": "Audit",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Audit Engagement",
+   "number_card_name": "Audit Engagement"
+  },
+  {
+   "label": "Audit Opinion Draft",
+   "number_card_name": "Audit Opinion Draft"
+  },
+  {
+   "label": "Audit Balance Snapshot",
+   "number_card_name": "Audit Balance Snapshot"
+  },
+  {
+   "label": "Audit Finding",
+   "number_card_name": "Audit Finding"
+  },
+  {
+   "label": "Audit Evidence",
+   "number_card_name": "Audit Evidence"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
@@ -36,6 +155,58 @@
  "restrict_to_domain": "",
  "roles": [],
  "sequence_id": 9.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "color": "Cyan",
+   "doc_view": "List",
+   "label": "Audit Engagement",
+   "link_to": "Audit Engagement",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "Audit Opinion Draft",
+   "link_to": "Audit Opinion Draft",
+   "type": "DocType"
+  },
+  {
+   "color": "Purple",
+   "doc_view": "List",
+   "label": "Audit Balance Snapshot",
+   "link_to": "Audit Balance Snapshot",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "Audit Finding",
+   "link_to": "Audit Finding",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "Audit Evidence",
+   "link_to": "Audit Evidence",
+   "type": "DocType"
+  },
+  {
+   "color": "Red",
+   "doc_view": "",
+   "label": "General Ledger",
+   "link_to": "General Ledger",
+   "report_ref_doctype": "Journal Entry",
+   "type": "Report"
+  },
+  {
+   "color": "Teal",
+   "doc_view": "",
+   "label": "General Journal",
+   "link_to": "General Journal",
+   "report_ref_doctype": "Journal Entry",
+   "type": "Report"
+  }
+ ],
  "title": "Audit"
 }

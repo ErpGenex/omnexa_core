@@ -14,17 +14,40 @@ from omnexa_core.omnexa_core.branch_access import (
 
 
 def apply_company_branch_defaults(doc, method=None):
-	"""Populate company/branch from logged-in user context when missing."""
-	has_company = bool(getattr(doc.meta, "has_field", lambda f: False)("company"))
-	has_branch = bool(getattr(doc.meta, "has_field", lambda f: False)("branch"))
+	"""Populate company/branch from logged-in user context when missing (no manual entry)."""
+	if frappe.flags.in_install:
+		return
+	if not getattr(frappe.local, "session", None):
+		return
+	if frappe.session.user == "Guest":
+		return
 
-	if has_company and not getattr(doc, "company", None):
+	try:
+		has_company = doc.meta.has_field("company")
+		has_branch = doc.meta.has_field("branch")
+	except Exception:
+		return
+
+	if not has_company and not has_branch:
+		return
+
+	if has_company and not doc.get("company"):
 		doc.company = get_default_company()
 
-	if has_branch and not getattr(doc, "branch", None):
-		company = getattr(doc, "company", None)
+	if has_branch and not doc.get("branch"):
+		company = doc.get("company")
 		if company:
-			doc.branch = get_default_branch(company=company)
+			doc.branch = get_default_branch(company)
+			if not doc.branch:
+				branches = frappe.get_all(
+					"Branch",
+					filters={"company": company},
+					pluck="name",
+					limit=1,
+					order_by="is_head_office desc, creation asc",
+				)
+				if branches:
+					doc.branch = branches[0]
 
 
 def get_allowed_branches_for_current_doc(doc) -> list[str] | None:
