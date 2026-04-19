@@ -5,6 +5,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from omnexa_core.omnexa_core.workspace_control_tower import (
+	_aggregatable_doctype,
 	_app_installed,
 	infer_workspace_spec,
 	sync_workspace_for_app,
@@ -15,6 +16,13 @@ class TestWorkspaceControlTower(FrappeTestCase):
 	def test_app_installed_reflects_bench(self):
 		self.assertTrue(_app_installed("frappe"))
 		self.assertTrue(_app_installed("omnexa_core"))
+
+	def test_single_doctype_not_aggregatable_for_kpis(self):
+		"""Single DocTypes (e.g. Website Settings) have no row table — Number Card Count must skip them."""
+		if frappe.db.exists("DocType", "Website Settings"):
+			self.assertFalse(_aggregatable_doctype("Website Settings"))
+		if frappe.db.exists("DocType", "User"):
+			self.assertTrue(_aggregatable_doctype("User"))
 
 	def test_sync_noop_for_unknown_app(self):
 		sync_workspace_for_app("not_a_registered_omnexa_app")

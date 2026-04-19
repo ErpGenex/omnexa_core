@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"omx-sell-h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Sell</b></span><br><span class=\\\"text-muted\\\">Lead-to-cash — إعدادات المبيعات (شركة/فرع/ضريبة/عملات)، CRM، الدورة، التقارير المحلية</span>\",\"col\":12}},{\"id\":\"omx-sell-c0\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales setup (company, branches, tax & FX)\",\"col\":4}},{\"id\":\"omx-sell-c1\",\"type\":\"card\",\"data\":{\"card_name\":\"CRM & pipeline (Lead → Opportunity)\",\"col\":4}},{\"id\":\"omx-sell-c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Customer management\",\"col\":4}},{\"id\":\"omx-sell-c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales cycle (Quotation → Invoice)\",\"col\":4}},{\"id\":\"omx-sell-c4\",\"type\":\"card\",\"data\":{\"card_name\":\"Returns, payments & retail\",\"col\":4}},{\"id\":\"omx-sell-c5\",\"type\":\"card\",\"data\":{\"card_name\":\"Logistics & fulfillment\",\"col\":4}},{\"id\":\"omx-sell-c6\",\"type\":\"card\",\"data\":{\"card_name\":\"E-Invoicing & e-receipt\",\"col\":4}},{\"id\":\"omx-sell-c7\",\"type\":\"card\",\"data\":{\"card_name\":\"Data & imports\",\"col\":4}},{\"id\":\"omx-sell-c8\",\"type\":\"card\",\"data\":{\"card_name\":\"Local sales reports\",\"col\":4}}]",
+ "content": "[{\"id\": \"omx-sell-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Sell</b></span><br><span class=\\\"text-muted\\\">Lead-to-cash — إعدادات المبيعات (شركة/فرع/ضريبة/عملات)، CRM، الدورة، التقارير المحلية</span>\", \"col\": 12}}, {\"id\": \"omx-sell-c0\", \"type\": \"card\", \"data\": {\"card_name\": \"Sales setup (tax & FX)\", \"col\": 4}}, {\"id\": \"omx-sell-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"CRM & pipeline (Lead → Opportunity)\", \"col\": 4}}, {\"id\": \"omx-sell-c2\", \"type\": \"card\", \"data\": {\"card_name\": \"Customer management\", \"col\": 4}}, {\"id\": \"omx-sell-c3\", \"type\": \"card\", \"data\": {\"card_name\": \"Sales cycle (Quotation → Invoice)\", \"col\": 4}}, {\"id\": \"omx-sell-c4\", \"type\": \"card\", \"data\": {\"card_name\": \"Returns, payments & retail\", \"col\": 4}}, {\"id\": \"omx-sell-c5\", \"type\": \"card\", \"data\": {\"card_name\": \"Logistics & fulfillment\", \"col\": 4}}, {\"id\": \"omx-sell-c6\", \"type\": \"card\", \"data\": {\"card_name\": \"E-Invoicing & e-receipt\", \"col\": 4}}, {\"id\": \"omx-sell-c7\", \"type\": \"card\", \"data\": {\"card_name\": \"Data & imports\", \"col\": 4}}, {\"id\": \"omx-sell-c8\", \"type\": \"card\", \"data\": {\"card_name\": \"Local sales reports\", \"col\": 4}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -11,52 +11,353 @@
  "is_hidden": 0,
  "label": "Sell",
  "links": [
-  {"hidden": 0, "is_query_report": 0, "label": "Sales setup (company, branches, tax & FX)", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Company", "link_count": 0, "link_to": "Company", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Branch", "link_count": 0, "link_to": "Branch", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Tax Rule", "link_count": 0, "link_to": "Tax Rule", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Currency Exchange Rate", "link_count": 0, "link_to": "Currency Exchange Rate", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "CRM & pipeline (Lead → Opportunity)", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Pipeline Lead", "link_count": 0, "link_to": "Pipeline Lead", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Pipeline Opportunity", "link_count": 0, "link_to": "Pipeline Opportunity", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "CRM Activity", "link_count": 0, "link_to": "CRM Activity", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "CRM Campaign", "link_count": 0, "link_to": "CRM Campaign", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Customer management", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Customer", "link_count": 0, "link_to": "Customer", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Sales cycle (Quotation → Order → Delivery → Invoice)", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Sales Quotation", "link_count": 0, "link_to": "Sales Quotation", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Sales Order", "link_count": 0, "link_to": "Sales Order", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Delivery Note", "link_count": 0, "link_to": "Delivery Note", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Sales Invoice", "link_count": 0, "link_to": "Sales Invoice", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Returns, payments & retail", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Credit notes & returns", "link_count": 0, "link_to": "Sales Invoice", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Payment Entry", "link_count": 0, "link_to": "Payment Entry", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Counter sales (Sales Invoice)", "link_count": 0, "link_to": "Sales Invoice", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Logistics & fulfillment", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Warehouse", "link_count": 0, "link_to": "Warehouse", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Stock Entry", "link_count": 0, "link_to": "Stock Entry", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "E-Invoicing & e-receipt", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Sales invoices (e-invoice source)", "link_count": 0, "link_to": "Sales Invoice", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Payment entries (e-receipt source)", "link_count": 0, "link_to": "Payment Entry", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Authority submissions (invoice & receipt)", "link_count": 0, "link_to": "E-Document Submission", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Tax Authority Profile", "link_count": 0, "link_to": "Tax Authority Profile", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Signing Profile", "link_count": 0, "link_to": "Signing Profile", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Data & imports", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Data Import (CRM)", "link_count": 0, "link_to": "Data Import", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Local sales reports (workspace only)", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Sales Register", "link_count": 0, "link_to": "Sales Register", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Sales Invoice", "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Sales by Customer", "link_count": 0, "link_to": "Sales by Customer", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Sales Invoice", "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Sales by Item", "link_count": 0, "link_to": "Sales by Item", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Sales Invoice", "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Sales by Country", "link_count": 0, "link_to": "Sales by Country", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Sales Invoice", "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Pipeline Funnel", "link_count": 0, "link_to": "Pipeline Funnel", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Pipeline Opportunity", "type": "Link"}
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales setup (tax & FX)",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tax Rule",
+   "link_count": 0,
+   "link_to": "Tax Rule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Currency Exchange Rate",
+   "link_count": 0,
+   "link_to": "Currency Exchange Rate",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "CRM & pipeline (Lead → Opportunity)",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Pipeline Lead",
+   "link_count": 0,
+   "link_to": "Pipeline Lead",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Pipeline Opportunity",
+   "link_count": 0,
+   "link_to": "Pipeline Opportunity",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "CRM Activity",
+   "link_count": 0,
+   "link_to": "CRM Activity",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "CRM Campaign",
+   "link_count": 0,
+   "link_to": "CRM Campaign",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Customer management",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Customer",
+   "link_count": 0,
+   "link_to": "Customer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales cycle (Quotation → Order → Delivery → Invoice)",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Quotation",
+   "link_count": 0,
+   "link_to": "Sales Quotation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Order",
+   "link_count": 0,
+   "link_to": "Sales Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery Note",
+   "link_count": 0,
+   "link_to": "Delivery Note",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Invoice",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Returns, payments & retail",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Credit notes & returns",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Entry",
+   "link_count": 0,
+   "link_to": "Payment Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Counter sales (Sales Invoice)",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Logistics & fulfillment",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warehouse",
+   "link_count": 0,
+   "link_to": "Warehouse",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Entry",
+   "link_count": 0,
+   "link_to": "Stock Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "E-Invoicing & e-receipt",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales invoices (e-invoice source)",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment entries (e-receipt source)",
+   "link_count": 0,
+   "link_to": "Payment Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Authority submissions (invoice & receipt)",
+   "link_count": 0,
+   "link_to": "E-Document Submission",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tax Authority Profile",
+   "link_count": 0,
+   "link_to": "Tax Authority Profile",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Signing Profile",
+   "link_count": 0,
+   "link_to": "Signing Profile",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Data & imports",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Data Import (CRM)",
+   "link_count": 0,
+   "link_to": "Data Import",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Local sales reports (workspace only)",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Register",
+   "link_count": 0,
+   "link_to": "Sales Register",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Sales Invoice",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales by Customer",
+   "link_count": 0,
+   "link_to": "Sales by Customer",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Sales Invoice",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales by Item",
+   "link_count": 0,
+   "link_to": "Sales by Item",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Sales Invoice",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales by Country",
+   "link_count": 0,
+   "link_to": "Sales by Country",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Sales Invoice",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Pipeline Funnel",
+   "link_count": 0,
+   "link_to": "Pipeline Funnel",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Pipeline Opportunity",
+   "type": "Link"
+  }
  ],
  "modified": "2026-04-17 22:00:00",
  "modified_by": "Administrator",

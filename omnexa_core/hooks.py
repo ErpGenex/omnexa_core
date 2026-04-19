@@ -26,7 +26,13 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 app_include_css = "/assets/omnexa_core/css/omnexa_core.css"
-# app_include_js = "/assets/omnexa_core/js/omnexa_core.js"
+app_include_js = [
+	"/assets/omnexa_core/js/workspace_shortcut_icons.js",
+	"/assets/omnexa_core/js/form_layout_optimizer.js",
+]
+
+# Fallback logo URL if Navbar Settings has no app_logo value.
+app_logo_url = "/files/erpgenex-logo.png"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/omnexa_core/css/omnexa_core.css"
@@ -85,6 +91,8 @@ app_include_css = "/assets/omnexa_core/css/omnexa_core.css"
 # before_install = "omnexa_core.install.before_install"
 after_install = "omnexa_core.install.after_install"
 after_migrate = "omnexa_core.install.after_migrate"
+setup_wizard_requires = ["assets/omnexa_core/js/omnexa_core_setup_wizard.js"]
+setup_wizard_complete = "omnexa_core.install.setup_wizard_create_core_masters"
 
 # Uninstallation
 # ------------
@@ -202,7 +210,10 @@ doc_events = {
 
 # Request Events
 # ----------------
-before_request = ["omnexa_core.omnexa_core.license_gate.before_request"]
+before_request = [
+	"omnexa_core.omnexa_core.license_gate.before_request",
+	"omnexa_core.omnexa_core.report_defaults.auto_apply_company_branch_report_filters",
+]
 # after_request = ["omnexa_core.utils.after_request"]
 
 # Job Events

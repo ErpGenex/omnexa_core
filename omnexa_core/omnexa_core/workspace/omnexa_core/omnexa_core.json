@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"omx-core-h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Settings</b></span>\",\"col\":12}},{\"id\":\"omx-core-c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Company & compliance\",\"col\":4}},{\"id\":\"omx-core-c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Branch governance\",\"col\":4}}]",
+ "content": "[{\"id\": \"omx-core-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Settings</b></span>\", \"col\": 12}}, {\"id\": \"omx-core-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"Compliance & e-invoice\", \"col\": 4}}, {\"id\": \"omx-core-c2\", \"type\": \"card\", \"data\": {\"card_name\": \"Branch access\", \"col\": 4}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -14,30 +14,10 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Company & compliance",
+   "label": "Compliance & e-invoice",
    "link_count": 0,
    "onboard": 0,
    "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Company",
-   "link_count": 0,
-   "link_to": "Company",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Branch",
-   "link_count": 0,
-   "link_to": "Branch",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
   },
   {
    "hidden": 0,
@@ -72,7 +52,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Branch governance",
+   "label": "Branch access",
    "link_count": 0,
    "onboard": 0,
    "type": "Card Break"

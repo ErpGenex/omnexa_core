@@ -23,7 +23,9 @@
   "company_tax_authority_profile",
   "company_signing_profile",
   "group_section",
-  "parent_company"
+  "parent_company",
+  "global_erp_section",
+  "global_erp_strict_workflow"
  ],
  "fields": [
   {
@@ -138,6 +140,19 @@
    "fieldtype": "Link",
    "label": "Parent Company",
    "options": "Company"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "global_erp_section",
+   "fieldtype": "Section Break",
+   "label": "Global ERP"
+  },
+  {
+   "default": "0",
+   "description": "When enabled: quotation requires opportunity link; sales invoice lines with stock items require delivery note; purchase invoice lines with stock items require goods receipt reference.",
+   "fieldname": "global_erp_strict_workflow",
+   "fieldtype": "Check",
+   "label": "Strict Global ERP chain validations"
   }
  ],
  "grid_page_length": 50,

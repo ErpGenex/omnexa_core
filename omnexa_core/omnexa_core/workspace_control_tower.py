@@ -461,8 +461,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"trend_doctypes": ["Journal Entry", "Payment Entry", "Bank Reconciliation"],
 		"status_doctypes": ["Journal Entry", "Bank Reconciliation"],
 		"kpis": [
-			("Companies", "Company", []),
-			("Branches", "Branch", []),
 			("GL Accounts", "GL Account", []),
 			("Journal Entries", "Journal Entry", []),
 			("Payment Entries", "Payment Entry", []),
@@ -472,8 +470,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Tax Rules", "Tax Rule", []),
 		],
 		"shortcuts": [
-			("Company", "DocType", "Company"),
-			("Branch", "DocType", "Branch"),
 			("GL Account", "DocType", "GL Account"),
 			("Item (stock↔GL)", "DocType", "Item"),
 			("Budget", "DocType", "Budget"),
@@ -545,8 +541,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"trend_doctypes": ["Sales Quotation", "Sales Order", "Delivery Note", "Sales Invoice"],
 		"status_doctypes": ["Pipeline Opportunity", "CRM Activity"],
 		"kpis": [
-			("Companies", "Company", []),
-			("Branches", "Branch", []),
 			("Customers", "Customer", []),
 			("Sales quotations", "Sales Quotation", []),
 			("Sales orders", "Sales Order", []),
@@ -557,8 +551,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Pipeline opportunities", "Pipeline Opportunity", []),
 		],
 		"shortcuts": [
-			("Company", "DocType", "Company"),
-			("Branch", "DocType", "Branch"),
 			("Tax Rule", "DocType", "Tax Rule"),
 			("Currency Exchange Rate", "DocType", "Currency Exchange Rate"),
 			("Customer", "DocType", "Customer"),
@@ -602,8 +594,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"trend_doctypes": ["Purchase Order", "Purchase Receipt", "Purchase Invoice"],
 		"status_doctypes": ["Purchase Invoice", "Purchase Order"],
 		"kpis": [
-			("Companies", "Company", []),
-			("Branches", "Branch", []),
 			("Suppliers", "Supplier", []),
 			("Purchase requests", "Purchase Request", []),
 			("Purchase orders", "Purchase Order", []),
@@ -613,8 +603,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Purchase approval rules", "Purchase Approval Rule", []),
 		],
 		"shortcuts": [
-			("Company", "DocType", "Company"),
-			("Branch", "DocType", "Branch"),
 			("Tax Rule", "DocType", "Tax Rule"),
 			("Currency Exchange Rate", "DocType", "Currency Exchange Rate"),
 			("Supplier", "DocType", "Supplier"),
@@ -648,16 +636,12 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"trend_doctypes": ["Stock Entry", "Stock Reconciliation", "Item"],
 		"status_doctypes": ["Stock Entry"],
 		"kpis": [
-			("Companies", "Company", []),
-			("Branches", "Branch", []),
 			("Items", "Item", []),
 			("Warehouses", "Warehouse", []),
 			("Stock entries", "Stock Entry", []),
 			("Stock reconciliations", "Stock Reconciliation", []),
 		],
 		"shortcuts": [
-			("Company", "DocType", "Company"),
-			("Branch", "DocType", "Branch"),
 			("Warehouse", "DocType", "Warehouse"),
 			("Item", "DocType", "Item"),
 			("Stock Entry", "DocType", "Stock Entry"),
@@ -687,8 +671,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"trend_doctypes": ["Journal Entry", "Payment Entry", "Bank Reconciliation"],
 		"status_doctypes": ["Journal Entry", "Bank Reconciliation"],
 		"kpis": [
-			("Companies", "Company", []),
-			("Branches", "Branch", []),
 			("GL accounts", "GL Account", []),
 			("Journal entries", "Journal Entry", []),
 			("Payment entries", "Payment Entry", []),
@@ -698,8 +680,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Budgets", "Budget", []),
 		],
 		"shortcuts": [
-			("Company", "DocType", "Company"),
-			("Branch", "DocType", "Branch"),
 			("GL Account", "DocType", "GL Account"),
 			("Item (stock↔GL)", "DocType", "Item"),
 			("Budget", "DocType", "Budget"),
@@ -722,35 +702,428 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 	},
 	"omnexa_projects_pm": {
 		"_requires_app": "omnexa_projects_pm",
-		"workspace": "Projects PM",
+		"workspace": "projects",
 		"module": "Omnexa Projects PM",
-		"icon": "project",
-		"headline": "Projects PM",
+		"icon": "kanban",
+		"headline": "Projects",
 		"parent_page": "",
 		"is_hidden": 0,
-		"tagline": "WBS, milestones, issues, baselines, KPI snapshots, and risk — when Omnexa Projects PM is installed.",
-		"trend_doctypes": ["PM WBS Task", "PM Issue Log"],
-		"status_doctypes": ["PM WBS Task"],
+		"tagline": "Portfolio & programmes — WBS, milestones, CPM, resources, issues, baselines and KPIs; aligned with ISO 21500 / PMBOK delivery expectations.",
+		"trend_doctypes": ["PM WBS Task", "PM Issue Log", "PM Milestone"],
+		"status_doctypes": ["PM WBS Task", "PM Milestone"],
 		"kpis": [
+			("Project contracts", "Project Contract", []),
 			("WBS tasks", "PM WBS Task", []),
 			("Milestones", "PM Milestone", []),
-			("Issues", "PM Issue Log", []),
+			("Open issues", "PM Issue Log", [["status", "=", "Open"]]),
 			("Baseline snapshots", "PM Baseline Snapshot", []),
+			("Risk registers", "Risk Register", []),
 		],
-		"shortcuts": [
-			("PM WBS Task", "DocType", "PM WBS Task"),
-			("PM Milestone", "DocType", "PM Milestone"),
-			("PM Issue Log", "DocType", "PM Issue Log"),
-			("PM Baseline Snapshot", "DocType", "PM Baseline Snapshot"),
-			("PM KPI Snapshot", "DocType", "PM KPI Snapshot"),
-			("PM Resource Assignment", "DocType", "PM Resource Assignment"),
-			("Risk Register", "DocType", "Risk Register"),
-			("PM CPM Groundwork", "Report", "PM CPM Groundwork"),
-			("PM Resource Loading", "Report", "PM Resource Loading"),
-		],
+		"shortcuts": [],
 		"kpi_trends": [
 			{"type": "Bar", "doctype": "PM WBS Task", "group_by": "status", "label": "Task status"},
 			{"type": "Pie", "doctype": "PM Issue Log", "group_by": "severity", "label": "Issue severity"},
+			{"type": "Bar", "doctype": "PM Milestone", "group_by": "status", "label": "Milestone status"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_restaurant": {
+		"_requires_app": "omnexa_restaurant",
+		"workspace": "Restaurant",
+		"module": "Omnexa Restaurant",
+		"icon": "retail",
+		"headline": "Restaurant",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "F&B desk — venue, menu, POS, kitchen, delivery, waste; revenue & gross margin analytics aligned with IFRS 15 revenue recognition.",
+		"trend_doctypes": ["Restaurant Order", "Kitchen Ticket", "Waste Log"],
+		"status_doctypes": ["Restaurant Order"],
+		"kpis": [
+			("Submitted orders", "Restaurant Order", [["docstatus", "=", 1]]),
+			("Orders in progress", "Restaurant Order", [["status", "=", "In Progress"]]),
+			("Kitchen tickets", "Kitchen Ticket", []),
+			("Menu items", "Menu Item", []),
+			("Restaurant tables", "Restaurant Table", []),
+			("Waste logs", "Waste Log", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Restaurant Order", "group_by": "order_type", "label": "Sales by channel"},
+			{"type": "Pie", "doctype": "Restaurant Order", "group_by": "status", "label": "Order status"},
+			{"type": "Bar", "doctype": "Kitchen Ticket", "group_by": "ticket_status", "label": "Kitchen tickets"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_services": {
+		"_requires_app": "omnexa_services",
+		"workspace": "Services",
+		"module": "Omnexa Services",
+		"icon": "tool",
+		"headline": "Services",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Professional & field service — tickets, SLAs, timesheets, billing; IFRS 15 revenue schedules and customer satisfaction visibility.",
+		"trend_doctypes": ["Service Ticket", "Service Timesheet", "Service Invoice"],
+		"status_doctypes": ["Service Ticket"],
+		"kpis": [
+			("Open tickets", "Service Ticket", [["status", "=", "Open"]]),
+			("Tickets in progress", "Service Ticket", [["status", "=", "In Progress"]]),
+			("Service timesheets", "Service Timesheet", []),
+			("Service invoices", "Service Invoice", []),
+			("Service contracts", "Service Contract", []),
+			("Revenue schedules", "Service Revenue Schedule", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Service Ticket", "group_by": "priority", "label": "Tickets by priority"},
+			{"type": "Pie", "doctype": "Service Ticket", "group_by": "status", "label": "Ticket status"},
+			{"type": "Bar", "doctype": "Service Invoice", "group_by": "status", "label": "Invoice status"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_construction": {
+		"_requires_app": "omnexa_construction",
+		"workspace": "Construction",
+		"module": "Omnexa Construction",
+		"icon": "tool",
+		"headline": "Construction",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "EPC & civil works — contracts, BOQ, site, claims, IPC & WIP; cost and progress analytics aligned with IFRS 15 / IAS 11 contract accounting expectations.",
+		"trend_doctypes": ["Project Contract", "Site Daily Report", "IPC Certificate"],
+		"status_doctypes": ["Project Contract", "Subcontract Work Order"],
+		"kpis": [
+			("Project contracts", "Project Contract", []),
+			("BOQ lines", "BOQ Item", []),
+			("Site daily reports", "Site Daily Report", []),
+			("Subcontract work orders", "Subcontract Work Order", []),
+			("IPC certificates", "IPC Certificate", []),
+			("Construction claims", "Construction Claim", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Project Contract", "group_by": "contract_type", "label": "Contracts by type"},
+			{"type": "Pie", "doctype": "Project Contract", "group_by": "status", "label": "Contract status"},
+			{"type": "Bar", "doctype": "IPC Certificate", "group_by": "status", "label": "IPC status"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_agriculture": {
+		"_requires_app": "omnexa_agriculture",
+		"workspace": "Agriculture",
+		"module": "Omnexa Agriculture",
+		"icon": "agriculture",
+		"headline": "Agriculture",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Farm enterprise — land, crops, livestock, harvest & traceability; GlobalG.A.P and IFRS / IAS 41 biological-asset alignment; procurement and revenue integration.",
+		"trend_doctypes": ["Farm", "Crop Cycle", "Harvest Record"],
+		"status_doctypes": ["Farm", "Crop Cycle"],
+		"kpis": [
+			("Farms", "Farm", []),
+			("Field plots", "Field Plot", []),
+			("Crop cycles", "Crop Cycle", []),
+			("Livestock animals", "Livestock Animal", []),
+			("Vaccination records", "Vaccination Record", []),
+			("Harvest records", "Harvest Record", []),
+			("Customers", "Customer", []),
+			("Purchase orders", "Purchase Order", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Farm", "group_by": "farm_type", "label": "Farm type"},
+			{"type": "Pie", "doctype": "Crop Cycle", "group_by": "status", "label": "Crop cycle status"},
+			{"type": "Bar", "doctype": "Livestock Animal", "group_by": "animal_type", "label": "Livestock type"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_statutory_audit": {
+		"_requires_app": "omnexa_statutory_audit",
+		"workspace": "Audit",
+		"module": "Omnexa Core",
+		"icon": "review",
+		"headline": "Audit",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Statutory audit — engagements, evidence, findings & opinion drafts; IFRS financial statement tie-out to trial balance, general ledger, receivables/payables and substantive balance review.",
+		"trend_doctypes": ["Audit Engagement", "Audit Finding", "Audit Evidence"],
+		"status_doctypes": ["Audit Engagement", "Audit Opinion Draft"],
+		"kpis": [
+			("Audit engagements", "Audit Engagement", []),
+			("Opinion drafts", "Audit Opinion Draft", []),
+			("Balance snapshot lines", "Audit Balance Snapshot", []),
+			("Audit findings", "Audit Finding", []),
+			("Audit evidence items", "Audit Evidence", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Audit Engagement", "group_by": "status", "label": "Engagement phase"},
+			{"type": "Pie", "doctype": "Audit Finding", "group_by": "severity", "label": "Finding severity"},
+			{"type": "Bar", "doctype": "Audit Balance Snapshot", "group_by": "review_status", "label": "Balance review"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_customer_core": {
+		"_requires_app": "omnexa_customer_core",
+		"workspace": "CRM",
+		"module": "Omnexa Customer Core",
+		"icon": "users",
+		"headline": "CRM",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Customer 360, pipeline, cases & campaigns — pipeline value, SLA and revenue analytics for global CRM governance.",
+		"trend_doctypes": ["CRM Lead", "CRM Opportunity", "CRM Case Ticket"],
+		"status_doctypes": ["CRM Opportunity", "CRM Case Ticket"],
+		"kpis": [
+			("Customer profiles", "Customer Profile", []),
+			("Interaction logs", "CRM Interaction Log", []),
+			("Leads", "CRM Lead", []),
+			("Opportunities", "CRM Opportunity", []),
+			("Case tickets", "CRM Case Ticket", []),
+			("Campaigns", "CRM Campaign", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "CRM Lead", "group_by": "lead_status", "label": "Lead status"},
+			{"type": "Pie", "doctype": "CRM Opportunity", "group_by": "status", "label": "Opportunity outcome"},
+			{"type": "Bar", "doctype": "CRM Case Ticket", "group_by": "status", "label": "Case status"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_tourism": {
+		"_requires_app": "omnexa_tourism",
+		"workspace": "Tourism",
+		"module": "Omnexa Tourism",
+		"icon": "map",
+		"headline": "Tourism",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Hospitality & travel — properties, bookings, folios and channel performance; UN IRSTS-style operations and revenue analytics.",
+		"trend_doctypes": ["Tourism Booking", "Tourism Guest Folio", "Tourism Hotel"],
+		"status_doctypes": ["Tourism Hotel", "Tourism Housekeeping Task"],
+		"kpis": [
+			("Hotels", "Tourism Hotel", []),
+			("Bookings", "Tourism Booking", []),
+			("Room units", "Tourism Room Unit", []),
+			("Guest folios", "Tourism Guest Folio", []),
+			("Service orders", "Tourism Service Order", []),
+			("Travel packages", "Tourism Travel Package", []),
+			("Customers", "Customer", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Tourism Booking", "group_by": "status", "label": "Booking status"},
+			{"type": "Pie", "doctype": "Tourism Booking", "group_by": "booking_channel", "label": "Channel mix"},
+			{"type": "Bar", "doctype": "Tourism Guest Folio", "group_by": "status", "label": "Folio status"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_healthcare": {
+		"_requires_app": "omnexa_healthcare",
+		"workspace": "Healthcare",
+		"module": "Omnexa Healthcare",
+		"icon": "organization",
+		"headline": "Healthcare",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "FHIR-aligned care — patients, encounters, scheduling, inpatient and billing; clinical access and revenue analytics.",
+		"trend_doctypes": ["Healthcare Encounter", "Healthcare Appointment", "Healthcare Admission"],
+		"status_doctypes": ["Healthcare Encounter", "Healthcare Appointment"],
+		"kpis": [
+			("Patients", "Healthcare Patient", []),
+			("Encounters", "Healthcare Encounter", []),
+			("Appointments", "Healthcare Appointment", []),
+			("Admissions", "Healthcare Admission", []),
+			("Service charges", "Healthcare Service Charge", []),
+			("Diagnostic reports", "Healthcare Diagnostic Report", []),
+			("Facilities", "Healthcare Facility Profile", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Healthcare Encounter", "group_by": "status", "label": "Encounter status"},
+			{"type": "Pie", "doctype": "Healthcare Appointment", "group_by": "status", "label": "Appointment status"},
+			{"type": "Bar", "doctype": "Healthcare Admission", "group_by": "status", "label": "Admission status"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_education": {
+		"_requires_app": "omnexa_education",
+		"workspace": "Education",
+		"module": "Omnexa Education",
+		"icon": "education",
+		"headline": "Education",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "K–12 & institutions — curriculum, sections, students, fee billing and finance tie-out; enrollment and revenue analytics.",
+		"trend_doctypes": ["Education Student", "Education Billing Invoice", "Education Section"],
+		"status_doctypes": ["Education Student", "Education Section"],
+		"kpis": [
+			("Institutions", "Education Institution", []),
+			("Students", "Education Student", []),
+			("Sections", "Education Section", []),
+			("Billing invoices", "Education Billing Invoice", []),
+			("Fee plans", "Education Fee Plan", []),
+			("Teachers", "Education Teacher", []),
+			("Campuses", "Education Campus", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Education Student", "group_by": "status", "label": "Student status"},
+			{"type": "Pie", "doctype": "Education Section", "group_by": "status", "label": "Section status"},
+			{"type": "Bar", "doctype": "Education Institution", "group_by": "institution_type", "label": "Institution type"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_manufacturing": {
+		"_requires_app": "omnexa_manufacturing",
+		"workspace": "Manufacturing",
+		"module": "Omnexa Manufacturing",
+		"icon": "tool",
+		"headline": "Manufacturing",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Shop floor & quality — work orders, production logs, BOMs and costing; OEE, yield and variance analytics.",
+		"trend_doctypes": ["Work Order", "Production Log", "Manufacturing Quality Check"],
+		"status_doctypes": ["Work Order", "Manufacturing Rework Order"],
+		"kpis": [
+			("Work orders", "Work Order", []),
+			("Production logs", "Production Log", []),
+			("Quality checks", "Manufacturing Quality Check", []),
+			("Rework orders", "Manufacturing Rework Order", []),
+			("BOMs", "Manufacturing BOM", []),
+			("Material entries", "Work Order Material Entry", []),
+			("Items", "Item", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Work Order", "group_by": "status", "label": "Work order status"},
+			{"type": "Pie", "doctype": "Manufacturing Quality Check", "group_by": "status", "label": "QC status"},
+			{"type": "Bar", "doctype": "Work Order", "group_by": "manufacturing_mode", "label": "Manufacturing mode"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_car_rental": {
+		"_requires_app": "omnexa_car_rental",
+		"workspace": "Car Rental",
+		"module": "Omnexa Car Rental",
+		"icon": "retail",
+		"headline": "Car Rental",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Fleet & contracts — bookings, tolls, maintenance and damage exposure; utilization and revenue analytics.",
+		"trend_doctypes": ["Rental Contract", "Rental Booking", "Vehicle"],
+		"status_doctypes": ["Rental Contract", "Vehicle"],
+		"kpis": [
+			("Vehicles", "Vehicle", []),
+			("Rental bookings", "Rental Booking", []),
+			("Rental contracts", "Rental Contract", []),
+			("Toll transactions", "Toll Transaction", []),
+			("Maintenance records", "Vehicle Maintenance Record", []),
+			("Damage reports", "Vehicle Damage Report", []),
+			("Customers", "Customer", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Rental Booking", "group_by": "booking_status", "label": "Booking pipeline"},
+			{"type": "Pie", "doctype": "Rental Contract", "group_by": "status", "label": "Contract status"},
+			{"type": "Bar", "doctype": "Vehicle", "group_by": "status", "label": "Vehicle status"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_trading": {
+		"_requires_app": "omnexa_trading",
+		"workspace": "Trading",
+		"module": "Omnexa Trading",
+		"icon": "retail",
+		"headline": "Trading",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Van sales & distribution — routes, orders, commissions and tenders; field fulfillment and credit analytics.",
+		"trend_doctypes": ["Trading Distribution Order", "Trading Van Sales Invoice", "Trading Route Plan"],
+		"status_doctypes": ["Trading Distribution Order", "Trading Tender"],
+		"kpis": [
+			("Route plans", "Trading Route Plan", []),
+			("Distribution orders", "Trading Distribution Order", []),
+			("Van sales invoices", "Trading Van Sales Invoice", []),
+			("Vehicle transfers", "Trading Vehicle Stock Transfer", []),
+			("Tenders", "Trading Tender", []),
+			("Commission settlements", "Trading Commission Settlement", []),
+			("Trading vehicles", "Trading Vehicle", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Trading Distribution Order", "group_by": "status", "label": "Order status"},
+			{"type": "Pie", "doctype": "Trading Van Sales Invoice", "group_by": "status", "label": "Invoice status"},
+			{"type": "Bar", "doctype": "Trading Tender", "group_by": "status", "label": "Tender pipeline"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_engineering_consulting": {
+		"_requires_app": "omnexa_engineering_consulting",
+		"workspace": "engineering-consulting",
+		"module": "Omnexa Engineering Consulting",
+		"icon": "quality",
+		"headline": "Engineering Consulting",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "RIBA Plan of Work 2020 — design stages, submittals, information registers, communications, site records & engagement; procurement and IPC bridge to construction.",
+		"trend_doctypes": ["Engineering Stage", "Engineering Submittal", "Client Communication Log"],
+		"status_doctypes": ["Engineering Stage", "Engineering Submittal"],
+		"kpis": [
+			("Project contracts", "Project Contract", []),
+			("RIBA engineering stages", "Engineering Stage", []),
+			("Engineering submittals", "Engineering Submittal", []),
+			("Client communications", "Client Communication Log", []),
+			("Document register entries", "Engineering Document Register", []),
+			("Site records", "Engineering Site Record", []),
+			("Consultant engagements", "Engineering Consultant Engagement", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Engineering Stage", "group_by": "stage", "label": "RIBA stages"},
+			{"type": "Pie", "doctype": "Engineering Submittal", "group_by": "workflow_state", "label": "Submittal workflow"},
+			{"type": "Bar", "doctype": "Client Communication Log", "group_by": "channel", "label": "Comms channel"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_fixed_assets": {
+		"_requires_app": "omnexa_fixed_assets",
+		"workspace": "Fixed assets",
+		"module": "Omnexa Fixed Assets",
+		"icon": "folder-normal",
+		"headline": "Fixed Assets",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Asset lifecycle workspace — acquisition, capitalization, depreciation, transfer, disposal, maintenance, valuation.",
+		"trend_doctypes": [
+			"Fixed Asset Acquisition",
+			"Fixed Asset Depreciation Entry",
+			"Fixed Asset Disposal",
+		],
+		"status_doctypes": ["Fixed Asset"],
+		"kpis": [
+			("Assets in register", "Fixed Asset", []),
+			("Assets in use", "Fixed Asset", [["status", "=", "in_use"]]),
+			("Assets under maintenance", "Fixed Asset", [["status", "=", "under_maintenance"]]),
+			("Disposed assets", "Fixed Asset", [["status", "=", "disposed"]]),
+			("Depreciation runs", "Fixed Asset Depreciation Entry", []),
+			("Asset disposals", "Fixed Asset Disposal", []),
+		],
+		"shortcuts": [
+			("Fixed Asset", "DocType", "Fixed Asset"),
+			("Fixed Asset Category", "DocType", "Fixed Asset Category"),
+			("Fixed Asset Acquisition", "DocType", "Fixed Asset Acquisition"),
+			("Fixed Asset Depreciation Entry", "DocType", "Fixed Asset Depreciation Entry"),
+			("Fixed Asset Disposal", "DocType", "Fixed Asset Disposal"),
+			("Asset Register Report", "Report", "Asset Register Report"),
+			("Asset Depreciation Schedule", "Report", "Asset Depreciation Schedule"),
+			("Asset Movement Report", "Report", "Asset Movement Report"),
+		],
+		"kpi_trends": [
+			{"type": "Line", "doctype": "Fixed Asset Acquisition", "label": "Asset value trend"},
+			{"type": "Line", "doctype": "Fixed Asset Depreciation Entry", "label": "Depreciation trend"},
+			{"type": "Pie", "doctype": "Fixed Asset", "group_by": "category", "label": "Distribution by category"},
+			{"type": "Bar", "doctype": "Fixed Asset", "group_by": "status", "label": "Status breakdown"},
 		],
 		"extra_sections": [],
 	},
@@ -758,7 +1131,7 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"_requires_app": "omnexa_core",
 		"workspace": "Governance",
 		"module": "Omnexa Core",
-		"icon": "shield",
+		"icon": "setting-gear",
 		"headline": "Governance",
 		"parent_page": "",
 		"is_hidden": 0,
@@ -766,7 +1139,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"trend_doctypes": ["User", "Workflow"],
 		"status_doctypes": ["Workflow"],
 		"kpis": [
-			("Companies", "Company", []),
 			("Users", "User", []),
 			("Roles", "Role", []),
 			("Workflows", "Workflow", []),
@@ -774,7 +1146,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Error logs", "Error Log", []),
 		],
 		"shortcuts": [
-			("Company", "DocType", "Company"),
 			("User", "DocType", "User"),
 			("Role", "DocType", "Role"),
 			("User Permission", "DocType", "User Permission"),
@@ -794,11 +1165,81 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		],
 		"extra_sections": [],
 	},
+	"omnexa_core_settings": {
+		"_requires_app": "omnexa_core",
+		"workspace": "Settings",
+		"module": "Omnexa Core",
+		"icon": "setting",
+		"headline": "Settings · Enterprise setup",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Organization, indirect tax (VAT/GST), sales & procurement masters, stock, e-invoicing — IFRS-aligned ERP configuration hub.",
+		"trend_doctypes": ["Tax Rule", "Customer", "Supplier", "Item"],
+		"status_doctypes": ["Customer", "Supplier"],
+		"kpis": [
+			("Companies", "Company", []),
+			("Branches", "Branch", []),
+			("Tax categories", "Tax Category", []),
+			("Tax rules", "Tax Rule", []),
+			("Customers", "Customer", []),
+			("Suppliers", "Supplier", []),
+			("Items", "Item", []),
+			("Warehouses", "Warehouse", []),
+			("Users", "User", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Tax Rule", "group_by": "tax_type", "label": "Tax rules by treatment"},
+			{"type": "Pie", "doctype": "Customer", "group_by": "status", "label": "Customer status"},
+			{"type": "Pie", "doctype": "Supplier", "group_by": "status", "label": "Supplier status"},
+			{"type": "Bar", "doctype": "Item", "group_by": "product_type", "label": "Item types"},
+		],
+		"extra_sections": [],
+	},
 }
 
 
 def _doctype_ready(name: str) -> bool:
 	return bool(name and frappe.db.exists("DocType", name))
+
+
+def _aggregatable_doctype(name: str) -> bool:
+	"""DocTypes backed by a normal SQL table — Number Card Count & aggregate charts need this.
+
+	Single DocTypes (e.g. Website Settings) and Virtual DocTypes have no `tab{Doctype}` row set;
+	using them raises TableMissingError / ProgrammingError in get_list.
+	"""
+	if not _doctype_ready(name):
+		return False
+	try:
+		meta = frappe.get_meta(name)
+	except Exception:
+		return False
+	if getattr(meta, "issingle", False):
+		return False
+	if getattr(meta, "is_virtual", False):
+		return False
+	return True
+
+
+def prune_invalid_workspace_kpi_artifacts() -> None:
+	"""Remove Number Cards / Dashboard Charts tied to Single (or non-aggregatable) DocTypes; clear Workspace links."""
+	singles = frappe.get_all("DocType", filters={"issingle": 1}, pluck="name")
+	virtual = frappe.get_all("DocType", filters={"is_virtual": 1}, pluck="name")
+	bad = list(dict.fromkeys([*(singles or []), *(virtual or [])]))
+	if not bad:
+		return
+	for row in frappe.get_all(
+		"Number Card",
+		filters={"type": "Document Type", "document_type": ["in", bad]},
+		pluck="name",
+	):
+		frappe.db.sql("DELETE FROM `tabWorkspace Number Card` WHERE number_card_name = %s", (row,))
+		frappe.delete_doc("Number Card", row, force=True, ignore_permissions=True)
+	for row in frappe.get_all("Dashboard Chart", filters={"document_type": ["in", bad]}, pluck="name"):
+		frappe.db.sql("DELETE FROM `tabWorkspace Chart` WHERE chart_name = %s", (row,))
+		frappe.delete_doc("Dashboard Chart", row, force=True, ignore_permissions=True)
+	frappe.db.commit()
 
 
 def _trim_chart_suffix(text: str, max_len: int = 28) -> str:
@@ -807,7 +1248,7 @@ def _trim_chart_suffix(text: str, max_len: int = 28) -> str:
 
 
 def _ensure_timeseries_chart(chart_name: str, module: str, document_type: str, viz: str) -> None:
-	if frappe.db.exists("Dashboard Chart", chart_name) or not _doctype_ready(document_type):
+	if frappe.db.exists("Dashboard Chart", chart_name) or not _aggregatable_doctype(document_type):
 		return
 	if viz not in ("Line", "Bar"):
 		return
@@ -842,7 +1283,7 @@ def _ensure_group_by_chart(
 	viz: str,
 	number_of_groups: int = 8,
 ) -> None:
-	if frappe.db.exists("Dashboard Chart", chart_name) or not _doctype_ready(document_type):
+	if frappe.db.exists("Dashboard Chart", chart_name) or not _aggregatable_doctype(document_type):
 		return
 	if viz not in ("Bar", "Pie", "Donut", "Percentage"):
 		return
@@ -881,7 +1322,7 @@ def _collect_workspace_chart_names(spec: dict[str, Any], prefix: str, module: st
 			seen.add(chart_name)
 			names.append(chart_name)
 
-	trend = spec.get("trend_doctypes") or []
+	trend = [dt for dt in (spec.get("trend_doctypes") or []) if _aggregatable_doctype(dt)]
 	for dt in trend:
 		su = _trim_chart_suffix(dt, 28)
 		cn = f"{prefix} · {su} Trend"
@@ -899,7 +1340,7 @@ def _collect_workspace_chart_names(spec: dict[str, Any], prefix: str, module: st
 		viz = row.get("type")
 		dt = row.get("doctype")
 		gf = row.get("group_by")
-		if viz not in ("Bar", "Pie", "Percentage") or not dt or not gf:
+		if viz not in ("Bar", "Pie", "Percentage") or not dt or not gf or not _aggregatable_doctype(dt):
 			continue
 		lbl = _trim_chart_suffix(row.get("label") or str(gf), 22)
 		tag = str(viz)[:4]
@@ -908,6 +1349,8 @@ def _collect_workspace_chart_names(spec: dict[str, Any], prefix: str, module: st
 		add(cn)
 
 	for dt in spec.get("status_doctypes") or []:
+		if not _aggregatable_doctype(dt):
+			continue
 		su = _trim_chart_suffix(dt, 24)
 		cn = f"{prefix} · {su} Mix"
 		_ensure_donut_chart(cn, module, dt, "status")
@@ -917,7 +1360,7 @@ def _collect_workspace_chart_names(spec: dict[str, Any], prefix: str, module: st
 
 
 def _ensure_number_card(label: str, document_type: str, module: str, filters: list | None) -> str | None:
-	if not _doctype_ready(document_type):
+	if not _aggregatable_doctype(document_type):
 		return None
 	filters_json = json.dumps(filters or [], separators=(",", ":"))
 	existing = frappe.db.get_value(
@@ -950,6 +1393,57 @@ def _slug(text: str) -> str:
 	return "".join(c if c.isalnum() else "-" for c in text.lower())[:24].strip("-") or "ws"
 
 
+def _workspace_shortcut_es_icon(link_type: str, link_to: str | None) -> str:
+	"""Espresso / timeless icon id for desk shortcuts (frappe.utils.icon on the client)."""
+	lt = (link_type or "").strip()
+	if lt == "URL":
+		return "es-line-link"
+	if lt == "Report":
+		return "es-line-reports"
+	if lt == "Dashboard":
+		return "es-line-dashboard"
+	if lt == "Page" and link_to and frappe.db.exists("Page", link_to):
+		pg = frappe.db.get_value("Page", link_to, "icon")
+		if isinstance(pg, str) and pg.startswith("es-"):
+			return pg
+		if isinstance(pg, str) and pg and " " not in pg and not pg.startswith("fa"):
+			return pg
+		return "es-line-filetype"
+	if lt == "DocType" and link_to and _doctype_ready(link_to):
+		di = frappe.db.get_value("DocType", link_to, "icon")
+		if isinstance(di, str) and di.startswith("es-"):
+			return di
+		if isinstance(di, str) and di and " " not in di and not di.startswith("fa"):
+			return di
+		return "es-line-filetype"
+	return "es-line-filetype"
+
+
+def _card_break_sidebar_es_icon(card_title: str) -> str:
+	t = (card_title or "").lower()
+	if "report" in t:
+		return "es-line-reports"
+	if any(k in t for k in ("chart", "kpi", "analytic", "dashboard")):
+		return "es-line-dashboard"
+	return "es-line-zap"
+
+
+def _shortcut_seed_ops_before_reports(seed: list[Any]) -> list[Any]:
+	"""Stable reorder: DocType / Page / URL before Report — main workspace body matches Operations → Reports."""
+	if not seed:
+		return seed
+	ops: list[Any] = []
+	rpts: list[Any] = []
+	for sc in seed:
+		if not sc or len(sc) < 3:
+			continue
+		if sc[1] == "Report":
+			rpts.append(sc)
+		else:
+			ops.append(sc)
+	return ops + rpts
+
+
 def _workspace_row_label(link_name: str) -> str:
 	"""Label shown on workspace rows; EditorJS blocks match page_data by this label (not Link name)."""
 	parts = [p.strip() for p in (link_name or "").split("·")]
@@ -960,7 +1454,7 @@ def _build_content(
 	spec: dict[str, Any],
 	chart_block_labels: list[str],
 	number_card_block_labels: list[str],
-	shortcut_labels: list[str],
+	shortcut_rows: list[dict[str, Any]],
 ) -> str:
 	slug = _slug(spec["workspace"])
 	blocks: list[dict[str, Any]] = []
@@ -971,6 +1465,94 @@ def _build_content(
 			"data": {"text": f"<span class=\"h4\"><b>{spec['headline']}</b></span>", "col": 12},
 		}
 	)
+
+	# Strict hierarchy (top -> bottom):
+	# 1) Operations, 2) Reports, 3) KPIs, 4) Charts
+	operation_shortcuts: list[str] = []
+	report_shortcuts: list[str] = []
+	for row in shortcut_rows:
+		if row.get("type") == "Report":
+			report_shortcuts.append(row.get("label"))
+		else:
+			operation_shortcuts.append(row.get("label"))
+
+	blocks.append(
+		{
+			"id": f"{slug}-ops",
+			"type": "header",
+			"data": {"text": "<span class=\"h5\"><b>\u2699 Operations</b></span>", "col": 12},
+		}
+	)
+	core_ops: list[str] = []
+	support_ops: list[str] = []
+	master_ops: list[str] = []
+	other_ops: list[str] = []
+	for sc in operation_shortcuts[:72]:
+		if ":" not in sc:
+			other_ops.append(sc)
+			continue
+		prefix, label = [p.strip() for p in sc.split(":", 1)]
+		if prefix.lower() == "core transactions":
+			core_ops.append(label)
+		elif prefix.lower() == "supporting processes":
+			support_ops.append(label)
+		elif prefix.lower() == "masters":
+			master_ops.append(label)
+		else:
+			other_ops.append(sc)
+
+	grouped_ops = bool(core_ops or support_ops or master_ops)
+	# 12-column grid: col 4 → three shortcuts per row (consistent across vertical workspaces)
+	op_col = 4
+	op_idx = 0
+
+	def _append_ops_group(title: str, items: list[str]) -> None:
+		nonlocal op_idx
+		if not items:
+			return
+		blocks.append(
+			{
+				"id": f"{slug}-opg{op_idx}",
+				"type": "header",
+				"data": {"text": f"<span class=\"h5\"><b>\u2699 {title}</b></span>", "col": 12},
+			}
+		)
+		op_idx += 1
+		for item in items:
+			blocks.append({"id": f"{slug}-op{op_idx}", "type": "shortcut", "data": {"shortcut_name": item, "col": op_col}})
+			op_idx += 1
+
+	_append_ops_group("Core Transactions", core_ops)
+	_append_ops_group("Supporting Processes", support_ops)
+	_append_ops_group("Masters", master_ops)
+
+	if grouped_ops:
+		for sc in other_ops:
+			blocks.append({"id": f"{slug}-op{op_idx}", "type": "shortcut", "data": {"shortcut_name": sc, "col": op_col}})
+			op_idx += 1
+	else:
+		# Unprefixed desk labels (e.g. full module navigation): flat grid under Operations — no fake Core/Support/Masters buckets.
+		for sc in other_ops:
+			blocks.append({"id": f"{slug}-op{op_idx}", "type": "shortcut", "data": {"shortcut_name": sc, "col": op_col}})
+			op_idx += 1
+
+	blocks.append(
+		{
+			"id": f"{slug}-rpt",
+			"type": "header",
+			"data": {"text": "<span class=\"h5\"><b>\U0001f4ca Reports</b></span>", "col": 12},
+		}
+	)
+	for i, sc in enumerate(report_shortcuts[:18]):
+		blocks.append({"id": f"{slug}-rp{i}", "type": "shortcut", "data": {"shortcut_name": sc, "col": 4}})
+
+	blocks.append(
+		{
+			"id": f"{slug}-kpi",
+			"type": "header",
+			"data": {"text": "<span class=\"h5\"><b>\U0001f4c8 KPIs</b></span>", "col": 12},
+		}
+	)
 	for i, nl in enumerate(number_card_block_labels):
 		blocks.append(
 			{
@@ -979,11 +1561,16 @@ def _build_content(
 				"data": {"number_card_name": nl, "col": 4},
 			}
 		)
+
+	blocks.append(
+		{
+			"id": f"{slug}-chr",
+			"type": "header",
+			"data": {"text": "<span class=\"h5\"><b>\U0001f4c9 Charts</b></span>", "col": 12},
+		}
+	)
 	for i, cl in enumerate(chart_block_labels):
 		blocks.append({"id": f"{slug}-ch{i}", "type": "chart", "data": {"chart_name": cl, "col": 4}})
-	blocks.append({"id": f"{slug}-ops", "type": "header", "data": {"text": "<b>Quick Actions</b>", "col": 12}})
-	for i, sc in enumerate(shortcut_labels):
-		blocks.append({"id": f"{slug}-sc{i}", "type": "shortcut", "data": {"shortcut_name": sc, "col": 3}})
 	return json.dumps(blocks, separators=(",", ":"))
 
 
@@ -992,24 +1579,40 @@ def _merge_link_sections(ws, sections: list[tuple[str, list[tuple[str, str, str,
 	for break_label, links in sections:
 		if break_label in existing_breaks:
 			continue
-		ws.append("links", {"type": "Card Break", "label": break_label, "hidden": 0})
-		for label, link_type, link_to, icon in links:
+		ws.append(
+			"links",
+			{
+				"type": "Card Break",
+				"label": break_label,
+				"hidden": 0,
+				"icon": _card_break_sidebar_es_icon(break_label),
+			},
+		)
+		for label, link_type, link_to, fourth in links:
 			if link_type == "DocType" and not _doctype_ready(link_to):
 				continue
 			if link_type == "Report" and not frappe.db.exists("Report", link_to):
 				continue
-			ws.append(
-				"links",
-				{
-					"type": "Link",
-					"label": label,
-					"link_type": link_type,
-					"link_to": link_to,
-					"icon": icon,
-					"hidden": 0,
-					"is_query_report": 1 if link_type == "Report" else 0,
-				},
-			)
+			if link_type == "Page" and not frappe.db.exists("Page", link_to):
+				continue
+			row = {
+				"type": "Link",
+				"label": label,
+				"link_type": link_type,
+				"link_to": link_to,
+				"icon": _workspace_shortcut_es_icon(link_type, link_to),
+				"hidden": 0,
+				"is_query_report": 1 if link_type == "Report" else 0,
+			}
+			if link_type == "Report":
+				ref = (
+					fourth
+					if fourth and frappe.db.exists("DocType", fourth)
+					else frappe.db.get_value("Report", link_to, "ref_doctype")
+				)
+				if ref:
+					row["report_ref_doctype"] = ref
+			ws.append("links", row)
 
 
 _GENERIC_LINK_SKIP = frozenset({"User", "Role", "File", "Comment", "Version"})
@@ -1033,7 +1636,7 @@ def _ordered_doctypes_from_workspace(ws) -> list[str]:
 		if row.get("type") != "Link" or row.get("link_type") != "DocType":
 			continue
 		dt = row.get("link_to")
-		if not dt or dt in _GENERIC_LINK_SKIP or not _doctype_ready(dt):
+		if not dt or dt in _GENERIC_LINK_SKIP or not _aggregatable_doctype(dt):
 			continue
 		if dt in ordered:
 			continue
@@ -1044,6 +1647,8 @@ def _ordered_doctypes_from_workspace(ws) -> list[str]:
 
 
 def _infer_kpi_trends_for_doctype(dt: str) -> list[dict[str, Any]]:
+	if not _aggregatable_doctype(dt):
+		return []
 	meta = frappe.get_meta(dt)
 	out: list[dict[str, Any]] = []
 	viz_cycle = ("Bar", "Pie", "Percentage")
@@ -1080,7 +1685,7 @@ def _iter_shortcuts_from_workspace(ws) -> list[tuple[str, str, str]]:
 	for row in ws.get("links") or []:
 		if row.get("type") != "Link":
 			continue
-		if row.get("link_type") not in ("DocType", "Report"):
+		if row.get("link_type") not in ("DocType", "Report", "Page"):
 			continue
 		lt = row.get("link_type")
 		lto = row.get("link_to")
@@ -1090,6 +1695,10 @@ def _iter_shortcuts_from_workspace(ws) -> list[tuple[str, str, str]]:
 		if key in seen:
 			continue
 		if lt == "DocType" and (not _doctype_ready(lto) or lto in _GENERIC_LINK_SKIP):
+			continue
+		if lt == "Report" and not frappe.db.exists("Report", lto):
+			continue
+		if lt == "Page" and not frappe.db.exists("Page", lto):
 			continue
 		seen.add(key)
 		rows.append((row.get("label") or lto, lt, lto))
@@ -1104,12 +1713,21 @@ def _apply_desk_link_sections(ws, sections: list[tuple[str, list[tuple[str, str,
 	for card_title, rows in sections:
 		ws.append(
 			"links",
-			{"type": "Card Break", "label": card_title, "hidden": 0, "onboard": 0, "link_count": 0},
+			{
+				"type": "Card Break",
+				"label": card_title,
+				"hidden": 0,
+				"onboard": 0,
+				"link_count": 0,
+				"icon": _card_break_sidebar_es_icon(card_title),
+			},
 		)
 		for label, link_type, link_to, ref_doc in rows:
 			if link_type == "DocType" and not _doctype_ready(link_to):
 				continue
 			if link_type == "Report" and not frappe.db.exists("Report", link_to):
+				continue
+			if link_type == "Page" and not frappe.db.exists("Page", link_to):
 				continue
 			row: dict[str, Any] = {
 				"type": "Link",
@@ -1120,9 +1738,20 @@ def _apply_desk_link_sections(ws, sections: list[tuple[str, list[tuple[str, str,
 				"link_to": link_to,
 				"link_count": 0,
 				"is_query_report": 0,
+				"icon": _workspace_shortcut_es_icon(link_type, link_to),
 			}
-			if link_type == "Report" and ref_doc:
-				row["report_ref_doctype"] = ref_doc
+			if link_type == "Report":
+				ref_for = (
+					ref_doc
+					if ref_doc and frappe.db.exists("DocType", ref_doc)
+					else frappe.db.get_value("Report", link_to, "ref_doctype")
+				)
+				if ref_for:
+					row["report_ref_doctype"] = ref_for
+			if link_type == "Report":
+				rt = frappe.db.get_value("Report", link_to, "report_type")
+				if rt in ("Query Report", "Script Report", "Custom Report"):
+					row["is_query_report"] = 1
 			ws.append("links", row)
 
 
@@ -1159,7 +1788,7 @@ def infer_workspace_spec(ws) -> dict[str, Any]:
 			kpi_trends.append(row)
 		if len(kpi_trends) >= 6:
 			break
-	shortcuts = _iter_shortcuts_from_workspace(ws)
+	shortcuts = _shortcut_seed_ops_before_reports(_iter_shortcuts_from_workspace(ws))
 	return {
 		"workspace": ws.name,
 		"module": module,
@@ -1185,7 +1814,7 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 	number_card_ids: list[str] = []
 	number_card_labels: list[str] = []
 	for label, dt, filt in spec.get("kpis", []):
-		if not _doctype_ready(dt):
+		if not _aggregatable_doctype(dt):
 			continue
 		nm = _ensure_number_card(label, dt, module, filt)
 		if nm:
@@ -1200,8 +1829,16 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 	for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
 		ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
 
+	shortcut_seed: list[Any] = list(spec.get("shortcuts") or [])
+	if desk:
+		shortcut_seed = []
+		for _card_title, rows in desk:
+			for lbl, ltype, lto, _ref_doc in rows:
+				shortcut_seed.append((lbl, ltype, lto))
+	shortcut_seed = _shortcut_seed_ops_before_reports(shortcut_seed)
+
 	shortcut_rows: list[dict[str, Any]] = []
-	for i, sc in enumerate(spec.get("shortcuts", [])):
+	for i, sc in enumerate(shortcut_seed):
 		if not sc or len(sc) < 3:
 			continue
 		lbl, ltype, lto = sc[0], sc[1], sc[2]
@@ -1212,6 +1849,7 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 					"type": "URL",
 					"url": lto,
 					"color": _COLORS[i % len(_COLORS)],
+					"icon": _workspace_shortcut_es_icon("URL", lto),
 				}
 			)
 			continue
@@ -1219,26 +1857,32 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 			continue
 		if ltype == "Report" and not frappe.db.exists("Report", lto):
 			continue
+		if ltype == "Page" and not frappe.db.exists("Page", lto):
+			continue
 		row: dict[str, Any] = {
 			"label": lbl,
 			"type": ltype,
 			"link_to": lto,
 			"color": _COLORS[i % len(_COLORS)],
+			"icon": _workspace_shortcut_es_icon(ltype, lto),
 		}
 		if ltype == "DocType":
 			row["doc_view"] = "List"
+		if ltype == "Report":
+			rt_ref = frappe.db.get_value("Report", lto, "ref_doctype")
+			if rt_ref:
+				row["report_ref_doctype"] = rt_ref
 		shortcut_rows.append(row)
 
 	ws.shortcuts = []
 	for row in shortcut_rows:
 		ws.append("shortcuts", row)
 
-	shortcut_labels = [r["label"] for r in shortcut_rows]
 	ws.content = _build_content(
 		spec,
 		chart_row_labels[:9],
 		number_card_labels[:9],
-		shortcut_labels[:14],
+		shortcut_rows[:72],
 	)
 
 	_merge_link_sections(ws, spec.get("extra_sections", []))
@@ -1252,6 +1896,9 @@ def sync_workspace_kpi_generic(ws_name: str) -> None:
 	if not ws.public or getattr(ws, "for_user", None):
 		return
 	spec = infer_workspace_spec(ws)
+	canonical = get_desk_sections_for_workspace(ws_name)
+	if canonical:
+		spec["desk_link_layout"] = canonical
 	prefix = _chart_prefix_for(ws)
 	_apply_kpi_to_workspace(ws, spec, prefix)
 	ws.save(ignore_permissions=True)

@@ -1,0 +1,184 @@
+/*
+Global desk card shadows for ErpGenEx.
+Keep existing color palette untouched; only depth and hover elevation are added.
+*/
+
+.desk-container .widget,
+.desk-container .widget.links-widget-box,
+.desk-container .widget.shortcut-widget-box,
+.desk-container .widget.number-widget-box,
+.desk-container .widget.dashboard-widget-box,
+.desk-container .report-summary,
+.desk-container .form-dashboard-section,
+.desk-container .form-dashboard-wrapper {
+	box-shadow: 0 3px 10px rgba(15, 23, 42, 0.12);
+	transition: box-shadow 0.2s ease;
+}
+
+.desk-container .widget:hover,
+.desk-container .widget.links-widget-box:hover,
+.desk-container .widget.shortcut-widget-box:hover,
+.desk-container .widget.number-widget-box:hover,
+.desk-container .widget.dashboard-widget-box:hover,
+.desk-container .report-summary:hover {
+	box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+}
+
+/* Leading icon on control-tower workspace shortcuts (workspace_shortcut_icons.js) */
+.desk-container .shortcut-widget-box .widget-head .widget-label .widget-title {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.desk-container .shortcut-widget-box .widget-head .widget-label .widget-title .omnexa-ws-sc-ic {
+	flex: none;
+}
+
+/* -------- Global form UX optimizer (non-destructive) -------- */
+:root {
+	--omnexa-space-1: 8px;
+	--omnexa-space-2: 12px;
+	--omnexa-space-3: 16px;
+	--omnexa-space-4: 24px;
+	--omnexa-radius: 8px;
+	--omnexa-border: 1px solid rgba(15, 23, 42, 0.08);
+	--omnexa-shadow-soft: 0 2px 10px rgba(15, 23, 42, 0.06);
+	--omnexa-focus: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .form-page {
+	padding-inline: var(--omnexa-space-2);
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .form-section {
+	background: var(--card-bg, #fff);
+	border: var(--omnexa-border);
+	border-radius: var(--omnexa-radius);
+	box-shadow: var(--omnexa-shadow-soft);
+	padding: var(--omnexa-space-2);
+	margin-bottom: var(--omnexa-space-3);
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .section-head {
+	font-size: 1.02rem;
+	font-weight: 700;
+	margin-bottom: var(--omnexa-space-2);
+	padding-bottom: var(--omnexa-space-1);
+	border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .section-body {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(220px, 1fr));
+	gap: var(--omnexa-space-2) var(--omnexa-space-3);
+	align-items: start;
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-dense .section-body {
+	grid-template-columns: repeat(3, minmax(180px, 1fr));
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-complex .section-body {
+	grid-template-columns: repeat(4, minmax(160px, 1fr));
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-single .section-body {
+	grid-template-columns: 1fr;
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Section Break"],
+.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Column Break"],
+.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="HTML"],
+.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Table"],
+.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Text Editor"],
+.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Code"] {
+	grid-column: 1 / -1;
+}
+
+/* Frappe puts fields inside .form-column > form; detail controls must span full section width */
+.layout-main-section .form-layout.omnexa-form-optimized .section-body > .form-column:has(
+		.frappe-control[data-fieldtype="Table"],
+		.frappe-control[data-fieldtype="Text Editor"],
+		.frappe-control[data-fieldtype="Code"],
+		.frappe-control[data-fieldtype="HTML"]
+	) {
+	grid-column: 1 / -1;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0;
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control .control-label {
+	margin-bottom: 4px;
+	font-weight: 600;
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control input,
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control select,
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control textarea,
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control .control-value,
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control .like-disabled-input {
+	border-radius: 6px;
+	min-height: 34px;
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control input:focus,
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control select:focus,
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control textarea:focus {
+	box-shadow: var(--omnexa-focus);
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control.omnexa-important-control .control-label {
+	color: #1e40af;
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .frappe-control.omnexa-required-control .control-label::after {
+	content: " *";
+	color: #dc2626;
+	font-weight: 700;
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .omnexa-align-end {
+	text-align: end;
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .omnexa-compact-input {
+	max-width: 220px;
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .form-section.omnexa-section-dense .section-head::after {
+	content: " (dense)";
+	font-size: 0.84rem;
+	font-weight: 500;
+	color: #64748b;
+}
+
+@media (max-width: 1399px) {
+	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-complex .section-body {
+		grid-template-columns: repeat(3, minmax(180px, 1fr));
+	}
+}
+
+@media (max-width: 1199px) {
+	.layout-main-section .form-layout.omnexa-form-optimized .section-body,
+	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-dense .section-body,
+	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-complex .section-body {
+		grid-template-columns: repeat(2, minmax(180px, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.layout-main-section .form-layout.omnexa-form-optimized .section-body,
+	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-dense .section-body,
+	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-complex .section-body {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	.layout-main-section .form-layout.omnexa-form-optimized .form-section {
+		border-color: rgba(148, 163, 184, 0.24);
+		box-shadow: 0 2px 14px rgba(2, 6, 23, 0.28);
+	}
+}

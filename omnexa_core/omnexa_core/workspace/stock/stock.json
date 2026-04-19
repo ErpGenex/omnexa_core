@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"omx-stock-h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Stock</b></span><br><span class=\\\"text-muted\\\">دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية</span>\",\"col\":12}},{\"id\":\"omx-stock-c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Master data\",\"col\":4}},{\"id\":\"omx-stock-c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Warehouse & inventory setup\",\"col\":4}},{\"id\":\"omx-stock-c3\",\"type\":\"card\",\"data\":{\"card_name\":\"Movements & reconciliation\",\"col\":4}},{\"id\":\"omx-stock-c4\",\"type\":\"card\",\"data\":{\"card_name\":\"Local inventory reports\",\"col\":4}}]",
+ "content": "[{\"id\": \"omx-stock-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Stock</b></span><br><span class=\\\"text-muted\\\">دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية</span>\", \"col\": 12}}, {\"id\": \"omx-stock-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"Master data\", \"col\": 4}}, {\"id\": \"omx-stock-c2\", \"type\": \"card\", \"data\": {\"card_name\": \"Warehouse & inventory setup\", \"col\": 4}}, {\"id\": \"omx-stock-c3\", \"type\": \"card\", \"data\": {\"card_name\": \"Movements & reconciliation\", \"col\": 4}}, {\"id\": \"omx-stock-c4\", \"type\": \"card\", \"data\": {\"card_name\": \"Local inventory reports\", \"col\": 4}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -11,26 +11,154 @@
  "is_hidden": 0,
  "label": "Stock",
  "links": [
-  {"hidden": 0, "is_query_report": 0, "label": "Master data", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Item", "link_count": 0, "link_to": "Item", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "UOM", "link_count": 0, "link_to": "UOM", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Warehouse & inventory setup (company, branches, locations)", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Company", "link_count": 0, "link_to": "Company", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Branch", "link_count": 0, "link_to": "Branch", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Warehouse", "link_count": 0, "link_to": "Warehouse", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Movements, reconciliation & batch / serial", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Stock Entry", "link_count": 0, "link_to": "Stock Entry", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Stock Reconciliation", "link_count": 0, "link_to": "Stock Reconciliation", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Local inventory reports (workspace only)", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Item Stock Balance", "link_count": 0, "link_to": "Item Stock Balance", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Item", "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Stock Movement", "link_count": 0, "link_to": "Stock Movement", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Stock Entry", "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Stock Voucher Register", "link_count": 0, "link_to": "Stock Voucher Register", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Stock Entry", "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Inventory Valuation Summary", "link_count": 0, "link_to": "Inventory Valuation Summary", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Item", "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Inventory Valuation (GL)", "link_count": 0, "link_to": "Inventory Valuation (GL)", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Item", "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Low Stock", "link_count": 0, "link_to": "Low Stock", "link_type": "Report", "onboard": 0, "report_ref_doctype": "Item", "type": "Link"}
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Master data",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item",
+   "link_count": 0,
+   "link_to": "Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "UOM",
+   "link_count": 0,
+   "link_to": "UOM",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warehouse & inventory setup (locations)",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warehouse",
+   "link_count": 0,
+   "link_to": "Warehouse",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Movements, reconciliation & batch / serial",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Entry",
+   "link_count": 0,
+   "link_to": "Stock Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Reconciliation",
+   "link_count": 0,
+   "link_to": "Stock Reconciliation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Local inventory reports (workspace only)",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Stock Balance",
+   "link_count": 0,
+   "link_to": "Item Stock Balance",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Item",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Movement",
+   "link_count": 0,
+   "link_to": "Stock Movement",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Stock Entry",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Voucher Register",
+   "link_count": 0,
+   "link_to": "Stock Voucher Register",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Stock Entry",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Inventory Valuation Summary",
+   "link_count": 0,
+   "link_to": "Inventory Valuation Summary",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Item",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Inventory Valuation (GL)",
+   "link_count": 0,
+   "link_to": "Inventory Valuation (GL)",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Item",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Low Stock",
+   "link_count": 0,
+   "link_to": "Low Stock",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Item",
+   "type": "Link"
+  }
  ],
  "modified": "2026-04-17 22:00:00",
  "modified_by": "Administrator",
