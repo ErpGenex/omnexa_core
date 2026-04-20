@@ -568,6 +568,24 @@ def assert_app_licensed_or_raise(app_slug: str) -> None:
 	enforce = frappe.conf.get("omnexa_license_enforce") in (1, True, "1", "true", "True")
 	if not enforce:
 		return
+	# Keep rescue paths reachable even when one app is locked.
+	req = getattr(frappe.local, "request", None)
+	if req:
+		path = str(req.path or "")
+		if any(path.startswith(p) for p in ("/assets/", "/files/", "/.well-known")):
+			return
+		if "/app/erpgenex-marketplace" in path:
+			return
+		if path.startswith("/api/method/"):
+			method = path[len("/api/method/") :].split("?", 1)[0].strip("/")
+			if method in ("login", "logout"):
+				return
+			if method.startswith("frappe."):
+				return
+			if method.startswith("omnexa_core.omnexa_core.marketplace."):
+				return
+			if method.startswith("omnexa_core.desk_license_boot."):
+				return
 
 	r = verify_app_license(app_slug)
 	if is_license_status_ok(r.status):
