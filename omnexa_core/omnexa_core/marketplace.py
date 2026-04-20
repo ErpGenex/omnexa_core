@@ -3,6 +3,7 @@ from __future__ import annotations
 import glob
 import hashlib
 import hmac
+import importlib
 import os
 import subprocess
 import time
@@ -76,6 +77,58 @@ def _title_from_slug(app_slug: str) -> str:
 	return " ".join(p.capitalize() for p in parts)
 
 
+def _app_display_meta(app_slug: str) -> tuple[str, str]:
+	"""
+	Human title and short description for the marketplace.
+
+	Priority: ``site_config`` overrides → ``{app}.hooks`` (``app_title``, ``app_description``) → derived title / empty description.
+
+	Optional ``site_config`` dicts:
+
+	- ``omnexa_marketplace_app_titles``: ``{ "omnexa_accounting": "Custom title" }``
+	- ``omnexa_marketplace_app_descriptions``: ``{ "omnexa_accounting": "..." }``
+	"""
+	title_ov = frappe.conf.get("omnexa_marketplace_app_titles") or {}
+	desc_ov = frappe.conf.get("omnexa_marketplace_app_descriptions") or {}
+
+	title_from_conf = None
+	if isinstance(title_ov, dict):
+		v = title_ov.get(app_slug)
+		if isinstance(v, str) and v.strip():
+			title_from_conf = v.strip()
+
+	desc_from_conf = None
+	if isinstance(desc_ov, dict):
+		v = desc_ov.get(app_slug)
+		if isinstance(v, str) and v.strip():
+			desc_from_conf = v.strip()
+
+	app_title = None
+	app_description = None
+	try:
+		mod = importlib.import_module(f"{app_slug}.hooks")
+		app_title = getattr(mod, "app_title", None)
+		app_description = getattr(mod, "app_description", None)
+	except Exception:
+		pass
+
+	title = title_from_conf
+	if not title:
+		if isinstance(app_title, str) and app_title.strip():
+			title = app_title.strip()
+		else:
+			title = _title_from_slug(app_slug)
+
+	if desc_from_conf is not None:
+		description = desc_from_conf
+	elif isinstance(app_description, str) and app_description.strip():
+		description = app_description.strip()
+	else:
+		description = ""
+
+	return title, description
+
+
 def _guess_icon_path(app_slug: str) -> str:
 	"""Resolve icon from app public assets; fallback to generic icon."""
 	try:
@@ -107,10 +160,12 @@ def _guess_icon_path(app_slug: str) -> str:
 def _catalog_seed() -> list[dict]:
 	rows = []
 	for app_slug in _marketplace_catalog_slugs():
+		display_title, short_description = _app_display_meta(app_slug)
 		rows.append(
 			{
 				"app_slug": app_slug,
-				"title": _title_from_slug(app_slug),
+				"title": display_title,
+				"short_description": short_description,
 				"price_type": "free" if is_free_app(app_slug) else "paid",
 				"icon_url": _guess_icon_path(app_slug),
 				"activity": _activity_for_app(app_slug),

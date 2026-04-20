@@ -10,7 +10,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			<div class="mb-3 text-muted" data-section="meta"></div>
 			<div class="row g-2 mb-2" data-section="filters">
 				<div class="col-md-3">
-					<input type="text" class="form-control form-control-sm" data-filter="search" placeholder="${__("Search by name / version")}">
+					<input type="text" class="form-control form-control-sm" data-filter="search" placeholder="${__("Search by title, description, slug, or version")}">
 				</div>
 				<div class="col-md-2">
 					<select class="form-select form-select-sm" data-filter="activity">
@@ -51,6 +51,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 						<tr>
 							<th>${__("Icon")}</th>
 							<th>${__("App")}</th>
+							<th>${__("Description")}</th>
 							<th>${__("Activity")}</th>
 							<th>${__("Version")}</th>
 							<th>${__("Updated")}</th>
@@ -61,7 +62,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 						</tr>
 					</thead>
 					<tbody data-section="rows">
-						<tr><td colspan="9" class="text-muted">${__("Loading...")}</td></tr>
+						<tr><td colspan="10" class="text-muted">${__("Loading...")}</td></tr>
 					</tbody>
 				</table>
 			</div>
@@ -86,6 +87,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const status = frappe.utils.escape_html(item.license_status || "");
 		const title = frappe.utils.escape_html(item.title || item.app_slug);
 		const appSlug = frappe.utils.escape_html(item.app_slug);
+		const shortDesc = frappe.utils.escape_html(item.short_description || "");
 		const activity = frappe.utils.escape_html(item.activity || "General");
 		const version = frappe.utils.escape_html(item.current_version || "N/A");
 		const updated = frappe.utils.escape_html(formatDate(item.updated_at));
@@ -126,7 +128,8 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		return `
 			<tr data-app="${appSlug}">
 				<td><img src="${iconUrl}" style="width:24px;height:24px;object-fit:contain;" alt="${title}"/></td>
-				<td><strong>${title}</strong><div class="text-muted small">${appSlug}</div></td>
+				<td><strong>${title}</strong><div class="text-muted small font-monospace">${appSlug}</div></td>
+				<td class="small text-muted" style="max-width:22rem;">${shortDesc || "—"}</td>
 				<td>${activity}</td>
 				<td>${version}</td>
 				<td>${updated}</td>
@@ -215,7 +218,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const to = String($container.find('[data-filter="updated_to"]').val() || "").trim();
 
 		const filtered = (allItems || []).filter((item) => {
-			const haystack = `${item.title || ""} ${item.app_slug || ""} ${item.current_version || ""}`.toLowerCase();
+			const haystack = `${item.title || ""} ${item.app_slug || ""} ${item.short_description || ""} ${item.current_version || ""}`.toLowerCase();
 			if (q && !haystack.includes(q)) return false;
 			if (activity && String(item.activity || "General").trim() !== activity) return false;
 			if (version && !String(item.current_version || "").toLowerCase().includes(version)) return false;
@@ -228,7 +231,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const rows = sortFilteredRows(filtered);
 
 		if (!rows.length) {
-			$container.find('[data-section="rows"]').html(`<tr><td colspan="9" class="text-muted">${__("No apps match current filters.")}</td></tr>`);
+			$container.find('[data-section="rows"]').html(`<tr><td colspan="10" class="text-muted">${__("No apps match current filters.")}</td></tr>`);
 			return;
 		}
 		$container.find('[data-section="rows"]').html(rows.map(renderRow).join(""));
@@ -250,7 +253,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				`${frappe.utils.escape_html(payload.support_email || "info@erpgenex.com")}</div>`
 		);
 		if (!items.length) {
-			$container.find('[data-section="rows"]').html(`<tr><td colspan="9" class="text-muted">${__("No apps found.")}</td></tr>`);
+			$container.find('[data-section="rows"]').html(`<tr><td colspan="10" class="text-muted">${__("No apps found.")}</td></tr>`);
 			return;
 		}
 		applyFiltersAndRender();
