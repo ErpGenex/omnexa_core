@@ -578,6 +578,13 @@ def assert_app_licensed_or_raise(app_slug: str) -> None:
 			return
 		if path.startswith("/api/method/"):
 			method = path[len("/api/method/") :].split("?", 1)[0].strip("/")
+			# When app-level gates call this helper, do not block requests that target
+			# another app namespace (e.g. omnexa_agriculture gate should not block
+			# /api/method/omnexa_intelligence_core.* calls).
+			if method.startswith("omnexa_"):
+				head = method.split(".", 1)[0]
+				if head and head != app_slug:
+					return
 			if method in ("login", "logout"):
 				return
 			if method.startswith("frappe."):
