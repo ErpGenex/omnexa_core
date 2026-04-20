@@ -30,3 +30,7 @@ def boot_session(bootinfo):
 	for key in ("success_action", "notes"):
 		if bootinfo.get(key):
 			bootinfo[key] = _rebrand(bootinfo[key])
+
+	from omnexa_core.desk_license_boot import inject_omnexa_license_boot
+
+	inject_omnexa_license_boot(bootinfo)

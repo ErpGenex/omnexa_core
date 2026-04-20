@@ -32,6 +32,17 @@ import frappe
 
 TRIAL_DAYS = 7
 DEVELOPER_BYPASS_CODE = "26101975sayed"
+
+# Statuses that allow normal app usage (Desk + API).
+LICENSE_OK_STATUSES = frozenset(
+	{
+		"licensed",
+		"licensed_free",
+		"licensed_dev_override",
+		"trial",
+	}
+)
+
 FREE_APPS = frozenset(
 	{
 		"omnexa_core",
@@ -62,6 +73,25 @@ def is_free_app(app_slug: str) -> bool:
 		free_apps.update([x.strip() for x in extra.split(",") if x.strip()])
 
 	return app_slug.strip() in free_apps
+
+
+def is_license_status_ok(status: str) -> bool:
+	return bool(status) and status in LICENSE_OK_STATUSES
+
+
+def get_omnexa_license_snapshot() -> dict[str, dict[str, Any]]:
+	"""Per installed omnexa_* app: current verify_app_license status (for Desk boot / refresh)."""
+	out: dict[str, dict[str, Any]] = {}
+	for app in frappe.get_installed_apps() or []:
+		if not isinstance(app, str) or not app.startswith("omnexa_"):
+			continue
+		r = verify_app_license(app)
+		out[app] = {
+			"status": r.status,
+			"ok": is_license_status_ok(r.status),
+			"has_stored_license_key": bool(get_stored_license_key(app)),
+		}
+	return out
 
 
 def _trial_key(app_slug: str) -> str:

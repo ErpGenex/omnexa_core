@@ -421,8 +421,17 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 							return;
 						}
 						const msg = (resp.message && resp.message.status) || "";
-						frappe.show_alert({ message: __("Updated: {0}", [msg]), indicator: "orange" });
-						loadCatalog();
+						frappe.show_alert({
+							message: __("License data updated: {0}. Reloading…", [msg]),
+							indicator: "orange",
+						});
+						if (typeof frappe.refresh_omnexa_license_boot === "function") {
+							frappe.refresh_omnexa_license_boot().always(function () {
+								window.location.reload();
+							});
+						} else {
+							window.location.reload();
+						}
 					},
 				});
 			},

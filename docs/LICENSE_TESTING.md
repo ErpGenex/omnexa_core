@@ -74,7 +74,16 @@
 
 ---
 
-## 5. إلغاء الترخيص من الماركت بليس
+## 5. سلوك Desk بعد حذف المفتاح
+
+1. **`frappe.boot.omnexa_license_by_app`** يُحدَّث عند كل تسجيل دخول ويُعاد تحميله بعد **Revoke** (إعادة تحميل الصفحة).
+2. **`desk_license_guard.js`** يعترض مسارات **Workspace** و**List** و**Form**: إذا كان تطبيق `omnexa_*` غير مرخّص (`ok: false`)، يُعرض تنبيه ويُعاد التوجيه إلى **Welcome Workspace**، مع رابط للماركت بليس.
+3. **استثناء:** مسارات تحتوي **`erpgenex-marketplace`** تبقى متاحة لتفعيل مفتاح جديد.
+4. **`omnexa_license_enforce`**: عند تفعيله، يمنع **`license_gate`** استدعاءات API التي تبدأ بـ **`omnexa_*`** (مثل `omnexa_tourism....`) بينما تبقى استدعاءات **`frappe.*`** للعمل؛ لذلك يُكمّل الحارس العميل سلوك «عدم التطبيق» من القائمة.
+
+---
+
+## 6. إلغاء الترخيص من الماركت بليس
 
 لمستخدمي **System Manager**: زر **Revoke / Reset trial** يستدعي `revoke_app_license`:
 
@@ -85,7 +94,10 @@
 
 ---
 
-## 6. مراجع
+## 7. مراجع
 
 - `omnexa_core/omnexa_core/omnexa_license.py`
+- `omnexa_core/omnexa_core/license_gate.py` (فرض API على مسارات `omnexa_*` عند التفعيل)
+- `omnexa_core/desk_license_boot.py` (حقن `omnexa_license_by_app` في الـ boot)
+- `omnexa_core/public/js/desk_license_guard.js`
 - `omnexa_core/omnexa_core/marketplace.py` (`get_marketplace_catalog`, `revoke_app_license`, `activate_app_license`)

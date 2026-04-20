@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 import frappe
 
-from omnexa_core.omnexa_core.omnexa_license import verify_app_license
+from omnexa_core.omnexa_core.omnexa_license import is_license_status_ok, verify_app_license
 
 
 NOTICE_INTERVAL_SECONDS = 30 * 60
@@ -80,11 +80,51 @@ def _maybe_notify_expiry(app: str, result) -> None:
 	)
 
 
+def _license_enforcement_enabled() -> bool:
+	return frappe.conf.get("omnexa_license_enforce") in (1, True, "1", "true", "True")
+
+
+def _exempt_api_method(method: str) -> bool:
+	"""Allow core Frappe, auth, file, and Omnexa marketplace / license refresh."""
+	if not method:
+		return True
+	m = method.split("?", 1)[0].strip("/")
+	low = m.lower()
+	if low in ("login", "logout"):
+		return True
+	if m.startswith("frappe."):
+		return True
+	if m.startswith("file."):
+		return True
+	if m.startswith("omnexa_core.omnexa_core.marketplace."):
+		return True
+	# Boot refresh (module path: omnexa_core.desk_license_boot)
+	if m.startswith("omnexa_core.desk_license_boot."):
+		return True
+	return False
+
+
+def _app_from_api_method(method: str) -> str | None:
+	m = method.split("?", 1)[0].strip("/")
+	if not m or "." not in m:
+		return None
+	head = m.split(".", 1)[0]
+	if head.startswith("omnexa_"):
+		return head
+	return None
+
+
 def before_request():
-	"""Enforce licenses globally for all installed non-free Omnexa apps."""
-	if frappe.conf.get("omnexa_license_enforce") not in (1, True, "1", "true", "True"):
+	"""
+	When ``omnexa_license_enforce`` is set, block API calls whose method namespace is ``omnexa_*``
+	if that app's license is not OK. Core ``frappe.*`` calls stay allowed (Desk shell + forms);
+	navigation for unlicensed apps is handled client-side via ``desk_license_guard.js``.
+	"""
+	if not _license_enforcement_enabled():
 		return
 	if not getattr(frappe.local, "request", None):
+		return
+	if frappe.session.user == "Guest":
 		return
 
 	path = frappe.local.request.path or ""
@@ -92,16 +132,20 @@ def before_request():
 		if path.startswith(prefix):
 			return
 
-	for app in frappe.get_installed_apps() or []:
-		if not app.startswith("omnexa_"):
-			continue
+	if path.startswith("/api/method/"):
+		method = path[len("/api/method/") :].split("?", 1)[0].strip("/")
+		if _exempt_api_method(method):
+			return
+		app = _app_from_api_method(method)
+		if not app:
+			return
 		result = verify_app_license(app)
-		if result.status in ("licensed", "licensed_free", "licensed_dev_override", "trial"):
+		if is_license_status_ok(result.status):
 			_maybe_notify_expiry(app, result)
-			continue
+			return
 		frappe.throw(
-			frappe._("App {0} is not licensed ({1}). Please renew with a valid license key.").format(
-				app, result.status
-			),
-			title=frappe._("License"),
+			frappe._(
+				"Application {0} is not licensed ({1}). Open ErpGenEx Marketplace to add a license or developer key."
+			).format(app, result.status),
+			title=frappe._("License required"),
 		)
