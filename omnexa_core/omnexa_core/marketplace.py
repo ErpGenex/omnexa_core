@@ -22,6 +22,7 @@ from omnexa_core.omnexa_core.omnexa_license import (
 	is_free_app,
 	record_online_license_check,
 	set_license_key,
+	set_manual_revoke,
 	verify_app_license,
 )
 
@@ -496,6 +497,7 @@ def revoke_app_license(app_slug: str, remove_key: int = 1, clear_trial: int = 0)
 
 	if remove_key:
 		clear_license_key(app_slug)
+		set_manual_revoke(app_slug, True)
 	if clear_trial:
 		clear_trial_for_app(app_slug)
 	frappe.clear_cache()
@@ -531,6 +533,7 @@ def activate_app_license(app_slug: str, activation_key: str):
 			title=frappe._("License"),
 		)
 	# Online activation moment counts as a fresh online validation.
+	set_manual_revoke(app_slug, False)
 	record_online_license_check(app_slug)
 	install_result = {"installed": False, "message": "auto_install_disabled"}
 	if _auto_install_enabled():
@@ -670,6 +673,7 @@ def auto_activate_from_platform(app_slug: str, activation_key: str, timestamp: s
 			title=frappe._("License"),
 		)
 	record_online_license_check(app_slug)
+	set_manual_revoke(app_slug, False)
 
 	install_result = {"installed": False, "message": "auto_install_disabled"}
 	if _auto_install_enabled():

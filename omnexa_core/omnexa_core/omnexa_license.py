@@ -120,6 +120,10 @@ def _tamper_detected_key(app_slug: str) -> str:
 	return f"omnexa_license_time_tamper_detected_ts_{frappe.scrub(app_slug)}"
 
 
+def _manual_revoke_key(app_slug: str) -> str:
+	return f"omnexa_license_manual_revoked_{frappe.scrub(app_slug)}"
+
+
 def _utc_now_ts() -> int:
 	return int(datetime.utcnow().timestamp())
 
@@ -134,6 +138,18 @@ def record_online_license_check(app_slug: str, now_ts: int | None = None) -> Non
 	frappe.db.set_default(_offline_grace_started_key(app_slug), None)
 	frappe.db.set_default(_tamper_detected_key(app_slug), None)
 	frappe.db.commit()
+
+
+def set_manual_revoke(app_slug: str, revoked: bool) -> None:
+	"""Manual hard lock switch set by Marketplace revoke action."""
+	if not app_slug or not isinstance(app_slug, str) or not app_slug.startswith("omnexa_"):
+		return
+	frappe.db.set_default(_manual_revoke_key(app_slug), "1" if revoked else None)
+	frappe.db.commit()
+
+
+def is_manual_revoke(app_slug: str) -> bool:
+	return frappe.db.get_default(_manual_revoke_key(app_slug)) in ("1", 1, True, "true", "True")
 
 
 def _get_int_default(key: str) -> int | None:
@@ -519,6 +535,8 @@ def verify_app_license(app_slug: str) -> LicenseCheckResult:
 		return LicenseCheckResult(status="licensed_dev_override", reason="developer_bypass")
 	if is_free_app(app_slug):
 		return LicenseCheckResult(status="licensed_free", reason="free_app")
+	if is_manual_revoke(app_slug):
+		return LicenseCheckResult(status="revoked_manual", reason="manual_revoke")
 	if app_slug.startswith("omnexa_") and not _is_erpgenex_platform():
 		return LicenseCheckResult(
 			status="invalid_platform",
@@ -552,7 +570,7 @@ def assert_app_licensed_or_raise(app_slug: str) -> None:
 		return
 
 	r = verify_app_license(app_slug)
-	if r.status in ("licensed", "licensed_free", "licensed_dev_override", "trial"):
+	if is_license_status_ok(r.status):
 		return
 
 	frappe.throw(
