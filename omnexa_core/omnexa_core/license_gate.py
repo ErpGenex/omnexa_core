@@ -145,10 +145,16 @@ def _doctype_from_resource_path(path: str) -> str | None:
 
 def _doctype_from_frappe_method(method: str) -> str | None:
 	"""
-	Extract doctype for common frappe.* write methods.
-	Supports:
+	Extract DocType for frappe.* calls so paid apps are gated on reads as well as writes.
+
+	Writes (doc JSON or explicit doctype):
 	- frappe.client.insert/save/submit/cancel/delete
-	- frappe.desk.form.save.savedocs (doc JSON payload)
+	- frappe.desk.form.save.savedocs
+
+	Reads / queries (doctype in form_dict — list view, form load, reportview, search, calendar, etc.):
+	- Any ``frappe.desk.*`` call that passes ``doctype`` (Desk data APIs).
+	- Most ``frappe.client.*`` calls that pass ``doctype`` (get/get_list/...); excludes
+	  asset/bootstrap helpers without a DocType.
 	"""
 	fd = getattr(frappe.local, "form_dict", {}) or {}
 	if method in (
@@ -180,7 +186,44 @@ def _doctype_from_frappe_method(method: str) -> str | None:
 				return str(doc.get("doctype"))
 		except Exception:
 			return None
+		return None
+
+	# --- Reads / list / form / search: standard Desk + Client data APIs carry ``doctype`` ---
+	if method.startswith("frappe.desk.") and fd.get("doctype"):
+		return str(fd.get("doctype")).strip()
+
+	if method.startswith("frappe.client."):
+		if method in ("frappe.client.get_js", "frappe.client.get_time_zone"):
+			return None
+		if fd.get("doctype"):
+			return str(fd.get("doctype")).strip()
+
 	return None
+
+
+def _enforce_for_frappe_multi_doc_methods(method: str) -> bool:
+	"""
+	Return True if handled (enforced). Used for JSON list payloads without top-level doctype.
+	"""
+	if method not in ("frappe.client.bulk_update", "frappe.client.insert_many"):
+		return False
+	fd = getattr(frappe.local, "form_dict", {}) or {}
+	raw = fd.get("docs")
+	if not raw:
+		return True
+	try:
+		docs = json.loads(str(raw))
+	except Exception:
+		return True
+	if not isinstance(docs, list):
+		return True
+	for doc in docs:
+		if not isinstance(doc, dict) or not doc.get("doctype"):
+			continue
+		app_for_dt = _app_from_doctype(str(doc.get("doctype")))
+		if app_for_dt:
+			_enforce_for_app(app_for_dt)
+	return True
 
 
 def _enforce_for_app(app: str) -> None:
@@ -199,8 +242,13 @@ def _enforce_for_app(app: str) -> None:
 def before_request():
 	"""
 	When ``omnexa_license_enforce`` is set, block API calls whose method namespace is ``omnexa_*``
-	if that app's license is not OK. Core ``frappe.*`` calls stay allowed (Desk shell + forms);
-	navigation for unlicensed apps is handled client-side via ``desk_license_guard.js``.
+	if that app's license is not OK.
+
+	Also blocks common ``frappe.desk.*`` / ``frappe.client.*`` data calls when the target DocType
+	belongs to an unlicensed paid Omnexa app (list/form/reportview reads, not just writes).
+
+	Desk HTML routes under ``/app/`` still load; unlicensed-module navigation is reinforced by
+	``desk_license_guard.js``.
 	"""
 	if not _license_enforcement_enabled():
 		return
@@ -221,7 +269,9 @@ def before_request():
 			if app:
 				_enforce_for_app(app)
 				return
-		# For generic frappe.* write endpoints, enforce by doctype owner app.
+		if _enforce_for_frappe_multi_doc_methods(method):
+			return
+		# frappe.* list/form/reportview/etc.: resolve DocType -> owning app.
 		dt = _doctype_from_frappe_method(method)
 		app_for_dt = _app_from_doctype(dt)
 		if app_for_dt:
