@@ -46,7 +46,21 @@
 		const important = new Set();
 		(frm.meta.fields || []).forEach((df) => {
 			if (!df || !df.fieldname) return;
-			if (df.reqd || df.bold || ["status", "company", "customer", "supplier", "posting_date", "transaction_date"].includes(df.fieldname)) {
+			if (
+				df.reqd ||
+				df.bold ||
+				[
+					"status",
+					"company",
+					"customer",
+					"supplier",
+					"posting_date",
+					"transaction_date",
+					"bill_date",
+					"delivery_date",
+					"due_date",
+				].includes(df.fieldname)
+			) {
 				important.add(df.fieldname);
 			}
 		});

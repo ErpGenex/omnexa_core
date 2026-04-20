@@ -37,18 +37,27 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 
 /* -------- Global form UX optimizer (non-destructive) -------- */
 :root {
+	/* Spacing scale (4 / 8 / 16 / 24 / 32) — ErpGenex Design System */
+	--omnexa-micro: 4px;
+	--omnexa-space-0: 8px;
 	--omnexa-space-1: 8px;
 	--omnexa-space-2: 12px;
 	--omnexa-space-3: 16px;
 	--omnexa-space-4: 24px;
+	--omnexa-section-gap: 24px;
+	--omnexa-page-gap: 32px;
 	--omnexa-radius: 8px;
+	--omnexa-radius-input: 6px;
 	--omnexa-border: 1px solid rgba(15, 23, 42, 0.08);
 	--omnexa-shadow-soft: 0 2px 10px rgba(15, 23, 42, 0.06);
 	--omnexa-focus: 0 0 0 3px rgba(37, 99, 235, 0.18);
+	--omnexa-zebra: rgba(241, 245, 249, 0.72);
+	--omnexa-zebra-list: rgba(241, 245, 249, 0.45);
 }
 
 .layout-main-section .form-layout.omnexa-form-optimized .form-page {
 	padding-inline: var(--omnexa-space-2);
+	padding-bottom: var(--omnexa-page-gap);
 }
 
 .layout-main-section .form-layout.omnexa-form-optimized .form-section {
@@ -57,14 +66,14 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	border-radius: var(--omnexa-radius);
 	box-shadow: var(--omnexa-shadow-soft);
 	padding: var(--omnexa-space-2);
-	margin-bottom: var(--omnexa-space-3);
+	margin-bottom: var(--omnexa-section-gap);
 }
 
 .layout-main-section .form-layout.omnexa-form-optimized .section-head {
-	font-size: 1.02rem;
+	font-size: 1.0625rem;
 	font-weight: 700;
 	margin-bottom: var(--omnexa-space-2);
-	padding-bottom: var(--omnexa-space-1);
+	padding-bottom: var(--omnexa-micro);
 	border-bottom: 1px solid rgba(15, 23, 42, 0.07);
 }
 
@@ -79,8 +88,9 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	grid-template-columns: repeat(3, minmax(180px, 1fr));
 }
 
+/* Desktop: max 3 field columns per row (enterprise grid rule) */
 .layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-complex .section-body {
-	grid-template-columns: repeat(4, minmax(160px, 1fr));
+	grid-template-columns: repeat(3, minmax(180px, 1fr));
 }
 
 .layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-single .section-body {
@@ -110,8 +120,9 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 }
 
 .layout-main-section .form-layout.omnexa-form-optimized .frappe-control .control-label {
-	margin-bottom: 4px;
+	margin-bottom: var(--omnexa-micro);
 	font-weight: 600;
+	font-size: 0.8125rem;
 }
 
 .layout-main-section .form-layout.omnexa-form-optimized .frappe-control input,
@@ -119,8 +130,9 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 .layout-main-section .form-layout.omnexa-form-optimized .frappe-control textarea,
 .layout-main-section .form-layout.omnexa-form-optimized .frappe-control .control-value,
 .layout-main-section .form-layout.omnexa-form-optimized .frappe-control .like-disabled-input {
-	border-radius: 6px;
+	border-radius: var(--omnexa-radius-input);
 	min-height: 34px;
+	font-size: 0.875rem;
 }
 
 .layout-main-section .form-layout.omnexa-form-optimized .frappe-control input:focus,
@@ -147,19 +159,6 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	max-width: 220px;
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .form-section.omnexa-section-dense .section-head::after {
-	content: " (dense)";
-	font-size: 0.84rem;
-	font-weight: 500;
-	color: #64748b;
-}
-
-@media (max-width: 1399px) {
-	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-complex .section-body {
-		grid-template-columns: repeat(3, minmax(180px, 1fr));
-	}
-}
-
 @media (max-width: 1199px) {
 	.layout-main-section .form-layout.omnexa-form-optimized .section-body,
 	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-dense .section-body,
@@ -180,5 +179,37 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	.layout-main-section .form-layout.omnexa-form-optimized .form-section {
 		border-color: rgba(148, 163, 184, 0.24);
 		box-shadow: 0 2px 14px rgba(2, 6, 23, 0.28);
+	}
+}
+
+/* -------- Document title + status (page head inside form wrapper) -------- */
+.omnexa-form-optimized .page-head .title-area .title-text {
+	font-size: clamp(1.125rem, 0.6vw + 1rem, 1.5rem);
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+/* -------- Child tables: sticky heading + zebra (items grid) -------- */
+.layout-main-section .form-layout.omnexa-form-optimized .form-grid .grid-heading-row {
+	position: sticky;
+	top: 0;
+	z-index: 4;
+	background-color: var(--subtle-fg, var(--fg-color, #f4f5f6));
+	box-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
+}
+
+.layout-main-section .form-layout.omnexa-form-optimized .form-grid .grid-body > .grid-row:nth-child(even) {
+	background-color: var(--omnexa-zebra);
+}
+
+/* -------- List views: subtle row banding -------- */
+.frappe-list .result .list-row-container:nth-child(even) .list-row:not(.list-row-head) {
+	background-color: var(--omnexa-zebra-list);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--omnexa-zebra: rgba(30, 41, 59, 0.45);
+		--omnexa-zebra-list: rgba(30, 41, 59, 0.35);
 	}
 }
