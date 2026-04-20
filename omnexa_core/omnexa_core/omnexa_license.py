@@ -36,8 +36,10 @@ FREE_APPS = frozenset(
 	{
 		"omnexa_core",
 		"omnexa_accounting",
+		"omnexa_customer_core",
 		"omnexa_einvoice",
 		"omnexa_experience",
+		"omnexa_fixed_assets",
 		"omnexa_hr",
 		"omnexa_intelligence_core",
 		"omnexa_projects_pm",
