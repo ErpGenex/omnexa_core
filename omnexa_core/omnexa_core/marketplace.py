@@ -721,6 +721,8 @@ def get_uninstall_plan(app_slug: str):
 	can_uninstall = bool(is_installed and not is_protected and not dependents)
 	warning = frappe._(
 		"This removes the app from this site and deletes its DocTypes and module data. "
+		"The marketplace catalog is unchanged: the app row stays visible as long as the app exists on the bench; "
+		"only the “installed on this site” state is cleared. "
 		"A database backup runs first (unless disabled in site config). "
 		"The app folder remains under bench; use `bench uninstall-app` on the server to remove code."
 	)
