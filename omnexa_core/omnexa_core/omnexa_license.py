@@ -586,6 +586,11 @@ def assert_app_licensed_or_raise(app_slug: str) -> None:
 		path = str(req.path or "")
 		if any(path.startswith(p) for p in ("/assets/", "/files/", "/.well-known")):
 			return
+		# Allow Desk shell/app routes to load; runtime blocking is enforced by:
+		# - omnexa_core.omnexa_core.license_gate (API/resource/doctype paths)
+		# - desk_license_guard.js (navigation guard)
+		if path.startswith("/app/"):
+			return
 		if "/app/erpgenex-marketplace" in path:
 			return
 		if path.startswith("/api/method/"):
