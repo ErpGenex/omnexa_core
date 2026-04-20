@@ -430,6 +430,36 @@ def _can_install_on_this_site(app_slug: str) -> bool:
 	return app_slug in all_apps
 
 
+def _uninstall_protected_apps() -> frozenset[str]:
+	"""Apps that must never be removed from the Desk marketplace (site-breaking)."""
+	out = {"frappe", "omnexa_core"}
+	raw = frappe.conf.get("omnexa_marketplace_uninstall_protect")
+	if isinstance(raw, (list, tuple, set)):
+		out.update(str(x).strip() for x in raw if isinstance(x, str) and str(x).strip())
+	elif isinstance(raw, str) and raw.strip():
+		out.update(s.strip() for s in raw.split(",") if s.strip())
+	return frozenset(out)
+
+
+def _installed_apps_that_require(app_slug: str) -> list[str]:
+	"""
+	Mirror ``frappe.installer.remove_app`` dependency rule: another installed app
+	lists this app in ``required_apps`` → uninstall that app first.
+	"""
+	blockers: list[str] = []
+	for other in frappe.get_installed_apps() or []:
+		if other == app_slug:
+			continue
+		try:
+			app_hooks = frappe.get_hooks(app_name=other)
+		except Exception:
+			continue
+		required = app_hooks.get("required_apps") or []
+		if any(isinstance(ra, str) and app_slug in ra for ra in required):
+			blockers.append(other)
+	return sorted(set(blockers))
+
+
 def _install_app_if_needed(app_slug: str, repo_url: str, require_confirmation: bool = True) -> dict:
 	"""Install app on current site when available and not yet installed."""
 	if require_confirmation:
@@ -677,6 +707,99 @@ def install_app_now(app_slug: str, confirm_install: int = 0):
 	repo_url = _approved_repo_for_app(app_slug)
 	confirmed = _is_truthy(confirm_install)
 	return _install_app_if_needed(app_slug, repo_url=repo_url, require_confirmation=not confirmed)
+
+
+@frappe.whitelist()
+def get_uninstall_plan(app_slug: str):
+	"""Metadata for uninstall (System Manager)."""
+	frappe.only_for("System Manager")
+	_assert_marketplace_app_slug(app_slug)
+	protected = _uninstall_protected_apps()
+	is_installed = app_slug in (frappe.get_installed_apps() or [])
+	is_protected = app_slug in protected
+	dependents = _installed_apps_that_require(app_slug) if is_installed else []
+	can_uninstall = bool(is_installed and not is_protected and not dependents)
+	warning = frappe._(
+		"This removes the app from this site and deletes its DocTypes and module data. "
+		"A database backup runs first (unless disabled in site config). "
+		"The app folder remains under bench; use `bench uninstall-app` on the server to remove code."
+	)
+	return {
+		"app_slug": app_slug,
+		"is_installed": is_installed,
+		"is_protected": is_protected,
+		"dependents": dependents,
+		"can_uninstall": can_uninstall,
+		"warning": warning,
+	}
+
+
+@frappe.whitelist()
+def uninstall_app_now(app_slug: str, confirm_uninstall: int = 0):
+	"""
+	Remove app from the current site (same core behavior as ``bench uninstall-app``).
+
+	- System Manager only.
+	- Never removes ``frappe`` or ``omnexa_core`` (or extra slugs in ``omnexa_marketplace_uninstall_protect``).
+	- Blocked while another installed app lists this app in ``hooks.required_apps``.
+	"""
+	frappe.only_for("System Manager")
+	_assert_marketplace_app_slug(app_slug)
+	if not _is_truthy(confirm_uninstall):
+		return {"uninstalled": False, "message": "confirmation_required"}
+
+	protected = _uninstall_protected_apps()
+	if app_slug in protected:
+		frappe.throw(
+			frappe._("This app cannot be uninstalled from the marketplace (platform / protected)."),
+			title=frappe._("Uninstall blocked"),
+		)
+
+	installed = list(frappe.get_installed_apps() or [])
+	if app_slug not in installed:
+		return {"uninstalled": False, "message": "not_installed"}
+
+	dependents = _installed_apps_that_require(app_slug)
+	if dependents:
+		frappe.throw(
+			frappe._(
+				"These apps list {0} as a required dependency: {1}. Uninstall those apps first (or change their hooks), then try again."
+			).format(app_slug, ", ".join(dependents)),
+			title=frappe._("Uninstall blocked"),
+		)
+
+	no_backup = _is_truthy(frappe.conf.get("omnexa_marketplace_uninstall_no_backup"))
+
+	try:
+		from frappe.installer import remove_app
+
+		remove_app(app_slug, dry_run=False, yes=True, no_backup=no_backup, force=False)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Marketplace Uninstall Failed")
+		frappe.throw(
+			frappe._("Uninstall failed. Check Error Log for details."),
+			title=frappe._("Uninstall"),
+		)
+
+	if app_slug in (frappe.get_installed_apps() or []):
+		return {"uninstalled": False, "message": "still_installed"}
+
+	# Clean license artifacts for this slug (safe even if none were stored).
+	try:
+		clear_license_key(app_slug)
+	except Exception:
+		pass
+	try:
+		clear_trial_for_app(app_slug)
+	except Exception:
+		pass
+	try:
+		set_manual_revoke(app_slug, False)
+	except Exception:
+		pass
+
+	frappe.clear_cache()
+	return {"uninstalled": True, "message": "uninstalled_now", "app_slug": app_slug}
 
 
 def _compute_signature(secret: str, app_slug: str, activation_key: str, timestamp: str) -> str:

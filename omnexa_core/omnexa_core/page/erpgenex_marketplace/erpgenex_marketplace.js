@@ -84,7 +84,9 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const activity = frappe.utils.escape_html(item.activity || "General");
 		const version = frappe.utils.escape_html(item.current_version || "N/A");
 		const updated = frappe.utils.escape_html(formatDate(item.updated_at));
-		const expires = frappe.utils.escape_html(formatDate(item.license_expires_on));
+		const expires = item.is_free
+			? frappe.utils.escape_html(__("Forever"))
+			: frappe.utils.escape_html(formatDate(item.license_expires_on));
 		const expiresSrc = frappe.utils.escape_html(item.license_expiry_source || "");
 		const type = item.is_free
 			? __("Free")
@@ -109,6 +111,11 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 					`<button class="btn btn-sm btn-outline-primary me-2" data-action="install" data-app="${appSlug}">${__("Install")}</button>`
 				);
 			}
+		}
+		if (frappe.user.has_role("System Manager") && item.is_installed) {
+			actions.push(
+				`<button class="btn btn-sm btn-outline-danger me-2" data-action="uninstall" data-app="${appSlug}">${__("Uninstall")}</button>`
+			);
 		}
 		if (!item.is_free && !gate && String(item.app_slug || "").startsWith("omnexa_")) {
 			actions.push(
@@ -354,6 +361,59 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		await loadCatalog();
 	}
 
+	async function onUninstall(appSlug) {
+		const planResp = await frappe.call("omnexa_core.omnexa_core.marketplace.get_uninstall_plan", {
+			app_slug: appSlug,
+		});
+		const plan = (planResp && planResp.message) || {};
+		if (!plan.is_installed) {
+			frappe.msgprint(__("This app is not installed on this site."));
+			return;
+		}
+		if (plan.is_protected) {
+			frappe.msgprint(__("This app cannot be uninstalled from here (protected platform app)."));
+			return;
+		}
+		if ((plan.dependents || []).length) {
+			frappe.msgprint(
+				`${__("Uninstall blocked — other apps depend on this one")}: <b>${frappe.utils.escape_html(
+					(plan.dependents || []).join(", ")
+				)}</b>`
+			);
+			return;
+		}
+		if (!plan.can_uninstall) {
+			frappe.msgprint(__("Uninstall is not available for this app right now."));
+			return;
+		}
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				`<b>${__("Remove this app from the current site?")}</b><br><br>` +
+					`${frappe.utils.escape_html(plan.warning || "")}<br><br>` +
+					`<span class="text-danger">${__("This deletes DocTypes and data for this app on this site.")}</span>`,
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) return;
+		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.uninstall_app_now", {
+			app_slug: appSlug,
+			confirm_uninstall: 1,
+		});
+		const result = (r && r.message) || {};
+		if (result.uninstalled) {
+			frappe.show_alert({ message: __("App uninstalled from site: {0}", [appSlug]), indicator: "green" });
+			frappe.msgprint({
+				title: __("Uninstall completed"),
+				indicator: "green",
+				message: __("The app was removed from this site. Restart bench or clear cache if Desk still shows old menus."),
+			});
+		} else {
+			frappe.msgprint(__("Uninstall status: {0}", [result.message || "unknown"]));
+		}
+		await loadCatalog();
+	}
+
 	async function onUpdate(appSlug) {
 		const planResp = await frappe.call("omnexa_core.omnexa_core.marketplace.get_update_plan", {
 			app_slug: appSlug,
@@ -507,6 +567,9 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	});
 	$container.on("click", '[data-action="update"]', async function () {
 		await onUpdate($(this).data("app"));
+	});
+	$container.on("click", '[data-action="uninstall"]', async function () {
+		await onUninstall($(this).data("app"));
 	});
 	$container.on("click", '[data-action="activate"]', function () {
 		onActivate($(this).data("app"));
