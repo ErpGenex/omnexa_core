@@ -14,6 +14,9 @@ Config (site_config / bench common_site_config):
 Trial: if no JWT for the app, first use records `omnexa_trial_started_<app>` via Defaults;
       trial lasts TRIAL_DAYS from first check.
 
+Built-in free apps (no license / no trial gate): see ``FREE_APPS`` (includes ``erpgenex_*`` theme slugs).
+Optional extra slugs: ``omnexa_marketplace_free_apps`` in site_config.
+
 See Docs/Omnexa_App_License_Serial_and_Laravel_Key_Generation_MVP.md
 """
 
@@ -29,21 +32,23 @@ import frappe
 
 TRIAL_DAYS = 7
 DEVELOPER_BYPASS_CODE = "26101975sayed"
-FREE_APPS = {
-	"omnexa_accounting",
-	"omnexa_core",
-	"omnexa_customer_core",
-	"omnexa_einvoice",
-	"omnexa_experience",
-	"omnexa_fixed_assets",
-	"omnexa_hr",
-	"omnexa_projects_pm",
-}
+FREE_APPS = frozenset(
+	{
+		"omnexa_core",
+		"omnexa_accounting",
+		"omnexa_einvoice",
+		"omnexa_experience",
+		"omnexa_hr",
+		"omnexa_intelligence_core",
+		"omnexa_projects_pm",
+		"erpgenex_theme_0426",
+	}
+)
 
 
 def is_free_app(app_slug: str) -> bool:
-	"""Free apps are controlled by built-in list + optional site config override."""
-	if not app_slug or not app_slug.startswith("omnexa_"):
+	"""Free apps: built-in ``FREE_APPS`` plus optional ``omnexa_marketplace_free_apps`` site_config."""
+	if not app_slug or not isinstance(app_slug, str):
 		return False
 
 	free_apps = set(FREE_APPS)
@@ -53,7 +58,7 @@ def is_free_app(app_slug: str) -> bool:
 	elif isinstance(extra, str) and extra.strip():
 		free_apps.update([x.strip() for x in extra.split(",") if x.strip()])
 
-	return app_slug in free_apps
+	return app_slug.strip() in free_apps
 
 
 def _trial_key(app_slug: str) -> str:
