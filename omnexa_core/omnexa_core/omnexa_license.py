@@ -169,6 +169,15 @@ def _max_offline_days() -> int:
 	return max(1, min(90, d))
 
 
+def _auto_trial_enabled() -> bool:
+	"""
+	Auto trial is OFF by default for paid apps.
+	Enable explicitly only when desired:
+	  omnexa_license_auto_trial = 1/true
+	"""
+	return frappe.conf.get("omnexa_license_auto_trial") in (1, True, "1", "true", "True")
+
+
 def _apply_time_policies(app_slug: str, base: "LicenseCheckResult") -> "LicenseCheckResult":
 	"""
 	Apply offline + time-rollback policies to paid apps.
@@ -556,7 +565,10 @@ def verify_app_license(app_slug: str) -> LicenseCheckResult:
 		base = _decode_license_jwt(token, public_pem, expect_app=app_slug)
 		return _apply_time_policies(app_slug, base)
 
-	return _apply_time_policies(app_slug, _trial_result(app_slug))
+	if _auto_trial_enabled():
+		return _apply_time_policies(app_slug, _trial_result(app_slug))
+
+	return LicenseCheckResult(status="missing_license", reason="paid_app_requires_key")
 
 
 def assert_app_licensed_or_raise(app_slug: str) -> None:

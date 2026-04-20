@@ -34,6 +34,7 @@ class TestOmnexaLicense(FrappeTestCase):
 	def setUp(self):
 		super().setUp()
 		self._old_platform = frappe.local.conf.get("omnexa_platform")
+		self._old_auto_trial = frappe.local.conf.get("omnexa_license_auto_trial")
 		frappe.local.conf["omnexa_platform"] = "erpgenex"
 
 	def tearDown(self):
@@ -41,6 +42,10 @@ class TestOmnexaLicense(FrappeTestCase):
 			frappe.local.conf.pop("omnexa_platform", None)
 		else:
 			frappe.local.conf["omnexa_platform"] = self._old_platform
+		if self._old_auto_trial is None:
+			frappe.local.conf.pop("omnexa_license_auto_trial", None)
+		else:
+			frappe.local.conf["omnexa_license_auto_trial"] = self._old_auto_trial
 		super().tearDown()
 
 	def test_omnexa_apps_blocked_outside_erpgenex_platform(self):
@@ -67,6 +72,7 @@ class TestOmnexaLicense(FrappeTestCase):
 		frappe.db.commit()
 
 	def test_all_paid_omnexa_apps_start_as_trial_without_key(self):
+		frappe.local.conf["omnexa_license_auto_trial"] = True
 		try:
 			all_apps = frappe.get_all_apps(with_internal_apps=True)
 		except TypeError:
@@ -97,6 +103,7 @@ class TestOmnexaLicense(FrappeTestCase):
 				frappe.db.commit()
 
 	def test_paid_app_trial_expires_after_one_week(self):
+		frappe.local.conf["omnexa_license_auto_trial"] = True
 		app = "omnexa_tourism"
 		key = f"omnexa_trial_started_{frappe.scrub(app)}"
 		old = frappe.db.get_default(key)
@@ -118,6 +125,23 @@ class TestOmnexaLicense(FrappeTestCase):
 			r = verify_app_license(app)
 			self.assertEqual(r.status, "trial")
 			self.assertIn("remaining_seconds", (r.claims or {}))
+		finally:
+			if old_lic is not None:
+				frappe.local.conf["omnexa_licenses"] = old_lic
+			if old_pk is not None:
+				frappe.local.conf["omnexa_license_public_key_pem"] = old_pk
+
+	def test_paid_app_without_key_is_locked_when_auto_trial_disabled(self):
+		frappe.local.conf["omnexa_license_auto_trial"] = False
+		app = "omnexa_tourism"
+		old_lic = frappe.local.conf.get("omnexa_licenses")
+		old_pk = frappe.local.conf.get("omnexa_license_public_key_pem")
+		try:
+			set_manual_revoke(app, False)
+			frappe.local.conf.pop("omnexa_licenses", None)
+			frappe.local.conf.pop("omnexa_license_public_key_pem", None)
+			r = verify_app_license(app)
+			self.assertEqual(r.status, "missing_license")
 		finally:
 			if old_lic is not None:
 				frappe.local.conf["omnexa_licenses"] = old_lic
