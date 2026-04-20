@@ -490,10 +490,28 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			);
 		});
 		if (!confirmed) return;
-		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.update_app_now", {
-			app_slug: appSlug,
-			confirm_update: 1,
-		});
+		const stopTick = startMarketplaceProgress(
+			__("Updating app"),
+			__("Git pull, database migrate, and asset build may take several minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.update_app_now",
+				args: { app_slug: appSlug, confirm_update: 1 },
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		if (!r || r.exc) {
+			frappe.hide_progress();
+			return;
+		}
+		await completeMarketplaceProgress(__("Updating app"));
 		const result = (r && r.message) || {};
 		if (result.updated) {
 			const version = result.version || "N/A";
