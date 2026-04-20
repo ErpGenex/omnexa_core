@@ -76,6 +76,22 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		].includes(String(status || ""));
 	}
 
+	/** Shown while install/uninstall API runs (server does not stream real %). */
+	function startMarketplaceProgress(title, description) {
+		frappe.show_progress(title, 0, 100, description, false);
+		let pseudo = 0;
+		const interval = setInterval(() => {
+			pseudo = Math.min(pseudo + (pseudo < 45 ? 4 : pseudo < 80 ? 2 : 1), 92);
+			frappe.show_progress(title, pseudo, 100, description, false);
+		}, 400);
+		return () => clearInterval(interval);
+	}
+
+	async function completeMarketplaceProgress(title) {
+		frappe.show_progress(title, 100, 100, __("Completed"), true);
+		await new Promise((resolve) => setTimeout(resolve, 550));
+	}
+
 	function renderRow(item) {
 		const status = frappe.utils.escape_html(item.license_status || "");
 		const title = frappe.utils.escape_html(item.title || item.app_slug);
@@ -346,10 +362,28 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			);
 		});
 		if (!confirmed) return;
-		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.install_app_now", {
-			app_slug: appSlug,
-			confirm_install: 1,
-		});
+		const stopTick = startMarketplaceProgress(
+			__("Installing app"),
+			__("Backup, repository fetch, and install may take a few minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.install_app_now",
+				args: { app_slug: appSlug, confirm_install: 1 },
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		if (!r || r.exc) {
+			frappe.hide_progress();
+			return;
+		}
+		await completeMarketplaceProgress(__("Installing app"));
 		const result = (r && r.message) || {};
 		if (result.installed) {
 			const version = result.version || "N/A";
@@ -403,10 +437,28 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			);
 		});
 		if (!confirmed) return;
-		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.uninstall_app_now", {
-			app_slug: appSlug,
-			confirm_uninstall: 1,
-		});
+		const stopTick = startMarketplaceProgress(
+			__("Uninstalling app"),
+			__("Backup (if enabled), then removing modules and DocTypes — may take a few minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.uninstall_app_now",
+				args: { app_slug: appSlug, confirm_uninstall: 1 },
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		if (!r || r.exc) {
+			frappe.hide_progress();
+			return;
+		}
+		await completeMarketplaceProgress(__("Uninstalling app"));
 		const result = (r && r.message) || {};
 		if (result.uninstalled) {
 			frappe.show_alert({ message: __("App uninstalled from site: {0}", [appSlug]), indicator: "green" });
