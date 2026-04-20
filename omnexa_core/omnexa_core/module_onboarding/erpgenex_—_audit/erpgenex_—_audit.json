@@ -1,0 +1,41 @@
+{
+ "allow_roles": [
+  {
+   "role": "Desk User"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "creation": "2026-04-20 00:31:39.344139",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "documentation_url": "https://frappe.io/framework",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-04-20 02:24:43.676875",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "ERPGENEX \u2014 Audit",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "step": "ERPGENEX-WS-audit-01-user_branch_access"
+  },
+  {
+   "step": "ERPGENEX-WS-audit-02-audit_engagement"
+  },
+  {
+   "step": "ERPGENEX-WS-audit-03-audit_opinion_draft"
+  },
+  {
+   "step": "ERPGENEX-WS-audit-04-audit_balance_snapshot"
+  },
+  {
+   "step": "ERPGENEX-WS-audit-home"
+  }
+ ],
+ "subtitle": "Guided setup for this workspace.",
+ "success_message": "You are ready to work in Audit.",
+ "title": "ERPGENEX \u00b7 Audit"
+}

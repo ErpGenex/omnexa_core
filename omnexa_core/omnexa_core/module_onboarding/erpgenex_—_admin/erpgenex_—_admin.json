@@ -1,0 +1,41 @@
+{
+ "allow_roles": [
+  {
+   "role": "Desk User"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "creation": "2026-04-20 00:31:38.865042",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "documentation_url": "https://frappe.io/framework",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-04-20 02:24:43.098358",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "ERPGENEX \u2014 Admin",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "step": "ERPGENEX-WS-admin-01-workspace"
+  },
+  {
+   "step": "ERPGENEX-WS-admin-02-doctype"
+  },
+  {
+   "step": "ERPGENEX-WS-admin-03-report"
+  },
+  {
+   "step": "ERPGENEX-WS-admin-04-data_import"
+  },
+  {
+   "step": "ERPGENEX-WS-admin-home"
+  }
+ ],
+ "subtitle": "Guided setup for this workspace.",
+ "success_message": "You are ready to work in Admin.",
+ "title": "ERPGENEX \u00b7 Admin"
+}

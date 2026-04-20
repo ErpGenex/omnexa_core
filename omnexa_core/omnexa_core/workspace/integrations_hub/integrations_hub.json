@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"egx-int-h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Integrations</b></span>\",\"col\":12}},{\"id\":\"egx-int-c1\",\"type\":\"card\",\"data\":{\"card_name\":\"E-Invoicing\",\"col\":4}},{\"id\":\"egx-int-c2\",\"type\":\"card\",\"data\":{\"card_name\":\"Payment & channels\",\"col\":4}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Integrations\", \"col\": 12}}, {\"id\": \"egx-int-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Integrations</b></span>\", \"col\": 12}}, {\"id\": \"egx-int-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"E-Invoicing\", \"col\": 4}}, {\"id\": \"egx-int-c2\", \"type\": \"card\", \"data\": {\"card_name\": \"Payment & channels\", \"col\": 4}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -11,14 +11,72 @@
  "is_hidden": 0,
  "label": "Integrations",
  "links": [
-  {"hidden": 0, "is_query_report": 0, "label": "E-Invoicing", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "E-Document Submission", "link_count": 0, "link_to": "E-Document Submission", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Tax Authority Profile", "link_count": 0, "link_to": "Tax Authority Profile", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Signing Profile", "link_count": 0, "link_to": "Signing Profile", "link_type": "DocType", "onboard": 0, "type": "Link"},
-
-  {"hidden": 0, "is_query_report": 0, "label": "Payment & channels", "link_count": 0, "onboard": 0, "type": "Card Break"},
-  {"hidden": 0, "is_query_report": 0, "label": "Payment Intent", "link_count": 0, "link_to": "Payment Intent", "link_type": "DocType", "onboard": 0, "type": "Link"},
-  {"hidden": 0, "is_query_report": 0, "label": "Web Order", "link_count": 0, "link_to": "Web Order", "link_type": "DocType", "onboard": 0, "type": "Link"}
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "E-Invoicing",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "E-Document Submission",
+   "link_count": 0,
+   "link_to": "E-Document Submission",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tax Authority Profile",
+   "link_count": 0,
+   "link_to": "Tax Authority Profile",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Signing Profile",
+   "link_count": 0,
+   "link_to": "Signing Profile",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment & channels",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Intent",
+   "link_count": 0,
+   "link_to": "Payment Intent",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Web Order",
+   "link_count": 0,
+   "link_to": "Web Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
  ],
  "modified": "2026-04-15 02:04:00",
  "modified_by": "Administrator",

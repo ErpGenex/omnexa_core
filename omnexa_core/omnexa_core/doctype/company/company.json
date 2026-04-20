@@ -25,7 +25,10 @@
   "group_section",
   "parent_company",
   "global_erp_section",
-  "global_erp_strict_workflow"
+  "global_erp_strict_workflow",
+  "production_readiness_section",
+  "production_demo_branch",
+  "production_demo_activity"
  ],
  "fields": [
   {
@@ -153,6 +156,27 @@
    "fieldname": "global_erp_strict_workflow",
    "fieldtype": "Check",
    "label": "Strict Global ERP chain validations"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:!doc.__islocal",
+   "fieldname": "production_readiness_section",
+   "fieldtype": "Section Break",
+   "label": "Production readiness & demo data"
+  },
+  {
+   "description": "Optional. Leave empty to scope demo seed / reset to the whole company.",
+   "fieldname": "production_demo_branch",
+   "fieldtype": "Link",
+   "label": "Demo / reset branch",
+   "options": "Branch"
+  },
+  {
+   "description": "Used for professional COA extensions and demo seeding. If empty, Industry Sector is used when relevant.",
+   "fieldname": "production_demo_activity",
+   "fieldtype": "Select",
+   "label": "Demo activity",
+   "options": "\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
   }
  ],
  "grid_page_length": 50,

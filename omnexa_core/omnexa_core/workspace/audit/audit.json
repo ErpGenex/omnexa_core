@@ -1,19 +1,19 @@
 {
  "charts": [
   {
-   "chart_name": "Audit \u00b7 Status Bar",
+   "chart_name": "Audit · Status Bar",
    "label": "Status Bar"
   },
   {
-   "chart_name": "Audit \u00b7 Audit Engagement Mix",
+   "chart_name": "Audit · Audit Engagement Mix",
    "label": "Audit Engagement Mix"
   },
   {
-   "chart_name": "Audit \u00b7 Audit Opinion Draft Mix",
+   "chart_name": "Audit · Audit Opinion Draft Mix",
    "label": "Audit Opinion Draft Mix"
   }
  ],
- "content": "[{\"id\":\"audit-h\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Audit</b></span>\",\"col\":12}},{\"id\":\"audit-nc0\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Audit Engagement\",\"col\":4}},{\"id\":\"audit-nc1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Audit Opinion Draft\",\"col\":4}},{\"id\":\"audit-nc2\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Audit Balance Snapshot\",\"col\":4}},{\"id\":\"audit-nc3\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Audit Finding\",\"col\":4}},{\"id\":\"audit-nc4\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Audit Evidence\",\"col\":4}},{\"id\":\"audit-ch0\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Status Bar\",\"col\":4}},{\"id\":\"audit-ch1\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Audit Engagement Mix\",\"col\":4}},{\"id\":\"audit-ch2\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Audit Opinion Draft Mix\",\"col\":4}},{\"id\":\"audit-ops\",\"type\":\"header\",\"data\":{\"text\":\"<b>Quick Actions</b>\",\"col\":12}},{\"id\":\"audit-sc0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit Engagement\",\"col\":3}},{\"id\":\"audit-sc1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit Opinion Draft\",\"col\":3}},{\"id\":\"audit-sc2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit Balance Snapshot\",\"col\":3}},{\"id\":\"audit-sc3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit Finding\",\"col\":3}},{\"id\":\"audit-sc4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit Evidence\",\"col\":3}},{\"id\":\"audit-sc5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Ledger\",\"col\":3}},{\"id\":\"audit-sc6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Journal\",\"col\":3}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Audit\", \"col\": 12}}, {\"id\": \"audit-h\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Audit</b></span>\", \"col\": 12}}, {\"id\": \"audit-nc0\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Audit Engagement\", \"col\": 4}}, {\"id\": \"audit-nc1\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Audit Opinion Draft\", \"col\": 4}}, {\"id\": \"audit-nc2\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Audit Balance Snapshot\", \"col\": 4}}, {\"id\": \"audit-nc3\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Audit Finding\", \"col\": 4}}, {\"id\": \"audit-nc4\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Audit Evidence\", \"col\": 4}}, {\"id\": \"audit-ch0\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Status Bar\", \"col\": 4}}, {\"id\": \"audit-ch1\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Audit Engagement Mix\", \"col\": 4}}, {\"id\": \"audit-ch2\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Audit Opinion Draft Mix\", \"col\": 4}}, {\"id\": \"audit-ops\", \"type\": \"header\", \"data\": {\"text\": \"<b>Quick Actions</b>\", \"col\": 12}}, {\"id\": \"audit-sc0\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Audit Engagement\", \"col\": 3}}, {\"id\": \"audit-sc1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Audit Opinion Draft\", \"col\": 3}}, {\"id\": \"audit-sc2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Audit Balance Snapshot\", \"col\": 3}}, {\"id\": \"audit-sc3\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Audit Finding\", \"col\": 3}}, {\"id\": \"audit-sc4\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Audit Evidence\", \"col\": 3}}, {\"id\": \"audit-sc5\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"General Ledger\", \"col\": 3}}, {\"id\": \"audit-sc6\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"General Journal\", \"col\": 3}}]",
  "creation": "2026-04-15 00:12:39.154212",
  "custom_blocks": [],
  "docstatus": 0,

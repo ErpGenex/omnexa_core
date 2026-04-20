@@ -1,51 +1,51 @@
 {
  "charts": [
   {
-   "chart_name": "Settings \u00b7 Tax Rule Trend",
+   "chart_name": "Settings · Tax Rule Trend",
    "label": "Tax Rule Trend"
   },
   {
-   "chart_name": "Settings \u00b7 Customer Trend",
+   "chart_name": "Settings · Customer Trend",
    "label": "Customer Trend"
   },
   {
-   "chart_name": "Settings \u00b7 Supplier Trend",
+   "chart_name": "Settings · Supplier Trend",
    "label": "Supplier Trend"
   },
   {
-   "chart_name": "Settings \u00b7 Item Trend",
+   "chart_name": "Settings · Item Trend",
    "label": "Item Trend"
   },
   {
-   "chart_name": "Settings \u00b7 Tax Rule Vol",
+   "chart_name": "Settings · Tax Rule Vol",
    "label": "Tax Rule Vol"
   },
   {
-   "chart_name": "Settings \u00b7 Tax rules by treatment Bar",
+   "chart_name": "Settings · Tax rules by treatment Bar",
    "label": "Tax rules by treatment Bar"
   },
   {
-   "chart_name": "Settings \u00b7 Customer status Pie",
+   "chart_name": "Settings · Customer status Pie",
    "label": "Customer status Pie"
   },
   {
-   "chart_name": "Settings \u00b7 Supplier status Pie",
+   "chart_name": "Settings · Supplier status Pie",
    "label": "Supplier status Pie"
   },
   {
-   "chart_name": "Settings \u00b7 Item types Bar",
+   "chart_name": "Settings · Item types Bar",
    "label": "Item types Bar"
   },
   {
-   "chart_name": "Settings \u00b7 Customer Mix",
+   "chart_name": "Settings · Customer Mix",
    "label": "Customer Mix"
   },
   {
-   "chart_name": "Settings \u00b7 Supplier Mix",
+   "chart_name": "Settings · Supplier Mix",
    "label": "Supplier Mix"
   }
  ],
- "content": "[{\"id\":\"settings-h\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Settings \\u00b7 Enterprise setup</b></span>\",\"col\":12}},{\"id\":\"settings-ops\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>\\u2699 Operations</b></span>\",\"col\":12}},{\"id\":\"settings-op0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Organization\",\"col\":4}},{\"id\":\"settings-op1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Branches\",\"col\":4}},{\"id\":\"settings-op2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Tax categories (VAT / GST)\",\"col\":4}},{\"id\":\"settings-op3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Tax rules & statutory rates\",\"col\":4}},{\"id\":\"settings-op4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Chart of accounts\",\"col\":4}},{\"id\":\"settings-op5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Fiscal years\",\"col\":4}},{\"id\":\"settings-op6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cost centers\",\"col\":4}},{\"id\":\"settings-op7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Currency exchange rates\",\"col\":4}},{\"id\":\"settings-op8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customers (AR master)\",\"col\":4}},{\"id\":\"settings-op9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Suppliers (AP master)\",\"col\":4}},{\"id\":\"settings-op10\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase approval rules\",\"col\":4}},{\"id\":\"settings-op11\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Items (product master)\",\"col\":4}},{\"id\":\"settings-op12\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Warehouses\",\"col\":4}},{\"id\":\"settings-op13\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Units of measure\",\"col\":4}},{\"id\":\"settings-op14\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Tax authority profile\",\"col\":4}},{\"id\":\"settings-op15\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Signing profile (e-invoice)\",\"col\":4}},{\"id\":\"settings-op16\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"E-document submissions\",\"col\":4}},{\"id\":\"settings-op17\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Users\",\"col\":4}},{\"id\":\"settings-op18\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Roles\",\"col\":4}},{\"id\":\"settings-op19\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User permissions\",\"col\":4}},{\"id\":\"settings-op20\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Workflows\",\"col\":4}},{\"id\":\"settings-op21\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System settings\",\"col\":4}},{\"id\":\"settings-op22\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Activity log\",\"col\":4}},{\"id\":\"settings-rpt\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>\\ud83d\\udcca Reports</b></span>\",\"col\":12}},{\"id\":\"settings-rp0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Tax configuration summary\",\"col\":4}},{\"id\":\"settings-rp1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Configuration change summary\",\"col\":4}},{\"id\":\"settings-rp2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User activity summary\",\"col\":4}},{\"id\":\"settings-rp3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Access control summary\",\"col\":4}},{\"id\":\"settings-rp4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Audit trail summary\",\"col\":4}},{\"id\":\"settings-rp5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Workflow execution summary\",\"col\":4}},{\"id\":\"settings-kpi\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>\\ud83d\\udcc8 KPIs</b></span>\",\"col\":12}},{\"id\":\"settings-nc0\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Companies\",\"col\":4}},{\"id\":\"settings-nc1\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Branches\",\"col\":4}},{\"id\":\"settings-nc2\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Tax categories\",\"col\":4}},{\"id\":\"settings-nc3\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Tax rules\",\"col\":4}},{\"id\":\"settings-nc4\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Customers\",\"col\":4}},{\"id\":\"settings-nc5\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Suppliers\",\"col\":4}},{\"id\":\"settings-nc6\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Items\",\"col\":4}},{\"id\":\"settings-nc7\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Warehouses\",\"col\":4}},{\"id\":\"settings-nc8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Users\",\"col\":4}},{\"id\":\"settings-chr\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>\\ud83d\\udcc9 Charts</b></span>\",\"col\":12}},{\"id\":\"settings-ch0\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Tax Rule Trend\",\"col\":4}},{\"id\":\"settings-ch1\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Customer Trend\",\"col\":4}},{\"id\":\"settings-ch2\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Supplier Trend\",\"col\":4}},{\"id\":\"settings-ch3\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Item Trend\",\"col\":4}},{\"id\":\"settings-ch4\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Tax Rule Vol\",\"col\":4}},{\"id\":\"settings-ch5\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Tax rules by treatment Bar\",\"col\":4}},{\"id\":\"settings-ch6\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Customer status Pie\",\"col\":4}},{\"id\":\"settings-ch7\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Supplier status Pie\",\"col\":4}},{\"id\":\"settings-ch8\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Item types Bar\",\"col\":4}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Settings\", \"col\": 12}}, {\"id\": \"settings-h\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Settings · Enterprise setup</b></span>\", \"col\": 12}}, {\"id\": \"settings-ops\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h5\\\"><b>⚙ Operations</b></span>\", \"col\": 12}}, {\"id\": \"settings-op0\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Organization\", \"col\": 4}}, {\"id\": \"settings-op1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Branches\", \"col\": 4}}, {\"id\": \"settings-op2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Tax categories (VAT / GST)\", \"col\": 4}}, {\"id\": \"settings-op3\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Tax rules & statutory rates\", \"col\": 4}}, {\"id\": \"settings-op4\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Chart of accounts\", \"col\": 4}}, {\"id\": \"settings-op5\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Fiscal years\", \"col\": 4}}, {\"id\": \"settings-op6\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Cost centers\", \"col\": 4}}, {\"id\": \"settings-op7\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Currency exchange rates\", \"col\": 4}}, {\"id\": \"settings-op8\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Customers (AR master)\", \"col\": 4}}, {\"id\": \"settings-op9\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Suppliers (AP master)\", \"col\": 4}}, {\"id\": \"settings-op10\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Purchase approval rules\", \"col\": 4}}, {\"id\": \"settings-op11\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Items (product master)\", \"col\": 4}}, {\"id\": \"settings-op12\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Warehouses\", \"col\": 4}}, {\"id\": \"settings-op13\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Units of measure\", \"col\": 4}}, {\"id\": \"settings-op14\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Tax authority profile\", \"col\": 4}}, {\"id\": \"settings-op15\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Signing profile (e-invoice)\", \"col\": 4}}, {\"id\": \"settings-op16\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"E-document submissions\", \"col\": 4}}, {\"id\": \"settings-op17\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Users\", \"col\": 4}}, {\"id\": \"settings-op18\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Roles\", \"col\": 4}}, {\"id\": \"settings-op19\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"User permissions\", \"col\": 4}}, {\"id\": \"settings-op20\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Workflows\", \"col\": 4}}, {\"id\": \"settings-op21\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"System settings\", \"col\": 4}}, {\"id\": \"settings-op22\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Activity log\", \"col\": 4}}, {\"id\": \"settings-rpt\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h5\\\"><b>📊 Reports</b></span>\", \"col\": 12}}, {\"id\": \"settings-rp0\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Tax configuration summary\", \"col\": 4}}, {\"id\": \"settings-rp1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Configuration change summary\", \"col\": 4}}, {\"id\": \"settings-rp2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"User activity summary\", \"col\": 4}}, {\"id\": \"settings-rp3\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Access control summary\", \"col\": 4}}, {\"id\": \"settings-rp4\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Audit trail summary\", \"col\": 4}}, {\"id\": \"settings-rp5\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Workflow execution summary\", \"col\": 4}}, {\"id\": \"settings-kpi\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h5\\\"><b>📈 KPIs</b></span>\", \"col\": 12}}, {\"id\": \"settings-nc0\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Companies\", \"col\": 4}}, {\"id\": \"settings-nc1\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Branches\", \"col\": 4}}, {\"id\": \"settings-nc2\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Tax categories\", \"col\": 4}}, {\"id\": \"settings-nc3\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Tax rules\", \"col\": 4}}, {\"id\": \"settings-nc4\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Customers\", \"col\": 4}}, {\"id\": \"settings-nc5\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Suppliers\", \"col\": 4}}, {\"id\": \"settings-nc6\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Items\", \"col\": 4}}, {\"id\": \"settings-nc7\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Warehouses\", \"col\": 4}}, {\"id\": \"settings-nc8\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Users\", \"col\": 4}}, {\"id\": \"settings-chr\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h5\\\"><b>📉 Charts</b></span>\", \"col\": 12}}, {\"id\": \"settings-ch0\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Tax Rule Trend\", \"col\": 4}}, {\"id\": \"settings-ch1\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Customer Trend\", \"col\": 4}}, {\"id\": \"settings-ch2\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Supplier Trend\", \"col\": 4}}, {\"id\": \"settings-ch3\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Item Trend\", \"col\": 4}}, {\"id\": \"settings-ch4\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Tax Rule Vol\", \"col\": 4}}, {\"id\": \"settings-ch5\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Tax rules by treatment Bar\", \"col\": 4}}, {\"id\": \"settings-ch6\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Customer status Pie\", \"col\": 4}}, {\"id\": \"settings-ch7\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Supplier status Pie\", \"col\": 4}}, {\"id\": \"settings-ch8\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Item types Bar\", \"col\": 4}}]",
  "creation": "2026-04-14 22:31:47.231783",
  "custom_blocks": [],
  "docstatus": 0,
@@ -324,7 +324,7 @@
    "hidden": 0,
    "icon": "es-line-reports",
    "is_query_report": 0,
-   "label": "Reports \u00b7 setup & compliance audit",
+   "label": "Reports · setup & compliance audit",
    "link_count": 0,
    "link_type": "DocType",
    "onboard": 0,

@@ -29,6 +29,13 @@ def after_migrate():
 		sync_all_workspace_kpi_layout()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: sync_all_workspace_kpi_layout")
+	try:
+		from omnexa_core.workspace_onboarding_sync import enable_onboarding_setting, sync_workspace_database
+
+		enable_onboarding_setting()
+		sync_workspace_database()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: workspace onboarding sync")
 
 
 def remove_legacy_people_workspace():

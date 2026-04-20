@@ -1,7 +1,7 @@
 app_name = "omnexa_core"
-app_title = "ErpGenEx — Core"
+app_title = "ERPGENEX — Core"
 app_publisher = "Omnexa"
-app_description = "Core platform for ErpGenEx (omnexa_core)"
+app_description = "Core platform for ERPGENEX (omnexa_core)"
 app_email = "dev@omnexa.local"
 app_license = "mit"
 
@@ -29,6 +29,7 @@ app_include_css = "/assets/omnexa_core/css/omnexa_core.css"
 app_include_js = [
 	"/assets/omnexa_core/js/workspace_shortcut_icons.js",
 	"/assets/omnexa_core/js/form_layout_optimizer.js",
+	"/assets/omnexa_core/js/erpgenex_brand_desk.js",
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.
@@ -263,4 +264,7 @@ before_request = [
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
+
+# Desk boot: replace legacy product name in Success Action / notes payloads.
+boot_session = "omnexa_core.erpgenex_brand.boot_session"
 

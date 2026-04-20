@@ -30,9 +30,50 @@ def _platform_base_url() -> str:
 	return official
 
 
+def _catalog_exclude() -> set[str]:
+	"""Apps never shown in marketplace (bench core)."""
+	out = {"frappe"}
+	raw = frappe.conf.get("omnexa_marketplace_catalog_exclude")
+	if isinstance(raw, (list, tuple, set)):
+		for x in raw:
+			if isinstance(x, str) and x.strip():
+				out.add(x.strip())
+	elif isinstance(raw, str) and raw.strip():
+		out.update(s.strip() for s in raw.split(",") if s.strip())
+	return out
+
+
+def _marketplace_catalog_slugs() -> list[str]:
+	"""
+	All marketplace rows share one GitHub org/base URL pattern via ``_approved_repo_for_app``.
+
+	- Default: every app returned by ``get_all_apps`` except excluded (always ``frappe``).
+	- Optional ``omnexa_marketplace_catalog_slugs`` (list): replace the default list entirely.
+	- Optional ``omnexa_marketplace_extra_catalog_slugs`` (list): add slugs not yet on bench (install uses get-app).
+	"""
+	override = frappe.conf.get("omnexa_marketplace_catalog_slugs")
+	if isinstance(override, (list, tuple)):
+		return sorted({str(x).strip() for x in override if str(x).strip()})
+
+	try:
+		on_bench = list(frappe.get_all_apps(with_internal_apps=True) or [])
+	except TypeError:
+		on_bench = list(frappe.get_all_apps() or [])
+	exc = _catalog_exclude()
+	slugs = {a for a in on_bench if isinstance(a, str) and a and a not in exc}
+
+	extra = frappe.conf.get("omnexa_marketplace_extra_catalog_slugs") or []
+	if isinstance(extra, (list, tuple)):
+		slugs.update(str(x).strip() for x in extra if isinstance(x, str) and str(x).strip())
+
+	return sorted(slugs)
+
+
 def _title_from_slug(app_slug: str) -> str:
-	parts = app_slug.replace("omnexa_", "").split("_")
-	return " ".join(p.capitalize() for p in parts if p)
+	parts = [p for p in app_slug.replace("omnexa_", "").split("_") if p]
+	if not parts:
+		return app_slug
+	return " ".join(p.capitalize() for p in parts)
 
 
 def _guess_icon_path(app_slug: str) -> str:
@@ -64,22 +105,18 @@ def _guess_icon_path(app_slug: str) -> str:
 
 
 def _catalog_seed() -> list[dict]:
-	try:
-		all_apps = frappe.get_all_apps(with_internal_apps=True)
-	except TypeError:
-		all_apps = frappe.get_all_apps()
-	omnexa_apps = sorted([a for a in (all_apps or []) if a.startswith("omnexa_")])
-
-	return [
-		{
-			"app_slug": app_slug,
-			"title": _title_from_slug(app_slug),
-			"price_type": "free" if is_free_app(app_slug) else "paid",
-			"icon_url": _guess_icon_path(app_slug),
-			"activity": _activity_for_app(app_slug),
-		}
-		for app_slug in omnexa_apps
-	]
+	rows = []
+	for app_slug in _marketplace_catalog_slugs():
+		rows.append(
+			{
+				"app_slug": app_slug,
+				"title": _title_from_slug(app_slug),
+				"price_type": "free" if is_free_app(app_slug) else "paid",
+				"icon_url": _guess_icon_path(app_slug),
+				"activity": _activity_for_app(app_slug),
+			}
+		)
+	return rows
 
 
 def _activity_for_app(app_slug: str) -> str:
@@ -90,6 +127,8 @@ def _activity_for_app(app_slug: str) -> str:
 		if isinstance(val, str) and val.strip():
 			return val.strip()
 
+	if app_slug.startswith("erpgenex_"):
+		return "ErpGenEx"
 	parts = [p for p in app_slug.replace("omnexa_", "").split("_") if p]
 	if not parts:
 		return "General"
@@ -128,6 +167,17 @@ def _app_updated_at(app_slug: str) -> str:
 		return ""
 
 
+def _github_base_url() -> str:
+	return str(frappe.conf.get("omnexa_marketplace_github_org") or "https://github.com/ErpGenex").rstrip("/")
+
+
+def _assert_marketplace_app_slug(app_slug: str) -> None:
+	if not app_slug or not isinstance(app_slug, str):
+		frappe.throw(frappe._("Invalid app slug."))
+	if app_slug not in set(_marketplace_catalog_slugs()):
+		frappe.throw(frappe._("This app is not in the marketplace catalog."))
+
+
 def _is_truthy(value) -> bool:
 	return value in (1, True, "1", "true", "True", "yes", "on")
 
@@ -148,8 +198,7 @@ def _approved_repo_for_app(app_slug: str) -> str:
 	repos = frappe.conf.get("omnexa_marketplace_repos") or {}
 	if isinstance(repos, dict) and isinstance(repos.get(app_slug), str) and repos.get(app_slug).strip():
 		return repos.get(app_slug).strip()
-	base = str(frappe.conf.get("omnexa_marketplace_github_org") or "https://github.com/ErpGenex").rstrip("/")
-	return f"{base}/{app_slug}.git"
+	return f"{_github_base_url()}/{app_slug}.git"
 
 
 def _app_highlights(app_slug: str) -> str:
@@ -304,6 +353,7 @@ def get_marketplace_catalog():
 		)
 	return {
 		"platform_url": _platform_base_url(),
+		"github_base": _github_base_url(),
 		"support_email": str(frappe.conf.get("omnexa_support_email") or "info@erpgenex.com"),
 		"items": items,
 	}
@@ -311,8 +361,7 @@ def get_marketplace_catalog():
 
 @frappe.whitelist()
 def get_checkout_url(app_slug: str, months: int = 12):
-	if not app_slug or not app_slug.startswith("omnexa_"):
-		frappe.throw(frappe._("Invalid app slug."))
+	_assert_marketplace_app_slug(app_slug)
 	months = int(months or 12)
 	if months < 1 or months > 36:
 		frappe.throw(frappe._("License months must be between 1 and 36."))
@@ -324,6 +373,8 @@ def get_checkout_url(app_slug: str, months: int = 12):
 @frappe.whitelist()
 def activate_app_license(app_slug: str, activation_key: str):
 	"""Save customer key (or developer code) only when verification accepts it."""
+	if not app_slug or not app_slug.startswith("omnexa_"):
+		frappe.throw(frappe._("License activation is only supported for Omnexa apps (omnexa_*)."))
 	previous = get_stored_license_key(app_slug)
 	set_license_key(app_slug=app_slug, license_value=activation_key)
 	status = verify_app_license(app_slug)
@@ -349,8 +400,7 @@ def activate_app_license(app_slug: str, activation_key: str):
 
 @frappe.whitelist()
 def get_install_plan(app_slug: str):
-	if not app_slug or not app_slug.startswith("omnexa_"):
-		frappe.throw(frappe._("Invalid app slug."))
+	_assert_marketplace_app_slug(app_slug)
 	return {
 		"app_slug": app_slug,
 		"repo_url": _approved_repo_for_app(app_slug),
@@ -364,8 +414,7 @@ def get_install_plan(app_slug: str):
 @frappe.whitelist()
 def get_update_plan(app_slug: str):
 	"""Return metadata for updating an already-installed app from its Git remote."""
-	if not app_slug or not app_slug.startswith("omnexa_"):
-		frappe.throw(frappe._("Invalid app slug."))
+	_assert_marketplace_app_slug(app_slug)
 	installed = frappe.get_installed_apps() or []
 	if app_slug not in installed:
 		frappe.throw(frappe._("App must be installed before it can be updated from here."))
@@ -381,8 +430,7 @@ def get_update_plan(app_slug: str):
 @frappe.whitelist()
 def update_app_now(app_slug: str, confirm_update: int = 0):
 	"""Pull latest code for an installed app, migrate current site, and build assets."""
-	if not app_slug or not app_slug.startswith("omnexa_"):
-		frappe.throw(frappe._("Invalid app slug."))
+	_assert_marketplace_app_slug(app_slug)
 	if not _is_truthy(confirm_update):
 		return {"updated": False, "message": "confirmation_required"}
 
@@ -434,8 +482,7 @@ def update_app_now(app_slug: str, confirm_update: int = 0):
 @frappe.whitelist()
 def install_app_now(app_slug: str, confirm_install: int = 0):
 	"""Manual install action from marketplace UI."""
-	if not app_slug or not app_slug.startswith("omnexa_"):
-		frappe.throw(frappe._("Invalid app slug."))
+	_assert_marketplace_app_slug(app_slug)
 	_license_allows_marketplace_action(app_slug)
 	repo_url = _approved_repo_for_app(app_slug)
 	confirmed = _is_truthy(confirm_install)

@@ -11,6 +11,7 @@ class Company(Document):
 		if self.eta_einvoice_enabled and not (self.rin or "").strip():
 			frappe.throw(_("RIN is required when ETA e-Invoice is enabled."), title=_("Validation"))
 		self._validate_einvoice_profiles()
+		self._validate_production_demo_branch()
 
 	def before_insert(self):
 		self._prevent_circular_parent()
@@ -33,6 +34,15 @@ class Company(Document):
 				frappe.throw(_("Circular parent company chain is not allowed."), title=_("Validation"))
 			walk = frappe.db.get_value("Company", walk, "parent_company")
 			depth += 1
+
+	def _validate_production_demo_branch(self):
+		if not getattr(self, "production_demo_branch", None):
+			return
+		b_company = frappe.db.get_value("Branch", self.production_demo_branch, "company")
+		if not b_company:
+			frappe.throw(_("Branch does not exist."), title=_("Validation"))
+		if b_company != self.name:
+			frappe.throw(_("Demo / reset branch must belong to this company."), title=_("Validation"))
 
 	def _validate_einvoice_profiles(self):
 		if not self.eta_einvoice_enabled:

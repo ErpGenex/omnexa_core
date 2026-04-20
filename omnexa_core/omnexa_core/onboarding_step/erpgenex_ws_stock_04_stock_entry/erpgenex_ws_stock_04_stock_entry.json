@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create",
+ "creation": "2026-04-20 00:31:43.066874",
+ "description": "Create or review your first **Stock Entry** record from this workspace.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-04-20 02:24:49.019810",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-stock-04-stock_entry",
+ "owner": "Administrator",
+ "reference_document": "Stock Entry",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Get started with Stock Entry",
+ "validate_action": 1
+}

@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create",
+ "creation": "2026-04-20 00:31:41.361301",
+ "description": "Create or review your first **User Permission** record from this workspace.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-04-20 02:24:46.455969",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-governance-03-user_permission",
+ "owner": "Administrator",
+ "reference_document": "User Permission",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Get started with User Permission",
+ "validate_action": 1
+}

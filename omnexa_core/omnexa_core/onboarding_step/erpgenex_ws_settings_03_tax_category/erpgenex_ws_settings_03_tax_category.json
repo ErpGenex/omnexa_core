@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create",
+ "creation": "2026-04-20 00:31:42.839203",
+ "description": "Create or review your first **Tax Category** record from this workspace.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-04-20 02:24:48.700286",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-settings-03-tax_category",
+ "owner": "Administrator",
+ "reference_document": "Tax Category",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Get started with Tax Category",
+ "validate_action": 1
+}

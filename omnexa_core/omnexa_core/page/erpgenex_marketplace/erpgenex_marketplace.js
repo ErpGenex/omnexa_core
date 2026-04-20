@@ -8,7 +8,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	const $container = $(`
 		<div class="erpgenex-marketplace">
 			<div class="mb-3 text-muted" data-section="meta"></div>
-			<div class="row g-2 mb-3" data-section="filters">
+			<div class="row g-2 mb-2" data-section="filters">
 				<div class="col-md-3">
 					<input type="text" class="form-control form-control-sm" data-filter="search" placeholder="${__("Search by name / version")}">
 				</div>
@@ -20,14 +20,29 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				<div class="col-md-2">
 					<input type="text" class="form-control form-control-sm" data-filter="version" placeholder="${__("Version")}">
 				</div>
+				<div class="col-md-3">
+					<select class="form-select form-select-sm marketplace-sort" title="${__("Sort order")}">
+						<option value="title_asc">${__("Sort: App name A–Z")}</option>
+						<option value="title_desc">${__("Sort: App name Z–A")}</option>
+						<option value="activity">${__("Sort: Activity")}</option>
+						<option value="version">${__("Sort: Version")}</option>
+						<option value="updated_desc">${__("Sort: Updated (newest)")}</option>
+						<option value="updated_asc">${__("Sort: Updated (oldest)")}</option>
+						<option value="installed_first">${__("Sort: Installed first")}</option>
+						<option value="installed_last">${__("Sort: Not installed first")}</option>
+						<option value="license">${__("Sort: License status")}</option>
+					</select>
+				</div>
 				<div class="col-md-2">
+					<button class="btn btn-sm btn-light w-100" data-action="reset-filters">${__("Reset")}</button>
+				</div>
+			</div>
+			<div class="row g-2 mb-3" data-section="filters-dates">
+				<div class="col-md-3">
 					<input type="date" class="form-control form-control-sm" data-filter="updated_from" title="${__("Updated from")}">
 				</div>
-				<div class="col-md-2">
+				<div class="col-md-3">
 					<input type="date" class="form-control form-control-sm" data-filter="updated_to" title="${__("Updated to")}">
-				</div>
-				<div class="col-md-1">
-					<button class="btn btn-sm btn-light w-100" data-action="reset-filters">${__("Reset")}</button>
 				</div>
 			</div>
 			<div class="table-responsive">
@@ -54,12 +69,17 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	`);
 	$(page.body).append($container);
 	let allItems = [];
+	let sortKey = "title_asc";
 
 	/** License or developer bypass accepted — hide Buy / Activate; allow Install from public repo. */
 	function is_license_gate_passed(status) {
-		return ["licensed", "licensed_free", "licensed_dev_override", "licensed_bundle"].includes(
-			String(status || "")
-		);
+		return [
+			"licensed",
+			"licensed_free",
+			"licensed_dev_override",
+			"licensed_bundle",
+			"trial",
+		].includes(String(status || ""));
 	}
 
 	function renderRow(item) {
@@ -69,7 +89,11 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const activity = frappe.utils.escape_html(item.activity || "General");
 		const version = frappe.utils.escape_html(item.current_version || "N/A");
 		const updated = frappe.utils.escape_html(formatDate(item.updated_at));
-		const type = item.is_free ? __("Free") : __("Paid");
+		const type = item.is_free
+			? __("Free")
+			: String(item.app_slug || "").startsWith("omnexa_")
+				? __("Paid")
+				: __("Repo");
 		const iconUrl = frappe.utils.escape_html(item.icon_url || "/assets/frappe/images/frappe-framework-logo.svg");
 		const installState = item.is_installed ? __("Installed") : __("Not Installed");
 		const installBadge = item.is_installed
@@ -89,12 +113,12 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				);
 			}
 		}
-		if (!item.is_free && !gate) {
+		if (!item.is_free && !gate && String(item.app_slug || "").startsWith("omnexa_")) {
 			actions.push(
 				`<button class="btn btn-sm btn-primary me-2" data-action="buy" data-app="${appSlug}">${__("Buy")}</button>`
 			);
 		}
-		if (!gate) {
+		if (!gate && String(item.app_slug || "").startsWith("omnexa_")) {
 			actions.push(
 				`<button class="btn btn-sm btn-secondary" data-action="activate" data-app="${appSlug}">${__("Activate Key")}</button>`
 			);
@@ -132,6 +156,57 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		if (selected && activities.includes(selected)) $activity.val(selected);
 	}
 
+	function parseUpdatedTs(item) {
+		const v = item.updated_at;
+		if (!v) return 0;
+		const t = new Date(v).getTime();
+		return Number.isNaN(t) ? 0 : t;
+	}
+
+	function sortFilteredRows(rows) {
+		const list = [...(rows || [])];
+		const sk = sortKey || "title_asc";
+		const titleCmp = (a, b) =>
+			String(a.title || a.app_slug || "").localeCompare(String(b.title || b.app_slug || ""), undefined, {
+				sensitivity: "base",
+			});
+		const verCmp = (a, b) =>
+			String(a.current_version || "").localeCompare(String(b.current_version || ""), undefined, {
+				numeric: true,
+			});
+		const licCmp = (a, b) =>
+			String(a.license_status || "").localeCompare(String(b.license_status || ""), undefined, {
+				sensitivity: "base",
+			});
+		if (sk === "title_desc") {
+			list.sort((a, b) => -titleCmp(a, b));
+		} else if (sk === "title_asc") {
+			list.sort(titleCmp);
+		} else if (sk === "activity") {
+			list.sort((a, b) => {
+				const c = String(a.activity || "").localeCompare(String(b.activity || ""), undefined, {
+					sensitivity: "base",
+				});
+				return c || titleCmp(a, b);
+			});
+		} else if (sk === "version") {
+			list.sort((a, b) => verCmp(a, b) || titleCmp(a, b));
+		} else if (sk === "updated_desc") {
+			list.sort((a, b) => parseUpdatedTs(b) - parseUpdatedTs(a) || titleCmp(a, b));
+		} else if (sk === "updated_asc") {
+			list.sort((a, b) => parseUpdatedTs(a) - parseUpdatedTs(b) || titleCmp(a, b));
+		} else if (sk === "installed_first") {
+			list.sort((a, b) => Number(!!b.is_installed) - Number(!!a.is_installed) || titleCmp(a, b));
+		} else if (sk === "installed_last") {
+			list.sort((a, b) => Number(!!a.is_installed) - Number(!!b.is_installed) || titleCmp(a, b));
+		} else if (sk === "license") {
+			list.sort((a, b) => licCmp(a, b) || titleCmp(a, b));
+		} else {
+			list.sort(titleCmp);
+		}
+		return list;
+	}
+
 	function applyFiltersAndRender() {
 		const q = String($container.find('[data-filter="search"]').val() || "").trim().toLowerCase();
 		const activity = String($container.find('[data-filter="activity"]').val() || "").trim();
@@ -139,7 +214,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const from = String($container.find('[data-filter="updated_from"]').val() || "").trim();
 		const to = String($container.find('[data-filter="updated_to"]').val() || "").trim();
 
-		const rows = (allItems || []).filter((item) => {
+		const filtered = (allItems || []).filter((item) => {
 			const haystack = `${item.title || ""} ${item.app_slug || ""} ${item.current_version || ""}`.toLowerCase();
 			if (q && !haystack.includes(q)) return false;
 			if (activity && String(item.activity || "General").trim() !== activity) return false;
@@ -149,6 +224,8 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			if (to && (!day || day > to)) return false;
 			return true;
 		});
+
+		const rows = sortFilteredRows(filtered);
 
 		if (!rows.length) {
 			$container.find('[data-section="rows"]').html(`<tr><td colspan="9" class="text-muted">${__("No apps match current filters.")}</td></tr>`);
@@ -163,10 +240,11 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const items = payload.items || [];
 		allItems = items;
 		updateActivityFilterOptions(items);
+		const gh = frappe.utils.escape_html(payload.github_base || "https://github.com/ErpGenex");
 		$container.find('[data-section="meta"]').html(
 			`<div class="mb-2">${__(
-				"Install uses the official public GitHub repository for each app. No GitHub login is required on this server."
-			)}</div>` +
+				"Install and update use one GitHub organization base for every app (no GitHub login on this server)."
+			)} <code class="small">${gh}/&lt;app&gt;.git</code></div>` +
 				`<div>${__("Marketplace")}: <a href="${frappe.utils.escape_html(payload.platform_url || "https://erpgenex.com")}" target="_blank">` +
 				`${frappe.utils.escape_html(payload.platform_url || "https://erpgenex.com")}</a> — ${__("Support")}: ` +
 				`${frappe.utils.escape_html(payload.support_email || "info@erpgenex.com")}</div>`
@@ -333,12 +411,18 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	$container.on("input change", "[data-filter]", function () {
 		applyFiltersAndRender();
 	});
+	$container.on("change", ".marketplace-sort", function () {
+		sortKey = String($(this).val() || "title_asc");
+		applyFiltersAndRender();
+	});
 	$container.on("click", '[data-action="reset-filters"]', function () {
 		$container.find('[data-filter="search"]').val("");
 		$container.find('[data-filter="activity"]').val("");
 		$container.find('[data-filter="version"]').val("");
 		$container.find('[data-filter="updated_from"]').val("");
 		$container.find('[data-filter="updated_to"]').val("");
+		sortKey = "title_asc";
+		$container.find(".marketplace-sort").val("title_asc");
 		applyFiltersAndRender();
 	});
 

@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "New booking",
+ "creation": "2026-04-20 00:31:39.723476",
+ "description": "Reserve capacity against bookable resources without double-booking.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-04-20 02:24:44.280673",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-COMM-03-Booking",
+ "owner": "Administrator",
+ "reference_document": "Booking",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Schedule a booking",
+ "validate_action": 1
+}

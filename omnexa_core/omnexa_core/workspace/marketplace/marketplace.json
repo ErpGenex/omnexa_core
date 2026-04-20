@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"egx-market-h1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Marketplace</b></span>\",\"col\":12}},{\"id\":\"egx-market-c1\",\"type\":\"card\",\"data\":{\"card_name\":\"Apps & licensing\",\"col\":12}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Marketplace\", \"col\": 12}}, {\"id\": \"egx-market-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Marketplace</b></span>\", \"col\": 12}}, {\"id\": \"egx-market-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"Apps & licensing\", \"col\": 12}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",

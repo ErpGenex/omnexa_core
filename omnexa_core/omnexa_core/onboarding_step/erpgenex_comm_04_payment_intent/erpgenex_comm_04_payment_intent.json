@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "New payment intent",
+ "creation": "2026-04-20 00:31:39.833684",
+ "description": "Track initiation, confirmation, capture, refund, and reconciliation outcomes.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-04-20 02:24:44.286182",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-COMM-04-Payment-Intent",
+ "owner": "Administrator",
+ "reference_document": "Payment Intent",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Record a payment intent",
+ "validate_action": 1
+}

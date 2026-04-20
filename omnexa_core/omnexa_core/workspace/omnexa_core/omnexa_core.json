@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\": \"omx-core-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Settings</b></span>\", \"col\": 12}}, {\"id\": \"omx-core-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"Compliance & e-invoice\", \"col\": 4}}, {\"id\": \"omx-core-c2\", \"type\": \"card\", \"data\": {\"card_name\": \"Branch access\", \"col\": 4}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Settings\", \"col\": 12}}, {\"id\": \"omx-core-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Settings</b></span>\", \"col\": 12}}, {\"id\": \"omx-core-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"Compliance & e-invoice\", \"col\": 4}}, {\"id\": \"omx-core-c2\", \"type\": \"card\", \"data\": {\"card_name\": \"Branch access\", \"col\": 4}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",

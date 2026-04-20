@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create",
+ "creation": "2026-04-20 00:31:39.333967",
+ "description": "Create or review your first **Audit Balance Snapshot** record from this workspace.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-04-20 02:24:43.638404",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-audit-04-audit_balance_snapshot",
+ "owner": "Administrator",
+ "reference_document": "Audit Balance Snapshot",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Get started with Audit Balance Snapshot",
+ "validate_action": 1
+}
