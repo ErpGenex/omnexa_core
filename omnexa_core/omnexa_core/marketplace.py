@@ -298,6 +298,43 @@ def _license_help_banner_html(bundle_mode: bool, use_real: bool) -> str:
 	return "".join(parts) if parts else ""
 
 
+def _license_expiry_meta(result) -> tuple[str, str]:
+	"""
+	Return (expires_on_yyyy_mm_dd_or_empty, source_label).
+	- trial_expires_at for trial
+	- exp for JWT licenses
+	- lock_at for grace/lock policies
+	"""
+	claims = (result.claims or {}) if result else {}
+	if not isinstance(claims, dict):
+		return "", ""
+
+	try:
+		if claims.get("trial_expires_at"):
+			d = datetime.fromisoformat(str(claims.get("trial_expires_at")))
+			return d.date().isoformat(), "trial"
+	except Exception:
+		pass
+
+	try:
+		exp = claims.get("exp")
+		if isinstance(exp, (int, float)):
+			d = datetime.fromtimestamp(int(exp), tz=timezone.utc)
+			return d.date().isoformat(), "license"
+	except Exception:
+		pass
+
+	try:
+		lock_at = claims.get("lock_at")
+		if isinstance(lock_at, (int, float)):
+			d = datetime.fromtimestamp(int(lock_at), tz=timezone.utc)
+			return d.date().isoformat(), "lock"
+	except Exception:
+		pass
+
+	return "", ""
+
+
 def _approved_repo_for_app(app_slug: str) -> str:
 	repos = frappe.conf.get("omnexa_marketplace_repos") or {}
 	if isinstance(repos, dict) and isinstance(repos.get(app_slug), str) and repos.get(app_slug).strip():
@@ -445,14 +482,19 @@ def get_marketplace_catalog():
 		app = row["app_slug"]
 		if bundle_mode and not use_real:
 			status = "licensed_bundle"
+			result = None
 		else:
-			status = verify_app_license(app).status
+			result = verify_app_license(app)
+			status = result.status
+		expires_on, expires_source = _license_expiry_meta(result)
 		items.append(
 			{
 				**row,
 				"is_free": is_free_app(app),
 				"is_installed": app in (frappe.get_installed_apps() or []),
 				"license_status": status,
+				"license_expires_on": expires_on,
+				"license_expiry_source": expires_source,
 				"has_stored_license_key": bool(get_stored_license_key(app)),
 				"approved_repo": _approved_repo_for_app(app),
 				"current_version": get_app_version(app) if app in (frappe.get_installed_apps() or []) else "",

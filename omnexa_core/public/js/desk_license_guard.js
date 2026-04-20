@@ -67,12 +67,26 @@
 	}
 
 	function guardWorkspace(route) {
-		if (!route || route[0] !== "Workspaces" || !route[1]) {
+		const pages = frappe.boot.allowed_workspaces || [];
+		if (!route || !route.length) {
 			return;
 		}
-		const pages = frappe.boot.allowed_workspaces || [];
-		const name = route[1];
-		const ws = pages.find((p) => p.name === name);
+		let ws = null;
+		if (route[0] === "Workspaces" && route[1]) {
+			const name = route[1];
+			ws = pages.find((p) => p.name === name);
+		} else if (route.length === 1) {
+			// Modern workspace route is usually /app/<workspace-slug>
+			const slug = String(route[0] || "").toLowerCase();
+			ws = pages.find((p) => {
+				const n = String(p.name || "");
+				const t = String(p.title || "");
+				return (
+					frappe.router.slug(n).toLowerCase() === slug ||
+					(t && frappe.router.slug(t).toLowerCase() === slug)
+				);
+			});
+		}
 		if (!ws || !ws.module) {
 			return;
 		}
@@ -115,7 +129,7 @@
 			return;
 		}
 		const route = frappe.get_route() || [];
-		if (route[0] === "Workspaces") {
+		if (route[0] === "Workspaces" || route.length === 1) {
 			guardWorkspace(route);
 			return;
 		}

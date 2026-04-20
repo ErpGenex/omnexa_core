@@ -46,11 +46,12 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 							<th class="marketplace-sort-th user-select-none" data-sort-col="type" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Type")}<span class="sort-indicator text-primary"></span></th>
 							<th class="marketplace-sort-th user-select-none" data-sort-col="installed" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Install")}<span class="sort-indicator text-primary"></span></th>
 							<th class="marketplace-sort-th user-select-none" data-sort-col="license" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("License Status")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="expires" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Expires")}<span class="sort-indicator text-primary"></span></th>
 							<th>${__("Actions")}</th>
 						</tr>
 					</thead>
 					<tbody data-section="rows">
-						<tr><td colspan="10" class="text-muted">${__("Loading...")}</td></tr>
+						<tr><td colspan="11" class="text-muted">${__("Loading...")}</td></tr>
 					</tbody>
 				</table>
 			</div>
@@ -83,6 +84,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const activity = frappe.utils.escape_html(item.activity || "General");
 		const version = frappe.utils.escape_html(item.current_version || "N/A");
 		const updated = frappe.utils.escape_html(formatDate(item.updated_at));
+		const expires = frappe.utils.escape_html(formatDate(item.license_expires_on));
 		const type = item.is_free
 			? __("Free")
 			: String(item.app_slug || "").startsWith("omnexa_")
@@ -133,6 +135,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				<td>${type}</td>
 				<td>${installBadge}</td>
 				<td>${status}</td>
+				<td>${expires}</td>
 				<td>${actions.join("")}</td>
 			</tr>`;
 	}
@@ -190,6 +193,10 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			String(a.license_status || "").localeCompare(String(b.license_status || ""), undefined, {
 				sensitivity: "base",
 			});
+		const expCmp = (a, b) =>
+			String(a.license_expires_on || "").localeCompare(String(b.license_expires_on || ""), undefined, {
+				sensitivity: "base",
+			});
 		const descCmp = (a, b) =>
 			String(a.short_description || "").localeCompare(String(b.short_description || ""), undefined, {
 				sensitivity: "base",
@@ -214,6 +221,8 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				c = Number(!!a.is_installed) - Number(!!b.is_installed);
 			} else if (col === "license") {
 				c = licCmp(a, b);
+			} else if (col === "expires") {
+				c = expCmp(a, b);
 			} else {
 				c = titleCmp(a, b);
 			}
@@ -262,7 +271,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const rows = sortFilteredRows(filtered);
 
 		if (!rows.length) {
-			$container.find('[data-section="rows"]').html(`<tr><td colspan="10" class="text-muted">${__("No apps match current filters.")}</td></tr>`);
+			$container.find('[data-section="rows"]').html(`<tr><td colspan="11" class="text-muted">${__("No apps match current filters.")}</td></tr>`);
 			updateSortColumnIndicators();
 			return;
 		}
@@ -289,7 +298,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				`${frappe.utils.escape_html(payload.support_email || "info@erpgenex.com")}</div>`
 		);
 		if (!items.length) {
-			$container.find('[data-section="rows"]').html(`<tr><td colspan="10" class="text-muted">${__("No apps found.")}</td></tr>`);
+			$container.find('[data-section="rows"]').html(`<tr><td colspan="11" class="text-muted">${__("No apps found.")}</td></tr>`);
 			updateSortColumnIndicators();
 			return;
 		}

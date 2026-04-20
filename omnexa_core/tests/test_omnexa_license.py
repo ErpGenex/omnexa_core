@@ -15,6 +15,7 @@ from omnexa_core.omnexa_core.omnexa_license import (
 	DEVELOPER_BYPASS_CODE,
 	FREE_APPS,
 	assert_app_licensed_or_raise,
+	set_manual_revoke,
 	verify_app_license,
 )
 
@@ -80,6 +81,7 @@ class TestOmnexaLicense(FrappeTestCase):
 			old_lic = frappe.local.conf.get("omnexa_licenses")
 			old_pk = frappe.local.conf.get("omnexa_license_public_key_pem")
 			try:
+				set_manual_revoke(app, False)
 				frappe.db.set_default(key, None)
 				frappe.db.commit()
 				frappe.local.conf.pop("omnexa_licenses", None)
@@ -99,6 +101,7 @@ class TestOmnexaLicense(FrappeTestCase):
 		key = f"omnexa_trial_started_{frappe.scrub(app)}"
 		old = frappe.db.get_default(key)
 		try:
+			set_manual_revoke(app, False)
 			old_dt = datetime.now() - timedelta(days=8)
 			frappe.db.set_default(key, old_dt.isoformat())
 			frappe.db.commit()
