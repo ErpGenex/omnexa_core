@@ -70,6 +70,8 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			"licensed_dev_override",
 			"licensed_bundle",
 			"trial",
+			"licensed_grace",
+			"trial_grace",
 		].includes(String(status || ""));
 	}
 

@@ -20,6 +20,7 @@ from omnexa_core.omnexa_core.omnexa_license import (
 	clear_trial_for_app,
 	get_stored_license_key,
 	is_free_app,
+	record_online_license_check,
 	set_license_key,
 	verify_app_license,
 )
@@ -529,6 +530,8 @@ def activate_app_license(app_slug: str, activation_key: str):
 			frappe._("License key was not accepted: {0}").format(status.status),
 			title=frappe._("License"),
 		)
+	# Online activation moment counts as a fresh online validation.
+	record_online_license_check(app_slug)
 	install_result = {"installed": False, "message": "auto_install_disabled"}
 	if _auto_install_enabled():
 		install_result = _install_app_if_needed(
@@ -666,6 +669,7 @@ def auto_activate_from_platform(app_slug: str, activation_key: str, timestamp: s
 			frappe._("Activation received but key is invalid: {0}").format(status.status),
 			title=frappe._("License"),
 		)
+	record_online_license_check(app_slug)
 
 	install_result = {"installed": False, "message": "auto_install_disabled"}
 	if _auto_install_enabled():

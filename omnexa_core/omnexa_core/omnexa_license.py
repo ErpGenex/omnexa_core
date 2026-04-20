@@ -39,9 +39,13 @@ LICENSE_OK_STATUSES = frozenset(
 		"licensed",
 		"licensed_free",
 		"licensed_dev_override",
+		"licensed_grace",
 		"trial",
 	}
 )
+
+MAX_OFFLINE_DAYS_DEFAULT = 7
+TIME_ROLLBACK_SKEW_SECONDS = 5 * 60
 
 FREE_APPS = frozenset(
 	{
@@ -90,12 +94,131 @@ def get_omnexa_license_snapshot() -> dict[str, dict[str, Any]]:
 			"status": r.status,
 			"ok": is_license_status_ok(r.status),
 			"has_stored_license_key": bool(get_stored_license_key(app)),
+			"warnings": (r.claims or {}).get("warnings") if isinstance((r.claims or {}).get("warnings"), list) else [],
+			"lock_at": (r.claims or {}).get("lock_at"),
 		}
 	return out
 
 
 def _trial_key(app_slug: str) -> str:
 	return f"omnexa_trial_started_{frappe.scrub(app_slug)}"
+
+
+def _offline_last_online_key(app_slug: str) -> str:
+	return f"omnexa_license_last_online_ts_{frappe.scrub(app_slug)}"
+
+
+def _offline_grace_started_key(app_slug: str) -> str:
+	return f"omnexa_license_offline_grace_started_ts_{frappe.scrub(app_slug)}"
+
+
+def _last_seen_key(app_slug: str) -> str:
+	return f"omnexa_license_last_seen_ts_{frappe.scrub(app_slug)}"
+
+
+def _tamper_detected_key(app_slug: str) -> str:
+	return f"omnexa_license_time_tamper_detected_ts_{frappe.scrub(app_slug)}"
+
+
+def _utc_now_ts() -> int:
+	return int(datetime.utcnow().timestamp())
+
+
+def record_online_license_check(app_slug: str, now_ts: int | None = None) -> None:
+	"""Record a successful online activation / renewal / validation moment."""
+	if not app_slug or not isinstance(app_slug, str) or not app_slug.startswith("omnexa_"):
+		return
+	ts = int(now_ts or _utc_now_ts())
+	frappe.db.set_default(_offline_last_online_key(app_slug), str(ts))
+	frappe.db.set_default(_last_seen_key(app_slug), str(ts))
+	frappe.db.set_default(_offline_grace_started_key(app_slug), None)
+	frappe.db.set_default(_tamper_detected_key(app_slug), None)
+	frappe.db.commit()
+
+
+def _get_int_default(key: str) -> int | None:
+	val = frappe.db.get_default(key)
+	try:
+		return int(str(val))
+	except Exception:
+		return None
+
+
+def _max_offline_days() -> int:
+	raw = frappe.conf.get("omnexa_license_max_offline_days")
+	try:
+		d = int(raw)
+	except Exception:
+		d = MAX_OFFLINE_DAYS_DEFAULT
+	return max(1, min(90, d))
+
+
+def _apply_time_policies(app_slug: str, base: "LicenseCheckResult") -> "LicenseCheckResult":
+	"""
+	Apply offline + time-rollback policies to paid apps.
+	- Warning + grace window (default 7 days).
+	- After grace, lock the app (status becomes *_locked).
+	"""
+	if not app_slug or not isinstance(app_slug, str) or not app_slug.startswith("omnexa_"):
+		return base
+	if is_free_app(app_slug):
+		return base
+	# Online/offline policies apply to paid licenses only (JWT present). Trials remain local-only.
+	if base.status != "licensed":
+		return base
+
+	now_ts = _utc_now_ts()
+	warnings: list[str] = []
+	claims = dict(base.claims or {})
+
+	# --- time rollback detection (local clock moved backward) ---
+	last_seen = _get_int_default(_last_seen_key(app_slug))
+	if last_seen is not None and now_ts + TIME_ROLLBACK_SKEW_SECONDS < last_seen:
+		# first detection time anchor
+		detected = _get_int_default(_tamper_detected_key(app_slug))
+		if detected is None:
+			frappe.db.set_default(_tamper_detected_key(app_slug), str(now_ts))
+			frappe.db.commit()
+			detected = now_ts
+		lock_at = detected + _max_offline_days() * 86400
+		warnings.append("time_rollback_detected")
+		claims.update({"warnings": warnings, "lock_at": lock_at})
+		if now_ts >= lock_at:
+			return LicenseCheckResult(status="time_tamper_locked", reason="time_rollback_locked", claims=claims)
+		return LicenseCheckResult(status=f"{base.status}_grace", reason="time_rollback_grace", claims=claims)
+
+	# update last seen forward
+	frappe.db.set_default(_last_seen_key(app_slug), str(now_ts))
+	frappe.db.commit()
+
+	# --- offline max-days since last online activation/renewal ---
+	last_online = _get_int_default(_offline_last_online_key(app_slug))
+	if last_online is None:
+		# if never recorded, start grace from first sight
+		grace_started = _get_int_default(_offline_grace_started_key(app_slug))
+		if grace_started is None:
+			frappe.db.set_default(_offline_grace_started_key(app_slug), str(now_ts))
+			frappe.db.commit()
+			grace_started = now_ts
+		lock_at = grace_started + _max_offline_days() * 86400
+		warnings.append("offline_check_missing")
+		claims.update({"warnings": warnings, "lock_at": lock_at})
+		if now_ts >= lock_at:
+			return LicenseCheckResult(status="offline_locked", reason="offline_check_required", claims=claims)
+		return LicenseCheckResult(status=f"{base.status}_grace", reason="offline_grace", claims=claims)
+
+	age = now_ts - int(last_online)
+	max_age = _max_offline_days() * 86400
+	if age > max_age:
+		# grace starts at last_online + max_age
+		lock_at = int(last_online) + max_age + max_age
+		warnings.append("offline_check_expired")
+		claims.update({"warnings": warnings, "lock_at": lock_at, "offline_age_seconds": age})
+		if now_ts >= lock_at:
+			return LicenseCheckResult(status="offline_locked", reason="offline_expired", claims=claims)
+		return LicenseCheckResult(status=f"{base.status}_grace", reason="offline_expired_grace", claims=claims)
+
+	return base
 
 
 @dataclass(frozen=True)
@@ -412,9 +535,10 @@ def verify_app_license(app_slug: str) -> LicenseCheckResult:
 				status="misconfigured",
 				reason=pem_reason or "public key missing but omnexa_licenses has an entry",
 			)
-		return _decode_license_jwt(token, public_pem, expect_app=app_slug)
+		base = _decode_license_jwt(token, public_pem, expect_app=app_slug)
+		return _apply_time_policies(app_slug, base)
 
-	return _trial_result(app_slug)
+	return _apply_time_policies(app_slug, _trial_result(app_slug))
 
 
 def assert_app_licensed_or_raise(app_slug: str) -> None:

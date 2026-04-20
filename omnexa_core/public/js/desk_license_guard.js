@@ -40,13 +40,20 @@
 	function blockWithMessage(app) {
 		const row = (hasBootLicenseData() && frappe.boot.omnexa_license_by_app[app]) || {};
 		const st = row.status || "unknown";
+		const lockAt = row.lock_at ? String(row.lock_at) : "";
+		const warnings = Array.isArray(row.warnings) ? row.warnings.join(", ") : "";
 		const mp = frappe.boot.omnexa_marketplace_route || "/app/erpgenex-marketplace";
 		frappe.msgprint({
 			title: __("License required"),
 			indicator: "red",
 			message: __(
-				"The application {0} is not licensed (status: {1}). Open ErpGenEx Marketplace and enter a valid license or developer key."
-			).format(app, st),
+				"The application {0} is not licensed (status: {1}). {2}{3}Open ErpGenEx Marketplace and enter a valid license or developer key."
+			).format(
+				app,
+				st,
+				warnings ? __("Warnings: {0}. ", [warnings]) : "",
+				lockAt ? __("Lock at (UTC ts): {0}. ", [lockAt]) : ""
+			),
 		});
 		frappe.msgprint({
 			title: __("Action"),
