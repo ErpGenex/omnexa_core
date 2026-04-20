@@ -58,6 +58,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	`);
 	$(page.body).append($container);
 	let allItems = [];
+	let lastTrialDays = 7;
 	let sortColumn = "title";
 	let sortDir = "asc";
 
@@ -112,6 +113,11 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		if (!gate && String(item.app_slug || "").startsWith("omnexa_")) {
 			actions.push(
 				`<button class="btn btn-sm btn-secondary" data-action="activate" data-app="${appSlug}">${__("Activate Key")}</button>`
+			);
+		}
+		if (frappe.user.has_role("System Manager") && String(item.app_slug || "").startsWith("omnexa_")) {
+			actions.push(
+				`<button class="btn btn-sm btn-outline-danger" data-action="revoke" data-app="${appSlug}" data-free="${item.is_free ? "1" : "0"}">${__("Revoke / Reset trial")}</button>`
 			);
 		}
 		return `
@@ -267,12 +273,15 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const payload = (r && r.message) || {};
 		const items = payload.items || [];
 		allItems = items;
+		lastTrialDays = Number(payload.trial_days) > 0 ? Number(payload.trial_days) : 7;
 		updateActivityFilterOptions(items);
 		const gh = frappe.utils.escape_html(payload.github_base || "https://github.com/ErpGenex");
+		const helpHtml = payload.license_help_html || "";
 		$container.find('[data-section="meta"]').html(
-			`<div class="mb-2">${__(
-				"Install and update use one GitHub organization base for every app (no GitHub login on this server)."
-			)} <code class="small">${gh}/&lt;app&gt;.git</code></div>` +
+			(helpHtml ? `<div class="mb-2">${helpHtml}</div>` : "") +
+				`<div class="mb-2">${__(
+					"Install and update use one GitHub organization base for every app (no GitHub login on this server)."
+				)} <code class="small">${gh}/&lt;app&gt;.git</code></div>` +
 				`<div>${__("Marketplace")}: <a href="${frappe.utils.escape_html(payload.platform_url || "https://erpgenex.com")}" target="_blank">` +
 				`${frappe.utils.escape_html(payload.platform_url || "https://erpgenex.com")}</a> — ${__("Support")}: ` +
 				`${frappe.utils.escape_html(payload.support_email || "info@erpgenex.com")}</div>`
@@ -378,6 +387,50 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	}
 
 	/** ``frappe.prompt`` returns a Dialog, not a Promise — use callback style only. */
+	function onRevoke(appSlug, isFree) {
+		const fields = [];
+		if (!isFree) {
+			fields.push({
+				fieldname: "remove_key",
+				fieldtype: "Check",
+				label: __("Remove stored license key from this site"),
+				default: 1,
+			});
+		}
+		fields.push({
+			fieldname: "clear_trial",
+			fieldtype: "Check",
+			label: __("Reset trial counter (new {0}-day window from next license check)", [String(lastTrialDays)]),
+			default: 0,
+		});
+		frappe.prompt(
+			fields,
+			function (values) {
+				const removeKey = isFree ? 0 : values.remove_key ? 1 : 0;
+				const clearTrial = values.clear_trial ? 1 : 0;
+				frappe.call({
+					method: "omnexa_core.omnexa_core.marketplace.revoke_app_license",
+					args: {
+						app_slug: appSlug,
+						remove_key: removeKey,
+						clear_trial: clearTrial,
+					},
+					freeze: true,
+					callback: function (resp) {
+						if (resp.exc) {
+							return;
+						}
+						const msg = (resp.message && resp.message.status) || "";
+						frappe.show_alert({ message: __("Updated: {0}", [msg]), indicator: "orange" });
+						loadCatalog();
+					},
+				});
+			},
+			__("Revoke or reset trial"),
+			__("Apply")
+		);
+	}
+
 	function onActivate(appSlug) {
 		frappe.prompt(
 			[
@@ -436,6 +489,11 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	});
 	$container.on("click", '[data-action="activate"]', function () {
 		onActivate($(this).data("app"));
+	});
+	$container.on("click", '[data-action="revoke"]', function () {
+		const appSlug = $(this).data("app");
+		const isFree = String($(this).data("free")) === "1";
+		onRevoke(appSlug, isFree);
 	});
 	$container.on("input change", "[data-filter]", function () {
 		applyFiltersAndRender();

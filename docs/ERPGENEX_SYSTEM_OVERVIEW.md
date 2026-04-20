@@ -190,6 +190,7 @@
 ## 7. مراجع داخلية
 
 - [دليل موقع جديد + تثبيت التطبيقات المجانية بالترتيب](./NEW_SITE_AND_FREE_APPS_INSTALL.md)  
+- [اختبار الترخيص والمفتاح التجريبي](./LICENSE_TESTING.md)  
 - [نظام التصميم — الخطة والتشيكليست](./design-system/README.md)  
 - [رموز التصميم](./design-system/TOKENS.md)
 

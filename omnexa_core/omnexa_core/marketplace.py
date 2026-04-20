@@ -15,7 +15,9 @@ from frappe.utils import get_app_version, get_bench_path
 from frappe.utils.backups import new_backup
 
 from omnexa_core.omnexa_core.omnexa_license import (
+	TRIAL_DAYS,
 	clear_license_key,
+	clear_trial_for_app,
 	get_stored_license_key,
 	is_free_app,
 	set_license_key,
@@ -249,6 +251,51 @@ def _bundle_mode_enabled() -> bool:
 	return _is_truthy(frappe.conf.get("omnexa_marketplace_bundle_mode"))
 
 
+def _catalog_show_real_license_status() -> bool:
+	"""
+	When True, catalog rows use ``verify_app_license`` instead of forcing ``licensed_bundle``.
+	Use for testing (developer_mode) or explicit site_config.
+	"""
+	if _is_truthy(frappe.conf.get("omnexa_marketplace_show_real_license_status")):
+		return True
+	return bool(frappe.conf.get("developer_mode"))
+
+
+def _license_help_banner_html(bundle_mode: bool, use_real: bool) -> str:
+	"""HTML snippets for marketplace meta (Desk)."""
+	parts = []
+	if bundle_mode and not use_real:
+		parts.append(
+			'<div class="alert alert-warning mb-2">'
+			+ frappe._(
+				"Bundle mode is active: every app shows as licensed_bundle and license prompts are hidden. "
+				"To test per-app trial and activation, set {0} to 1 in site_config.json, or enable developer_mode on this site."
+			).format("<code>omnexa_marketplace_show_real_license_status</code>")
+			+ "</div>"
+		)
+	if use_real and bundle_mode:
+		parts.append(
+			'<div class="alert alert-info mb-2">'
+			+ frappe._(
+				"You are viewing real license/trial status while bundle mode is still on for server-side rules where applicable. "
+				"See {0} for test keys and JWT notes."
+			).format(
+				'<a href="https://github.com/ErpGenex/omnexa_core/blob/develop/docs/LICENSE_TESTING.md" target="_blank" rel="noopener noreferrer">LICENSE_TESTING.md</a>'
+			)
+			+ "</div>"
+		)
+	elif not bundle_mode:
+		parts.append(
+			'<div class="alert alert-secondary mb-2 small">'
+			+ frappe._("Trial length: {0} days without a key (paid apps). Help: {1}").format(
+				int(TRIAL_DAYS),
+				'<a href="https://github.com/ErpGenex/omnexa_core/blob/develop/docs/LICENSE_TESTING.md" target="_blank" rel="noopener noreferrer">LICENSE_TESTING.md</a>',
+			)
+			+ "</div>"
+		)
+	return "".join(parts) if parts else ""
+
+
 def _approved_repo_for_app(app_slug: str) -> str:
 	repos = frappe.conf.get("omnexa_marketplace_repos") or {}
 	if isinstance(repos, dict) and isinstance(repos.get(app_slug), str) and repos.get(app_slug).strip():
@@ -391,15 +438,20 @@ def get_marketplace_catalog():
 	"""Return catalog for desk marketplace page."""
 	items = []
 	bundle_mode = _bundle_mode_enabled()
+	use_real = _catalog_show_real_license_status()
 	for row in _catalog_seed():
 		app = row["app_slug"]
-		status = "licensed_bundle" if bundle_mode else verify_app_license(app).status
+		if bundle_mode and not use_real:
+			status = "licensed_bundle"
+		else:
+			status = verify_app_license(app).status
 		items.append(
 			{
 				**row,
 				"is_free": is_free_app(app),
 				"is_installed": app in (frappe.get_installed_apps() or []),
 				"license_status": status,
+				"has_stored_license_key": bool(get_stored_license_key(app)),
 				"approved_repo": _approved_repo_for_app(app),
 				"current_version": get_app_version(app) if app in (frappe.get_installed_apps() or []) else "",
 				"updated_at": _app_updated_at(app),
@@ -410,8 +462,43 @@ def get_marketplace_catalog():
 		"platform_url": _platform_base_url(),
 		"github_base": _github_base_url(),
 		"support_email": str(frappe.conf.get("omnexa_support_email") or "info@erpgenex.com"),
+		"bundle_mode": bundle_mode,
+		"catalog_uses_real_license_status": use_real,
+		"trial_days": int(TRIAL_DAYS),
+		"license_help_html": _license_help_banner_html(bundle_mode, use_real),
 		"items": items,
 	}
+
+
+@frappe.whitelist()
+def revoke_app_license(app_slug: str, remove_key: int = 1, clear_trial: int = 0):
+	"""
+	Remove stored license key and/or reset trial clock (System Manager).
+	Free apps: only trial reset is allowed (no key to remove).
+	"""
+	frappe.only_for("System Manager")
+	_assert_marketplace_app_slug(app_slug)
+	if not app_slug.startswith("omnexa_"):
+		frappe.throw(frappe._("Only Omnexa apps (omnexa_*) support this action."))
+
+	remove_key = bool(int(remove_key or 0))
+	clear_trial = bool(int(clear_trial or 0))
+	if not remove_key and not clear_trial:
+		frappe.throw(frappe._("Choose at least one: remove stored key or reset trial."))
+
+	if is_free_app(app_slug):
+		if remove_key:
+			frappe.throw(frappe._("This app is free: there is no license key to remove."))
+		clear_trial_for_app(app_slug)
+		frappe.clear_cache()
+		return {"ok": True, "status": verify_app_license(app_slug).status}
+
+	if remove_key:
+		clear_license_key(app_slug)
+	if clear_trial:
+		clear_trial_for_app(app_slug)
+	frappe.clear_cache()
+	return {"ok": True, "status": verify_app_license(app_slug).status}
 
 
 @frappe.whitelist()

@@ -137,6 +137,14 @@ def clear_license_key(app_slug: str) -> None:
 	frappe.db.commit()
 
 
+def clear_trial_for_app(app_slug: str) -> None:
+	"""Clear stored trial start timestamp so the next check starts a fresh trial window."""
+	if not app_slug or not isinstance(app_slug, str) or not app_slug.startswith("omnexa_"):
+		return
+	frappe.db.set_default(_trial_key(app_slug), None)
+	frappe.db.commit()
+
+
 def get_stored_license_key(app_slug: str) -> str | None:
 	"""Return the saved license string for an app, if any."""
 	return _get_conf_licenses().get(app_slug)
@@ -177,9 +185,21 @@ def _extract_jwt_from_license_value(raw_value: str) -> tuple[Optional[str], str]
 
 
 def _is_developer_bypass(token_or_key: Optional[str]) -> bool:
-	"""Static developer bypass code for internal developer usage."""
+	"""Match legacy code, ``omnexa_developer_license_keys`` list, or ``omnexa_developer_bypass_code`` in site_config."""
 	value = (token_or_key or "").strip()
-	return bool(value) and value == DEVELOPER_BYPASS_CODE
+	if not value:
+		return False
+	if value == DEVELOPER_BYPASS_CODE:
+		return True
+	one = frappe.conf.get("omnexa_developer_bypass_code")
+	if isinstance(one, str) and one.strip() and value == one.strip():
+		return True
+	raw = frappe.conf.get("omnexa_developer_license_keys")
+	if isinstance(raw, (list, tuple, set)):
+		return value in {str(x).strip() for x in raw if x and isinstance(x, str)}
+	if isinstance(raw, str) and raw.strip():
+		return value in {s.strip() for s in raw.split(",") if s.strip()}
+	return False
 
 
 def _get_public_key_pem() -> Optional[str]:
