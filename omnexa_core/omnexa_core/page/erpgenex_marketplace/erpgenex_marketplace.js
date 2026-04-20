@@ -7,6 +7,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 
 	const $container = $(`
 		<div class="erpgenex-marketplace">
+			<div class="mb-2" data-section="update-banner"></div>
 			<div class="mb-3 text-muted" data-section="meta"></div>
 			<div class="row g-2 mb-2" data-section="filters">
 				<div class="col-md-5">
@@ -62,6 +63,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	let lastTrialDays = 7;
 	let sortColumn = "title";
 	let sortDir = "asc";
+	let catalogAutoRefreshTimer = null;
 
 	/** License or developer bypass accepted — hide Buy / Activate; allow Install from public repo. */
 	function is_license_gate_passed(status) {
@@ -92,13 +94,118 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		await new Promise((resolve) => setTimeout(resolve, 550));
 	}
 
+	function renderUpdateBanner(items) {
+		const $b = $container.find('[data-section="update-banner"]');
+		const stale = (items || []).filter((x) => x.update_available);
+		if (!stale.length) {
+			$b.empty();
+			return;
+		}
+		const names = stale
+			.map((i) => frappe.utils.escape_html(String(i.title || i.app_slug || "")))
+			.slice(0, 12)
+			.join(", ");
+		const more = stale.length > 12 ? ` (+${stale.length - 12})` : "";
+		$b.html(
+			`<div class="alert alert-info alert-dismissible fade show mb-0" role="alert">
+				<strong>${frappe.utils.escape_html(__("Updates available"))}</strong>
+				<div class="small mt-1">${frappe.utils.escape_html(
+					__(
+						"The catalog checks Git in the background. When you are ready, use Update on a row and choose branch or tag."
+					)
+				)}</div>
+				<div class="small font-monospace mt-1">${names}${frappe.utils.escape_html(more)}</div>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="${frappe.utils.escape_html(
+					__("Close")
+				)}"></button>
+			</div>`
+		);
+	}
+
+	function scheduleCatalogAutoRefresh(ms) {
+		let n = Number(ms);
+		if (!Number.isFinite(n) || n < 60000) {
+			n = 600000;
+		}
+		if (catalogAutoRefreshTimer) {
+			clearInterval(catalogAutoRefreshTimer);
+			catalogAutoRefreshTimer = null;
+		}
+		catalogAutoRefreshTimer = setInterval(function () {
+			loadCatalog();
+		}, n);
+	}
+
+	function pickUpdateTargetRef(plan, appSlug) {
+		return new Promise((resolve) => {
+			const refs = plan.update_refs || [];
+			if (!refs.length) {
+				resolve("");
+				return;
+			}
+			const gm = plan.git_meta || {};
+			const shaLine =
+				gm.local_sha && gm.remote_sha
+					? `<div class="small text-muted">${frappe.utils.escape_html(__("Local git"))}: <code>${frappe.utils.escape_html(
+							gm.local_sha
+					  )}</code> → ${frappe.utils.escape_html(__("Remote"))}: <code>${frappe.utils.escape_html(
+							gm.remote_sha
+					  )}</code></div>`
+					: "";
+			const d = new frappe.ui.Dialog({
+				title: __("Update {0}", [appSlug]),
+				fields: [
+					{
+						fieldname: "hint",
+						fieldtype: "HTML",
+						options:
+							`<p class="small"><b>${frappe.utils.escape_html(__("Repo"))}:</b> ${frappe.utils.escape_html(
+								plan.repo_url || ""
+							)}<br>` +
+							`<b>${frappe.utils.escape_html(__("App version"))}:</b> ${frappe.utils.escape_html(
+								plan.current_version || "N/A"
+							)}</p>` +
+							shaLine +
+							`<p class="text-muted small mt-2">${frappe.utils.escape_html(plan.warning || "")}</p>`,
+					},
+					{
+						fieldname: "target_ref",
+						fieldtype: "Select",
+						label: __("Version / branch"),
+						options: refs.map((r) => r.label).join("\n"),
+						default: refs[0].label,
+						reqd: 1,
+					},
+				],
+				primary_action_label: __("Continue"),
+				primary_action() {
+					const label = d.get_value("target_ref");
+					const picked = refs.find((r) => r.label === label);
+					d.hide();
+					resolve(picked ? picked.value : "");
+				},
+				secondary_action_label: __("Cancel"),
+				secondary_action() {
+					d.hide();
+					resolve(null);
+				},
+			});
+			d.show();
+		});
+	}
+
 	function renderRow(item) {
 		const status = frappe.utils.escape_html(item.license_status || "");
 		const title = frappe.utils.escape_html(item.title || item.app_slug);
 		const appSlug = frappe.utils.escape_html(item.app_slug);
 		const shortDesc = frappe.utils.escape_html(item.short_description || "");
 		const activity = frappe.utils.escape_html(item.activity || "General");
-		const version = frappe.utils.escape_html(item.current_version || "N/A");
+		let versionHtml = frappe.utils.escape_html(item.current_version || "N/A");
+		if (item.update_available) {
+			versionHtml += ` <span class="badge bg-info-subtle text-info ms-1" title="${frappe.utils.escape_html(
+				__("New commits on remote — open Update to choose a version")
+			)}">${__("Update available")}</span>`;
+		}
 		const updated = frappe.utils.escape_html(formatDate(item.updated_at));
 		const expires = item.is_free
 			? frappe.utils.escape_html(__("Forever"))
@@ -161,7 +268,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				<td><strong>${title}</strong><div class="text-muted small font-monospace">${appSlug}</div></td>
 				<td class="small text-muted" style="max-width:22rem;">${shortDesc || "—"}</td>
 				<td>${activity}</td>
-				<td>${version}</td>
+				<td>${versionHtml}</td>
 				<td>${updated}</td>
 				<td>${type}</td>
 				<td>${installBadge}</td>
@@ -316,6 +423,8 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const items = payload.items || [];
 		allItems = items;
 		lastTrialDays = Number(payload.trial_days) > 0 ? Number(payload.trial_days) : 7;
+		renderUpdateBanner(items);
+		scheduleCatalogAutoRefresh(payload.catalog_auto_refresh_ms);
 		updateActivityFilterOptions(items);
 		const gh = frappe.utils.escape_html(payload.github_base || "https://github.com/ErpGenex");
 		const helpHtml = payload.license_help_html || "";
@@ -478,18 +587,10 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			app_slug: appSlug,
 		});
 		const plan = (planResp && planResp.message) || {};
-		const confirmed = await new Promise((resolve) => {
-			frappe.confirm(
-				`${__("Pull the latest code for this app, run migrate on this site, and rebuild assets?")}<br><br>` +
-					`<b>${__("Repo")}:</b> ${frappe.utils.escape_html(plan.repo_url || "")}<br>` +
-					`<b>${__("Current Version")}:</b> ${frappe.utils.escape_html(plan.current_version || "N/A")}<br>` +
-					`<b>${__("What's New")}:</b> ${frappe.utils.escape_html(plan.whats_new || "")}<br><br>` +
-					`<span class="text-muted">${frappe.utils.escape_html(plan.warning || "")}</span>`,
-				() => resolve(true),
-				() => resolve(false)
-			);
-		});
-		if (!confirmed) return;
+		const targetRef = await pickUpdateTargetRef(plan, appSlug);
+		if (targetRef === null) {
+			return;
+		}
 		const stopTick = startMarketplaceProgress(
 			__("Updating app"),
 			__("Git pull, database migrate, and asset build may take several minutes…")
@@ -498,7 +599,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		try {
 			r = await frappe.call({
 				method: "omnexa_core.omnexa_core.marketplace.update_app_now",
-				args: { app_slug: appSlug, confirm_update: 1 },
+				args: { app_slug: appSlug, confirm_update: 1, target_ref: targetRef },
 				freeze: false,
 			});
 		} catch (e) {

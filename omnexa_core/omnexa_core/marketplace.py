@@ -5,6 +5,7 @@ import hashlib
 import hmac
 import importlib
 import os
+import re
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -367,22 +368,200 @@ def _run_bench_cmd(args: list[str]) -> tuple[bool, str]:
 
 def _git_pull_app(app_slug: str) -> tuple[bool, str]:
 	"""Pull latest commits for ``apps/<app_slug>`` (must be a git checkout)."""
-	app_root = os.path.join(get_bench_path(), "apps", app_slug)
-	git_dir = os.path.join(app_root, ".git")
-	if not os.path.isdir(app_root) or not os.path.isdir(git_dir):
-		return False, "missing_app_or_git"
+	ok, out = _git_update_app_to_ref(app_slug, "")
+	return ok, out
+
+
+def _marketplace_git_cache_ttl() -> int:
+	try:
+		return max(120, min(86400, int(frappe.conf.get("omnexa_marketplace_update_check_ttl") or 600)))
+	except Exception:
+		return 600
+
+
+def _git_app_repo_root(app_slug: str) -> str | None:
+	root = os.path.join(get_bench_path(), "apps", app_slug)
+	if os.path.isdir(root) and os.path.isdir(os.path.join(root, ".git")):
+		return root
+	return None
+
+
+def _git_run(app_root: str, args: list[str], timeout: int = 120) -> tuple[int, str]:
 	try:
 		p = subprocess.run(
-			["git", "-C", app_root, "pull"],
+			["git", "-C", app_root, *args],
 			capture_output=True,
 			text=True,
+			timeout=timeout,
 			check=False,
-			timeout=600,
 		)
-		output = (p.stdout or "") + "\n" + (p.stderr or "")
-		return p.returncode == 0, output[-3000:]
+		out = (p.stdout or "") + "\n" + (p.stderr or "")
+		return p.returncode, out
 	except Exception:
-		return False, frappe.get_traceback()[-3000:]
+		return 1, frappe.get_traceback()[-2000:]
+
+
+def _git_default_upstream_branch(app_root: str) -> str:
+	rc, out = _git_run(app_root, ["symbolic-ref", "-q", "refs/remotes/origin/HEAD"], timeout=30)
+	if rc == 0 and out.strip():
+		ref = out.strip().split("/")[-1]
+		if ref:
+			return ref
+	rc, out = _git_run(app_root, ["remote", "show", "origin"], timeout=60)
+	if rc == 0 and "HEAD branch:" in out:
+		for line in out.splitlines():
+			if "HEAD branch:" in line:
+				name = line.split("HEAD branch:", 1)[-1].strip()
+				if name:
+					return name
+	return "develop"
+
+
+def _git_local_head(app_root: str) -> str | None:
+	rc, out = _git_run(app_root, ["rev-parse", "HEAD"], timeout=30)
+	if rc != 0:
+		return None
+	s = out.strip()
+	return s or None
+
+
+def _git_ls_remote_branch_tip(app_root: str, branch: str) -> str | None:
+	rc, out = _git_run(app_root, ["ls-remote", "origin", f"refs/heads/{branch}"], timeout=120)
+	if rc != 0 or not out.strip():
+		return None
+	line = out.strip().splitlines()[0]
+	parts = line.split()
+	return parts[0] if parts else None
+
+
+def _git_list_remote_tags(app_root: str, limit: int = 25) -> list[dict[str, str]]:
+	rc, out = _git_run(app_root, ["ls-remote", "--tags", "origin"], timeout=180)
+	if rc != 0:
+		return []
+	tags: dict[str, str] = {}
+	for line in out.splitlines():
+		parts = line.split("\t")
+		if len(parts) < 2:
+			continue
+		sha, ref = parts[0], parts[1]
+		if not ref.startswith("refs/tags/") or ref.endswith("^{}"):
+			continue
+		name = ref[len("refs/tags/") :]
+		if name:
+			tags[name] = sha[:12]
+	try:
+		from packaging.version import InvalidVersion, Version
+
+		def sort_key(nm: str):
+			try:
+				return (0, Version(nm.lstrip("v").split("/")[-1]))
+			except (InvalidVersion, ValueError, TypeError):
+				return (1, nm)
+
+		names = sorted(tags.keys(), key=sort_key, reverse=True)
+	except Exception:
+		names = sorted(tags.keys(), reverse=True)
+	return [{"ref": n, "sha": tags[n]} for n in names[:limit]]
+
+
+def get_git_update_meta_for_app(app_slug: str, use_cache: bool = True) -> dict:
+	"""Compare local HEAD to remote default-branch tip; list recent tags (cached)."""
+	cache_key = f"omnexa_market_git_meta::{app_slug}"
+	if use_cache:
+		cached = frappe.cache().get_value(cache_key)
+		if cached is not None:
+			return dict(cached)
+	meta: dict = {
+		"ok": False,
+		"app_slug": app_slug,
+		"local_sha": "",
+		"remote_sha": "",
+		"tracked_branch": "develop",
+		"update_available": False,
+		"tags_sample": [],
+		"error": "",
+	}
+	root = _git_app_repo_root(app_slug)
+	if not root:
+		meta["error"] = "no_git_repo"
+		frappe.cache().set_value(cache_key, meta, expires_in_sec=_marketplace_git_cache_ttl())
+		return meta
+	br = _git_default_upstream_branch(root)
+	meta["tracked_branch"] = br
+	local = _git_local_head(root)
+	if local:
+		meta["local_sha"] = local[:12]
+	remote = _git_ls_remote_branch_tip(root, br)
+	if remote:
+		meta["remote_sha"] = remote[:12]
+	meta["tags_sample"] = _git_list_remote_tags(root, limit=20)
+	meta["ok"] = bool(local and remote)
+	if local and remote:
+		meta["update_available"] = local != remote
+	else:
+		meta["update_available"] = False
+	frappe.cache().set_value(cache_key, meta, expires_in_sec=_marketplace_git_cache_ttl())
+	return meta
+
+
+def _invalidate_git_meta_cache(app_slug: str) -> None:
+	try:
+		frappe.cache().delete_value(f"omnexa_market_git_meta::{app_slug}")
+	except Exception:
+		pass
+
+
+def _build_update_ref_choices(app_slug: str, meta: dict) -> list[dict[str, str]]:
+	br = meta.get("tracked_branch") or "develop"
+	choices: list[dict[str, str]] = [
+		{
+			"value": "",
+			"label": frappe._("Pull current branch (fast-forward when possible)"),
+		},
+		{
+			"value": br,
+			"label": frappe._("Branch {0} — match origin (checkout + pull)").format(br),
+		},
+	]
+	seen = {"", br}
+	for t in meta.get("tags_sample") or []:
+		ref = t.get("ref")
+		if not ref or ref in seen:
+			continue
+		seen.add(ref)
+		choices.append(
+			{
+				"value": ref,
+				"label": frappe._("Tag {0} (commit {1})").format(ref, t.get("sha", "")),
+			}
+		)
+	return choices
+
+
+def _git_update_app_to_ref(app_slug: str, target_ref: str) -> tuple[bool, str]:
+	"""Fetch origin; then ``git pull`` (empty ref) or ``git checkout`` + pull if on that branch."""
+	root = _git_app_repo_root(app_slug)
+	if not root:
+		return False, "missing_app_or_git"
+	target_ref = (target_ref or "").strip()
+	rc, out = _git_run(root, ["fetch", "origin", "--tags", "--prune"], timeout=600)
+	if rc != 0:
+		return False, out[-3000:]
+	if not target_ref:
+		rc, out = _git_run(root, ["pull", "--ff-only"], timeout=600)
+		if rc != 0:
+			rc, out = _git_run(root, ["pull"], timeout=600)
+		return rc == 0, out[-3000:]
+	if not re.match(r"^[\w.\-\/]+$", target_ref) or len(target_ref) > 128:
+		return False, "invalid_ref"
+	rc, out = _git_run(root, ["checkout", target_ref], timeout=600)
+	if rc != 0:
+		return False, out[-3000:]
+	br = _git_default_upstream_branch(root)
+	if target_ref == br:
+		rc, out = _git_run(root, ["pull", "origin", br], timeout=600)
+		return rc == 0, out[-3000:]
+	return True, out[-3000:]
 
 
 def _license_allows_marketplace_action(app_slug: str) -> None:
@@ -513,8 +692,12 @@ def get_marketplace_catalog():
 	bundle_mode = _bundle_mode_enabled()
 	use_real = _catalog_show_real_license_status()
 	_uninstall_blocked = _uninstall_protected_apps()
+	installed_set = set(frappe.get_installed_apps() or [])
 	for row in _catalog_seed():
 		app = row["app_slug"]
+		git_meta: dict = {}
+		if app in installed_set:
+			git_meta = get_git_update_meta_for_app(app, use_cache=True)
 		if bundle_mode and not use_real:
 			status = "licensed_bundle"
 			result = None
@@ -526,18 +709,27 @@ def get_marketplace_catalog():
 			{
 				**row,
 				"is_free": is_free_app(app),
-				"is_installed": app in (frappe.get_installed_apps() or []),
+				"is_installed": app in installed_set,
 				"uninstall_allowed": app not in _uninstall_blocked,
 				"license_status": status,
 				"license_expires_on": expires_on,
 				"license_expiry_source": expires_source,
 				"has_stored_license_key": bool(get_stored_license_key(app)),
 				"approved_repo": _approved_repo_for_app(app),
-				"current_version": get_app_version(app) if app in (frappe.get_installed_apps() or []) else "",
+				"current_version": get_app_version(app) if app in installed_set else "",
 				"updated_at": _app_updated_at(app),
 				"whats_new": _app_highlights(app),
+				"update_available": bool(app in installed_set and git_meta.get("update_available")),
+				"local_git_sha": git_meta.get("local_sha", ""),
+				"remote_git_sha": git_meta.get("remote_sha", ""),
+				"git_tracked_branch": git_meta.get("tracked_branch", ""),
+				"git_update_check_ok": bool(git_meta.get("ok")),
 			}
 		)
+	try:
+		refresh_ms = max(60000, min(3600000, int(frappe.conf.get("omnexa_marketplace_catalog_refresh_ms") or 600000)))
+	except Exception:
+		refresh_ms = 600000
 	return {
 		"platform_url": _platform_base_url(),
 		"github_base": _github_base_url(),
@@ -546,6 +738,8 @@ def get_marketplace_catalog():
 		"catalog_uses_real_license_status": use_real,
 		"trial_days": int(TRIAL_DAYS),
 		"license_help_html": _license_help_banner_html(bundle_mode, use_real),
+		"catalog_auto_refresh_ms": refresh_ms,
+		"update_check_ttl_seconds": _marketplace_git_cache_ttl(),
 		"items": items,
 	}
 
@@ -644,18 +838,21 @@ def get_update_plan(app_slug: str):
 	installed = frappe.get_installed_apps() or []
 	if app_slug not in installed:
 		frappe.throw(frappe._("App must be installed before it can be updated from here."))
+	git_meta = get_git_update_meta_for_app(app_slug, use_cache=False)
 	return {
 		"app_slug": app_slug,
 		"repo_url": _approved_repo_for_app(app_slug),
 		"current_version": get_app_version(app_slug),
 		"whats_new": _app_highlights(app_slug),
 		"warning": "A full backup will be created, then git pull, migrate this site, and build assets for this app.",
+		"git_meta": git_meta,
+		"update_refs": _build_update_ref_choices(app_slug, git_meta),
 	}
 
 
 @frappe.whitelist()
-def update_app_now(app_slug: str, confirm_update: int = 0):
-	"""Pull latest code for an installed app, migrate current site, and build assets."""
+def update_app_now(app_slug: str, confirm_update: int = 0, target_ref: str = ""):
+	"""Pull or checkout a ref for an installed app, migrate current site, and build assets."""
 	_assert_marketplace_app_slug(app_slug)
 	if not _is_truthy(confirm_update):
 		return {"updated": False, "message": "confirmation_required"}
@@ -669,7 +866,7 @@ def update_app_now(app_slug: str, confirm_update: int = 0):
 	if not backup_state.get("ok"):
 		return {"updated": False, "message": "backup_failed"}
 
-	ok_pull, out_pull = _git_pull_app(app_slug)
+	ok_pull, out_pull = _git_update_app_to_ref(app_slug, target_ref or "")
 	if not ok_pull:
 		return {
 			"updated": False,
@@ -693,6 +890,7 @@ def update_app_now(app_slug: str, confirm_update: int = 0):
 		}
 
 	ok_build, out_build = _run_bench_cmd(["build", "--app", app_slug])
+	_invalidate_git_meta_cache(app_slug)
 	frappe.clear_cache()
 	version = get_app_version(app_slug)
 	return {
@@ -702,6 +900,7 @@ def update_app_now(app_slug: str, confirm_update: int = 0):
 		"backup": backup_state,
 		"build_ok": ok_build,
 		"build_log_tail": out_build[-1500:] if out_build else "",
+		"applied_ref": (target_ref or "").strip() or "pull",
 	}
 
 
