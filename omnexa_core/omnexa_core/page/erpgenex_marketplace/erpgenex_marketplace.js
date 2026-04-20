@@ -85,6 +85,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const version = frappe.utils.escape_html(item.current_version || "N/A");
 		const updated = frappe.utils.escape_html(formatDate(item.updated_at));
 		const expires = frappe.utils.escape_html(formatDate(item.license_expires_on));
+		const expiresSrc = frappe.utils.escape_html(item.license_expiry_source || "");
 		const type = item.is_free
 			? __("Free")
 			: String(item.app_slug || "").startsWith("omnexa_")
@@ -134,7 +135,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				<td>${updated}</td>
 				<td>${type}</td>
 				<td>${installBadge}</td>
-				<td>${status}</td>
+				<td>${status}${expires !== "N/A" ? `<div class="small text-muted">${__("Expires")}: ${expires}${expiresSrc ? ` (${expiresSrc})` : ""}</div>` : ""}</td>
 				<td>${expires}</td>
 				<td>${actions.join("")}</td>
 			</tr>`;

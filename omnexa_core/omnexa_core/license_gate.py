@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import json
+from urllib.parse import unquote
 
 import frappe
 
@@ -114,6 +116,86 @@ def _app_from_api_method(method: str) -> str | None:
 	return None
 
 
+def _app_from_doctype(doctype: str | None) -> str | None:
+	"""Resolve owning app from DocType metadata (module -> app)."""
+	if not doctype or not isinstance(doctype, str):
+		return None
+	try:
+		meta = frappe.get_meta(doctype)
+		module = getattr(meta, "module", None)
+		if not module:
+			return None
+		app = (frappe.local.module_app or {}).get(frappe.scrub(module))
+		if isinstance(app, str) and app.startswith("omnexa_"):
+			return app
+	except Exception:
+		return None
+	return None
+
+
+def _doctype_from_resource_path(path: str) -> str | None:
+	# /api/resource/<Doctype>[/name]
+	if not path.startswith("/api/resource/"):
+		return None
+	rest = path[len("/api/resource/") :].split("?", 1)[0].strip("/")
+	if not rest:
+		return None
+	return unquote(rest.split("/", 1)[0]).strip()
+
+
+def _doctype_from_frappe_method(method: str) -> str | None:
+	"""
+	Extract doctype for common frappe.* write methods.
+	Supports:
+	- frappe.client.insert/save/submit/cancel/delete
+	- frappe.desk.form.save.savedocs (doc JSON payload)
+	"""
+	fd = getattr(frappe.local, "form_dict", {}) or {}
+	if method in (
+		"frappe.client.insert",
+		"frappe.client.save",
+		"frappe.client.submit",
+		"frappe.client.cancel",
+		"frappe.client.delete",
+	):
+		dt = fd.get("doctype")
+		if dt:
+			return str(dt)
+		doc_payload = fd.get("doc")
+		if doc_payload:
+			try:
+				doc = json.loads(str(doc_payload))
+				if isinstance(doc, dict) and doc.get("doctype"):
+					return str(doc.get("doctype"))
+			except Exception:
+				pass
+		return None
+	if method == "frappe.desk.form.save.savedocs":
+		doc_payload = fd.get("doc")
+		if not doc_payload:
+			return None
+		try:
+			doc = json.loads(str(doc_payload))
+			if isinstance(doc, dict) and doc.get("doctype"):
+				return str(doc.get("doctype"))
+		except Exception:
+			return None
+	return None
+
+
+def _enforce_for_app(app: str) -> None:
+	result = verify_app_license(app)
+	if is_license_status_ok(result.status):
+		_maybe_notify_expiry(app, result)
+		return
+	frappe.throw(
+		frappe._("Application {0} is not licensed ({1}). Open ErpGenEx Marketplace to add a license or developer key.").format(
+			app, result.status
+		),
+		title=frappe._("License required"),
+	)
+
+
 def before_request():
 	"""
 	When ``omnexa_license_enforce`` is set, block API calls whose method namespace is ``omnexa_*``
@@ -134,18 +216,21 @@ def before_request():
 
 	if path.startswith("/api/method/"):
 		method = path[len("/api/method/") :].split("?", 1)[0].strip("/")
-		if _exempt_api_method(method):
+		if not _exempt_api_method(method):
+			app = _app_from_api_method(method)
+			if app:
+				_enforce_for_app(app)
+				return
+		# For generic frappe.* write endpoints, enforce by doctype owner app.
+		dt = _doctype_from_frappe_method(method)
+		app_for_dt = _app_from_doctype(dt)
+		if app_for_dt:
+			_enforce_for_app(app_for_dt)
 			return
-		app = _app_from_api_method(method)
-		if not app:
+
+	if path.startswith("/api/resource/"):
+		dt = _doctype_from_resource_path(path)
+		app_for_dt = _app_from_doctype(dt)
+		if app_for_dt:
+			_enforce_for_app(app_for_dt)
 			return
-		result = verify_app_license(app)
-		if is_license_status_ok(result.status):
-			_maybe_notify_expiry(app, result)
-			return
-		frappe.throw(
-			frappe._(
-				"Application {0} is not licensed ({1}). Open ErpGenEx Marketplace to add a license or developer key."
-			).format(app, result.status),
-			title=frappe._("License required"),
-		)
