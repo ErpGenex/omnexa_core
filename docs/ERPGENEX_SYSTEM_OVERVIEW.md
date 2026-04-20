@@ -189,6 +189,7 @@
 
 ## 7. مراجع داخلية
 
+- [دليل موقع جديد + تثبيت التطبيقات المجانية بالترتيب](./NEW_SITE_AND_FREE_APPS_INSTALL.md)  
 - [نظام التصميم — الخطة والتشيكليست](./design-system/README.md)  
 - [رموز التصميم](./design-system/TOKENS.md)
 
