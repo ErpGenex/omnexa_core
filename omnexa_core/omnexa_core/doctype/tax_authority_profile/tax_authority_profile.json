@@ -5,13 +5,21 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "company",
   "country_code",
   "adapter_id",
   "api_base_url",
-  "notification_webhook_secret"
+  "notification_webhook_secret",
+  "control_section",
+  "compliance_reference"
  ],
  "fields": [
+  {
+   "fieldname": "identity_section",
+   "fieldtype": "Section Break",
+   "label": "Authority Profile Identity"
+  },
   {
    "fieldname": "company",
    "fieldtype": "Link",
@@ -46,6 +54,16 @@
    "fieldname": "notification_webhook_secret",
    "fieldtype": "Password",
    "label": "Notification Webhook Secret"
+  },
+  {
+   "fieldname": "control_section",
+   "fieldtype": "Section Break",
+   "label": "Compliance"
+  },
+  {
+   "fieldname": "compliance_reference",
+   "fieldtype": "Data",
+   "label": "Compliance Reference"
   }
  ],
  "grid_page_length": 50,

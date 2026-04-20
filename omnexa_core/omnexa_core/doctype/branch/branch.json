@@ -6,6 +6,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "branch_section",
   "branch_name",
   "branch_code",
@@ -17,9 +18,15 @@
   "tax_section",
   "eta_einvoice_enabled",
   "tax_authority_profile",
-  "signing_profile"
+  "signing_profile",
+  "control_section"
  ],
  "fields": [
+  {
+   "fieldname": "identity_section",
+   "fieldtype": "Section Break",
+   "label": "Identity"
+  },
   {
    "fieldname": "branch_section",
    "fieldtype": "Section Break",
@@ -97,6 +104,11 @@
    "fieldtype": "Link",
    "label": "Signing Profile",
    "options": "Signing Profile"
+  },
+  {
+   "fieldname": "control_section",
+   "fieldtype": "Section Break",
+   "label": "Control"
   }
  ],
  "grid_page_length": 50,

@@ -55,12 +55,12 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	--omnexa-zebra-list: rgba(241, 245, 249, 0.45);
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .form-page {
+.layout-main-section .omnexa-form-optimized .form-page {
 	padding-inline: var(--omnexa-space-2);
 	padding-bottom: var(--omnexa-page-gap);
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .form-section {
+.layout-main-section .omnexa-form-optimized .form-section {
 	background: var(--card-bg, #fff);
 	border: var(--omnexa-border);
 	border-radius: var(--omnexa-radius);
@@ -69,7 +69,7 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	margin-bottom: var(--omnexa-section-gap);
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .section-head {
+.layout-main-section .omnexa-form-optimized .section-head {
 	font-size: 1.0625rem;
 	font-weight: 700;
 	margin-bottom: var(--omnexa-space-2);
@@ -77,37 +77,56 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	border-bottom: 1px solid rgba(15, 23, 42, 0.07);
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .section-body {
+.layout-main-section .omnexa-form-optimized .section-body {
 	display: grid;
-	grid-template-columns: repeat(2, minmax(220px, 1fr));
+	/* Enterprise default: 3 columns on desktop (like Item) */
+	grid-template-columns: repeat(3, minmax(220px, 1fr));
 	gap: var(--omnexa-space-2) var(--omnexa-space-3);
 	align-items: start;
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-dense .section-body {
+/* Some Frappe forms still render Bootstrap `.row` wrappers inside section-body. Flatten them. */
+.layout-main-section .omnexa-form-optimized .section-body > .row {
+	display: contents;
+}
+
+/* Many Frappe forms wrap controls inside `.form-column` nodes. Flatten them so controls participate in the grid. */
+.layout-main-section .omnexa-form-optimized .section-body > .form-column {
+	display: contents;
+}
+
+.layout-main-section .omnexa-form-optimized .section-body > .row > .form-column {
+	display: contents;
+}
+
+.layout-main-section .omnexa-form-optimized .section-body > .form-column > .frappe-control {
+	min-width: 0;
+}
+
+.layout-main-section .omnexa-form-optimized .section-body > .row > .form-column > .frappe-control {
+	min-width: 0;
+}
+
+.layout-main-section .omnexa-form-optimized.omnexa-layout-dense .section-body,
+.layout-main-section .omnexa-form-optimized.omnexa-layout-complex .section-body {
 	grid-template-columns: repeat(3, minmax(180px, 1fr));
 }
 
-/* Desktop: max 3 field columns per row (enterprise grid rule) */
-.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-complex .section-body {
-	grid-template-columns: repeat(3, minmax(180px, 1fr));
-}
-
-.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-single .section-body {
+.layout-main-section .omnexa-form-optimized.omnexa-layout-single .section-body {
 	grid-template-columns: 1fr;
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Section Break"],
-.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Column Break"],
-.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="HTML"],
-.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Table"],
-.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Text Editor"],
-.layout-main-section .form-layout.omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Code"] {
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Section Break"],
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Column Break"],
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="HTML"],
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Table"],
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Text Editor"],
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Code"] {
 	grid-column: 1 / -1;
 }
 
 /* Frappe puts fields inside .form-column > form; detail controls must span full section width */
-.layout-main-section .form-layout.omnexa-form-optimized .section-body > .form-column:has(
+.layout-main-section .omnexa-form-optimized .section-body > .form-column:has(
 		.frappe-control[data-fieldtype="Table"],
 		.frappe-control[data-fieldtype="Text Editor"],
 		.frappe-control[data-fieldtype="Code"],
@@ -119,58 +138,58 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	min-width: 0;
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control .control-label {
+.layout-main-section .omnexa-form-optimized .frappe-control .control-label {
 	margin-bottom: var(--omnexa-micro);
 	font-weight: 600;
 	font-size: 0.8125rem;
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control input,
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control select,
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control textarea,
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control .control-value,
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control .like-disabled-input {
+.layout-main-section .omnexa-form-optimized .frappe-control input,
+.layout-main-section .omnexa-form-optimized .frappe-control select,
+.layout-main-section .omnexa-form-optimized .frappe-control textarea,
+.layout-main-section .omnexa-form-optimized .frappe-control .control-value,
+.layout-main-section .omnexa-form-optimized .frappe-control .like-disabled-input {
 	border-radius: var(--omnexa-radius-input);
 	min-height: 34px;
 	font-size: 0.875rem;
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control input:focus,
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control select:focus,
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control textarea:focus {
+.layout-main-section .omnexa-form-optimized .frappe-control input:focus,
+.layout-main-section .omnexa-form-optimized .frappe-control select:focus,
+.layout-main-section .omnexa-form-optimized .frappe-control textarea:focus {
 	box-shadow: var(--omnexa-focus);
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control.omnexa-important-control .control-label {
+.layout-main-section .omnexa-form-optimized .frappe-control.omnexa-important-control .control-label {
 	color: #1e40af;
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .frappe-control.omnexa-required-control .control-label::after {
+.layout-main-section .omnexa-form-optimized .frappe-control.omnexa-required-control .control-label::after {
 	content: " *";
 	color: #dc2626;
 	font-weight: 700;
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .omnexa-align-end {
+.layout-main-section .omnexa-form-optimized .omnexa-align-end {
 	text-align: end;
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .omnexa-compact-input {
+.layout-main-section .omnexa-form-optimized .omnexa-compact-input {
 	max-width: 220px;
 }
 
 @media (max-width: 1199px) {
-	.layout-main-section .form-layout.omnexa-form-optimized .section-body,
-	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-dense .section-body,
-	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-complex .section-body {
+	.layout-main-section .omnexa-form-optimized .section-body,
+	.layout-main-section .omnexa-form-optimized.omnexa-layout-dense .section-body,
+	.layout-main-section .omnexa-form-optimized.omnexa-layout-complex .section-body {
 		grid-template-columns: repeat(2, minmax(180px, 1fr));
 	}
 }
 
 @media (max-width: 767px) {
-	.layout-main-section .form-layout.omnexa-form-optimized .section-body,
-	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-dense .section-body,
-	.layout-main-section .form-layout.omnexa-form-optimized.omnexa-layout-complex .section-body {
+	.layout-main-section .omnexa-form-optimized .section-body,
+	.layout-main-section .omnexa-form-optimized.omnexa-layout-dense .section-body,
+	.layout-main-section .omnexa-form-optimized.omnexa-layout-complex .section-body {
 		grid-template-columns: 1fr;
 	}
 }
@@ -190,7 +209,7 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 }
 
 /* -------- Child tables: sticky heading + zebra (items grid) -------- */
-.layout-main-section .form-layout.omnexa-form-optimized .form-grid .grid-heading-row {
+.layout-main-section .omnexa-form-optimized .form-grid .grid-heading-row {
 	position: sticky;
 	top: 0;
 	z-index: 4;
@@ -198,7 +217,7 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	box-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
 }
 
-.layout-main-section .form-layout.omnexa-form-optimized .form-grid .grid-body > .grid-row:nth-child(even) {
+.layout-main-section .omnexa-form-optimized .form-grid .grid-body > .grid-row:nth-child(even) {
 	background-color: var(--omnexa-zebra);
 }
 

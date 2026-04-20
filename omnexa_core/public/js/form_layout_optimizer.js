@@ -93,12 +93,23 @@
 	function apply_form_layout(frm) {
 		if (!frm || !frm.wrapper || !frm.meta) return;
 		const wrapper = frm.wrapper;
+		// Frappe renders the actual form under a `.form-layout` node inside wrapper.
+		// Some themes/customizations style `.form-layout` directly; apply classes to both.
+		const formLayout = wrapper.querySelector(".form-layout") || wrapper;
+
 		wrapper.classList.add(FORM_CLASS, APPLIED_CLASS);
+		if (formLayout !== wrapper) formLayout.classList.add(FORM_CLASS, APPLIED_CLASS);
 
 		[...wrapper.classList]
 			.filter((c) => c.startsWith(LEVEL_CLASS_PREFIX))
 			.forEach((c) => wrapper.classList.remove(c));
 		wrapper.classList.add(`${LEVEL_CLASS_PREFIX}${get_layout_level(frm)}`);
+		if (formLayout !== wrapper) {
+			[...formLayout.classList]
+				.filter((c) => c.startsWith(LEVEL_CLASS_PREFIX))
+				.forEach((c) => formLayout.classList.remove(c));
+			formLayout.classList.add(`${LEVEL_CLASS_PREFIX}${get_layout_level(frm)}`);
+		}
 
 		mark_required_fields(wrapper);
 		mark_important_fields(frm, wrapper);

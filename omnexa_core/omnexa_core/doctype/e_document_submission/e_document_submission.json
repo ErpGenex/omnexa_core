@@ -5,6 +5,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "reference_section",
   "company",
   "branch",
@@ -21,9 +22,16 @@
   "authority_uuid",
   "eta_error_code",
   "http_status_code",
-  "response_body"
+  "response_body",
+  "control_section",
+  "owner_user"
  ],
  "fields": [
+  {
+   "fieldname": "identity_section",
+   "fieldtype": "Section Break",
+   "label": "Identity"
+  },
   {
    "fieldname": "reference_section",
    "fieldtype": "Section Break",
@@ -129,6 +137,17 @@
    "fieldname": "response_body",
    "fieldtype": "Small Text",
    "label": "Response Body"
+  },
+  {
+   "fieldname": "control_section",
+   "fieldtype": "Section Break",
+   "label": "Control"
+  },
+  {
+   "fieldname": "owner_user",
+   "fieldtype": "Link",
+   "label": "Owner",
+   "options": "User"
   }
  ],
  "grid_page_length": 50,

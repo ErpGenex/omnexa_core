@@ -6,6 +6,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "company_section",
   "company_name",
   "abbr",
@@ -28,9 +29,16 @@
   "global_erp_strict_workflow",
   "production_readiness_section",
   "production_demo_branch",
-  "production_demo_activity"
+  "production_demo_activity",
+  "control_section",
+  "external_reference"
  ],
  "fields": [
+  {
+   "fieldname": "identity_section",
+   "fieldtype": "Section Break",
+   "label": "Identity"
+  },
   {
    "fieldname": "company_section",
    "fieldtype": "Section Break",
@@ -177,6 +185,16 @@
    "fieldtype": "Select",
    "label": "Demo activity",
    "options": "\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
+  },
+  {
+   "fieldname": "control_section",
+   "fieldtype": "Section Break",
+   "label": "Control"
+  },
+  {
+   "fieldname": "external_reference",
+   "fieldtype": "Data",
+   "label": "External Reference"
   }
  ],
  "grid_page_length": 50,

@@ -5,14 +5,22 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "identity_section",
   "company",
   "profile_name",
   "certificate_vault_ref",
   "pos_serial",
   "valid_from",
-  "valid_to"
+  "valid_to",
+  "control_section",
+  "key_rotation_date"
  ],
  "fields": [
+  {
+   "fieldname": "identity_section",
+   "fieldtype": "Section Break",
+   "label": "Profile Identity"
+  },
   {
    "fieldname": "company",
    "fieldtype": "Link",
@@ -29,7 +37,7 @@
    "reqd": 1
   },
   {
-   "description": "Pointer to secret manager / vault — never store private keys in the database",
+   "description": "Pointer to secret manager / vault \u2014 never store private keys in the database",
    "fieldname": "certificate_vault_ref",
    "fieldtype": "Data",
    "label": "Certificate Vault Reference"
@@ -48,6 +56,16 @@
    "fieldname": "valid_to",
    "fieldtype": "Date",
    "label": "Valid To"
+  },
+  {
+   "fieldname": "control_section",
+   "fieldtype": "Section Break",
+   "label": "Compliance"
+  },
+  {
+   "fieldname": "key_rotation_date",
+   "fieldtype": "Date",
+   "label": "Key Rotation Date"
   }
  ],
  "grid_page_length": 50,
