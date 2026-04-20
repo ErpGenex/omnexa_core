@@ -9,7 +9,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		<div class="erpgenex-marketplace">
 			<div class="mb-3 text-muted" data-section="meta"></div>
 			<div class="row g-2 mb-2" data-section="filters">
-				<div class="col-md-3">
+				<div class="col-md-5">
 					<input type="text" class="form-control form-control-sm" data-filter="search" placeholder="${__("Search by title, description, slug, or version")}">
 				</div>
 				<div class="col-md-2">
@@ -21,22 +21,10 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 					<input type="text" class="form-control form-control-sm" data-filter="version" placeholder="${__("Version")}">
 				</div>
 				<div class="col-md-3">
-					<select class="form-select form-select-sm marketplace-sort" title="${__("Sort order")}">
-						<option value="title_asc">${__("Sort: App name A–Z")}</option>
-						<option value="title_desc">${__("Sort: App name Z–A")}</option>
-						<option value="activity">${__("Sort: Activity")}</option>
-						<option value="version">${__("Sort: Version")}</option>
-						<option value="updated_desc">${__("Sort: Updated (newest)")}</option>
-						<option value="updated_asc">${__("Sort: Updated (oldest)")}</option>
-						<option value="installed_first">${__("Sort: Installed first")}</option>
-						<option value="installed_last">${__("Sort: Not installed first")}</option>
-						<option value="license">${__("Sort: License status")}</option>
-					</select>
-				</div>
-				<div class="col-md-2">
 					<button class="btn btn-sm btn-light w-100" data-action="reset-filters">${__("Reset")}</button>
 				</div>
 			</div>
+			<div class="mb-2 small text-muted" data-section="sort-hint">${__("Sort: click a column title (toggle ascending / descending).")}</div>
 			<div class="row g-2 mb-3" data-section="filters-dates">
 				<div class="col-md-3">
 					<input type="date" class="form-control form-control-sm" data-filter="updated_from" title="${__("Updated from")}">
@@ -50,14 +38,14 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 					<thead>
 						<tr>
 							<th>${__("Icon")}</th>
-							<th>${__("App")}</th>
-							<th>${__("Description")}</th>
-							<th>${__("Activity")}</th>
-							<th>${__("Version")}</th>
-							<th>${__("Updated")}</th>
-							<th>${__("Type")}</th>
-							<th>${__("Install")}</th>
-							<th>${__("License Status")}</th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="title" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("App")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="description" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Description")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="activity" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Activity")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="version" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Version")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="updated" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Updated")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="type" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Type")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="installed" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Install")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="license" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("License Status")}<span class="sort-indicator text-primary"></span></th>
 							<th>${__("Actions")}</th>
 						</tr>
 					</thead>
@@ -70,7 +58,8 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	`);
 	$(page.body).append($container);
 	let allItems = [];
-	let sortKey = "title_asc";
+	let sortColumn = "title";
+	let sortDir = "asc";
 
 	/** License or developer bypass accepted — hide Buy / Activate; allow Install from public repo. */
 	function is_license_gate_passed(status) {
@@ -166,13 +155,25 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		return Number.isNaN(t) ? 0 : t;
 	}
 
+	function typeRank(item) {
+		if (item.is_free) {
+			return 0;
+		}
+		if (String(item.app_slug || "").startsWith("omnexa_")) {
+			return 1;
+		}
+		return 2;
+	}
+
+	function titleCmp(a, b) {
+		return String(a.title || a.app_slug || "").localeCompare(String(b.title || b.app_slug || ""), undefined, {
+			sensitivity: "base",
+		});
+	}
+
 	function sortFilteredRows(rows) {
 		const list = [...(rows || [])];
-		const sk = sortKey || "title_asc";
-		const titleCmp = (a, b) =>
-			String(a.title || a.app_slug || "").localeCompare(String(b.title || b.app_slug || ""), undefined, {
-				sensitivity: "base",
-			});
+		const desc = sortDir === "desc";
 		const verCmp = (a, b) =>
 			String(a.current_version || "").localeCompare(String(b.current_version || ""), undefined, {
 				numeric: true,
@@ -181,33 +182,55 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			String(a.license_status || "").localeCompare(String(b.license_status || ""), undefined, {
 				sensitivity: "base",
 			});
-		if (sk === "title_desc") {
-			list.sort((a, b) => -titleCmp(a, b));
-		} else if (sk === "title_asc") {
-			list.sort(titleCmp);
-		} else if (sk === "activity") {
-			list.sort((a, b) => {
-				const c = String(a.activity || "").localeCompare(String(b.activity || ""), undefined, {
-					sensitivity: "base",
-				});
-				return c || titleCmp(a, b);
+		const descCmp = (a, b) =>
+			String(a.short_description || "").localeCompare(String(b.short_description || ""), undefined, {
+				sensitivity: "base",
 			});
-		} else if (sk === "version") {
-			list.sort((a, b) => verCmp(a, b) || titleCmp(a, b));
-		} else if (sk === "updated_desc") {
-			list.sort((a, b) => parseUpdatedTs(b) - parseUpdatedTs(a) || titleCmp(a, b));
-		} else if (sk === "updated_asc") {
-			list.sort((a, b) => parseUpdatedTs(a) - parseUpdatedTs(b) || titleCmp(a, b));
-		} else if (sk === "installed_first") {
-			list.sort((a, b) => Number(!!b.is_installed) - Number(!!a.is_installed) || titleCmp(a, b));
-		} else if (sk === "installed_last") {
-			list.sort((a, b) => Number(!!a.is_installed) - Number(!!b.is_installed) || titleCmp(a, b));
-		} else if (sk === "license") {
-			list.sort((a, b) => licCmp(a, b) || titleCmp(a, b));
-		} else {
-			list.sort(titleCmp);
-		}
+		const col = sortColumn || "title";
+
+		list.sort((a, b) => {
+			let c = 0;
+			if (col === "title") {
+				c = titleCmp(a, b);
+			} else if (col === "description") {
+				c = descCmp(a, b);
+			} else if (col === "activity") {
+				c = String(a.activity || "").localeCompare(String(b.activity || ""), undefined, { sensitivity: "base" });
+			} else if (col === "version") {
+				c = verCmp(a, b);
+			} else if (col === "updated") {
+				c = parseUpdatedTs(a) - parseUpdatedTs(b);
+			} else if (col === "type") {
+				c = typeRank(a) - typeRank(b);
+			} else if (col === "installed") {
+				c = Number(!!a.is_installed) - Number(!!b.is_installed);
+			} else if (col === "license") {
+				c = licCmp(a, b);
+			} else {
+				c = titleCmp(a, b);
+			}
+			if (c === 0) {
+				c = titleCmp(a, b);
+			}
+			if (desc) {
+				c = -c;
+			}
+			return c;
+		});
 		return list;
+	}
+
+	function updateSortColumnIndicators() {
+		const arrow = sortDir === "asc" ? " \u25b2" : " \u25bc";
+		$container.find(".marketplace-sort-th").each(function () {
+			const col = $(this).attr("data-sort-col");
+			const $ind = $(this).find(".sort-indicator");
+			if (col === sortColumn) {
+				$ind.text(arrow);
+			} else {
+				$ind.text("");
+			}
+		});
 	}
 
 	function applyFiltersAndRender() {
@@ -232,9 +255,11 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 
 		if (!rows.length) {
 			$container.find('[data-section="rows"]').html(`<tr><td colspan="10" class="text-muted">${__("No apps match current filters.")}</td></tr>`);
+			updateSortColumnIndicators();
 			return;
 		}
 		$container.find('[data-section="rows"]').html(rows.map(renderRow).join(""));
+		updateSortColumnIndicators();
 	}
 
 	async function loadCatalog() {
@@ -254,6 +279,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		);
 		if (!items.length) {
 			$container.find('[data-section="rows"]').html(`<tr><td colspan="10" class="text-muted">${__("No apps found.")}</td></tr>`);
+			updateSortColumnIndicators();
 			return;
 		}
 		applyFiltersAndRender();
@@ -414,9 +440,25 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	$container.on("input change", "[data-filter]", function () {
 		applyFiltersAndRender();
 	});
-	$container.on("change", ".marketplace-sort", function () {
-		sortKey = String($(this).val() || "title_asc");
+	$container.on("click", ".marketplace-sort-th", function (e) {
+		e.preventDefault();
+		const col = $(this).attr("data-sort-col");
+		if (!col) {
+			return;
+		}
+		if (sortColumn === col) {
+			sortDir = sortDir === "asc" ? "desc" : "asc";
+		} else {
+			sortColumn = col;
+			sortDir = col === "updated" ? "desc" : "asc";
+		}
 		applyFiltersAndRender();
+	});
+	$container.on("keydown", ".marketplace-sort-th", function (e) {
+		if (e.key === "Enter" || e.key === " ") {
+			e.preventDefault();
+			$(this).trigger("click");
+		}
 	});
 	$container.on("click", '[data-action="reset-filters"]', function () {
 		$container.find('[data-filter="search"]').val("");
@@ -424,8 +466,8 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		$container.find('[data-filter="version"]').val("");
 		$container.find('[data-filter="updated_from"]').val("");
 		$container.find('[data-filter="updated_to"]').val("");
-		sortKey = "title_asc";
-		$container.find(".marketplace-sort").val("title_asc");
+		sortColumn = "title";
+		sortDir = "asc";
 		applyFiltersAndRender();
 	});
 
