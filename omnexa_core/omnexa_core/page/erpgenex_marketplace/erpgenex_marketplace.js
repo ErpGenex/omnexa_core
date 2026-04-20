@@ -112,7 +112,14 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				);
 			}
 		}
-		if (frappe.user.has_role("System Manager") && item.is_installed) {
+		if (String(item.app_slug || "") === "omnexa_core" && item.is_installed) {
+			actions.push(
+				`<span class="small text-muted me-2 align-middle" title="${__("Hosts ErpGenEx Marketplace — use Update only")}">${__(
+					"Platform core (update only)"
+				)}</span>`
+			);
+		}
+		if (frappe.user.has_role("System Manager") && item.is_installed && item.uninstall_allowed !== false) {
 			actions.push(
 				`<button class="btn btn-sm btn-outline-danger me-2" data-action="uninstall" data-app="${appSlug}">${__("Uninstall")}</button>`
 			);

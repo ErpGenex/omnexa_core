@@ -431,7 +431,11 @@ def _can_install_on_this_site(app_slug: str) -> bool:
 
 
 def _uninstall_protected_apps() -> frozenset[str]:
-	"""Apps that must never be removed from the Desk marketplace (site-breaking)."""
+	"""
+	Apps that cannot be uninstalled from the marketplace UI.
+
+	Always includes ``omnexa_core`` (hosts ErpGenEx Marketplace — update only) and ``frappe``.
+	"""
 	out = {"frappe", "omnexa_core"}
 	raw = frappe.conf.get("omnexa_marketplace_uninstall_protect")
 	if isinstance(raw, (list, tuple, set)):
@@ -508,6 +512,7 @@ def get_marketplace_catalog():
 	items = []
 	bundle_mode = _bundle_mode_enabled()
 	use_real = _catalog_show_real_license_status()
+	_uninstall_blocked = _uninstall_protected_apps()
 	for row in _catalog_seed():
 		app = row["app_slug"]
 		if bundle_mode and not use_real:
@@ -522,6 +527,7 @@ def get_marketplace_catalog():
 				**row,
 				"is_free": is_free_app(app),
 				"is_installed": app in (frappe.get_installed_apps() or []),
+				"uninstall_allowed": app not in _uninstall_blocked,
 				"license_status": status,
 				"license_expires_on": expires_on,
 				"license_expiry_source": expires_source,
