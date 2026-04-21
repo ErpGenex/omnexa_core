@@ -25,12 +25,16 @@ app_license = "mit"
 # ------------------
 
 # include js, css files in header of desk.html
-app_include_css = "/assets/omnexa_core/css/omnexa_core.css"
+app_include_css = [
+	"/assets/omnexa_core/css/omnexa_core.css",
+	"/assets/omnexa_core/css/workspace_help_panel.css",
+]
 app_include_js = [
 	"/assets/omnexa_core/js/workspace_shortcut_icons.js",
 	"/assets/omnexa_core/js/form_layout_optimizer.js",
 	"/assets/omnexa_core/js/erpgenex_brand_desk.js",
 	"/assets/omnexa_core/js/desk_license_guard.js",
+	"/assets/omnexa_core/js/workspace_help_panel.js",
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.

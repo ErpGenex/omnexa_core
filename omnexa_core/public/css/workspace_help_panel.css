@@ -1,0 +1,128 @@
+/* In-workspace help panel (omnexa_core) */
+.omnexa-wh-fab {
+	position: fixed;
+	bottom: 1.25rem;
+	z-index: 1040;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: 50%;
+	border: none;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+	background: var(--primary, #2490ef);
+	color: #fff;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+	right: 1.25rem;
+	left: auto;
+}
+.omnexa-wh--rtl .omnexa-wh-fab {
+	left: 1.25rem;
+	right: auto;
+}
+.omnexa-wh-fab:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.omnexa-wh-panel {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	width: min(420px, 92vw);
+	max-width: 100%;
+	z-index: 1041;
+	background: var(--fg-color, #fff);
+	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+	display: flex;
+	flex-direction: column;
+	right: 0;
+	left: auto;
+	transform: translateX(100%);
+	opacity: 0;
+	pointer-events: none;
+	transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.omnexa-wh--rtl .omnexa-wh-panel {
+	right: auto;
+	left: 0;
+	box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
+	transform: translateX(-100%);
+}
+.omnexa-wh-panel.omnexa-wh-panel--open {
+	transform: translateX(0);
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.omnexa-wh-panel__head {
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid var(--border-color, #e2e2e2);
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+.omnexa-wh-panel__title {
+	font-weight: 600;
+	font-size: 1rem;
+	margin: 0;
+	line-height: 1.35;
+}
+.omnexa-wh-panel__close {
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	padding: 0.25rem;
+	line-height: 1;
+	color: var(--text-muted, #888);
+}
+.omnexa-wh-panel__body {
+	flex: 1;
+	overflow: auto;
+	padding: 0.75rem 1rem 1rem;
+}
+.omnexa-wh-panel__search {
+	width: 100%;
+	margin-bottom: 0.75rem;
+}
+.omnexa-wh-tip {
+	border: 1px solid var(--border-color, #e8e8e8);
+	border-radius: 6px;
+	padding: 0.6rem 0.75rem;
+	margin-bottom: 0.5rem;
+	font-size: 0.92rem;
+	line-height: 1.45;
+}
+.omnexa-wh-tip.omnexa-wh-tip--hidden {
+	display: none;
+}
+.omnexa-wh-tip__t {
+	font-weight: 600;
+	margin-bottom: 0.25rem;
+}
+.omnexa-wh-panel__foot {
+	padding: 0.65rem 1rem;
+	border-top: 1px solid var(--border-color, #e2e2e2);
+	font-size: 0.85rem;
+}
+.omnexa-wh-panel__foot label {
+	cursor: pointer;
+	margin: 0;
+	font-weight: normal;
+}
+.omnexa-wh-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 1039;
+	background: rgba(0, 0, 0, 0.08);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s ease;
+}
+.omnexa-wh-backdrop.omnexa-wh-backdrop--open {
+	opacity: 1;
+	pointer-events: auto;
+}
