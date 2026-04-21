@@ -1,252 +1,245 @@
 {
- "actions": [],
- "allow_rename": 1,
- "autoname": "field:abbr",
- "creation": "2026-04-12 22:30:00",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "identity_section",
-  "company_section",
-  "company_name",
-  "abbr",
-  "status",
-  "column_break_1",
-  "default_currency",
-  "country",
-  "business_activity",
-  "industry_sector",
-  "enable_branches",
-  "tax_section",
-  "tax_id",
-  "rin",
-  "eta_einvoice_enabled",
-  "company_tax_authority_profile",
-  "company_signing_profile",
-  "group_section",
-  "parent_company",
-  "global_erp_section",
-  "global_erp_strict_workflow",
-  "production_readiness_section",
-  "production_demo_branch",
-  "production_demo_activity",
-  "control_section",
-  "external_reference"
- ],
- "fields": [
-  {
-   "fieldname": "identity_section",
-   "fieldtype": "Section Break",
-   "label": "Identity"
-  },
-  {
-   "fieldname": "company_section",
-   "fieldtype": "Section Break",
-   "label": "Company"
-  },
-  {
-   "fieldname": "company_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Legal Name",
-   "reqd": 1
-  },
-  {
-   "fieldname": "abbr",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Abbreviation",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "default": "Draft",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Draft\nActive\nInactive",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "default_currency",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Default Currency",
-   "options": "Currency",
-   "reqd": 1
-  },
-  {
-   "fieldname": "country",
-   "fieldtype": "Link",
-   "label": "Country",
-   "options": "Country",
-   "reqd": 1
-  },
-  {
-   "fieldname": "business_activity",
-   "fieldtype": "Data",
-   "label": "Business Activity"
-  },
-  {
-   "fieldname": "industry_sector",
-   "fieldtype": "Select",
-   "label": "Industry Sector",
-   "options": "\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
-  },
-  {
-   "default": "1",
-   "fieldname": "enable_branches",
-   "fieldtype": "Check",
-   "label": "Enable Branches"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "tax_section",
-   "fieldtype": "Section Break",
-   "label": "Tax & e-Invoice"
-  },
-  {
-   "fieldname": "tax_id",
-   "fieldtype": "Data",
-   "label": "Tax ID"
-  },
-  {
-   "description": "Egypt taxpayer registration (ETA) when e-invoicing is enabled",
-   "fieldname": "rin",
-   "fieldtype": "Data",
-   "label": "RIN"
-  },
-  {
-   "default": "0",
-   "fieldname": "eta_einvoice_enabled",
-   "fieldtype": "Check",
-   "label": "ETA e-Invoice Enabled"
-  },
-  {
-   "depends_on": "eval:doc.eta_einvoice_enabled",
-   "fieldname": "company_tax_authority_profile",
-   "fieldtype": "Link",
-   "label": "Tax Authority Profile",
-   "options": "Tax Authority Profile"
-  },
-  {
-   "depends_on": "eval:doc.eta_einvoice_enabled",
-   "fieldname": "company_signing_profile",
-   "fieldtype": "Link",
-   "label": "Signing Profile",
-   "options": "Signing Profile"
-  },
-  {
-   "fieldname": "group_section",
-   "fieldtype": "Section Break",
-   "label": "Group"
-  },
-  {
-   "fieldname": "parent_company",
-   "fieldtype": "Link",
-   "label": "Parent Company",
-   "options": "Company"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "global_erp_section",
-   "fieldtype": "Section Break",
-   "label": "Global ERP"
-  },
-  {
-   "default": "0",
-   "description": "When enabled: quotation requires opportunity link; sales invoice lines with stock items require delivery note; purchase invoice lines with stock items require goods receipt reference.",
-   "fieldname": "global_erp_strict_workflow",
-   "fieldtype": "Check",
-   "label": "Strict Global ERP chain validations"
-  },
-  {
-   "collapsible": 1,
-   "depends_on": "eval:!doc.__islocal",
-   "fieldname": "production_readiness_section",
-   "fieldtype": "Section Break",
-   "label": "Production readiness & demo data"
-  },
-  {
-   "description": "Optional. Leave empty to scope demo seed / reset to the whole company.",
-   "fieldname": "production_demo_branch",
-   "fieldtype": "Link",
-   "label": "Demo / reset branch",
-   "options": "Branch"
-  },
-  {
-   "description": "Used for professional COA extensions and demo seeding. If empty, Industry Sector is used when relevant.",
-   "fieldname": "production_demo_activity",
-   "fieldtype": "Select",
-   "label": "Demo activity",
-   "options": "\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
-  },
-  {
-   "fieldname": "control_section",
-   "fieldtype": "Section Break",
-   "label": "Control"
-  },
-  {
-   "fieldname": "external_reference",
-   "fieldtype": "Data",
-   "label": "External Reference"
-  }
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-04-14 21:30:00",
- "modified_by": "Administrator",
- "module": "Omnexa Core",
- "name": "Company",
- "naming_rule": "By fieldname",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 0,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Company Admin",
-   "share": 0,
-   "write": 1
-  },
-  {
-   "create": 0,
-   "delete": 0,
-   "email": 0,
-   "export": 0,
-   "print": 0,
-   "read": 1,
-   "report": 1,
-   "role": "Desk User",
-   "share": 0,
-   "write": 0
-  }
- ],
- "row_format": "Dynamic",
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+	"actions": [],
+	"allow_rename": 1,
+	"autoname": "field:abbr",
+	"creation": "2026-04-12 22:30:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"company_section",
+		"company_name",
+		"abbr",
+		"status",
+		"column_break_1",
+		"default_currency",
+		"country",
+		"business_activity",
+		"industry_sector",
+		"enable_branches",
+		"tax_section",
+		"tax_id",
+		"rin",
+		"column_break_omnexa_1",
+		"eta_einvoice_enabled",
+		"company_tax_authority_profile",
+		"company_signing_profile",
+		"group_section",
+		"parent_company",
+		"global_erp_section",
+		"global_erp_strict_workflow",
+		"production_readiness_section",
+		"production_demo_branch",
+		"production_demo_activity",
+		"external_reference"
+	],
+	"fields": [
+		{
+			"fieldname": "company_section",
+			"fieldtype": "Section Break",
+			"label": "Company"
+		},
+		{
+			"fieldname": "company_name",
+			"fieldtype": "Data",
+			"in_list_view": 1,
+			"label": "Legal Name",
+			"reqd": 1
+		},
+		{
+			"fieldname": "abbr",
+			"fieldtype": "Data",
+			"in_list_view": 1,
+			"label": "Abbreviation",
+			"reqd": 1,
+			"unique": 1
+		},
+		{
+			"default": "Draft",
+			"fieldname": "status",
+			"fieldtype": "Select",
+			"in_list_view": 1,
+			"label": "Status",
+			"options": "Draft\nActive\nInactive",
+			"reqd": 1
+		},
+		{
+			"fieldname": "column_break_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "default_currency",
+			"fieldtype": "Link",
+			"in_list_view": 1,
+			"label": "Default Currency",
+			"options": "Currency",
+			"reqd": 1
+		},
+		{
+			"fieldname": "country",
+			"fieldtype": "Link",
+			"label": "Country",
+			"options": "Country",
+			"reqd": 1
+		},
+		{
+			"fieldname": "business_activity",
+			"fieldtype": "Data",
+			"label": "Business Activity"
+		},
+		{
+			"fieldname": "industry_sector",
+			"fieldtype": "Select",
+			"label": "Industry Sector",
+			"options": "\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
+		},
+		{
+			"default": "1",
+			"fieldname": "enable_branches",
+			"fieldtype": "Check",
+			"label": "Enable Branches"
+		},
+		{
+			"collapsible": 1,
+			"fieldname": "tax_section",
+			"fieldtype": "Section Break",
+			"label": "Tax & e-Invoice"
+		},
+		{
+			"fieldname": "tax_id",
+			"fieldtype": "Data",
+			"label": "Tax ID"
+		},
+		{
+			"description": "Egypt taxpayer registration (ETA) when e-invoicing is enabled",
+			"fieldname": "rin",
+			"fieldtype": "Data",
+			"label": "RIN"
+		},
+		{
+			"default": "0",
+			"fieldname": "eta_einvoice_enabled",
+			"fieldtype": "Check",
+			"label": "ETA e-Invoice Enabled"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "company_tax_authority_profile",
+			"fieldtype": "Link",
+			"label": "Tax Authority Profile",
+			"options": "Tax Authority Profile"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "company_signing_profile",
+			"fieldtype": "Link",
+			"label": "Signing Profile",
+			"options": "Signing Profile"
+		},
+		{
+			"fieldname": "group_section",
+			"fieldtype": "Section Break",
+			"label": "Group"
+		},
+		{
+			"fieldname": "parent_company",
+			"fieldtype": "Link",
+			"label": "Parent Company",
+			"options": "Company"
+		},
+		{
+			"collapsible": 1,
+			"fieldname": "global_erp_section",
+			"fieldtype": "Section Break",
+			"label": "Global ERP"
+		},
+		{
+			"default": "0",
+			"description": "When enabled: quotation requires opportunity link; sales invoice lines with stock items require delivery note; purchase invoice lines with stock items require goods receipt reference.",
+			"fieldname": "global_erp_strict_workflow",
+			"fieldtype": "Check",
+			"label": "Strict Global ERP chain validations"
+		},
+		{
+			"collapsible": 1,
+			"depends_on": "eval:!doc.__islocal",
+			"fieldname": "production_readiness_section",
+			"fieldtype": "Section Break",
+			"label": "Production readiness & demo data"
+		},
+		{
+			"description": "Optional. Leave empty to scope demo seed / reset to the whole company.",
+			"fieldname": "production_demo_branch",
+			"fieldtype": "Link",
+			"label": "Demo / reset branch",
+			"options": "Branch"
+		},
+		{
+			"description": "Used for professional COA extensions and demo seeding. If empty, Industry Sector is used when relevant.",
+			"fieldname": "production_demo_activity",
+			"fieldtype": "Select",
+			"label": "Demo activity",
+			"options": "\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
+		},
+		{
+			"fieldname": "external_reference",
+			"fieldtype": "Data",
+			"label": "External Reference"
+		},
+		{
+			"fieldname": "column_break_omnexa_1",
+			"fieldtype": "Column Break"
+		}
+	],
+	"grid_page_length": 50,
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-04-14 21:30:00",
+	"modified_by": "Administrator",
+	"module": "Omnexa Core",
+	"name": "Company",
+	"naming_rule": "By fieldname",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"create": 1,
+			"delete": 1,
+			"email": 1,
+			"export": 1,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "System Manager",
+			"share": 1,
+			"write": 1
+		},
+		{
+			"create": 1,
+			"delete": 0,
+			"email": 1,
+			"export": 1,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "Company Admin",
+			"share": 0,
+			"write": 1
+		},
+		{
+			"create": 0,
+			"delete": 0,
+			"email": 0,
+			"export": 0,
+			"print": 0,
+			"read": 1,
+			"report": 1,
+			"role": "Desk User",
+			"share": 0,
+			"write": 0
+		}
+	],
+	"row_format": "Dynamic",
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
 }

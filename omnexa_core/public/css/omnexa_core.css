@@ -125,6 +125,93 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	grid-column: 1 / -1;
 }
 
+/* Ensure grid tables span full available width */
+.layout-main-section .omnexa-form-optimized .frappe-control[data-fieldtype="Table"],
+.layout-main-section .omnexa-form-optimized .frappe-control[data-fieldtype="Table"] .control-input-wrapper,
+.layout-main-section .omnexa-form-optimized .frappe-control[data-fieldtype="Table"] .control-input,
+.layout-main-section .omnexa-form-optimized .frappe-control[data-fieldtype="Table"] .form-grid-container {
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+}
+
+.layout-main-section .omnexa-form-optimized .form-grid {
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+}
+
+.layout-main-section .omnexa-form-optimized .form-grid .grid-heading-row,
+.layout-main-section .omnexa-form-optimized .form-grid .grid-body,
+.layout-main-section .omnexa-form-optimized .form-grid .grid-footer {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* DataTable internals used by Frappe grids */
+.layout-main-section .omnexa-form-optimized .form-grid .dt-scrollable,
+.layout-main-section .omnexa-form-optimized .form-grid .dt-scrollable .dt-scrollable-container,
+.layout-main-section .omnexa-form-optimized .form-grid .dt-scrollable .dt-scrollable-container .dt-row,
+.layout-main-section .omnexa-form-optimized .form-grid .dt-scrollable .dt-scrollable-container .dt-cell {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+.layout-main-section .omnexa-form-optimized .form-grid .dt-scrollable .dt-scrollable-container {
+	min-width: 100% !important;
+}
+
+/* Cover nested wrappers where Table is not a direct section-body child */
+.layout-main-section .omnexa-form-optimized .section-body .frappe-control[data-fieldtype="Table"] {
+	grid-column: 1 / -1 !important;
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* If a section has a Table, keep section body block to avoid grid squeezing. */
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-has-table-section .section-body {
+	display: block !important;
+}
+
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-has-table-section .frappe-control[data-fieldtype="Table"] {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* HARD OVERRIDE (all Desk forms): any Table control must occupy full row/width */
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] {
+	grid-column: 1 / -1 !important;
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	flex: 0 0 100% !important;
+}
+
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .control-input-wrapper,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .control-input,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .form-grid-container,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .form-grid,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .grid-body,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .grid-footer,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .dt-scrollable,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .dt-scrollable .dt-scrollable-container {
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+}
+
+/* Frappe core sometimes renders .form-grid as inline-block in columns; force block/full row */
+.layout-main-section .form-layout .form-grid-container,
+.layout-main-section .form-layout .form-grid,
+.layout-main-section .form-layout .form-column .form-grid-container,
+.layout-main-section .form-layout .form-column .form-grid {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
 /* Frappe puts fields inside .form-column > form; detail controls must span full section width */
 .layout-main-section .omnexa-form-optimized .section-body > .form-column:has(
 		.frappe-control[data-fieldtype="Table"],
@@ -176,6 +263,48 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 
 .layout-main-section .omnexa-form-optimized .omnexa-compact-input {
 	max-width: 220px;
+}
+
+/* Transaction form density (Journal Entry reference): tighter sections on all main DocType forms. */
+.layout-main-section .omnexa-form-optimized.omnexa-transaction-density .form-section {
+	margin-bottom: 12px;
+}
+
+.layout-main-section .omnexa-form-optimized .frappe-control.omnexa-je-remarks {
+	grid-column: 1 / span 2;
+}
+
+.layout-main-section .omnexa-form-optimized .frappe-control.omnexa-je-remarks textarea {
+	min-height: 34px !important;
+	max-height: 34px !important;
+	height: 34px !important;
+	resize: none;
+	overflow-y: auto;
+}
+
+/* Currency section: keep Currency as single control column, Default Tax Rule opposite it */
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-currency-section .section-body {
+	grid-template-columns: repeat(2, minmax(220px, 1fr));
+}
+
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-currency-section .frappe-control[data-fieldname="currency"] {
+	grid-column: 1;
+	order: 1;
+}
+
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-currency-section .frappe-control[data-fieldname="supporting_attachment"] {
+	grid-column: 2;
+	order: 2;
+}
+
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-currency-section .frappe-control[data-fieldname="default_tax_rule"] {
+	grid-column: 2;
+	order: 4;
+}
+
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-currency-section .frappe-control[data-fieldname="conversion_rate"] {
+	grid-column: 1;
+	order: 3;
 }
 
 @media (max-width: 1199px) {

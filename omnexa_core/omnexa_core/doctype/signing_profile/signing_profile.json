@@ -1,123 +1,111 @@
 {
- "actions": [],
- "autoname": "hash",
- "creation": "2026-04-12 22:30:00",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "identity_section",
-  "company",
-  "profile_name",
-  "certificate_vault_ref",
-  "pos_serial",
-  "valid_from",
-  "valid_to",
-  "control_section",
-  "key_rotation_date"
- ],
- "fields": [
-  {
-   "fieldname": "identity_section",
-   "fieldtype": "Section Break",
-   "label": "Profile Identity"
-  },
-  {
-   "fieldname": "company",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
-   "reqd": 1
-  },
-  {
-   "fieldname": "profile_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Profile Name",
-   "reqd": 1
-  },
-  {
-   "description": "Pointer to secret manager / vault \u2014 never store private keys in the database",
-   "fieldname": "certificate_vault_ref",
-   "fieldtype": "Data",
-   "label": "Certificate Vault Reference"
-  },
-  {
-   "fieldname": "pos_serial",
-   "fieldtype": "Data",
-   "label": "POS Serial"
-  },
-  {
-   "fieldname": "valid_from",
-   "fieldtype": "Date",
-   "label": "Valid From"
-  },
-  {
-   "fieldname": "valid_to",
-   "fieldtype": "Date",
-   "label": "Valid To"
-  },
-  {
-   "fieldname": "control_section",
-   "fieldtype": "Section Break",
-   "label": "Compliance"
-  },
-  {
-   "fieldname": "key_rotation_date",
-   "fieldtype": "Date",
-   "label": "Key Rotation Date"
-  }
- ],
- "grid_page_length": 50,
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2026-04-12 22:30:00",
- "modified_by": "Administrator",
- "module": "Omnexa Core",
- "name": "Signing Profile",
- "naming_rule": "Random",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 0,
-   "delete": 0,
-   "email": 0,
-   "export": 0,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Tax Integration",
-   "share": 0,
-   "write": 0
-  },
-  {
-   "create": 0,
-   "delete": 0,
-   "email": 0,
-   "export": 0,
-   "print": 0,
-   "read": 1,
-   "report": 1,
-   "role": "Desk User",
-   "share": 0,
-   "write": 0
-  }
- ],
- "row_format": "Dynamic",
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 1
+	"actions": [],
+	"autoname": "hash",
+	"creation": "2026-04-12 22:30:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"company",
+		"profile_name",
+		"certificate_vault_ref",
+		"pos_serial",
+		"valid_from",
+		"valid_to",
+		"key_rotation_date"
+	],
+	"fields": [
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"in_list_view": 1,
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "profile_name",
+			"fieldtype": "Data",
+			"in_list_view": 1,
+			"label": "Profile Name",
+			"reqd": 1
+		},
+		{
+			"description": "Pointer to secret manager / vault — never store private keys in the database",
+			"fieldname": "certificate_vault_ref",
+			"fieldtype": "Data",
+			"label": "Certificate Vault Reference"
+		},
+		{
+			"fieldname": "pos_serial",
+			"fieldtype": "Data",
+			"label": "POS Serial"
+		},
+		{
+			"fieldname": "valid_from",
+			"fieldtype": "Date",
+			"label": "Valid From"
+		},
+		{
+			"fieldname": "valid_to",
+			"fieldtype": "Date",
+			"label": "Valid To"
+		},
+		{
+			"fieldname": "key_rotation_date",
+			"fieldtype": "Date",
+			"label": "Key Rotation Date"
+		}
+	],
+	"grid_page_length": 50,
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-04-12 22:30:00",
+	"modified_by": "Administrator",
+	"module": "Omnexa Core",
+	"name": "Signing Profile",
+	"naming_rule": "Random",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"create": 1,
+			"delete": 1,
+			"email": 1,
+			"export": 1,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "System Manager",
+			"share": 1,
+			"write": 1
+		},
+		{
+			"create": 0,
+			"delete": 0,
+			"email": 0,
+			"export": 0,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "Tax Integration",
+			"share": 0,
+			"write": 0
+		},
+		{
+			"create": 0,
+			"delete": 0,
+			"email": 0,
+			"export": 0,
+			"print": 0,
+			"read": 1,
+			"report": 1,
+			"role": "Desk User",
+			"share": 0,
+			"write": 0
+		}
+	],
+	"row_format": "Dynamic",
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
 }

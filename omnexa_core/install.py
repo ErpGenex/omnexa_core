@@ -4,6 +4,7 @@
 from pathlib import Path
 
 import frappe
+from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 from frappe.utils import cint, flt
 from frappe.utils import get_bench_path
 from frappe.utils.file_manager import save_file
@@ -17,6 +18,7 @@ def after_install():
 def after_migrate():
 	ensure_omnexa_roles()
 	apply_default_branding()
+	ensure_global_supporting_attachment_fields()
 	remove_legacy_people_workspace()
 	remove_legacy_finance_workspace()
 	try:
@@ -242,3 +244,56 @@ def _ensure_gl_account(
 	)
 	doc.insert(ignore_permissions=True)
 	return doc.name
+
+
+def _last_insert_anchor_fieldname(doctype: str):
+	"""Stable anchor at end of form (avoids insert_after on removed layout-only sections)."""
+	try:
+		meta = frappe.get_meta(doctype)
+	except Exception:
+		return None
+	for df in reversed(meta.fields or []):
+		if not df.fieldname or df.fieldtype in ("Tab Break", "Section Break", "Column Break"):
+			continue
+		return df.fieldname
+	return None
+
+
+def ensure_global_supporting_attachment_fields():
+	"""Add a clear attachment area to Omnexa primary DocTypes (non-child, non-single)."""
+	try:
+		doctypes = frappe.get_all(
+			"DocType",
+			filters={
+				"module": ["like", "Omnexa%"],
+				"istable": 0,
+				"issingle": 0,
+			},
+			pluck="name",
+		)
+		if not doctypes:
+			return
+
+		custom_fields_map = {}
+		for dt in doctypes:
+			anchor = _last_insert_anchor_fieldname(dt)
+			if not anchor:
+				continue
+			custom_fields_map[dt] = [
+				{
+					"fieldname": "attachments_section",
+					"label": "Attachments",
+					"fieldtype": "Section Break",
+					"insert_after": anchor,
+				},
+				{
+					"fieldname": "supporting_attachment",
+					"label": "Supporting Attachment",
+					"fieldtype": "Attach",
+					"insert_after": "attachments_section",
+				},
+			]
+
+		create_custom_fields(custom_fields_map, update=True)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_global_supporting_attachment_fields")

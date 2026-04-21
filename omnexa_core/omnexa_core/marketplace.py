@@ -167,14 +167,14 @@ def _catalog_seed() -> list[dict]:
 	for app_slug in _marketplace_catalog_slugs():
 		display_title, short_description = _app_display_meta(app_slug)
 		rows.append(
-			{
-				"app_slug": app_slug,
+		{
+			"app_slug": app_slug,
 				"title": display_title,
 				"short_description": short_description,
-				"price_type": "free" if is_free_app(app_slug) else "paid",
-				"icon_url": _guess_icon_path(app_slug),
-				"activity": _activity_for_app(app_slug),
-			}
+			"price_type": "free" if is_free_app(app_slug) else "paid",
+			"icon_url": _guess_icon_path(app_slug),
+			"activity": _activity_for_app(app_slug),
+		}
 		)
 	return rows
 
