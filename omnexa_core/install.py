@@ -10,12 +10,37 @@ from frappe.utils import get_bench_path
 from frappe.utils.file_manager import save_file
 
 
+SUPPORTED_FRAPPE_MAJOR = 15
+
+
+def enforce_supported_frappe_version():
+	"""Fail early when running on an unsupported Frappe major release."""
+	version_text = (getattr(frappe, "__version__", "") or "").strip()
+	if not version_text:
+		return
+
+	major_token = version_text.split(".", 1)[0]
+	try:
+		major = int(major_token)
+	except ValueError:
+		return
+
+	if major != SUPPORTED_FRAPPE_MAJOR:
+		frappe.throw(
+			f"Unsupported Frappe version '{version_text}' for omnexa_core. "
+			f"Supported range is >=15.0,<16.0.",
+			frappe.ValidationError,
+		)
+
+
 def after_install():
+	enforce_supported_frappe_version()
 	ensure_omnexa_roles()
 	apply_default_branding()
 
 
 def after_migrate():
+	enforce_supported_frappe_version()
 	ensure_omnexa_roles()
 	apply_default_branding()
 	ensure_global_supporting_attachment_fields()

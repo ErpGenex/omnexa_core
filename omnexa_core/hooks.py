@@ -90,8 +90,9 @@ app_logo_url = "/files/erpgenex-logo.png"
 # Installation
 # ------------
 
-# before_install = "omnexa_core.install.before_install"
+before_install = "omnexa_core.install.enforce_supported_frappe_version"
 after_install = "omnexa_core.install.after_install"
+before_migrate = "omnexa_core.install.enforce_supported_frappe_version"
 after_migrate = "omnexa_core.install.after_migrate"
 setup_wizard_requires = ["assets/omnexa_core/js/omnexa_core_setup_wizard.js"]
 setup_wizard_complete = "omnexa_core.install.setup_wizard_create_core_masters"

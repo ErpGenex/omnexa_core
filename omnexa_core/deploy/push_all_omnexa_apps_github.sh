@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Push every omnexa_* app under the bench to GitHub (default org: microcol).
+# Push every omnexa_* app plus erpgenex_theme_0426 (bench theme) to GitHub.
+# Does not touch frappe (framework; use upstream / bench update).
+# Default org: microcol — set GITHUB_ORG=ErpGenex for your org.
 # Run from bench root:
 #   chmod +x apps/omnexa_core/omnexa_core/deploy/push_all_omnexa_apps_github.sh
 #   ./apps/omnexa_core/omnexa_core/deploy/push_all_omnexa_apps_github.sh
@@ -80,15 +82,17 @@ push_one() {
 }
 
 shopt -s nullglob
-mapfile -t OMNEXA_APPS < <(find "${APPS_DIR}" -maxdepth 1 -type d -name 'omnexa_*' | LC_ALL=C sort)
+mapfile -t PUSH_TARGETS < <(
+	find "${APPS_DIR}" -maxdepth 1 -type d \( -name 'omnexa_*' -o -name 'erpgenex_theme_0426' \) | LC_ALL=C sort
+)
 
-if [[ ${#OMNEXA_APPS[@]} -eq 0 ]]; then
-	echo "No omnexa_* directories under ${APPS_DIR}"
+if [[ ${#PUSH_TARGETS[@]} -eq 0 ]]; then
+	echo "No omnexa_* or erpgenex_theme_0426 directories under ${APPS_DIR}"
 	exit 1
 fi
 
-echo "Found ${#OMNEXA_APPS[@]} omnexa app directories."
-for app_dir in "${OMNEXA_APPS[@]}"; do
+echo "Found ${#PUSH_TARGETS[@]} repos (omnexa_* + erpgenex_theme_0426)."
+for app_dir in "${PUSH_TARGETS[@]}"; do
 	push_one "$app_dir"
 done
-echo "Finished pushing all omnexa apps."
+echo "Finished pushing all omnexa apps and theme."
