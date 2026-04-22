@@ -66,5 +66,17 @@
 		setTimeout(() => try_patch(attempts + 1), 50);
 	}
 
-	frappe.ready(() => try_patch(0));
+	function mount_workspace_shortcut_icons() {
+		if (!window.frappe || !frappe.boot || frappe.session.user === "Guest") return;
+		if (window.__workspace_shortcut_icons_mounted) return;
+		window.__workspace_shortcut_icons_mounted = true;
+		try_patch(0);
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", mount_workspace_shortcut_icons);
+	} else {
+		mount_workspace_shortcut_icons();
+	}
+	$(window).on("load", mount_workspace_shortcut_icons);
 })();

@@ -30,6 +30,7 @@ app_include_css = [
 	"/assets/omnexa_core/css/workspace_help_panel.css",
 ]
 app_include_js = [
+	"/assets/omnexa_core/js/frappe_ready_shim.js",
 	"/assets/omnexa_core/js/workspace_shortcut_icons.js",
 	"/assets/omnexa_core/js/form_layout_optimizer.js",
 	"/assets/omnexa_core/js/erpgenex_brand_desk.js",
