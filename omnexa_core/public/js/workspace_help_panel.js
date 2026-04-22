@@ -1,57 +1,62 @@
-// Omnexa: contextual help when opening any Desk workspace — close anytime, toggle auto-open, search tips, open global search.
+// Omnexa User Assistant: navbar + workspace/list sidebars + FAB on all Desk screens; contextual tips and search.
 (function () {
 	const LS_AUTO = "omnexa_wh_auto_open";
+	const BRAND = "👉 User Assistant";
 
 	const TIPS = [
+		{
+			id: "context",
+			t: "الشاشة الحالية / Current screen",
+			k: "route list form workspace report screen",
+			b: "يتغير السطر أعلى اللوحة حسب مكانك في النظام (قائمة، نموذج، مساحة عمل، …). The line above updates based on where you are.",
+		},
 		{
 			id: "awesome",
 			t: "البحث السريع (شريط الأوامر) / Awesome Bar",
 			k: "search awesome bar keyboard filter list",
-			b: "اضغط / أو Ctrl+K لفتح البحث، ثم اكتب اسم النموذج أو الصفحة. Press / or Ctrl+K to open search, then type a DocType or page name.",
+			b: "اضغط / أو Ctrl+G لفتح البحث، ثم اكتب اسم النموذج أو الأمر. Press / or Ctrl+G, then type a DocType or command.",
 		},
 		{
 			id: "sidebar",
 			t: "القائمة الجانبية / Sidebar",
-			k: "sidebar menu workspace links",
-			b: "من الجانب تختار مساحة العمل أو التوسيع لرؤية الاختصارات. Use the sidebar to switch workspaces or expand items for shortcuts.",
+			k: "sidebar menu workspace links filters",
+			b: "في مساحة العمل: اختصارات ومجموعات. في القوائم: عوامل تصفية وإحصاءات. In workspaces: shortcuts; in lists: filters and stats.",
 		},
 		{
 			id: "list",
 			t: "قوائم السجلات / List views",
 			k: "list filter sort export print assign tag",
-			b: "من القائمة: تصفية، ترتيب، أعمدة، تصدير، طباعة، إسناد، وسوم. In lists: filter, sort, columns, export, print, assign, and tags.",
+			b: "تصفية، ترتيب، أعمدة، تصدير، طباعة، إسناد، وسوم. Filter, sort, columns, export, print, assign, tags.",
 		},
 		{
 			id: "form",
-			t: "النماذج (إنشاء وتعديل) / Forms",
+			t: "النماذج / Forms",
 			k: "form save submit cancel amend duplicate attach comment timeline",
-			b: "احفظ، أرسل إن وُجد سير عمل، ألغِ، أو عدّل حسب صلاحياتك. المرفقات والتعليقات في الأسفل. Save, workflow actions, cancel, or amend per your role. Attachments and comments below.",
+			b: "احفظ، سير العمل، إلغاء، تعديل حسب الصلاحيات؛ المرفقات والتعليقات بالأسفل. Save, workflow, cancel, amend; attachments and comments below.",
 		},
 		{
 			id: "workspace",
 			t: "مساحات العمل / Workspaces",
 			k: "workspace cards shortcuts dashboard",
-			b: "كل مساحة تجمع روابط واختصارات لمجال عمل. Each workspace groups links and shortcuts for one business area.",
+			b: "كل مساحة تجمع روابط المجال. Each workspace groups links for one area.",
 		},
 		{
 			id: "report",
 			t: "التقارير / Reports",
 			k: "report query builder chart",
-			b: "افتح التقرير من الاختصار أو القائمة، وعدّل المرشحات ثم حدّث. Open a report from a shortcut or menu, set filters, then refresh.",
+			b: "اضبط المرشحات ثم حدّث. Set filters, then refresh.",
 		},
 		{
 			id: "help",
-			t: "مقالات المساعدة / Help articles",
+			t: "مقالات المساعدة / Help",
 			k: "help article documentation",
-			b: "إن فعّل المسؤول «مقالات المساعدة» ستجدها من القائمة أو البحث. If Help Article is enabled, find it from the menu or search.",
-		},
-		{
-			id: "rtl",
-			t: "اللغة والاتجاه / Language",
-			k: "rtl arabic english translate",
-			b: "يمكن تغيير لغة الواجهة من ملف المستخدم. Interface language is set in your user profile.",
+			b: "إن وُجدت «مقالات المساعدة» ابحث عنها من القائمة أو البحث. Use Help Articles from menu or search if enabled.",
 		},
 	];
+
+	function is_desk_app() {
+		return (window.location.pathname || "").indexOf("/app") === 0;
+	}
 
 	function is_workspace_route() {
 		const r = frappe.get_route() || [];
@@ -65,6 +70,26 @@
 		return r[1] || "";
 	}
 
+	function route_context_line() {
+		const r = frappe.get_route() || [];
+		const g = (s) => frappe.utils.xss_sanitise ? frappe.utils.xss_sanitise(String(s)) : String(s);
+		if (r[0] === "Workspaces") {
+			const t = workspace_title();
+			return t
+				? `${__("Workspace")}: ${g(__(t))}`
+				: __("Workspace");
+		}
+		if (r[0] === "List" && r[1]) return `${__("List")}: ${g(r[1])}`;
+		if (r[0] === "Form" && r[1]) {
+			const doc = r[2] ? ` — ${g(r[2])}` : "";
+			return `${__("Form")}: ${g(r[1])}${doc}`;
+		}
+		if (r[0] === "query-report" && r[1]) return `${__("Report")}: ${g(r[1])}`;
+		if (r[0] === "dashboard-view" && r[1]) return `${__("Dashboard")}: ${g(r[1])}`;
+		if (r[0] === "Tree" && r[1]) return `${__("Tree")}: ${g(r[1])}`;
+		return frappe.get_route_str() || __("Desk");
+	}
+
 	function read_ls(key, def) {
 		try {
 			const v = localStorage.getItem(key);
@@ -75,7 +100,7 @@
 		}
 	}
 
-	class OmnexaWorkspaceHelpPanel {
+	class OmnexaUserAssistant {
 		constructor() {
 			this.$root = null;
 			this.$fab = null;
@@ -83,6 +108,7 @@
 			this.$backdrop = null;
 			this.$search = null;
 			this.$tips = null;
+			this.$context = null;
 			this.$cbAuto = null;
 			this.open = false;
 			this._rtl = false;
@@ -94,7 +120,14 @@
 			this._rtl = Boolean(frappe.utils && frappe.utils.is_rtl && frappe.utils.is_rtl());
 			this.ensure_dom();
 			frappe.router.on("change", () => this.on_route_change());
+			$(document).on("toolbar_setup", () => this.inject_navbar_button());
+			$(document).on("list_sidebar_setup", () => this.inject_list_sidebar_button());
+			this.inject_navbar_button();
 			this.on_route_change();
+		}
+
+		open_panel() {
+			this.toggle_panel(true);
 		}
 
 		ensure_dom() {
@@ -103,8 +136,8 @@
 			if (this._rtl) this.$root.addClass("omnexa-wh--rtl");
 
 			this.$fab = $(`
-				<button type="button" class="omnexa-wh-fab" title="${__("Help for this workspace")}" aria-label="${__("Help")}">
-					<span class="fa fa-question" style="font-size:1.1rem"></span>
+				<button type="button" class="omnexa-wh-fab" title="${__(BRAND)}" aria-label="${__(BRAND)}">
+					<span class="fa fa-compass" style="font-size:1.15rem"></span>
 				</button>
 			`).appendTo(this.$root);
 			this.$fab.on("click", () => this.toggle_panel(true));
@@ -121,6 +154,7 @@
 					<div class="omnexa-wh-panel__head">
 						<div>
 							<p class="omnexa-wh-panel__title omnexa-wh-panel__title-text"></p>
+							<p class="text-muted small mb-1 omnexa-ua-context"></p>
 							<p class="text-muted small mb-0 omnexa-wh-panel__subtitle"></p>
 						</div>
 						<button type="button" class="omnexa-wh-panel__close" aria-label="${__("Close")}">&times;</button>
@@ -134,7 +168,7 @@
 					<div class="omnexa-wh-panel__foot">
 						<label class="d-flex align-items-center gap-2 mb-0">
 							<input type="checkbox" class="omnexa-wh-cb-auto" />
-							<span>${__("Do not open this panel automatically when I enter a workspace")}</span>
+							<span>${__("Do not open automatically when I enter a workspace")}</span>
 						</label>
 						<div class="mt-2">
 							<button type="button" class="btn btn-xs btn-default omnexa-wh-open-search">${__(
@@ -145,6 +179,8 @@
 				</div>
 			`).appendTo(this.$root);
 
+			this.$panel.find(".omnexa-wh-panel__title-text").text(__(BRAND));
+
 			this.$panel.find(".omnexa-wh-panel__close").on("click", () => {
 				if (this._open_timer) clearTimeout(this._open_timer);
 				this._open_timer = null;
@@ -153,9 +189,9 @@
 			this.$search = this.$panel.find(".omnexa-wh-panel__search");
 			this.$search.on("input", () => this.filter_tips());
 			this.$tips = this.$panel.find(".omnexa-wh-tips");
+			this.$context = this.$panel.find(".omnexa-ua-context");
 			this.$cbAuto = this.$panel.find(".omnexa-wh-cb-auto");
 			this.$cbAuto.on("change", () => {
-				// checked = user does NOT want auto-open → store "0"
 				localStorage.setItem(LS_AUTO, this.$cbAuto.prop("checked") ? "0" : "1");
 			});
 
@@ -179,10 +215,77 @@
 			return read_ls(LS_AUTO, "1") !== "0";
 		}
 
+		update_header() {
+			const ctx = route_context_line();
+			this.$context.text(ctx);
+			this.$panel
+				.find(".omnexa-wh-panel__subtitle")
+				.text(
+					__(
+						"Search the cards below for how lists, forms, workspaces, and search work — or use global search for any DocType."
+					)
+				);
+		}
+
+		inject_navbar_button() {
+			if (!is_desk_app() || $("#omnexa-user-assistant-nav").length) return;
+			let $helpLi = $("header .navbar-nav .dropdown-help").closest("li.nav-item");
+			if (!$helpLi.length) {
+				$helpLi = $("header .navbar-nav .dropdown-navbar-user").closest("li.nav-item");
+			}
+			if (!$helpLi.length) return;
+			const $li = $(`
+				<li class="nav-item d-none d-sm-flex align-items-center omnexa-user-assistant-nav-li" id="omnexa-user-assistant-nav">
+					<button type="button" class="btn-reset nav-link text-muted omnexa-user-assistant-nav-btn" title="${__(BRAND)}">
+						<span class="fa fa-compass" style="margin-inline-end:6px"></span>
+						<span class="d-none d-xl-inline text-nowrap">${BRAND}</span>
+					</button>
+				</li>
+			`);
+			$li.find("button").on("click", () => this.toggle_panel(true));
+			$helpLi.before($li);
+		}
+
+		inject_workspace_sidebar_button() {
+			$("#body .desk-sidebar .omnexa-ua-workspace-sidebar").remove();
+			const $sb = $("#body .desk-sidebar").first();
+			if (!$sb.length) return;
+			const $wrap = $(`
+				<div class="sidebar-item-container omnexa-ua-workspace-sidebar" style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border-color, #e8e8e8);">
+					<div class="desk-sidebar-item standard-sidebar-item">
+						<button type="button" class="btn-reset item-anchor omnexa-ua-ws-open" style="cursor:pointer;width:100%;text-align:inherit;">
+							<span class="sidebar-item-icon"><span class="fa fa-compass" style="font-size:1rem"></span></span>
+							<span class="sidebar-item-label">${BRAND}</span>
+						</button>
+					</div>
+				</div>
+			`);
+			$sb.prepend($wrap);
+			$wrap.find(".omnexa-ua-ws-open").on("click", (e) => {
+				e.preventDefault();
+				this.toggle_panel(true);
+			});
+		}
+
+		inject_list_sidebar_button() {
+			$("#body .list-sidebar .omnexa-ua-list-sidebar").remove();
+			const $sb = $("#body .list-sidebar").first();
+			if (!$sb.length) return;
+			const $b = $(`
+				<div class="omnexa-ua-list-sidebar" style="padding:10px 12px;border-bottom:1px solid var(--border-color, #e8e8e8);">
+					<button type="button" class="btn btn-default btn-sm btn-block omnexa-ua-list-open text-nowrap" style="overflow:hidden;text-overflow:ellipsis;">
+						<span class="fa fa-compass" style="margin-inline-end:6px"></span>${BRAND}
+					</button>
+				</div>
+			`);
+			$sb.prepend($b);
+			$b.find(".omnexa-ua-list-open").on("click", () => this.toggle_panel(true));
+		}
+
 		on_route_change() {
 			if (!this.$root) return;
 
-			if (!is_workspace_route()) {
+			if (!is_desk_app()) {
 				this._last_workspace_key = null;
 				this.$fab.hide();
 				this.toggle_panel(false);
@@ -190,35 +293,45 @@
 			}
 
 			this.$fab.show();
-			const title = workspace_title();
-			const label = title ? __(title) : __("Workspace");
-			this.$panel.find(".omnexa-wh-panel__title-text").text(__("How to use this area"));
-			this.$panel.find(".omnexa-wh-panel__subtitle").text(`${__("Current workspace")}: ${label}`);
-
+			this.update_header();
 			this.$cbAuto.prop("checked", !this.auto_open_enabled());
 
-			const key = `${frappe.get_route().join("/")}`;
-			const changed = key !== this._last_workspace_key;
-			this._last_workspace_key = key;
+			setTimeout(() => {
+				this.inject_workspace_sidebar_button();
+				this.inject_list_sidebar_button();
+			}, 80);
 
-			if (this._open_timer) clearTimeout(this._open_timer);
-			this._open_timer = null;
+			if (is_workspace_route()) {
+				const key = `${frappe.get_route().join("/")}`;
+				const changed = key !== this._last_workspace_key;
+				this._last_workspace_key = key;
 
-			if (this.auto_open_enabled() && changed) {
-				this._open_timer = setTimeout(() => {
-					this._open_timer = null;
-					if (is_workspace_route()) this.toggle_panel(true);
-				}, 350);
-			} else if (!this.auto_open_enabled()) {
+				if (this._open_timer) clearTimeout(this._open_timer);
+				this._open_timer = null;
+
+				if (this.auto_open_enabled() && changed) {
+					this._open_timer = setTimeout(() => {
+						this._open_timer = null;
+						if (is_workspace_route()) this.toggle_panel(true);
+					}, 350);
+				} else if (!this.auto_open_enabled()) {
+					this.toggle_panel(false);
+				}
+			} else {
+				this._last_workspace_key = null;
+				if (this._open_timer) clearTimeout(this._open_timer);
+				this._open_timer = null;
 				this.toggle_panel(false);
 			}
 		}
 
 		toggle_panel(show) {
+			if (!is_desk_app()) return;
 			this.open = Boolean(show);
 			this.$panel.toggleClass("omnexa-wh-panel--open", this.open);
 			this.$backdrop.toggleClass("omnexa-wh-backdrop--open", this.open);
 			if (this.open) {
+				this.update_header();
 				this.$search.val("");
 				this.filter_tips();
 				setTimeout(() => this.$search.trigger("focus"), 100);
@@ -256,9 +369,13 @@
 
 	frappe.ready(() => {
 		if (!frappe.boot || frappe.session.user === "Guest") return;
-		frappe.provide("omnexa_workspace_help");
-		const p = new OmnexaWorkspaceHelpPanel();
+		const p = new OmnexaUserAssistant();
 		p.init();
+		frappe.omnexa_user_assistant = p;
 		frappe.omnexa_workspace_help = p;
+		window.omnexaUserAssistant = {
+			openPanel: () => p.open_panel(),
+			toggle: (show) => p.toggle_panel(show !== false),
+		};
 	});
 })();

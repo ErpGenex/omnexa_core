@@ -126,3 +126,14 @@
 	opacity: 1;
 	pointer-events: auto;
 }
+
+header .navbar .omnexa-user-assistant-nav-btn {
+	max-width: 14rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.omnexa-ua-ws-open .sidebar-item-label {
+	white-space: normal;
+	line-height: 1.25;
+}
