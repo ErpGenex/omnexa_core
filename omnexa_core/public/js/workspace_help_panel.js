@@ -3,56 +3,80 @@
 	const LS_AUTO = "omnexa_wh_auto_open";
 	const BRAND = "👉 User Assistant";
 
-	const TIPS = [
-		{
-			id: "context",
-			t: "الشاشة الحالية / Current screen",
-			k: "route list form workspace report screen",
-			b: "يتغير السطر أعلى اللوحة حسب مكانك في النظام (قائمة، نموذج، مساحة عمل، …). The line above updates based on where you are.",
-		},
-		{
-			id: "awesome",
-			t: "البحث السريع (شريط الأوامر) / Awesome Bar",
-			k: "search awesome bar keyboard filter list",
-			b: "اضغط / أو Ctrl+G لفتح البحث، ثم اكتب اسم النموذج أو الأمر. Press / or Ctrl+G, then type a DocType or command.",
-		},
-		{
+	function base_tips() {
+		return [
+			{
+				id: "context",
+				t: "الشاشة الحالية / Current screen",
+				k: "route list form workspace report screen",
+				b: "يتغير السطر أعلى اللوحة حسب مكانك في النظام (قائمة، نموذج، مساحة عمل، …). The line above updates based on where you are.",
+			},
+			{
+				id: "awesome",
+				t: "البحث السريع (شريط الأوامر) / Awesome Bar",
+				k: "search awesome bar keyboard filter list",
+				b: "اضغط / أو Ctrl+G لفتح البحث، ثم اكتب اسم النموذج أو الأمر. Press / or Ctrl+G, then type a DocType or command.",
+			},
+			{
+				id: "help",
+				t: "مقالات المساعدة / Help",
+				k: "help article documentation",
+				b: "إن وُجدت «مقالات المساعدة» ابحث عنها من القائمة أو البحث. Use Help Articles from menu or search if enabled.",
+			},
+		];
+	}
+
+	function tips_for_route() {
+		const r = frappe.get_route() || [];
+		const head = [];
+
+		if (r[0] === "Workspaces") {
+			head.push({
+				id: "ws",
+				t: "مساحة العمل / Workspace",
+				k: "workspace shortcuts cards onboarding",
+				b: "استخدم الاختصارات والبطاقات للوصول السريع (إنشاء/قوائم/تقارير). Use shortcuts/cards to jump into work (new/list/reports).",
+			});
+		} else if (r[0] === "List") {
+			head.push({
+				id: "list",
+				t: "قائمة السجلات / List view",
+				k: "filter sort columns bulk export print tags assign",
+				b: "من الأعلى: الفلاتر/الترتيب/الأعمدة. ومن الإجراءات: تصدير، طباعة، إجراءات جماعية. Use filters/sort/columns, then export/print/bulk actions.",
+			});
+		} else if (r[0] === "Form") {
+			head.push({
+				id: "form",
+				t: "نموذج / Form",
+				k: "save submit workflow attachments comments timeline",
+				b: "احفظ أولاً، ثم نفّذ إجراءات سير العمل حسب صلاحيتك. المرفقات/التعليقات/التاريخ بالأسفل. Save first, then workflow actions; attachments/comments/timeline below.",
+			});
+		} else if (r[0] === "query-report" || r[0] === "Report") {
+			head.push({
+				id: "report",
+				t: "تقرير / Report",
+				k: "filters refresh export chart",
+				b: "اضبط المرشحات ثم اضغط تحديث. يمكن التصدير أو عرض الرسم. Set filters then refresh; export or view chart when available.",
+			});
+		} else {
+			head.push({
+				id: "desk",
+				t: "داخل النظام / Desk",
+				k: "search navigate shortcuts",
+				b: "استخدم الزر العائم أو زر الشريط العلوي لفتح المساعد. Use the floating button or top button to open the assistant anytime.",
+			});
+		}
+
+		// keep a sidebar tip for discoverability
+		head.push({
 			id: "sidebar",
 			t: "القائمة الجانبية / Sidebar",
 			k: "sidebar menu workspace links filters",
 			b: "في مساحة العمل: اختصارات ومجموعات. في القوائم: عوامل تصفية وإحصاءات. In workspaces: shortcuts; in lists: filters and stats.",
-		},
-		{
-			id: "list",
-			t: "قوائم السجلات / List views",
-			k: "list filter sort export print assign tag",
-			b: "تصفية، ترتيب، أعمدة، تصدير، طباعة، إسناد، وسوم. Filter, sort, columns, export, print, assign, tags.",
-		},
-		{
-			id: "form",
-			t: "النماذج / Forms",
-			k: "form save submit cancel amend duplicate attach comment timeline",
-			b: "احفظ، سير العمل، إلغاء، تعديل حسب الصلاحيات؛ المرفقات والتعليقات بالأسفل. Save, workflow, cancel, amend; attachments and comments below.",
-		},
-		{
-			id: "workspace",
-			t: "مساحات العمل / Workspaces",
-			k: "workspace cards shortcuts dashboard",
-			b: "كل مساحة تجمع روابط المجال. Each workspace groups links for one area.",
-		},
-		{
-			id: "report",
-			t: "التقارير / Reports",
-			k: "report query builder chart",
-			b: "اضبط المرشحات ثم حدّث. Set filters, then refresh.",
-		},
-		{
-			id: "help",
-			t: "مقالات المساعدة / Help",
-			k: "help article documentation",
-			b: "إن وُجدت «مقالات المساعدة» ابحث عنها من القائمة أو البحث. Use Help Articles from menu or search if enabled.",
-		},
-	];
+		});
+
+		return head.concat(base_tips());
+	}
 
 	function is_desk_app() {
 		return (window.location.pathname || "").indexOf("/app") === 0;
@@ -110,6 +134,7 @@
 			this.$tips = null;
 			this.$context = null;
 			this.$cbAuto = null;
+			this._tips = [];
 			this.open = false;
 			this._rtl = false;
 			this._last_workspace_key = null;
@@ -122,6 +147,7 @@
 			frappe.router.on("change", () => this.on_route_change());
 			$(document).on("toolbar_setup", () => this.inject_navbar_button());
 			$(document).on("list_sidebar_setup", () => this.inject_list_sidebar_button());
+			$(document).on("page-change", () => this.on_route_change());
 			this.inject_navbar_button();
 			this.on_route_change();
 		}
@@ -260,7 +286,8 @@
 					</div>
 				</div>
 			`);
-			$sb.prepend($wrap);
+			// place at the end of the workspace sidebar list
+			$sb.append($wrap);
 			$wrap.find(".omnexa-ua-ws-open").on("click", (e) => {
 				e.preventDefault();
 				this.toggle_panel(true);
@@ -278,6 +305,7 @@
 					</button>
 				</div>
 			`);
+			// keep list helpers near top, but after the default header area if any
 			$sb.prepend($b);
 			$b.find(".omnexa-ua-list-open").on("click", () => this.toggle_panel(true));
 		}
@@ -295,6 +323,10 @@
 			this.$fab.show();
 			this.update_header();
 			this.$cbAuto.prop("checked", !this.auto_open_enabled());
+
+			// refresh tips for current screen
+			this._tips = tips_for_route();
+			this.render_tips();
 
 			setTimeout(() => {
 				this.inject_workspace_sidebar_button();
@@ -332,6 +364,8 @@
 			this.$backdrop.toggleClass("omnexa-wh-backdrop--open", this.open);
 			if (this.open) {
 				this.update_header();
+				this._tips = tips_for_route();
+				this.render_tips();
 				this.$search.val("");
 				this.filter_tips();
 				setTimeout(() => this.$search.trigger("focus"), 100);
@@ -340,7 +374,7 @@
 
 		render_tips() {
 			this.$tips.empty();
-			TIPS.forEach((tip) => {
+			(this._tips || []).forEach((tip) => {
 				const $t = $(`
 					<div class="omnexa-wh-tip" data-id="${tip.id}">
 						<div class="omnexa-wh-tip__t"></div>
@@ -358,7 +392,10 @@
 			this.$tips.find(".omnexa-wh-tip").each(function () {
 				const $el = $(this);
 				const id = $el.attr("data-id");
-				const tip = TIPS.find((t) => t.id === id);
+				const tip = (frappe.omnexa_user_assistant && frappe.omnexa_user_assistant._tips
+					? frappe.omnexa_user_assistant._tips
+					: []
+				).find((t) => t.id === id);
 				if (!tip) return;
 				const hay = (tip.t + " " + tip.k + " " + tip.b).toLowerCase();
 				const ok = !q || hay.includes(q);
