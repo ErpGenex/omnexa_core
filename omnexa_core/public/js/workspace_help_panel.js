@@ -404,8 +404,10 @@
 		}
 	}
 
-	frappe.ready(() => {
-		if (!frappe.boot || frappe.session.user === "Guest") return;
+	function mount_user_assistant() {
+		if (!window.frappe || !frappe.boot || frappe.session.user === "Guest") return;
+		if (window.__omnexa_user_assistant_mounted) return;
+		window.__omnexa_user_assistant_mounted = true;
 		const p = new OmnexaUserAssistant();
 		p.init();
 		frappe.omnexa_user_assistant = p;
@@ -414,5 +416,13 @@
 			openPanel: () => p.open_panel(),
 			toggle: (show) => p.toggle_panel(show !== false),
 		};
-	});
+	}
+
+	// Robust bootstrap for varying load order in Desk.
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", mount_user_assistant);
+	} else {
+		mount_user_assistant();
+	}
+	$(window).on("load", mount_user_assistant);
 })();
