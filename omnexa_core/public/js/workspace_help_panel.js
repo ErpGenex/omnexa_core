@@ -1,7 +1,7 @@
 // Omnexa User Assistant: navbar + workspace/list sidebars + FAB on all Desk screens; contextual tips and search.
 (function () {
 	const LS_AUTO = "omnexa_wh_auto_open";
-	const BRAND = "👉 User Assistant";
+	const BRAND = "👉 ErpGenEx User Assistant";
 
 	const TIPS = [
 		{
