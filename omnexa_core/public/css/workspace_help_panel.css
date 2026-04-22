@@ -27,6 +27,44 @@
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
+.omnexa-ua-dock {
+	position: fixed;
+	bottom: 1.25rem;
+	right: 1.25rem;
+	left: auto;
+	z-index: 1040;
+	border: 1px solid var(--border-color, #d9d9d9);
+	background: var(--fg-color, #fff);
+	color: var(--text-color, #1f272e);
+	border-radius: 10px;
+	padding: 0.45rem 0.7rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.14);
+	cursor: pointer;
+	max-width: 17rem;
+}
+.omnexa-wh--rtl .omnexa-ua-dock {
+	left: 1.25rem;
+	right: auto;
+}
+.omnexa-ua-dock__icon {
+	color: var(--primary, #2490ef);
+}
+.omnexa-ua-dock__label {
+	font-size: 0.9rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.omnexa-ua-dock__action {
+	color: var(--text-muted, #8b8b8b);
+}
+.omnexa-ua-dock--active {
+	border-color: var(--primary, #2490ef);
+}
+
 .omnexa-wh-panel {
 	position: fixed;
 	top: 0;
@@ -44,6 +82,9 @@
 	opacity: 0;
 	pointer-events: none;
 	transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.omnexa-wh-panel.omnexa-wh-panel--wide {
+	width: min(760px, 96vw);
 }
 .omnexa-wh--rtl .omnexa-wh-panel {
 	right: auto;
@@ -72,6 +113,19 @@
 	line-height: 1.35;
 }
 .omnexa-wh-panel__close {
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	padding: 0.25rem;
+	line-height: 1;
+	color: var(--text-muted, #888);
+}
+.omnexa-wh-panel__head-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+.omnexa-wh-panel__resize {
 	border: none;
 	background: transparent;
 	cursor: pointer;

@@ -128,6 +128,7 @@
 		constructor() {
 			this.$root = null;
 			this.$fab = null;
+			this.$dock = null;
 			this.$panel = null;
 			this.$backdrop = null;
 			this.$search = null;
@@ -136,6 +137,7 @@
 			this.$cbAuto = null;
 			this._tips = [];
 			this.open = false;
+			this.panelWide = false;
 			this._rtl = false;
 			this._last_workspace_key = null;
 			this._open_timer = null;
@@ -167,6 +169,16 @@
 				</button>
 			`).appendTo(this.$root);
 			this.$fab.on("click", () => this.toggle_panel(true));
+			this.$fab.hide();
+
+			this.$dock = $(`
+				<button type="button" class="omnexa-ua-dock" title="${__(BRAND)}" aria-label="${__(BRAND)}">
+					<span class="omnexa-ua-dock__icon fa fa-compass"></span>
+					<span class="omnexa-ua-dock__label">${BRAND}</span>
+					<span class="omnexa-ua-dock__action fa fa-expand"></span>
+				</button>
+			`).appendTo(this.$root);
+			this.$dock.on("click", () => this.toggle_panel(true));
 
 			this.$backdrop = $('<div class="omnexa-wh-backdrop" />').appendTo(this.$root);
 			this.$backdrop.on("click", () => {
@@ -183,7 +195,12 @@
 							<p class="text-muted small mb-1 omnexa-ua-context"></p>
 							<p class="text-muted small mb-0 omnexa-wh-panel__subtitle"></p>
 						</div>
-						<button type="button" class="omnexa-wh-panel__close" aria-label="${__("Close")}">&times;</button>
+						<div class="omnexa-wh-panel__head-actions">
+							<button type="button" class="omnexa-wh-panel__resize" aria-label="${__("Resize")}">
+								<span class="fa fa-expand"></span>
+							</button>
+							<button type="button" class="omnexa-wh-panel__close" aria-label="${__("Close")}">&times;</button>
+						</div>
 					</div>
 					<div class="omnexa-wh-panel__body">
 						<input type="search" class="form-control input-sm omnexa-wh-panel__search" placeholder="${__(
@@ -212,6 +229,7 @@
 				this._open_timer = null;
 				this.toggle_panel(false);
 			});
+			this.$panel.find(".omnexa-wh-panel__resize").on("click", () => this.toggle_size());
 			this.$search = this.$panel.find(".omnexa-wh-panel__search");
 			this.$search.on("input", () => this.filter_tips());
 			this.$tips = this.$panel.find(".omnexa-wh-tips");
@@ -244,6 +262,7 @@
 		update_header() {
 			const ctx = route_context_line();
 			this.$context.text(ctx);
+			this.$dock.find(".omnexa-ua-dock__label").text(BRAND);
 			this.$panel
 				.find(".omnexa-wh-panel__subtitle")
 				.text(
@@ -316,11 +335,13 @@
 			if (!is_desk_app()) {
 				this._last_workspace_key = null;
 				this.$fab.hide();
+				this.$dock.hide();
 				this.toggle_panel(false);
 				return;
 			}
 
 			this.$fab.show();
+			this.$dock.show();
 			this.update_header();
 			this.$cbAuto.prop("checked", !this.auto_open_enabled());
 
@@ -353,7 +374,6 @@
 				this._last_workspace_key = null;
 				if (this._open_timer) clearTimeout(this._open_timer);
 				this._open_timer = null;
-				this.toggle_panel(false);
 			}
 		}
 
@@ -362,6 +382,7 @@
 			this.open = Boolean(show);
 			this.$panel.toggleClass("omnexa-wh-panel--open", this.open);
 			this.$backdrop.toggleClass("omnexa-wh-backdrop--open", this.open);
+			this.$dock.toggleClass("omnexa-ua-dock--active", this.open);
 			if (this.open) {
 				this.update_header();
 				this._tips = tips_for_route();
@@ -370,6 +391,13 @@
 				this.filter_tips();
 				setTimeout(() => this.$search.trigger("focus"), 100);
 			}
+		}
+
+		toggle_size() {
+			this.panelWide = !this.panelWide;
+			this.$panel.toggleClass("omnexa-wh-panel--wide", this.panelWide);
+			const icon = this.panelWide ? "fa-compress" : "fa-expand";
+			this.$panel.find(".omnexa-wh-panel__resize .fa").attr("class", `fa ${icon}`);
 		}
 
 		render_tips() {
