@@ -601,6 +601,25 @@ def _backup_before_install() -> dict:
 		return {"ok": False, "message": "backup_failed"}
 
 
+def _run_post_app_change_hardening(site: str, app_slug: str) -> dict:
+	"""Finalize site after install/update so Desk reflects latest modules immediately."""
+	ok_mig, out_mig = _run_bench_cmd(["--site", site, "migrate"])
+	if not ok_mig:
+		return {"ok": False, "message": "migrate_failed", "output": out_mig[-3000:] if out_mig else ""}
+
+	ok_build, out_build = _run_bench_cmd(["build", "--app", app_slug])
+	ok_sync, out_sync = _run_bench_cmd(["--site", site, "execute", "omnexa_core.install.run_workspace_desk_sync"])
+
+	return {
+		"ok": True,
+		"message": "post_app_change_hardening_done",
+		"build_ok": bool(ok_build),
+		"build_log_tail": out_build[-1500:] if out_build else "",
+		"sync_ok": bool(ok_sync),
+		"sync_log_tail": out_sync[-1500:] if out_sync else "",
+	}
+
+
 def _can_install_on_this_site(app_slug: str) -> bool:
 	try:
 		all_apps = set(frappe.get_all_apps(with_internal_apps=True) or [])
@@ -643,7 +662,26 @@ def _installed_apps_that_require(app_slug: str) -> list[str]:
 	return sorted(set(blockers))
 
 
-def _install_app_if_needed(app_slug: str, repo_url: str, require_confirmation: bool = True) -> dict:
+def _normalize_install_source(source: str | None) -> str:
+	source = (source or "github").strip().lower()
+	if source in ("local", "server", "on_server", "existing"):
+		return "local"
+	return "github"
+
+
+def _normalize_update_source(source: str | None) -> str:
+	source = (source or "github").strip().lower()
+	if source in ("local", "server", "on_server", "existing"):
+		return "local"
+	return "github"
+
+
+def _install_app_if_needed(
+	app_slug: str,
+	repo_url: str,
+	require_confirmation: bool = True,
+	install_source: str = "github",
+) -> dict:
 	"""Install app on current site when available and not yet installed."""
 	if require_confirmation:
 		return {"installed": False, "message": "confirmation_required"}
@@ -652,9 +690,20 @@ def _install_app_if_needed(app_slug: str, repo_url: str, require_confirmation: b
 	if not backup_state.get("ok"):
 		return {"installed": False, "message": "backup_failed"}
 
-	fetch_state = _ensure_app_present_from_repo(app_slug, repo_url)
-	if fetch_state.get("message") == "get_app_failed":
-		return {"installed": False, "message": "get_app_failed", "output": fetch_state.get("output")}
+	source = _normalize_install_source(install_source)
+	if source == "local":
+		if not _can_install_on_this_site(app_slug):
+			return {
+				"installed": False,
+				"message": "app_not_present_on_server",
+				"backup": backup_state,
+				"install_source": source,
+			}
+		fetch_state = {"fetched": False, "message": "using_local_server_copy"}
+	else:
+		fetch_state = _ensure_app_present_from_repo(app_slug, repo_url)
+		if fetch_state.get("message") == "get_app_failed":
+			return {"installed": False, "message": "get_app_failed", "output": fetch_state.get("output")}
 
 	installed = set(frappe.get_installed_apps() or [])
 	if app_slug in installed:
@@ -663,6 +712,7 @@ def _install_app_if_needed(app_slug: str, repo_url: str, require_confirmation: b
 			"message": "already_installed",
 			"backup": backup_state,
 			"fetch": fetch_state,
+			"install_source": source,
 		}
 	if not _can_install_on_this_site(app_slug):
 		return {"installed": False, "message": "app_not_present_on_server", "backup": backup_state}
@@ -679,6 +729,17 @@ def _install_app_if_needed(app_slug: str, repo_url: str, require_confirmation: b
 				"output": out_install,
 				"backup": backup_state,
 				"fetch": fetch_state,
+				"install_source": source,
+			}
+		post_state = _run_post_app_change_hardening(site, app_slug)
+		if not post_state.get("ok"):
+			return {
+				"installed": False,
+				"message": post_state.get("message") or "post_install_hardening_failed",
+				"output": post_state.get("output", ""),
+				"backup": backup_state,
+				"fetch": fetch_state,
+				"install_source": source,
 			}
 		frappe.clear_cache()
 		version = get_app_version(app_slug)
@@ -688,7 +749,12 @@ def _install_app_if_needed(app_slug: str, repo_url: str, require_confirmation: b
 			"version": version,
 			"backup": backup_state,
 			"fetch": fetch_state,
+			"install_source": source,
 			"install_log_tail": out_install[-1500:] if out_install else "",
+			"build_ok": bool(post_state.get("build_ok")),
+			"build_log_tail": post_state.get("build_log_tail", ""),
+			"sync_ok": bool(post_state.get("sync_ok")),
+			"sync_log_tail": post_state.get("sync_log_tail", ""),
 			"whats_new": _app_highlights(app_slug),
 		}
 	except Exception:
@@ -833,9 +899,25 @@ def activate_app_license(app_slug: str, activation_key: str):
 @frappe.whitelist()
 def get_install_plan(app_slug: str):
 	_assert_marketplace_app_slug(app_slug)
+	local_available = _can_install_on_this_site(app_slug)
 	return {
 		"app_slug": app_slug,
 		"repo_url": _approved_repo_for_app(app_slug),
+		"install_sources": [
+			{
+				"value": "github",
+				"label": "GitHub (approved repo)",
+				"enabled": True,
+				"note": "Fetch latest code from approved repository, then install on this site.",
+			},
+			{
+				"value": "local",
+				"label": "Local server copy",
+				"enabled": local_available,
+				"note": "Use app already present on this bench server (no get-app).",
+			},
+		],
+		"local_available": local_available,
 		"is_installed": app_slug in (frappe.get_installed_apps() or []),
 		"current_version": get_app_version(app_slug) if app_slug in (frappe.get_installed_apps() or []) else "",
 		"whats_new": _app_highlights(app_slug),
@@ -854,6 +936,20 @@ def get_update_plan(app_slug: str):
 	return {
 		"app_slug": app_slug,
 		"repo_url": _approved_repo_for_app(app_slug),
+		"update_sources": [
+			{
+				"value": "github",
+				"label": "GitHub (fetch + pull)",
+				"enabled": True,
+				"note": "Fetch latest commits/tags from origin, then pull/check out selected ref.",
+			},
+			{
+				"value": "local",
+				"label": "Local server copy",
+				"enabled": True,
+				"note": "Do not pull from remote; run migrate/build using current local code.",
+			},
+		],
 		"current_version": get_app_version(app_slug),
 		"whats_new": _app_highlights(app_slug),
 		"warning": "A full backup will be created, then git pull, migrate this site, and build assets for this app.",
@@ -863,7 +959,12 @@ def get_update_plan(app_slug: str):
 
 
 @frappe.whitelist()
-def update_app_now(app_slug: str, confirm_update: int = 0, target_ref: str = ""):
+def update_app_now(
+	app_slug: str,
+	confirm_update: int = 0,
+	target_ref: str = "",
+	update_source: str = "github",
+):
 	"""Pull or checkout a ref for an installed app, migrate current site, and build assets."""
 	_assert_marketplace_app_slug(app_slug)
 	if not _is_truthy(confirm_update):
@@ -878,30 +979,38 @@ def update_app_now(app_slug: str, confirm_update: int = 0, target_ref: str = "")
 	if not backup_state.get("ok"):
 		return {"updated": False, "message": "backup_failed"}
 
-	ok_pull, out_pull = _git_update_app_to_ref(app_slug, target_ref or "")
-	if not ok_pull:
-		return {
-			"updated": False,
-			"message": "git_pull_failed",
-			"output": out_pull,
-			"backup": backup_state,
-		}
+	update_source_norm = _normalize_update_source(update_source)
+	out_pull = ""
+	if update_source_norm == "github":
+		ok_pull, out_pull = _git_update_app_to_ref(app_slug, target_ref or "")
+		if not ok_pull:
+			return {
+				"updated": False,
+				"message": "git_pull_failed",
+				"output": out_pull,
+				"backup": backup_state,
+				"update_source": update_source_norm,
+			}
 
 	site = getattr(frappe.local, "site", None) or getattr(frappe.conf, "site_name", None)
 	if not site:
-		return {"updated": False, "message": "missing_site_context", "backup": backup_state}
-
-	ok_mig, out_mig = _run_bench_cmd(["--site", site, "migrate"])
-	if not ok_mig:
 		return {
 			"updated": False,
-			"message": "migrate_failed",
-			"output": out_mig,
+			"message": "missing_site_context",
 			"backup": backup_state,
-			"pulled": True,
+			"update_source": update_source_norm,
 		}
 
-	ok_build, out_build = _run_bench_cmd(["build", "--app", app_slug])
+	post_state = _run_post_app_change_hardening(site, app_slug)
+	if not post_state.get("ok"):
+		return {
+			"updated": False,
+			"message": post_state.get("message") or "post_update_hardening_failed",
+			"output": post_state.get("output", ""),
+			"backup": backup_state,
+			"pulled": bool(update_source_norm == "github"),
+			"update_source": update_source_norm,
+		}
 	_invalidate_git_meta_cache(app_slug)
 	frappe.clear_cache()
 	version = get_app_version(app_slug)
@@ -910,20 +1019,28 @@ def update_app_now(app_slug: str, confirm_update: int = 0, target_ref: str = "")
 		"message": "updated_now",
 		"version": version,
 		"backup": backup_state,
-		"build_ok": ok_build,
-		"build_log_tail": out_build[-1500:] if out_build else "",
-		"applied_ref": (target_ref or "").strip() or "pull",
+		"update_source": update_source_norm,
+		"build_ok": bool(post_state.get("build_ok")),
+		"build_log_tail": post_state.get("build_log_tail", ""),
+		"sync_ok": bool(post_state.get("sync_ok")),
+		"sync_log_tail": post_state.get("sync_log_tail", ""),
+		"applied_ref": (target_ref or "").strip() or ("pull" if update_source_norm == "github" else "local"),
 	}
 
 
 @frappe.whitelist()
-def install_app_now(app_slug: str, confirm_install: int = 0):
+def install_app_now(app_slug: str, confirm_install: int = 0, install_source: str = "github"):
 	"""Manual install action from marketplace UI."""
 	_assert_marketplace_app_slug(app_slug)
 	_license_allows_marketplace_action(app_slug)
 	repo_url = _approved_repo_for_app(app_slug)
 	confirmed = _is_truthy(confirm_install)
-	return _install_app_if_needed(app_slug, repo_url=repo_url, require_confirmation=not confirmed)
+	return _install_app_if_needed(
+		app_slug,
+		repo_url=repo_url,
+		require_confirmation=not confirmed,
+		install_source=_normalize_install_source(install_source),
+	)
 
 
 @frappe.whitelist()

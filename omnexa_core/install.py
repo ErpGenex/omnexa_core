@@ -15,14 +15,20 @@ SUPPORTED_FRAPPE_MAJOR = 15
 REQUIRED_SITE_APPS = [
 	"omnexa_accounting",
 	"erpgenex_theme_0426",
+	"omnexa_backup",
 	"omnexa_customer_core",
 	"omnexa_einvoice",
 	"omnexa_experience",
 	"omnexa_fixed_assets",
+	"omnexa_hr",
 	"omnexa_intelligence_core",
+	"omnexa_projects_pm",
+	"omnexa_reporting_compliance",
+	"omnexa_services",
 	"omnexa_setup_intelligence",
 	"omnexa_statutory_audit",
 	"omnexa_theme_manager",
+	"omnexa_trading",
 	"omnexa_user_academy",
 ]
 
@@ -104,7 +110,7 @@ def after_install():
 	install_required_site_apps()
 	ensure_omnexa_roles()
 	apply_default_branding()
-	run_workspace_desk_sync()
+	run_site_hardening_after_app_changes()
 
 
 def after_migrate():
@@ -112,6 +118,11 @@ def after_migrate():
 	ensure_global_defaults_compat()
 	ensure_omnexa_roles()
 	apply_default_branding()
+	run_site_hardening_after_app_changes()
+
+
+def run_site_hardening_after_app_changes():
+	"""Run all site-side fixes so fresh installs and migrations behave the same."""
 	ensure_global_supporting_attachment_fields()
 	remove_legacy_people_workspace()
 	remove_legacy_finance_workspace()

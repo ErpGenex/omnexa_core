@@ -528,9 +528,38 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			app_slug: appSlug,
 		});
 		const plan = (planResp && planResp.message) || {};
+		const installSources = Array.isArray(plan.install_sources) ? plan.install_sources : [];
+		const enabledSources = installSources.filter((s) => s && s.enabled);
+		let installSource = "github";
+		if (enabledSources.length > 1) {
+			installSource = await new Promise((resolve) => {
+				frappe.prompt(
+					[
+						{
+							fieldname: "install_source",
+							label: __("Install source"),
+							fieldtype: "Select",
+							reqd: 1,
+							options: enabledSources.map((s) => `${s.value}|${__(s.label)}`).join("\n"),
+							default: "github",
+							description: __("Choose source before installation."),
+						},
+					],
+					(values) => resolve((values && values.install_source) || "github"),
+					__("Install Source"),
+					__("Continue")
+				);
+			});
+			if (!installSource) return;
+		} else if (enabledSources.length === 1) {
+			installSource = enabledSources[0].value || "github";
+		}
+		const sourceLabel =
+			(installSources.find((s) => s && s.value === installSource) || {}).label || installSource;
 		const confirmed = await new Promise((resolve) => {
 			frappe.confirm(
-				`${__("Install from approved GitHub repo?")}<br><br>` +
+				`${__("Proceed with app installation?")}<br><br>` +
+					`<b>${__("Source")}:</b> ${frappe.utils.escape_html(__(sourceLabel))}<br>` +
 					`<b>${__("Repo")}:</b> ${frappe.utils.escape_html(plan.repo_url || "")}<br>` +
 					`<b>${__("Current Version")}:</b> ${frappe.utils.escape_html(plan.current_version || "N/A")}<br>` +
 					`<b>${__("What's New")}:</b> ${frappe.utils.escape_html(plan.whats_new || "")}<br><br>` +
@@ -548,7 +577,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		try {
 			r = await frappe.call({
 				method: "omnexa_core.omnexa_core.marketplace.install_app_now",
-				args: { app_slug: appSlug, confirm_install: 1 },
+				args: { app_slug: appSlug, confirm_install: 1, install_source: installSource },
 				freeze: false,
 			});
 		} catch (e) {
@@ -656,7 +685,33 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			app_slug: appSlug,
 		});
 		const plan = (planResp && planResp.message) || {};
-		const targetRef = await pickUpdateTargetRef(plan, appSlug);
+		const updateSources = Array.isArray(plan.update_sources) ? plan.update_sources : [];
+		const enabledSources = updateSources.filter((s) => s && s.enabled);
+		let updateSource = "github";
+		if (enabledSources.length > 1) {
+			updateSource = await new Promise((resolve) => {
+				frappe.prompt(
+					[
+						{
+							fieldname: "update_source",
+							label: __("Update source"),
+							fieldtype: "Select",
+							reqd: 1,
+							options: enabledSources.map((s) => `${s.value}|${__(s.label)}`).join("\n"),
+							default: "github",
+							description: __("Choose source before update."),
+						},
+					],
+					(values) => resolve((values && values.update_source) || "github"),
+					__("Update Source"),
+					__("Continue")
+				);
+			});
+			if (!updateSource) return;
+		} else if (enabledSources.length === 1) {
+			updateSource = enabledSources[0].value || "github";
+		}
+		const targetRef = updateSource === "github" ? await pickUpdateTargetRef(plan, appSlug) : "";
 		if (targetRef === null) {
 			return;
 		}
@@ -668,7 +723,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		try {
 			r = await frappe.call({
 				method: "omnexa_core.omnexa_core.marketplace.update_app_now",
-				args: { app_slug: appSlug, confirm_update: 1, target_ref: targetRef },
+				args: { app_slug: appSlug, confirm_update: 1, target_ref: targetRef, update_source: updateSource },
 				freeze: false,
 			});
 		} catch (e) {
