@@ -530,6 +530,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const plan = (planResp && planResp.message) || {};
 		const installSources = Array.isArray(plan.install_sources) ? plan.install_sources : [];
 		const enabledSources = installSources.filter((s) => s && s.enabled);
+		const installRefs = Array.isArray(plan.install_refs) ? plan.install_refs : [];
 		let installSource = "github";
 		if (enabledSources.length > 1) {
 			installSource = await new Promise((resolve) => {
@@ -554,12 +555,85 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		} else if (enabledSources.length === 1) {
 			installSource = enabledSources[0].value || "github";
 		}
+		let installRef = "";
+		if (installSource === "github") {
+			installRef = await new Promise((resolve) => {
+				const quickRefs = installRefs
+					.filter((r) => r && r.value && /^v?\d+\.\d+\.\d+/.test(r.value))
+					.slice(0, 6);
+				const d = new frappe.ui.Dialog({
+					title: __("Choose Version"),
+					fields: [
+						{
+							fieldname: "quick_hint",
+							fieldtype: "HTML",
+							options: quickRefs.length
+								? `<div class="small text-muted mb-2">${__(
+										"Quick buttons for latest release tags"
+								  )}</div>
+								   <div class="d-flex flex-wrap gap-2">
+									${quickRefs
+										.map(
+											(r) =>
+												`<button class="btn btn-xs btn-secondary js-install-ref-chip" data-ref="${frappe.utils.escape_html(
+													r.value
+												)}">${frappe.utils.escape_html(r.value)}</button>`
+										)
+										.join("")}
+								   </div>`
+								: `<div class="small text-muted">${__("No quick tags available. Use pick list or manual ref.")}</div>`,
+						},
+						{
+							fieldname: "install_ref_pick",
+							label: __("Version / branch (pick list)"),
+							fieldtype: "Select",
+							options: [__("Default (server policy / default branch)")]
+								.concat(installRefs.map((r) => r.label || r.value))
+								.join("\n"),
+							default: __("Default (server policy / default branch)"),
+						},
+						{
+							fieldname: "install_ref",
+							label: __("Version / branch / tag"),
+							fieldtype: "Data",
+							description: __("Optional. Example: develop, main, v1.0.0-beta"),
+						},
+					],
+					primary_action_label: __("Continue"),
+					primary_action() {
+						const manual = (d.get_value("install_ref") || "").trim();
+						if (manual) {
+							d.hide();
+							resolve(manual);
+							return;
+						}
+						const pickedLabel = d.get_value("install_ref_pick") || "";
+						const picked = installRefs.find((r) => (r.label || r.value) === pickedLabel);
+						d.hide();
+						resolve((picked && picked.value) || "");
+					},
+					secondary_action_label: __("Cancel"),
+					secondary_action() {
+						d.hide();
+						resolve(null);
+					},
+				});
+				d.show();
+				d.$wrapper.on("click", ".js-install-ref-chip", (e) => {
+					e.preventDefault();
+					const ref = $(e.currentTarget).attr("data-ref") || "";
+					d.set_value("install_ref", ref);
+				});
+			});
+			if (installRef === null) return;
+		}
 		const sourceLabel =
 			(installSources.find((s) => s && s.value === installSource) || {}).label || installSource;
 		const confirmed = await new Promise((resolve) => {
 			frappe.confirm(
 				`${__("Proceed with app installation?")}<br><br>` +
 					`<b>${__("Source")}:</b> ${frappe.utils.escape_html(__(sourceLabel))}<br>` +
+					`<b>${__("Version / ref")}:</b> ${frappe.utils.escape_html(installRef || __("Default"))}<br>` +
 					`<b>${__("Repo")}:</b> ${frappe.utils.escape_html(plan.repo_url || "")}<br>` +
 					`<b>${__("Current Version")}:</b> ${frappe.utils.escape_html(plan.current_version || "N/A")}<br>` +
 					`<b>${__("What's New")}:</b> ${frappe.utils.escape_html(plan.whats_new || "")}<br><br>` +
@@ -577,7 +651,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		try {
 			r = await frappe.call({
 				method: "omnexa_core.omnexa_core.marketplace.install_app_now",
-				args: { app_slug: appSlug, confirm_install: 1, install_source: installSource },
+				args: { app_slug: appSlug, confirm_install: 1, install_source: installSource, install_ref: installRef },
 				freeze: false,
 			});
 		} catch (e) {

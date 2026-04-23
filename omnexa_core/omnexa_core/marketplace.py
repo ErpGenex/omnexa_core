@@ -676,11 +676,21 @@ def _normalize_update_source(source: str | None) -> str:
 	return "github"
 
 
+def _normalize_install_ref(value: str | None) -> str:
+	ref = (value or "").strip()
+	if not ref:
+		return ""
+	if not re.match(r"^[\w.\-\/]+$", ref) or len(ref) > 128:
+		frappe.throw(frappe._("Invalid install ref. Use branch/tag names only."), title=frappe._("Marketplace"))
+	return ref
+
+
 def _install_app_if_needed(
 	app_slug: str,
 	repo_url: str,
 	require_confirmation: bool = True,
 	install_source: str = "github",
+	install_ref: str = "",
 ) -> dict:
 	"""Install app on current site when available and not yet installed."""
 	if require_confirmation:
@@ -691,6 +701,7 @@ def _install_app_if_needed(
 		return {"installed": False, "message": "backup_failed"}
 
 	source = _normalize_install_source(install_source)
+	ref = _normalize_install_ref(install_ref)
 	if source == "local":
 		if not _can_install_on_this_site(app_slug):
 			return {
@@ -701,7 +712,19 @@ def _install_app_if_needed(
 			}
 		fetch_state = {"fetched": False, "message": "using_local_server_copy"}
 	else:
-		fetch_state = _ensure_app_present_from_repo(app_slug, repo_url)
+		if _can_install_on_this_site(app_slug) and ref:
+			ok_ref, out_ref = _git_update_app_to_ref(app_slug, ref)
+			if not ok_ref:
+				return {
+					"installed": False,
+					"message": "git_ref_prepare_failed",
+					"output": out_ref,
+					"backup": backup_state,
+					"install_source": source,
+				}
+			fetch_state = {"fetched": False, "message": "using_local_repo_checked_out_to_ref", "ref": ref}
+		else:
+			fetch_state = _ensure_app_present_from_repo(app_slug, repo_url, branch=ref or None)
 		if fetch_state.get("message") == "get_app_failed":
 			return {"installed": False, "message": "get_app_failed", "output": fetch_state.get("output")}
 
@@ -713,6 +736,7 @@ def _install_app_if_needed(
 			"backup": backup_state,
 			"fetch": fetch_state,
 			"install_source": source,
+			"install_ref": ref,
 		}
 	if not _can_install_on_this_site(app_slug):
 		return {"installed": False, "message": "app_not_present_on_server", "backup": backup_state}
@@ -730,6 +754,7 @@ def _install_app_if_needed(
 				"backup": backup_state,
 				"fetch": fetch_state,
 				"install_source": source,
+				"install_ref": ref,
 			}
 		post_state = _run_post_app_change_hardening(site, app_slug)
 		if not post_state.get("ok"):
@@ -750,6 +775,7 @@ def _install_app_if_needed(
 			"backup": backup_state,
 			"fetch": fetch_state,
 			"install_source": source,
+			"install_ref": ref,
 			"install_log_tail": out_install[-1500:] if out_install else "",
 			"build_ok": bool(post_state.get("build_ok")),
 			"build_log_tail": post_state.get("build_log_tail", ""),
@@ -900,6 +926,13 @@ def activate_app_license(app_slug: str, activation_key: str):
 def get_install_plan(app_slug: str):
 	_assert_marketplace_app_slug(app_slug)
 	local_available = _can_install_on_this_site(app_slug)
+	install_refs = []
+	if local_available:
+		try:
+			meta = get_git_update_meta_for_app(app_slug, use_cache=False)
+			install_refs = _build_update_ref_choices(app_slug, meta)
+		except Exception:
+			install_refs = []
 	return {
 		"app_slug": app_slug,
 		"repo_url": _approved_repo_for_app(app_slug),
@@ -917,6 +950,7 @@ def get_install_plan(app_slug: str):
 				"note": "Use app already present on this bench server (no get-app).",
 			},
 		],
+		"install_refs": install_refs,
 		"local_available": local_available,
 		"is_installed": app_slug in (frappe.get_installed_apps() or []),
 		"current_version": get_app_version(app_slug) if app_slug in (frappe.get_installed_apps() or []) else "",
@@ -1029,7 +1063,12 @@ def update_app_now(
 
 
 @frappe.whitelist()
-def install_app_now(app_slug: str, confirm_install: int = 0, install_source: str = "github"):
+def install_app_now(
+	app_slug: str,
+	confirm_install: int = 0,
+	install_source: str = "github",
+	install_ref: str = "",
+):
 	"""Manual install action from marketplace UI."""
 	_assert_marketplace_app_slug(app_slug)
 	_license_allows_marketplace_action(app_slug)
@@ -1040,6 +1079,7 @@ def install_app_now(app_slug: str, confirm_install: int = 0, install_source: str
 		repo_url=repo_url,
 		require_confirmation=not confirmed,
 		install_source=_normalize_install_source(install_source),
+		install_ref=_normalize_install_ref(install_ref),
 	)
 
 
