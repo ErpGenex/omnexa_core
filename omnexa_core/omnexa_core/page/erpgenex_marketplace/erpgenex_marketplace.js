@@ -1,4 +1,49 @@
 frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
+	if (!document.getElementById("erpgenex-marketplace-compact-style")) {
+		const style = document.createElement("style");
+		style.id = "erpgenex-marketplace-compact-style";
+		style.textContent = `
+			.erpgenex-marketplace .table {
+				font-size: 12px;
+				table-layout: fixed;
+			}
+			.erpgenex-marketplace .table th,
+			.erpgenex-marketplace .table td {
+				padding: 0.3rem 0.35rem;
+				vertical-align: top;
+				word-break: break-word;
+			}
+			.erpgenex-marketplace .table th:nth-child(1),
+			.erpgenex-marketplace .table td:nth-child(1) { width: 36px; }
+			.erpgenex-marketplace .table th:nth-child(2),
+			.erpgenex-marketplace .table td:nth-child(2) { width: 170px; }
+			.erpgenex-marketplace .table th:nth-child(3),
+			.erpgenex-marketplace .table td:nth-child(3) { width: 120px; }
+			.erpgenex-marketplace .table th:nth-child(4),
+			.erpgenex-marketplace .table td:nth-child(4) { width: 96px; }
+			.erpgenex-marketplace .table th:nth-child(5),
+			.erpgenex-marketplace .table td:nth-child(5) { width: 72px; }
+			.erpgenex-marketplace .table th:nth-child(6),
+			.erpgenex-marketplace .table td:nth-child(6) { width: 86px; }
+			.erpgenex-marketplace .table th:nth-child(7),
+			.erpgenex-marketplace .table td:nth-child(7) { width: 56px; }
+			.erpgenex-marketplace .table th:nth-child(8),
+			.erpgenex-marketplace .table td:nth-child(8) { width: 68px; }
+			.erpgenex-marketplace .table th:nth-child(9),
+			.erpgenex-marketplace .table td:nth-child(9) { width: 120px; }
+			.erpgenex-marketplace .table th:nth-child(10),
+			.erpgenex-marketplace .table td:nth-child(10) { width: 62px; }
+			.erpgenex-marketplace .table th:nth-child(11),
+			.erpgenex-marketplace .table td:nth-child(11) { width: 106px; }
+			.erpgenex-marketplace .btn.btn-sm {
+				padding: 0.12rem 0.35rem;
+				font-size: 11px;
+				line-height: 1.2;
+			}
+		`;
+		document.head.appendChild(style);
+	}
+
 	const page = frappe.ui.make_app_page({
 		parent: wrapper,
 		title: __("ErpGenEx Marketplace"),
@@ -257,11 +302,6 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				`<button class="btn btn-sm btn-secondary" data-action="activate" data-app="${appSlug}">${__("Activate Key")}</button>`
 			);
 		}
-		if (frappe.user.has_role("System Manager") && String(item.app_slug || "").startsWith("omnexa_")) {
-			actions.push(
-				`<button class="btn btn-sm btn-outline-danger" data-action="revoke" data-app="${appSlug}" data-free="${item.is_free ? "1" : "0"}">${__("Revoke / Reset trial")}</button>`
-			);
-		}
 		return `
 			<tr data-app="${appSlug}">
 				<td><img src="${iconUrl}" style="width:24px;height:24px;object-fit:contain;" alt="${title}"/></td>
@@ -417,8 +457,35 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		updateSortColumnIndicators();
 	}
 
+	function mergeItemsBySlug(baseItems, freshItems) {
+		const freshMap = new Map((freshItems || []).map((x) => [String(x.app_slug || ""), x]));
+		return (baseItems || []).map((row) => {
+			const slug = String(row.app_slug || "");
+			const fresher = freshMap.get(slug);
+			return fresher ? { ...row, ...fresher } : row;
+		});
+	}
+
+	async function refreshUpdateStatusInBackground() {
+		try {
+			const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_marketplace_catalog", {
+				with_git_meta: 1,
+			});
+			const payload = (r && r.message) || {};
+			const freshItems = payload.items || [];
+			if (!freshItems.length) return;
+			allItems = mergeItemsBySlug(allItems, freshItems);
+			renderUpdateBanner(allItems);
+			applyFiltersAndRender();
+		} catch (e) {
+			// Keep initial fast catalog on screen; background update checks are best-effort.
+		}
+	}
+
 	async function loadCatalog() {
-		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_marketplace_catalog");
+		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_marketplace_catalog", {
+			with_git_meta: 0,
+		});
 		const payload = (r && r.message) || {};
 		const items = payload.items || [];
 		allItems = items;
@@ -440,9 +507,11 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		if (!items.length) {
 			$container.find('[data-section="rows"]').html(`<tr><td colspan="11" class="text-muted">${__("No apps found.")}</td></tr>`);
 			updateSortColumnIndicators();
+			refreshUpdateStatusInBackground();
 			return;
 		}
 		applyFiltersAndRender();
+		refreshUpdateStatusInBackground();
 	}
 
 	async function onBuy(appSlug) {
@@ -751,11 +820,6 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	});
 	$container.on("click", '[data-action="activate"]', function () {
 		onActivate($(this).data("app"));
-	});
-	$container.on("click", '[data-action="revoke"]', function () {
-		const appSlug = $(this).data("app");
-		const isFree = String($(this).data("free")) === "1";
-		onRevoke(appSlug, isFree);
 	});
 	$container.on("input change", "[data-filter]", function () {
 		applyFiltersAndRender();

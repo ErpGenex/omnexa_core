@@ -12,6 +12,7 @@ class Company(Document):
 			frappe.throw(_("RIN is required when ETA e-Invoice is enabled."), title=_("Validation"))
 		self._validate_einvoice_profiles()
 		self._validate_production_demo_branch()
+		self._validate_fiscal_year_start_month()
 
 	def before_insert(self):
 		self._prevent_circular_parent()
@@ -34,6 +35,16 @@ class Company(Document):
 				frappe.throw(_("Circular parent company chain is not allowed."), title=_("Validation"))
 			walk = frappe.db.get_value("Company", walk, "parent_company")
 			depth += 1
+
+	def _validate_fiscal_year_start_month(self):
+		if not self.get("fiscal_year_start_month"):
+			return
+		try:
+			m = int(self.fiscal_year_start_month)
+		except Exception:
+			frappe.throw(_("Fiscal year start month must be between 1 and 12."), title=_("Validation"))
+		if m < 1 or m > 12:
+			frappe.throw(_("Fiscal year start month must be between 1 and 12."), title=_("Validation"))
 
 	def _validate_production_demo_branch(self):
 		if not getattr(self, "production_demo_branch", None):

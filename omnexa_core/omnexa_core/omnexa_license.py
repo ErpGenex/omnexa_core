@@ -59,6 +59,8 @@ FREE_APPS = frozenset(
 		"omnexa_intelligence_core",
 		"omnexa_projects_pm",
 		"omnexa_setup_intelligence",
+		"omnexa_theme_manager",
+		"omnexa_user_academy",
 		"erpgenex_theme_0426",
 	}
 )

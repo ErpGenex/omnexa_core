@@ -33,17 +33,17 @@
 	right: 1.25rem;
 	left: auto;
 	z-index: 1040;
-	border: 1px solid var(--border-color, #d9d9d9);
-	background: var(--fg-color, #fff);
+	border: none;
+	background: transparent;
 	color: var(--text-color, #1f272e);
-	border-radius: 10px;
-	padding: 0.45rem 0.7rem;
+	border-radius: 999px;
+	padding: 0;
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
-	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.14);
+	gap: 0;
+	box-shadow: none;
 	cursor: pointer;
-	max-width: 17rem;
+	max-width: none;
 }
 .omnexa-wh--rtl .omnexa-ua-dock {
 	left: 1.25rem;
@@ -61,8 +61,55 @@
 .omnexa-ua-dock__action {
 	color: var(--text-muted, #8b8b8b);
 }
-.omnexa-ua-dock--active {
-	border-color: var(--primary, #2490ef);
+.omnexa-ua-avatar {
+	width: 3.1rem;
+	height: 3.1rem;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #4c8bf5, #7a5cff);
+	color: #fff;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	box-shadow: 0 5px 18px rgba(35, 60, 110, 0.28);
+}
+.omnexa-ua-avatar__user {
+	font-size: 1.25rem;
+}
+.omnexa-ua-avatar__wand {
+	position: absolute;
+	right: -0.2rem;
+	top: -0.2rem;
+	font-size: 0.82rem;
+	background: #fff;
+	color: #6a49ff;
+	border-radius: 999px;
+	padding: 0.22rem;
+	line-height: 1;
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+.omnexa-wh--rtl .omnexa-ua-avatar__wand {
+	left: -0.2rem;
+	right: auto;
+}
+.omnexa-ua-dock__notify {
+	position: absolute;
+	right: -0.3rem;
+	bottom: -0.3rem;
+	background: #ff3b5b;
+	color: #fff;
+	font-size: 0.65rem;
+	font-weight: 600;
+	padding: 0.15rem 0.35rem;
+	border-radius: 999px;
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.24);
+}
+.omnexa-wh--rtl .omnexa-ua-dock__notify {
+	left: -0.3rem;
+	right: auto;
+}
+.omnexa-ua-dock--active .omnexa-ua-avatar {
+	box-shadow: 0 0 0 3px rgba(76, 139, 245, 0.22), 0 5px 18px rgba(35, 60, 110, 0.28);
 }
 
 .omnexa-wh-panel {
@@ -85,6 +132,9 @@
 }
 .omnexa-wh-panel.omnexa-wh-panel--wide {
 	width: min(760px, 96vw);
+}
+.omnexa-wh-panel.omnexa-wh-panel--xl {
+	width: min(1120px, 99vw);
 }
 .omnexa-wh--rtl .omnexa-wh-panel {
 	right: auto;
@@ -145,7 +195,7 @@
 .omnexa-wh-tip {
 	border: 1px solid var(--border-color, #e8e8e8);
 	border-radius: 6px;
-	padding: 0.6rem 0.75rem;
+	padding: 0.45rem 0.65rem;
 	margin-bottom: 0.5rem;
 	font-size: 0.92rem;
 	line-height: 1.45;
@@ -155,7 +205,46 @@
 }
 .omnexa-wh-tip__t {
 	font-weight: 600;
-	margin-bottom: 0.25rem;
+}
+.omnexa-wh-tip__head {
+	width: 100%;
+	border: 0;
+	background: transparent;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	text-align: start;
+	cursor: pointer;
+}
+.omnexa-wh-tip__chev {
+	color: var(--text-muted, #888);
+	transition: transform 0.15s ease;
+}
+.omnexa-wh-tip__b {
+	margin-top: 0.4rem;
+}
+.omnexa-wh-tip__detail,
+.omnexa-wh-tip__steps {
+	display: none;
+}
+.omnexa-wh-tip.omnexa-wh-tip--open .omnexa-wh-tip__detail,
+.omnexa-wh-tip.omnexa-wh-tip--open .omnexa-wh-tip__steps {
+	display: block;
+}
+.omnexa-wh-tip.omnexa-wh-tip--open .omnexa-wh-tip__chev {
+	transform: rotate(180deg);
+}
+.omnexa-wh-tip__detail {
+	margin-top: 0.45rem;
+}
+.omnexa-wh-tip__steps {
+	margin: 0.35rem 0 0 1rem;
+	padding: 0;
+}
+.omnexa-wh-tip__steps li {
+	margin-bottom: 0.2rem;
 }
 .omnexa-wh-panel__foot {
 	padding: 0.65rem 1rem;

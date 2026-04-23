@@ -667,9 +667,19 @@ def _install_app_if_needed(app_slug: str, repo_url: str, require_confirmation: b
 	if not _can_install_on_this_site(app_slug):
 		return {"installed": False, "message": "app_not_present_on_server", "backup": backup_state}
 	try:
-		from frappe.installer import install_app as _install_app
+		site = getattr(frappe.local, "site", None) or getattr(frappe.conf, "site_name", None)
+		if not site:
+			return {"installed": False, "message": "missing_site_context", "backup": backup_state}
 
-		_install_app(app_slug, verbose=False, set_as_patched=True, force=False)
+		ok_install, out_install = _run_bench_cmd(["--site", site, "install-app", app_slug])
+		if not ok_install:
+			return {
+				"installed": False,
+				"message": "install_failed",
+				"output": out_install,
+				"backup": backup_state,
+				"fetch": fetch_state,
+			}
 		frappe.clear_cache()
 		version = get_app_version(app_slug)
 		return {
@@ -678,6 +688,7 @@ def _install_app_if_needed(app_slug: str, repo_url: str, require_confirmation: b
 			"version": version,
 			"backup": backup_state,
 			"fetch": fetch_state,
+			"install_log_tail": out_install[-1500:] if out_install else "",
 			"whats_new": _app_highlights(app_slug),
 		}
 	except Exception:
@@ -686,17 +697,18 @@ def _install_app_if_needed(app_slug: str, repo_url: str, require_confirmation: b
 
 
 @frappe.whitelist()
-def get_marketplace_catalog():
+def get_marketplace_catalog(with_git_meta: int = 0):
 	"""Return catalog for desk marketplace page."""
 	items = []
 	bundle_mode = _bundle_mode_enabled()
 	use_real = _catalog_show_real_license_status()
 	_uninstall_blocked = _uninstall_protected_apps()
 	installed_set = set(frappe.get_installed_apps() or [])
+	include_git_meta = _is_truthy(with_git_meta)
 	for row in _catalog_seed():
 		app = row["app_slug"]
 		git_meta: dict = {}
-		if app in installed_set:
+		if include_git_meta and app in installed_set:
 			git_meta = get_git_update_meta_for_app(app, use_cache=True)
 		if bundle_mode and not use_real:
 			status = "licensed_bundle"

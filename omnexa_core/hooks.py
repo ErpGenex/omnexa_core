@@ -8,7 +8,9 @@ app_license = "mit"
 # Apps
 # ------------------
 
-# required_apps = []
+# NOTE:
+# Do not set required_apps here, because many dependent apps already require omnexa_core.
+# Setting a reverse dependency causes recursive install loops (omnexa_core <-> omnexa_accounting, etc.).
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -95,11 +97,11 @@ app_logo_url = "/files/erpgenex-logo.png"
 # Installation
 # ------------
 
-before_install = "omnexa_core.install.enforce_supported_frappe_version"
+before_install = "omnexa_core.install.before_install"
 after_install = "omnexa_core.install.after_install"
-before_migrate = "omnexa_core.install.enforce_supported_frappe_version"
+before_migrate = "omnexa_core.install.before_migrate"
 after_migrate = "omnexa_core.install.after_migrate"
-setup_wizard_requires = ["assets/omnexa_core/js/omnexa_core_setup_wizard.js"]
+setup_wizard_requires = ["/assets/omnexa_core/js/omnexa_core_setup_wizard.js"]
 setup_wizard_complete = "omnexa_core.install.setup_wizard_create_core_masters"
 
 # Uninstallation
@@ -114,7 +116,7 @@ setup_wizard_complete = "omnexa_core.install.setup_wizard_create_core_masters"
 # Name of the app being installed is passed as an argument
 
 # before_app_install = "omnexa_core.utils.before_app_install"
-# after_app_install = "omnexa_core.utils.after_app_install"
+after_app_install = "omnexa_core.install.after_any_app_install"
 
 # Integration Cleanup
 # -------------------

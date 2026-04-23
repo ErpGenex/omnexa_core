@@ -3,8 +3,9 @@
 """
 Enterprise control-tower workspace sync: KPI number cards (with % vs prior period),
 dashboard charts (line, bar, donut, pie, percentage strip),
-and desk layout for registered finance apps plus **generic** public workspaces
-(DocTypes inferred from sidebar links, same chart/card binding rules as Frappe Desk).
+desk layout for registered finance apps plus **generic** public workspaces
+(DocTypes inferred from sidebar links, same chart/card binding rules as Frappe Desk),
+and **Guided setup** (Module Onboarding) matched per workspace module / title when not overridden.
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ from typing import Any
 import frappe
 
 from omnexa_core.omnexa_core.workspace_desk_layouts import get_desk_sections_for_workspace
+from omnexa_core.workspace_onboarding_sync import onboarding_name_for
 
 _COLORS = ("Cyan", "Blue", "Purple", "Orange", "Green", "Red", "Teal", "Pink")
 
@@ -200,7 +202,8 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 	"omnexa_alm": {
 		"workspace": "ALM",
 		"module": "Omnexa ALM",
-		"icon": "activity",
+		"icon": "chart",
+		"onboarding_name": "ERPGENEX — ALM",
 		"headline": "Asset & Liability Management",
 		"tagline": "Gap, LCR/NSFR, IRRBB outliers, FTP margin, behavioral assumptions, contingency playbooks.",
 		"trend_doctypes": ["ALM Daily Run", "ALM Position Snapshot"],
@@ -238,6 +241,30 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 				],
 			),
 		],
+	},
+	"omnexa_alm_governance": {
+		"_requires_app": "omnexa_alm",
+		"workspace": "ALM Governance",
+		"module": "Omnexa ALM",
+		"icon": "retail",
+		"headline": "ALM Governance",
+		"tagline": "Policy versions and audit snapshots for ALM oversight.",
+		"parent_page": "ALM",
+		"is_hidden": 1,
+		"trend_doctypes": ["ALM Policy Version", "ALM Audit Snapshot"],
+		"status_doctypes": ["ALM Policy Version"],
+		"kpis": [
+			("Policy Versions", "ALM Policy Version", []),
+			("Audit Snapshots", "ALM Audit Snapshot", []),
+		],
+		"shortcuts": [
+			("Policy Versions", "DocType", "ALM Policy Version"),
+			("Audit Snapshots", "DocType", "ALM Audit Snapshot"),
+		],
+		"kpi_trends": [
+			{"type": "Pie", "doctype": "ALM Policy Version", "group_by": "status", "label": "Policy status"},
+		],
+		"extra_sections": [],
 	},
 	"omnexa_consumer_finance": {
 		"workspace": "Consumer Finance",
@@ -345,7 +372,8 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 	"omnexa_factoring": {
 		"workspace": "Factoring",
 		"module": "Omnexa Factoring",
-		"icon": "percent",
+		"icon": "loan",
+		"onboarding_name": "ERPGENEX — Factoring",
 		"headline": "Factoring",
 		"tagline": "Invoice lifecycle, debtor exposure, collections, settlement reconciliation.",
 		"trend_doctypes": ["Factoring Case", "Factoring Invoice"],
@@ -376,10 +404,42 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			),
 		],
 	},
+	"omnexa_factoring_governance": {
+		"_requires_app": "omnexa_factoring",
+		"workspace": "Factoring Governance",
+		"module": "Omnexa Factoring",
+		"icon": "retail",
+		"parent_page": "Factoring",
+		"onboarding_name": "ERPGENEX — Factoring Governance",
+		"headline": "Factoring Governance",
+		"tagline": "Policy versions, audit snapshots, and compliance readiness.",
+		"trend_doctypes": ["Factoring Policy Version", "Factoring Audit Snapshot"],
+		"status_doctypes": ["Factoring Policy Version"],
+		"kpis": [
+			("Policy Versions", "Factoring Policy Version", []),
+			("Audit Snapshots", "Factoring Audit Snapshot", []),
+		],
+		"shortcuts": [
+			("Policy Versions", "DocType", "Factoring Policy Version"),
+			("Audit Snapshots", "DocType", "Factoring Audit Snapshot"),
+		],
+		"kpi_trends": [
+			{"type": "Pie", "doctype": "Factoring Policy Version", "group_by": "status", "label": "Policies by status"},
+		],
+		"extra_sections": [
+			(
+				"Governance reports",
+				[
+					("Governance Overview", "Report", "Governance Overview", "shield"),
+				],
+			),
+		],
+	},
 	"omnexa_sme_retail_finance": {
 		"workspace": "SME Retail Finance",
 		"module": "Omnexa SME Retail Finance",
-		"icon": "briefcase",
+		"icon": "equity",
+		"onboarding_name": "ERPGENEX — SME Retail Finance",
 		"headline": "SME Retail Finance",
 		"tagline": "SME cases, clusters, watchlist, credit quality & default analytics.",
 		"trend_doctypes": ["SME Retail Finance Case", "SME Portfolio Cluster"],
@@ -414,7 +474,8 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 	"omnexa_leasing_finance": {
 		"workspace": "Leasing Finance",
 		"module": "Omnexa Leasing Finance",
-		"icon": "layers",
+		"icon": "project",
+		"onboarding_name": "ERPGENEX — Leasing Finance",
 		"headline": "Leasing Finance",
 		"tagline": "IFRS16 contracts, assets, schedules, payments, risk & portfolio analytics.",
 		"trend_doctypes": ["Leasing Finance Contract", "Leasing Finance Payment"],
@@ -855,11 +916,44 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Audit findings", "Audit Finding", []),
 			("Audit evidence items", "Audit Evidence", []),
 		],
-		"shortcuts": [],
+		"shortcuts": [
+			("Audit Engagement", "DocType", "Audit Engagement"),
+			("Audit Opinion Draft", "DocType", "Audit Opinion Draft"),
+			("Audit Balance Snapshot", "DocType", "Audit Balance Snapshot"),
+			("Audit Finding", "DocType", "Audit Finding"),
+			("Audit Evidence", "DocType", "Audit Evidence"),
+			("General Ledger", "Report", "General Ledger"),
+			("General Journal", "Report", "General Journal"),
+		],
 		"kpi_trends": [
 			{"type": "Bar", "doctype": "Audit Engagement", "group_by": "status", "label": "Engagement phase"},
 			{"type": "Pie", "doctype": "Audit Finding", "group_by": "severity", "label": "Finding severity"},
 			{"type": "Bar", "doctype": "Audit Balance Snapshot", "group_by": "review_status", "label": "Balance review"},
+		],
+		"extra_sections": [],
+	},
+	"omnexa_theme_manager": {
+		"_requires_app": "omnexa_theme_manager",
+		"workspace": "Theme Manager",
+		"module": "Theme Manager",
+		"icon": "es-line-colour",
+		"headline": "Theme Manager",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Company Desk themes — presets, colors, typography, logos; activate per company without code.",
+		"trend_doctypes": ["Experience Tenant Theme"],
+		"status_doctypes": ["Experience Tenant Theme"],
+		"kpis": [
+			("Tenant themes", "Experience Tenant Theme", []),
+		],
+		"shortcuts": [
+			("All tenant themes", "DocType", "Experience Tenant Theme"),
+			("New tenant theme", "DocType", "Experience Tenant Theme"),
+		],
+		"kpi_trends": [
+			{"type": "Pie", "doctype": "Experience Tenant Theme", "group_by": "theme_preset", "label": "Preset mix"},
+			{"type": "Bar", "doctype": "Experience Tenant Theme", "group_by": "desk_theme_mode", "label": "Desk mode"},
+			{"type": "Percentage", "doctype": "Experience Tenant Theme", "group_by": "apply_to_desk", "label": "Desk apply"},
 		],
 		"extra_sections": [],
 	},
@@ -1120,8 +1214,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Asset Movement Report", "Report", "Asset Movement Report"),
 		],
 		"kpi_trends": [
-			{"type": "Line", "doctype": "Fixed Asset Acquisition", "label": "Asset value trend"},
-			{"type": "Line", "doctype": "Fixed Asset Depreciation Entry", "label": "Depreciation trend"},
 			{"type": "Pie", "doctype": "Fixed Asset", "group_by": "category", "label": "Distribution by category"},
 			{"type": "Bar", "doctype": "Fixed Asset", "group_by": "status", "label": "Status breakdown"},
 		],
@@ -1356,6 +1448,24 @@ def _collect_workspace_chart_names(spec: dict[str, Any], prefix: str, module: st
 		_ensure_donut_chart(cn, module, dt, "status")
 		add(cn)
 
+	if not names and module and module != "Desk":
+		for dt in _aggregatable_doctypes_for_module(module, limit=20):
+			try:
+				if not frappe.get_meta(dt).has_field("creation"):
+					continue
+			except Exception:
+				continue
+			su = _trim_chart_suffix(dt, 28)
+			cn = f"{prefix} · {su} Trend"
+			try:
+				_ensure_timeseries_chart(cn, module, dt, "Line")
+			except Exception:
+				continue
+			if frappe.db.exists("Dashboard Chart", cn):
+				seen.add(cn)
+				names.append(cn)
+				break
+
 	return names
 
 
@@ -1452,12 +1562,21 @@ def _workspace_row_label(link_name: str) -> str:
 
 def _build_content(
 	spec: dict[str, Any],
-	chart_block_labels: list[str],
-	number_card_block_labels: list[str],
+	chart_full_names: list[str],
+	number_card_doc_names: list[str],
 	shortcut_rows: list[dict[str, Any]],
 ) -> str:
 	slug = _slug(spec["workspace"])
 	blocks: list[dict[str, Any]] = []
+	onboarding = (spec.get("onboarding_name") or "").strip()
+	if onboarding:
+		blocks.append(
+			{
+				"id": "erpgenex-onboarding",
+				"type": "onboarding",
+				"data": {"onboarding_name": onboarding, "col": 12},
+			}
+		)
 	blocks.append(
 		{
 			"id": f"{slug}-h",
@@ -1480,7 +1599,7 @@ def _build_content(
 		{
 			"id": f"{slug}-ops",
 			"type": "header",
-			"data": {"text": "<span class=\"h5\"><b>\u2699 Operations</b></span>", "col": 12},
+			"data": {"text": "<span class=\"h5\"><b>Operations</b></span>", "col": 12},
 		}
 	)
 	core_ops: list[str] = []
@@ -1514,7 +1633,7 @@ def _build_content(
 			{
 				"id": f"{slug}-opg{op_idx}",
 				"type": "header",
-				"data": {"text": f"<span class=\"h5\"><b>\u2699 {title}</b></span>", "col": 12},
+				"data": {"text": f"<span class=\"h5\"><b>{title}</b></span>", "col": 12},
 			}
 		)
 		op_idx += 1
@@ -1540,7 +1659,7 @@ def _build_content(
 		{
 			"id": f"{slug}-rpt",
 			"type": "header",
-			"data": {"text": "<span class=\"h5\"><b>\U0001f4ca Reports</b></span>", "col": 12},
+			"data": {"text": "<span class=\"h5\"><b>Reports</b></span>", "col": 12},
 		}
 	)
 	for i, sc in enumerate(report_shortcuts[:18]):
@@ -1550,15 +1669,15 @@ def _build_content(
 		{
 			"id": f"{slug}-kpi",
 			"type": "header",
-			"data": {"text": "<span class=\"h5\"><b>\U0001f4c8 KPIs</b></span>", "col": 12},
+			"data": {"text": "<span class=\"h5\"><b>KPIs</b></span>", "col": 12},
 		}
 	)
-	for i, nl in enumerate(number_card_block_labels):
+	for i, nm in enumerate(number_card_doc_names):
 		blocks.append(
 			{
 				"id": f"{slug}-nc{i}",
 				"type": "number_card",
-				"data": {"number_card_name": nl, "col": 4},
+				"data": {"number_card_name": nm, "col": 4},
 			}
 		)
 
@@ -1566,11 +1685,11 @@ def _build_content(
 		{
 			"id": f"{slug}-chr",
 			"type": "header",
-			"data": {"text": "<span class=\"h5\"><b>\U0001f4c9 Charts</b></span>", "col": 12},
+			"data": {"text": "<span class=\"h5\"><b>Charts</b></span>", "col": 12},
 		}
 	)
-	for i, cl in enumerate(chart_block_labels):
-		blocks.append({"id": f"{slug}-ch{i}", "type": "chart", "data": {"chart_name": cl, "col": 4}})
+	for i, ch_name in enumerate(chart_full_names):
+		blocks.append({"id": f"{slug}-ch{i}", "type": "chart", "data": {"chart_name": ch_name, "col": 4}})
 	return json.dumps(blocks, separators=(",", ":"))
 
 
@@ -1619,6 +1738,109 @@ _GENERIC_LINK_SKIP = frozenset({"User", "Role", "File", "Comment", "Version"})
 # Optional: skip Frappe core maintenance workspaces (avoids dev-export noise on `bench migrate`).
 _SKIP_GENERIC_WORKSPACE_NAMES: frozenset[str] = frozenset({"Build"})
 
+# Standard finance desks ship large `links` (sidebar) that repeat Operations `shortcuts` (desk body).
+_DEDUPE_SIDEBAR_AGAINST_SHORTCUTS: frozenset[str] = frozenset(
+	{
+		"Credit Risk",
+		"Credit Engine",
+		"Finance Engine",
+		"Vehicle Finance",
+		"Consumer Finance",
+		"Mortgage Finance",
+		"Operational Risk",
+		"ALM",
+		"Factoring",
+		"SME Retail Finance",
+		"Leasing Finance",
+		"Fixed assets",
+		"Audit",
+	}
+)
+
+
+def _shortcut_nav_keys(ws) -> set[tuple[str, str]]:
+	"""(type, link_to_or_url) for workspace shortcuts — align with Workspace Link (link_type, link_to)."""
+	keys: set[tuple[str, str]] = set()
+	for row in ws.shortcuts or []:
+		st = (row.get("type") or "").strip()
+		if st == "URL":
+			url = (row.get("url") or row.get("link_to") or "").strip()
+			if url:
+				keys.add(("URL", url))
+			continue
+		lto = (row.get("link_to") or "").strip()
+		if st and lto:
+			keys.add((st, lto))
+	return keys
+
+
+def _dedupe_workspace_shortcut_rows(ws) -> None:
+	if (ws.name or "") not in _DEDUPE_SIDEBAR_AGAINST_SHORTCUTS:
+		return
+	seen: set[tuple[str, str]] = set()
+	kept: list[dict[str, Any]] = []
+	for row in ws.shortcuts or []:
+		st = (row.get("type") or "").strip()
+		if st == "URL":
+			key = ("URL", (row.get("url") or "").strip())
+		else:
+			key = (st, (row.get("link_to") or "").strip())
+		if key[0] != "URL" and not key[1]:
+			continue
+		if key in seen:
+			continue
+		seen.add(key)
+		kept.append(row)
+	ws.shortcuts = []
+	for row in kept:
+		ws.append("shortcuts", row)
+
+
+def _prune_workspace_links_duplicate_shortcuts(ws) -> None:
+	"""Drop Workspace Link rows that duplicate a shortcut (same navigation target)."""
+	if (ws.name or "") not in _DEDUPE_SIDEBAR_AGAINST_SHORTCUTS:
+		return
+	targets = _shortcut_nav_keys(ws)
+	if not targets:
+		return
+	filtered: list[Any] = []
+	for row in ws.links or []:
+		if row.get("type") != "Link":
+			filtered.append(row)
+			continue
+		lt = (row.get("link_type") or row.get("type") or "").strip()
+		lto = (row.get("link_to") or "").strip()
+		if (lt, lto) in targets:
+			continue
+		filtered.append(row)
+
+	out: list[Any] = []
+	i = 0
+	n = len(filtered)
+	while i < n:
+		row = filtered[i]
+		if row.get("type") == "Link":
+			out.append(row)
+			i += 1
+			continue
+		if row.get("type") == "Card Break":
+			br = row
+			j = i + 1
+			chunk_links: list[Any] = []
+			while j < n and filtered[j].get("type") == "Link":
+				chunk_links.append(filtered[j])
+				j += 1
+			if chunk_links:
+				out.append(br)
+				out.extend(chunk_links)
+			i = j
+			continue
+		i += 1
+
+	ws.links = []
+	for row in out:
+		ws.append("links", row)
+
 
 def _registry_workspace_titles() -> set[str]:
 	return {str(s.get("workspace", "")) for s in _APP_SPECS.values() if s.get("workspace")}
@@ -1644,6 +1866,212 @@ def _ordered_doctypes_from_workspace(ws) -> list[str]:
 	same_mod = [d for d in ordered if (frappe.db.get_value("DocType", d, "module") or "") == ws_module]
 	rest = [d for d in ordered if d not in same_mod]
 	return (same_mod + rest)[:20]
+
+
+def _aggregatable_doctypes_for_module(module: str | None, limit: int = 40) -> list[str]:
+	"""DocTypes in this module that support Count / aggregate charts (no dependency on other apps)."""
+	mod = (module or "").strip()
+	if not mod or mod == "Desk":
+		return []
+	out: list[str] = []
+	for name in frappe.get_all(
+		"DocType",
+		filters={"module": mod, "istable": 0, "issingle": 0, "is_virtual": 0},
+		pluck="name",
+		order_by="name asc",
+		limit=limit + 20,
+	):
+		if name in _GENERIC_LINK_SKIP or not _aggregatable_doctype(name):
+			continue
+		out.append(name)
+		if len(out) >= limit:
+			break
+	return out
+
+
+def _enrich_spec_analytics_from_module(spec: dict[str, Any], ws) -> None:
+	"""Guarantee trend / status / KPI / chart drivers from the workspace module when links are sparse."""
+	module = (spec.get("module") or ws.module or "").strip()
+	if not module or module == "Desk":
+		return
+	mod_dts = _aggregatable_doctypes_for_module(module)
+	if not mod_dts:
+		return
+
+	trend = list(dict.fromkeys(spec.get("trend_doctypes") or []))
+	for dt in mod_dts:
+		if len(trend) >= 6:
+			break
+		if dt in trend:
+			continue
+		try:
+			if frappe.get_meta(dt).has_field("creation"):
+				trend.append(dt)
+		except Exception:
+			continue
+	spec["trend_doctypes"] = trend
+
+	status = list(dict.fromkeys(spec.get("status_doctypes") or []))
+	for dt in mod_dts:
+		if len(status) >= 5:
+			break
+		if dt in status:
+			continue
+		try:
+			if frappe.get_meta(dt).has_field("status"):
+				status.append(dt)
+		except Exception:
+			continue
+	if not status and trend:
+		status = [trend[0]]
+	spec["status_doctypes"] = status
+
+	kpis = list(spec.get("kpis") or [])
+	seen_k: set[str] = {str(k[1]) for k in kpis if len(k) > 1}
+	for dt in mod_dts:
+		if len(kpis) >= 12:
+			break
+		if dt in seen_k:
+			continue
+		kpis.append((dt.replace("_", " "), dt, []))
+		seen_k.add(dt)
+	spec["kpis"] = kpis
+
+	kt = list(spec.get("kpi_trends") or [])
+	seen_trend: set[tuple[str, str]] = set()
+	for row in kt:
+		if row.get("doctype") and row.get("group_by"):
+			seen_trend.add((str(row["doctype"]), str(row["group_by"])))
+	for dt in mod_dts:
+		if len(kt) >= 9:
+			break
+		for row in _infer_kpi_trends_for_doctype(dt):
+			if len(kt) >= 9:
+				break
+			key = (str(row.get("doctype")), str(row.get("group_by")))
+			if key in seen_trend:
+				continue
+			seen_trend.add(key)
+			kt.append(row)
+	spec["kpi_trends"] = kt
+
+
+def _shortcut_seed_key(sc: Any) -> tuple[str, str] | None:
+	if not sc or len(sc) < 3:
+		return None
+	return (str(sc[1]), str(sc[2]))
+
+
+def _ensure_min_operation_shortcuts_in_seed(shortcut_seed: list[Any], module: str, minimum: int = 4) -> None:
+	"""Add DocType shortcuts from the same module so Operations is never empty."""
+	mod = (module or "").strip()
+	if not mod or mod == "Desk":
+		return
+	non_report = sum(1 for s in shortcut_seed if _shortcut_seed_key(s) and s[1] != "Report")
+	if non_report >= minimum:
+		return
+	seen = {_shortcut_seed_key(s) for s in shortcut_seed if _shortcut_seed_key(s)}
+	for dt in _aggregatable_doctypes_for_module(mod, limit=25):
+		if non_report >= minimum:
+			break
+		key = ("DocType", dt)
+		if key in seen:
+			continue
+		shortcut_seed.append((dt.replace("_", " "), "DocType", dt))
+		seen.add(key)
+		non_report += 1
+
+
+def _append_module_reports_to_shortcut_seed(shortcut_seed: list[Any], module: str, minimum_reports: int = 3) -> None:
+	"""Add Report shortcuts from the workspace module when desk links skipped optional apps."""
+	mod = (module or "").strip()
+	if not mod or mod == "Desk":
+		return
+	report_count = sum(1 for s in shortcut_seed if _shortcut_seed_key(s) and s[1] == "Report")
+	if report_count >= minimum_reports:
+		return
+	seen = {_shortcut_seed_key(s) for s in shortcut_seed if _shortcut_seed_key(s)}
+	for name in frappe.get_all("Report", filters={"module": mod}, pluck="name", order_by="name asc", limit=24):
+		if report_count >= minimum_reports:
+			break
+		if not name or not frappe.db.exists("Report", name):
+			continue
+		key = ("Report", name)
+		if key in seen:
+			continue
+		shortcut_seed.append((name, "Report", name))
+		seen.add(key)
+		report_count += 1
+
+
+def _onboarding_title_tail(onboarding_name: str) -> str:
+	nm = (onboarding_name or "").strip()
+	for sep in ("\u2014", "—"):
+		if sep in nm:
+			return nm.split(sep, 1)[-1].strip().lower()
+	if " - " in nm:
+		return nm.split(" - ", 1)[-1].strip().lower()
+	return nm.lower()
+
+
+def _workspace_onboarding_tokens(ws) -> set[str]:
+	tokens: set[str] = set()
+	for attr in ("name", "title", "label"):
+		val = getattr(ws, attr, None)
+		if not val:
+			continue
+		s = str(val).strip().lower()
+		if not s:
+			continue
+		tokens.add(s)
+		tokens.add(s.replace(" ", "").replace("-", ""))
+		for part in s.replace("_", " ").split():
+			if len(part) >= 2:
+				tokens.add(part)
+	return tokens
+
+
+def _pick_module_onboarding_name(ws) -> str | None:
+	"""Resolve Module Onboarding document name for this workspace (Guided setup widget)."""
+	module = (ws.module or "").strip()
+	if not module or module == "Desk":
+		return None
+	candidates = frappe.get_all(
+		"Module Onboarding",
+		filters={"module": module},
+		pluck="name",
+		order_by="name asc",
+	)
+	if not candidates:
+		return None
+	if len(candidates) == 1:
+		return candidates[0]
+
+	ws_tokens = _workspace_onboarding_tokens(ws)
+	best: str | None = None
+	best_score = -1
+	for nm in candidates:
+		tail = _onboarding_title_tail(nm)
+		tail_c = tail.replace(" ", "")
+		nm_l = nm.lower()
+		score = 0
+		for wt in ws_tokens:
+			if len(wt) < 2:
+				continue
+			if wt == tail or wt == tail_c:
+				score += 120
+			elif tail.startswith(wt) or wt.startswith(tail):
+				score += 80
+			elif wt in tail or tail in wt:
+				score += 40
+			elif len(wt) >= 4 and wt in nm_l.replace(" ", "").replace("\u2014", "").replace("—", ""):
+				score += 25
+		if score > best_score:
+			best_score = score
+			best = nm
+		elif score == best_score and best and nm and len(nm) > len(best):
+			best = nm
+	return best if best_score > 0 else candidates[0]
 
 
 def _infer_kpi_trends_for_doctype(dt: str) -> list[dict[str, Any]]:
@@ -1760,6 +2188,8 @@ def infer_workspace_spec(ws) -> dict[str, Any]:
 	doctypes = _ordered_doctypes_from_workspace(ws)
 	headline = ws.title or ws.label or ws.name
 	module = ws.module or "Desk"
+	if not doctypes and module and module != "Desk":
+		doctypes = _aggregatable_doctypes_for_module(module)[:20]
 	trend: list[str] = []
 	for dt in doctypes:
 		if frappe.get_meta(dt).has_field("creation"):
@@ -1789,11 +2219,15 @@ def infer_workspace_spec(ws) -> dict[str, Any]:
 		if len(kpi_trends) >= 6:
 			break
 	shortcuts = _shortcut_seed_ops_before_reports(_iter_shortcuts_from_workspace(ws))
+	_onb_spec: dict[str, Any] = {}
+	_bind_workspace_onboarding_name(ws, _onb_spec)
+	onb = (_onb_spec.get("onboarding_name") or "").strip()
 	return {
 		"workspace": ws.name,
 		"module": module,
 		"headline": headline,
 		"tagline": "",
+		"onboarding_name": onb,
 		"trend_doctypes": trend,
 		"status_doctypes": status or (trend[:1] if trend else []),
 		"kpis": kpis,
@@ -1803,11 +2237,32 @@ def infer_workspace_spec(ws) -> dict[str, Any]:
 	}
 
 
+def _bind_workspace_onboarding_name(ws, spec: dict[str, Any]) -> None:
+	"""Wire Guided setup to the Module Onboarding row for this workspace (same id as workspace_onboarding_sync)."""
+	if (spec.get("onboarding_name") or "").strip():
+		return
+	mod = (ws.module or "").strip()
+	if not mod or mod == "Desk":
+		return
+	lbl = (getattr(ws, "label", None) or getattr(ws, "title", None) or ws.name or "").strip()
+	if not lbl:
+		return
+	canon = onboarding_name_for(lbl)
+	if frappe.db.exists("Module Onboarding", canon):
+		spec["onboarding_name"] = canon
+		return
+	picked = _pick_module_onboarding_name(ws)
+	if picked:
+		spec["onboarding_name"] = picked
+
+
 def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 	desk = spec.get("desk_link_layout")
 	if desk:
 		_apply_desk_link_sections(ws, desk)
 	module = spec.get("module") or ws.module or "Desk"
+	_bind_workspace_onboarding_name(ws, spec)
+	_enrich_spec_analytics_from_module(spec, ws)
 	chart_names = _collect_workspace_chart_names(spec, prefix, module)
 	chart_row_labels = [_workspace_row_label(ch) for ch in chart_names]
 
@@ -1835,6 +2290,8 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 		for _card_title, rows in desk:
 			for lbl, ltype, lto, _ref_doc in rows:
 				shortcut_seed.append((lbl, ltype, lto))
+	_ensure_min_operation_shortcuts_in_seed(shortcut_seed, module)
+	_append_module_reports_to_shortcut_seed(shortcut_seed, module)
 	shortcut_seed = _shortcut_seed_ops_before_reports(shortcut_seed)
 
 	shortcut_rows: list[dict[str, Any]] = []
@@ -1880,12 +2337,14 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 
 	ws.content = _build_content(
 		spec,
-		chart_row_labels[:9],
-		number_card_labels[:9],
+		chart_names[:9],
+		number_card_ids[:9],
 		shortcut_rows[:72],
 	)
 
 	_merge_link_sections(ws, spec.get("extra_sections", []))
+	_dedupe_workspace_shortcut_rows(ws)
+	_prune_workspace_links_duplicate_shortcuts(ws)
 
 
 def sync_workspace_kpi_generic(ws_name: str) -> None:
@@ -1916,7 +2375,7 @@ def sync_all_workspace_kpi_layout() -> None:
 		try:
 			sync_workspace_kpi_generic(name)
 		except Exception:
-			frappe.log_error(frappe.get_traceback(), title=f"Workspace KPI generic: {name}")
+			frappe.log_error(title=f"Workspace KPI generic: {name}", message=frappe.get_traceback())
 
 
 def sync_workspace_for_app(app_name: str) -> None:

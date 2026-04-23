@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Finance Group\", \"col\": 12}}, {\"id\": \"fg-header\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Finance Group</b></span><br><span class=\\\"text-muted\\\">Independent finance applications. Install and use each app separately.</span>\", \"col\": 12}}, {\"id\": \"fg-s1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Finance Engine\", \"col\": 3}}, {\"id\": \"fg-s2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Credit Engine\", \"col\": 3}}, {\"id\": \"fg-s3\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Credit Risk\", \"col\": 3}}, {\"id\": \"fg-s4\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Operational Risk\", \"col\": 3}}, {\"id\": \"fg-s5\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"ALM\", \"col\": 3}}, {\"id\": \"fg-s6\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Consumer Finance\", \"col\": 3}}, {\"id\": \"fg-s7\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Vehicle Finance\", \"col\": 3}}, {\"id\": \"fg-s8\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Mortgage Finance\", \"col\": 3}}, {\"id\": \"fg-s9\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Factoring\", \"col\": 3}}, {\"id\": \"fg-s10\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"SME Retail Finance\", \"col\": 3}}, {\"id\": \"fg-s11\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Leasing Finance\", \"col\": 3}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Finance Group\", \"col\": 12}}, {\"id\": \"fg-header\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Finance Group</b></span><br><span class=\\\"text-muted\\\">Use the sidebar to open each finance workspace. Governance desks are nested under their main app.</span>\", \"col\": 12}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -118,95 +118,6 @@
  "quick_lists": [],
  "roles": [],
  "sequence_id": 7.0,
- "shortcuts": [
-  {
-   "color": "Blue",
-   "doc_view": "List",
-   "icon": "accounting",
-   "label": "Finance Engine",
-   "link_to": "Finance Engine",
-   "type": "Workspace"
-  },
-  {
-   "color": "Blue",
-   "doc_view": "List",
-   "icon": "workflow",
-   "label": "Credit Engine",
-   "link_to": "Credit Engine",
-   "type": "Workspace"
-  },
-  {
-   "color": "Blue",
-   "doc_view": "List",
-   "icon": "quality",
-   "label": "Credit Risk",
-   "link_to": "Credit Risk",
-   "type": "Workspace"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "List",
-   "icon": "restriction",
-   "label": "Operational Risk",
-   "link_to": "Operational Risk",
-   "type": "Workspace"
-  },
-  {
-   "color": "Orange",
-   "doc_view": "List",
-   "icon": "chart",
-   "label": "ALM",
-   "link_to": "ALM",
-   "type": "Workspace"
-  },
-  {
-   "color": "Green",
-   "doc_view": "List",
-   "icon": "customer",
-   "label": "Consumer Finance",
-   "link_to": "Consumer Finance",
-   "type": "Workspace"
-  },
-  {
-   "color": "Green",
-   "doc_view": "List",
-   "icon": "assets",
-   "label": "Vehicle Finance",
-   "link_to": "Vehicle Finance",
-   "type": "Workspace"
-  },
-  {
-   "color": "Green",
-   "doc_view": "List",
-   "icon": "loan",
-   "label": "Mortgage Finance",
-   "link_to": "Mortgage Finance",
-   "type": "Workspace"
-  },
-  {
-   "color": "Green",
-   "doc_view": "List",
-   "icon": "equity",
-   "label": "Factoring",
-   "link_to": "Factoring",
-   "type": "Workspace"
-  },
-  {
-   "color": "Green",
-   "doc_view": "List",
-   "icon": "users",
-   "label": "SME Retail Finance",
-   "link_to": "SME Retail Finance",
-   "type": "Workspace"
-  },
-  {
-   "color": "Green",
-   "doc_view": "List",
-   "icon": "project",
-   "label": "Leasing Finance",
-   "link_to": "Leasing Finance",
-   "type": "Workspace"
-  }
- ],
+ "shortcuts": [],
  "title": "Finance Group"
 }

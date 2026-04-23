@@ -1,6 +1,8 @@
 # Copyright (c) 2026, Omnexa and contributors
 # License: MIT. See license.txt
 
+import json
+
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
@@ -40,6 +42,10 @@ class TestWorkspaceControlTower(FrappeTestCase):
 	def test_sell_workspace_control_tower_kpis(self):
 		if not frappe.db.exists("Workspace", "Sell"):
 			return
+		from omnexa_core.workspace_onboarding_sync import enable_onboarding_setting, sync_workspace_database
+
+		enable_onboarding_setting()
+		sync_workspace_database()
 		sync_workspace_for_app("omnexa_core")
 		ws = frappe.get_doc("Workspace", "Sell")
 		self.assertGreaterEqual(len(ws.number_cards or []), 4)
@@ -54,6 +60,13 @@ class TestWorkspaceControlTower(FrappeTestCase):
 			self.assertIn("Sales by Customer", report_links)
 		self.assertNotIn("Customer Ledger", report_links)
 		self.assertNotIn("Receivables Aging", report_links)
+		blocks = json.loads(ws.content or "[]")
+		types = [b.get("type") for b in blocks]
+		self.assertIn("onboarding", types)
+		# Control tower layout: Operations → Reports → KPIs → Charts (single hierarchy, no orphaned KPI strip).
+		self.assertIn("Operations", ws.content or "")
+		self.assertIn("KPIs", ws.content or "")
+		self.assertIn("Charts", ws.content or "")
 
 	def test_buy_stock_finance_hr_control_tower_kpis(self):
 		for key in (

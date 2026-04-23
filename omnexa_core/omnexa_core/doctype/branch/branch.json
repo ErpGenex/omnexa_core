@@ -17,7 +17,15 @@
 		"tax_section",
 		"eta_einvoice_enabled",
 		"tax_authority_profile",
-		"signing_profile"
+		"signing_profile",
+		"branch_financial_defaults_section",
+		"inherit_company_financial_defaults",
+		"branch_fiscal_reporting_unit_code",
+		"column_branch_fin_gl",
+		"branch_default_petty_cash_gl",
+		"branch_default_bank_gl",
+		"branch_default_receivable_gl",
+		"branch_default_trade_payable_gl"
 	],
 	"fields": [
 		{
@@ -97,6 +105,64 @@
 			"fieldtype": "Link",
 			"label": "Signing Profile",
 			"options": "Signing Profile"
+		},
+		{
+			"collapsible": 1,
+			"depends_on": "eval:!doc.__islocal",
+			"description": "Branch-level financial context: optional operating GL overrides (e.g. local cash desk) and IFRS 8-style reporting unit code. When \u201cInherit company defaults\u201d is enabled, postings fall back to Company default GL accounts.",
+			"fieldname": "branch_financial_defaults_section",
+			"fieldtype": "Section Break",
+			"label": "Financial defaults (branch)"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:!doc.__islocal",
+			"fieldname": "inherit_company_financial_defaults",
+			"fieldtype": "Check",
+			"label": "Inherit company default GL accounts"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "Optional identifier for management reporting / CGU tagging (IFRS 8 operating segments).",
+			"fieldname": "branch_fiscal_reporting_unit_code",
+			"fieldtype": "Data",
+			"label": "Fiscal reporting unit code"
+		},
+		{
+			"fieldname": "column_branch_fin_gl",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
+			"description": "Optional override; CoA 1101",
+			"fieldname": "branch_default_petty_cash_gl",
+			"fieldtype": "Link",
+			"label": "Branch petty cash GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
+			"description": "Optional override; CoA 1102",
+			"fieldname": "branch_default_bank_gl",
+			"fieldtype": "Link",
+			"label": "Branch bank (operating) GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
+			"description": "Optional override; CoA 1103",
+			"fieldname": "branch_default_receivable_gl",
+			"fieldtype": "Link",
+			"label": "Branch trade receivable GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
+			"description": "Optional override; CoA 2101",
+			"fieldname": "branch_default_trade_payable_gl",
+			"fieldtype": "Link",
+			"label": "Branch trade payables GL",
+			"options": "GL Account"
 		}
 	],
 	"grid_page_length": 50,

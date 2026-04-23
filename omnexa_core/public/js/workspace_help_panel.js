@@ -10,18 +10,21 @@
 				t: "الشاشة الحالية / Current screen",
 				k: "route list form workspace report screen",
 				b: "يتغير السطر أعلى اللوحة حسب مكانك في النظام (قائمة، نموذج، مساحة عمل، …). The line above updates based on where you are.",
+				d: "هذا يضمن أن الشرح يتبدل تلقائيًا حسب الشاشة الفعلية التي تعمل عليها الآن.",
 			},
 			{
 				id: "awesome",
 				t: "البحث السريع (شريط الأوامر) / Awesome Bar",
 				k: "search awesome bar keyboard filter list",
 				b: "اضغط / أو Ctrl+G لفتح البحث، ثم اكتب اسم النموذج أو الأمر. Press / or Ctrl+G, then type a DocType or command.",
+				d: "اكتب جزءًا من اسم الشاشة أو العملية ثم اختر من النتائج للتنقل السريع بدون الرجوع للقوائم.",
 			},
 			{
 				id: "help",
 				t: "مقالات المساعدة / Help",
 				k: "help article documentation",
 				b: "إن وُجدت «مقالات المساعدة» ابحث عنها من القائمة أو البحث. Use Help Articles from menu or search if enabled.",
+				d: "اضغط على أي عنصر مساعدة لفتح شرحه التفصيلي داخل اللوحة.",
 			},
 		];
 	}
@@ -29,6 +32,8 @@
 	function tips_for_route() {
 		const r = frappe.get_route() || [];
 		const head = [];
+		const doctypeName = r[1] || __("this screen");
+		const recordName = r[2] || __("current record");
 
 		if (r[0] === "Workspaces") {
 			head.push({
@@ -43,13 +48,86 @@
 				t: "قائمة السجلات / List view",
 				k: "filter sort columns bulk export print tags assign",
 				b: "من الأعلى: الفلاتر/الترتيب/الأعمدة. ومن الإجراءات: تصدير، طباعة، إجراءات جماعية. Use filters/sort/columns, then export/print/bulk actions.",
+				d: `هذه الشاشة لإدارة سجلات ${doctypeName} بسرعة، وليست للتفاصيل الداخلية لسجل واحد.`,
+				steps: [
+					"ابدأ بإضافة فلتر لتحديد السجلات المطلوبة فقط.",
+					"استخدم Sort للترتيب حسب التاريخ أو الحالة.",
+					"اختر عدة سجلات ثم نفذ الإجراء الجماعي المناسب.",
+					"استخدم Export عند الحاجة لمراجعة خارج النظام.",
+				],
+			});
+			head.push({
+				id: "list-create",
+				t: "إنشاء سجل جديد من القائمة",
+				k: "list new add create",
+				b: `لإضافة ${doctypeName} جديد: اضغط New ثم املأ الحقول المطلوبة ثم اضغط Save.`,
+				d: "إذا لم يظهر زر New فغالبًا لا توجد صلاحية إنشاء (Create) لهذا المستخدم.",
+				steps: [
+					"اضغط زر New.",
+					"املأ الحقول الإلزامية أولًا (التي تظهر بعلامة إلزامية).",
+					"أكمل الحقول الأساسية مثل الاسم/التصنيف/السعر حسب نوع البيانات.",
+					"اضغط Save لحفظ السجل.",
+				],
+			});
+			head.push({
+				id: "list-edit-delete",
+				t: "التعديل والحذف من القائمة (مع الشروط)",
+				k: "edit delete permission submitted cancel amend list",
+				b: "يمكن فتح أي سجل للتعديل، ويمكن الحذف فقط إذا الحالة تسمح والصلاحية متاحة.",
+				d: "بعض السجلات المعتمدة (Submitted) لا تُحذف مباشرة، وقد تحتاج Cancel ثم تعديل أو إنشاء نسخة.",
+				steps: [
+					"للتعديل: افتح السجل المطلوب ثم عدل الحقول واضغط Save.",
+					"للحذف: من القائمة أو داخل السجل اختر Delete إذا كان الزر متاحًا.",
+					"إذا لم يظهر Delete: السبب غالبًا صلاحيات، أو أن السجل مرتبط بقيود أخرى.",
+					"في المستندات المعتمدة: قد يلزم Cancel أولًا حسب قواعد النشاط.",
+				],
 			});
 		} else if (r[0] === "Form") {
 			head.push({
 				id: "form",
 				t: "نموذج / Form",
 				k: "save submit workflow attachments comments timeline",
-				b: "احفظ أولاً، ثم نفّذ إجراءات سير العمل حسب صلاحيتك. المرفقات/التعليقات/التاريخ بالأسفل. Save first, then workflow actions; attachments/comments/timeline below.",
+				b: `أنت داخل نموذج ${doctypeName}. احفظ أولاً، ثم نفّذ إجراءات سير العمل حسب صلاحيتك.`,
+				d: "هذا هو المكان الأساسي للإضافة والتعديل والمراجعة والاعتماد.",
+				steps: [
+					"املأ الحقول الإلزامية أولًا.",
+					"اضغط Save لحفظ المسودة.",
+					"راجع الأخطاء الظاهرة أعلى النموذج إن وجدت.",
+					"بعد التحقق، نفذ Submit أو إجراء Workflow المناسب.",
+				],
+			});
+			head.push({
+				id: "form-beginner-guide",
+				t: "شرح مبسط للمستخدم الجديد",
+				k: "beginner how to add edit delete simple guide",
+				b: `لإضافة سجل جديد: New -> املأ النموذج -> Save. للتعديل: افتح ${recordName} -> عدّل -> Save.`,
+				d: "للحذف: افتح السجل ثم Menu/Actions -> Delete (إذا كانت الصلاحية والحالة تسمح).",
+				steps: [
+					"إضافة: اضغط New ثم أدخل البيانات الأساسية ثم Save.",
+					"تعديل: افتح السجل المطلوب، غيّر الحقول، ثم Save.",
+					"حذف: استخدم Delete عند الحاجة، وتأكد أن السجل غير معتمد أو غير مرتبط.",
+					"لو العملية غير متاحة: راجع الصلاحيات أو حالة المستند.",
+				],
+			});
+			head.push({
+				id: "form-attachments",
+				t: "المرفقات والتعليقات",
+				k: "form attachments comments timeline communication",
+				b: "أسفل النموذج تجد المرفقات، التعليقات، وسجل الحركة.",
+				d: "استخدم هذه المنطقة لتوثيق المستندات والمراجعات المرتبطة بنفس العملية.",
+			});
+			head.push({
+				id: "form-conditions",
+				t: "شروط العمليات (مهم جدًا)",
+				k: "conditions permissions docstatus workflow linked records",
+				b: "نجاح الإضافة/التعديل/الحذف يعتمد على الصلاحيات، حالة المستند، وسير العمل.",
+				d: "إذا ظهر منع للعمليات فغالبًا السبب: صلاحيات غير كافية، أو مستند معتمد، أو ارتباطات محاسبية/مخزنية.",
+				steps: [
+					"تحقق من حالة المستند: Draft / Submitted / Cancelled.",
+					"تحقق من دور المستخدم وصلاحياته (Create/Write/Delete/Submit).",
+					"تحقق من الارتباطات: قد يمنع النظام حذف سجل مرتبط بسجلات أخرى.",
+					"اتبع Workflow المعتمد بدل التعديل المباشر عندما يكون مطلوبًا.",
+				],
 			});
 		} else if (r[0] === "query-report" || r[0] === "Report") {
 			head.push({
@@ -57,13 +135,19 @@
 				t: "تقرير / Report",
 				k: "filters refresh export chart",
 				b: "اضبط المرشحات ثم اضغط تحديث. يمكن التصدير أو عرض الرسم. Set filters then refresh; export or view chart when available.",
+				d: "دقة التقرير تعتمد على المرشحات، لذلك تأكد من التاريخ والفرع/الشركة قبل التصدير.",
+				steps: [
+					"حدد نطاق التاريخ والمرشحات الأساسية.",
+					"اضغط Refresh لتحديث البيانات.",
+					"راجع النتائج ثم استخدم Export إذا أردت مشاركة التقرير.",
+				],
 			});
 		} else {
 			head.push({
 				id: "desk",
 				t: "داخل النظام / Desk",
 				k: "search navigate shortcuts",
-				b: "استخدم الزر العائم أو زر الشريط العلوي لفتح المساعد. Use the floating button or top button to open the assistant anytime.",
+				b: "استخدم زر الشريط العلوي بجانب Help لفتح المساعد في أي وقت. Use the topbar button next to Help to open the assistant anytime.",
 			});
 		}
 
@@ -127,8 +211,6 @@
 	class OmnexaUserAssistant {
 		constructor() {
 			this.$root = null;
-			this.$fab = null;
-			this.$dock = null;
 			this.$panel = null;
 			this.$backdrop = null;
 			this.$search = null;
@@ -136,11 +218,13 @@
 			this.$context = null;
 			this.$cbAuto = null;
 			this._tips = [];
+			this._db_tips = [];
 			this.open = false;
-			this.panelWide = false;
+			this.panelSize = "normal";
 			this._rtl = false;
 			this._last_workspace_key = null;
 			this._open_timer = null;
+			this._load_seq = 0;
 		}
 
 		init() {
@@ -148,7 +232,6 @@
 			this.ensure_dom();
 			frappe.router.on("change", () => this.on_route_change());
 			$(document).on("toolbar_setup", () => this.inject_navbar_button());
-			$(document).on("list_sidebar_setup", () => this.inject_list_sidebar_button());
 			$(document).on("page-change", () => this.on_route_change());
 			this.inject_navbar_button();
 			this.on_route_change();
@@ -158,27 +241,29 @@
 			this.toggle_panel(true);
 		}
 
+		inject_navbar_button() {
+			if (!is_desk_app() || $("#omnexa-user-assistant-nav").length) return;
+			let $helpLi = $("header .navbar-nav .dropdown-help").closest("li.nav-item");
+			if (!$helpLi.length) {
+				$helpLi = $("header .navbar-nav .dropdown-navbar-user").closest("li.nav-item");
+			}
+			if (!$helpLi.length) return;
+			const $li = $(`
+				<li class="nav-item d-none d-sm-flex align-items-center omnexa-user-assistant-nav-li" id="omnexa-user-assistant-nav">
+					<button type="button" class="btn-reset nav-link text-muted omnexa-user-assistant-nav-btn" title="${__(BRAND)}">
+						<span class="fa fa-question-circle" style="margin-inline-end:6px"></span>
+						<span class="d-none d-xl-inline text-nowrap">${BRAND}</span>
+					</button>
+				</li>
+			`);
+			$li.find("button").on("click", () => this.toggle_panel(true));
+			$helpLi.before($li);
+		}
+
 		ensure_dom() {
 			if (this.$root) return;
 			this.$root = $('<div class="omnexa-wh-root"></div>').appendTo("body");
 			if (this._rtl) this.$root.addClass("omnexa-wh--rtl");
-
-			this.$fab = $(`
-				<button type="button" class="omnexa-wh-fab" title="${__(BRAND)}" aria-label="${__(BRAND)}">
-					<span class="fa fa-compass" style="font-size:1.15rem"></span>
-				</button>
-			`).appendTo(this.$root);
-			this.$fab.on("click", () => this.toggle_panel(true));
-			this.$fab.hide();
-
-			this.$dock = $(`
-				<button type="button" class="omnexa-ua-dock" title="${__(BRAND)}" aria-label="${__(BRAND)}">
-					<span class="omnexa-ua-dock__icon fa fa-compass"></span>
-					<span class="omnexa-ua-dock__label">${BRAND}</span>
-					<span class="omnexa-ua-dock__action fa fa-expand"></span>
-				</button>
-			`).appendTo(this.$root);
-			this.$dock.on("click", () => this.toggle_panel(true));
 
 			this.$backdrop = $('<div class="omnexa-wh-backdrop" />').appendTo(this.$root);
 			this.$backdrop.on("click", () => {
@@ -262,71 +347,144 @@
 		update_header() {
 			const ctx = route_context_line();
 			this.$context.text(ctx);
-			this.$dock.find(".omnexa-ua-dock__label").text(BRAND);
 			this.$panel
 				.find(".omnexa-wh-panel__subtitle")
 				.text(
 					__(
-						"Search the cards below for how lists, forms, workspaces, and search work — or use global search for any DocType."
+						"Dynamic guidance for this screen: click any card to open full details and steps."
 					)
 				);
 		}
 
-		inject_navbar_button() {
-			if (!is_desk_app() || $("#omnexa-user-assistant-nav").length) return;
-			let $helpLi = $("header .navbar-nav .dropdown-help").closest("li.nav-item");
-			if (!$helpLi.length) {
-				$helpLi = $("header .navbar-nav .dropdown-navbar-user").closest("li.nav-item");
+		collect_dynamic_tips() {
+			const out = [];
+			try {
+				const actionTexts = [];
+				$(".page-head .btn:visible, .layout-main-section .btn:visible, .form-page .btn:visible")
+					.slice(0, 10)
+					.each(function () {
+						const txt = ($(this).text() || "").replace(/\s+/g, " ").trim();
+						if (!txt || txt.length < 2) return;
+						if (actionTexts.includes(txt)) return;
+						actionTexts.push(txt);
+					});
+
+				if (actionTexts.length) {
+					out.push({
+						id: "dynamic-actions",
+						t: "العمليات المتاحة الآن / Available actions now",
+						k: "current screen actions buttons workflow operations",
+						b: "تم استخراج الأزرار والعمليات الظاهرة حاليًا من نفس الشاشة.",
+						d: "هذه القائمة تتغير تلقائيًا حسب الشاشة والصلاحيات، لذلك المعلومات ليست ثابتة.",
+						steps: actionTexts.slice(0, 8).map((a) => `إجراء متاح الآن: ${a}`),
+					});
+				}
+			} catch (e) {
+				// ignore dynamic extraction errors
 			}
-			if (!$helpLi.length) return;
-			const $li = $(`
-				<li class="nav-item d-none d-sm-flex align-items-center omnexa-user-assistant-nav-li" id="omnexa-user-assistant-nav">
-					<button type="button" class="btn-reset nav-link text-muted omnexa-user-assistant-nav-btn" title="${__(BRAND)}">
-						<span class="fa fa-compass" style="margin-inline-end:6px"></span>
-						<span class="d-none d-xl-inline text-nowrap">${BRAND}</span>
-					</button>
-				</li>
-			`);
-			$li.find("button").on("click", () => this.toggle_panel(true));
-			$helpLi.before($li);
+
+			try {
+				if (window.cur_frm && cur_frm.meta && Array.isArray(cur_frm.meta.fields)) {
+					const reqd = cur_frm.meta.fields
+						.filter((f) => f && f.reqd && f.label)
+						.slice(0, 8)
+						.map((f) => f.label);
+					if (reqd.length) {
+						out.push({
+							id: "dynamic-required",
+							t: "الحقول الإلزامية / Required fields",
+							k: "mandatory required fields form validation",
+							b: "هذه الحقول يجب تعبئتها قبل الحفظ/الاعتماد.",
+							d: "تم التقاطها من تعريف النموذج الحالي مباشرة.",
+							steps: reqd.map((label) => `حقل إلزامي: ${label}`),
+						});
+					}
+				}
+			} catch (e) {
+				// ignore form metadata errors
+			}
+
+			return out;
 		}
 
-		inject_workspace_sidebar_button() {
-			$("#body .desk-sidebar .omnexa-ua-workspace-sidebar").remove();
-			const $sb = $("#body .desk-sidebar").first();
-			if (!$sb.length) return;
-			const $wrap = $(`
-				<div class="sidebar-item-container omnexa-ua-workspace-sidebar" style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border-color, #e8e8e8);">
-					<div class="desk-sidebar-item standard-sidebar-item">
-						<button type="button" class="btn-reset item-anchor omnexa-ua-ws-open" style="cursor:pointer;width:100%;text-align:inherit;">
-							<span class="sidebar-item-icon"><span class="fa fa-compass" style="font-size:1rem"></span></span>
-							<span class="sidebar-item-label">${BRAND}</span>
-						</button>
-					</div>
-				</div>
-			`);
-			// place at the end of the workspace sidebar list
-			$sb.append($wrap);
-			$wrap.find(".omnexa-ua-ws-open").on("click", (e) => {
-				e.preventDefault();
-				this.toggle_panel(true);
+		current_context_args() {
+			const r = frappe.get_route() || [];
+			const map = {
+				Workspaces: "Workspace",
+				List: "List",
+				Form: "Form",
+				Report: "Report",
+				"query-report": "Report",
+			};
+			return {
+				context_type: map[r[0]] || "Desk",
+				reference_doctype: r[1] || "",
+				workspace_name: r[0] === "Workspaces" ? (r[1] === "private" ? r[2] || "" : r[1] || "") : "",
+				route_str: frappe.get_route_str() || "",
+			};
+		}
+
+		current_tips() {
+			return tips_for_route().concat(this.collect_dynamic_tips(), this._db_tips || []);
+		}
+
+		async load_db_tips() {
+			if (!window.frappe || typeof frappe.call !== "function") {
+				this._db_tips = [];
+				return;
+			}
+
+			const seq = ++this._load_seq;
+			try {
+				const args = this.current_context_args();
+				const res = await frappe.call({
+					method: "omnexa_user_academy.api.get_user_assistant_guides",
+					args,
+					quiet: true,
+				});
+				if (seq !== this._load_seq) return;
+				this._db_tips = Array.isArray(res && res.message) ? res.message : [];
+			} catch (e) {
+				if (seq !== this._load_seq) return;
+				this._db_tips = [];
+			}
+		}
+
+		async refresh_tips() {
+			this._tips = this.current_tips();
+			this.render_tips();
+			this.apply_smart_panel_size();
+
+			await this.load_db_tips();
+			this._tips = this.current_tips();
+			this.render_tips();
+			this.apply_smart_panel_size();
+		}
+
+		compute_content_score() {
+			let score = 0;
+			(this._tips || []).forEach((tip) => {
+				score += (tip.t || "").length;
+				score += (tip.b || "").length;
+				score += (tip.d || "").length;
+				(tip.steps || []).forEach((s) => {
+					score += (s || "").length;
+				});
 			});
+			return score;
 		}
 
-		inject_list_sidebar_button() {
-			$("#body .list-sidebar .omnexa-ua-list-sidebar").remove();
-			const $sb = $("#body .list-sidebar").first();
-			if (!$sb.length) return;
-			const $b = $(`
-				<div class="omnexa-ua-list-sidebar" style="padding:10px 12px;border-bottom:1px solid var(--border-color, #e8e8e8);">
-					<button type="button" class="btn btn-default btn-sm btn-block omnexa-ua-list-open text-nowrap" style="overflow:hidden;text-overflow:ellipsis;">
-						<span class="fa fa-compass" style="margin-inline-end:6px"></span>${BRAND}
-					</button>
-				</div>
-			`);
-			// keep list helpers near top, but after the default header area if any
-			$sb.prepend($b);
-			$b.find(".omnexa-ua-list-open").on("click", () => this.toggle_panel(true));
+		apply_smart_panel_size() {
+			if (!this.$panel) return;
+			const score = this.compute_content_score();
+			const manyCards = (this._tips || []).length >= 8;
+			const veryLong = score > 2200;
+			const long = score > 1200 || manyCards;
+
+			const autoSize = veryLong ? "xl" : long ? "wide" : "normal";
+			if (this.panelSize === "normal") {
+				this.set_panel_size(autoSize);
+			}
 		}
 
 		on_route_change() {
@@ -334,25 +492,15 @@
 
 			if (!is_desk_app()) {
 				this._last_workspace_key = null;
-				this.$fab.hide();
-				this.$dock.hide();
 				this.toggle_panel(false);
 				return;
 			}
 
-			this.$fab.show();
-			this.$dock.show();
 			this.update_header();
 			this.$cbAuto.prop("checked", !this.auto_open_enabled());
 
-			// refresh tips for current screen
-			this._tips = tips_for_route();
-			this.render_tips();
-
-			setTimeout(() => {
-				this.inject_workspace_sidebar_button();
-				this.inject_list_sidebar_button();
-			}, 80);
+			// refresh tips for current screen (static + dynamic + db guides)
+			this.refresh_tips();
 
 			if (is_workspace_route()) {
 				const key = `${frappe.get_route().join("/")}`;
@@ -382,22 +530,27 @@
 			this.open = Boolean(show);
 			this.$panel.toggleClass("omnexa-wh-panel--open", this.open);
 			this.$backdrop.toggleClass("omnexa-wh-backdrop--open", this.open);
-			this.$dock.toggleClass("omnexa-ua-dock--active", this.open);
 			if (this.open) {
 				this.update_header();
-				this._tips = tips_for_route();
-				this.render_tips();
+				this.refresh_tips();
 				this.$search.val("");
 				this.filter_tips();
 				setTimeout(() => this.$search.trigger("focus"), 100);
 			}
 		}
 
-		toggle_size() {
-			this.panelWide = !this.panelWide;
-			this.$panel.toggleClass("omnexa-wh-panel--wide", this.panelWide);
-			const icon = this.panelWide ? "fa-compress" : "fa-expand";
+		set_panel_size(size) {
+			this.panelSize = size;
+			this.$panel.toggleClass("omnexa-wh-panel--wide", size === "wide" || size === "xl");
+			this.$panel.toggleClass("omnexa-wh-panel--xl", size === "xl");
+			const icon = size === "normal" ? "fa-expand" : "fa-compress";
 			this.$panel.find(".omnexa-wh-panel__resize .fa").attr("class", `fa ${icon}`);
+		}
+
+		toggle_size() {
+			if (this.panelSize === "normal") this.set_panel_size("wide");
+			else if (this.panelSize === "wide") this.set_panel_size("xl");
+			else this.set_panel_size("normal");
 		}
 
 		render_tips() {
@@ -405,12 +558,32 @@
 			(this._tips || []).forEach((tip) => {
 				const $t = $(`
 					<div class="omnexa-wh-tip" data-id="${tip.id}">
-						<div class="omnexa-wh-tip__t"></div>
+						<button type="button" class="omnexa-wh-tip__head">
+							<span class="omnexa-wh-tip__t"></span>
+							<span class="omnexa-wh-tip__chev fa fa-angle-down"></span>
+						</button>
 						<div class="omnexa-wh-tip__b text-muted"></div>
+						<div class="omnexa-wh-tip__detail text-muted"></div>
+						<ul class="omnexa-wh-tip__steps text-muted"></ul>
 					</div>
 				`);
 				$t.find(".omnexa-wh-tip__t").text(tip.t);
 				$t.find(".omnexa-wh-tip__b").text(tip.b);
+				$t.find(".omnexa-wh-tip__detail").text(tip.d || "");
+
+				const $steps = $t.find(".omnexa-wh-tip__steps");
+				(tip.steps || []).forEach((step) => {
+					const $li = $("<li></li>").text(step);
+					$steps.append($li);
+				});
+				if (!(tip.steps || []).length) $steps.hide();
+				if (!tip.d) $t.find(".omnexa-wh-tip__detail").hide();
+
+				$t.find(".omnexa-wh-tip__head").on("click", () => {
+					const open = $t.hasClass("omnexa-wh-tip--open");
+					$t.toggleClass("omnexa-wh-tip--open", !open);
+				});
+
 				this.$tips.append($t);
 			});
 		}
@@ -425,7 +598,9 @@
 					: []
 				).find((t) => t.id === id);
 				if (!tip) return;
-				const hay = (tip.t + " " + tip.k + " " + tip.b).toLowerCase();
+				const detailText = tip.d || "";
+				const stepsText = (tip.steps || []).join(" ");
+				const hay = (tip.t + " " + tip.k + " " + tip.b + " " + detailText + " " + stepsText).toLowerCase();
 				const ok = !q || hay.includes(q);
 				$el.toggleClass("omnexa-wh-tip--hidden", !ok);
 			});

@@ -27,6 +27,31 @@
 		"parent_company",
 		"global_erp_section",
 		"global_erp_strict_workflow",
+		"ifrs_reporting_section",
+		"reporting_framework",
+		"fiscal_year_start_month",
+		"ifrs_gl_defaults_section",
+		"default_petty_cash_gl",
+		"default_bank_operating_gl",
+		"default_receivable_gl",
+		"column_ifrs_gl_1",
+		"default_inventory_gl",
+		"default_advance_to_supplier_gl",
+		"default_input_vat_gl",
+		"default_other_receivable_gl",
+		"column_ifrs_gl_2",
+		"default_trade_payable_gl",
+		"default_output_vat_gl",
+		"default_customer_advances_gl",
+		"column_ifrs_gl_3",
+		"default_share_capital_gl",
+		"default_retained_earnings_gl",
+		"column_ifrs_gl_4",
+		"default_sales_revenue_gl",
+		"default_service_revenue_gl",
+		"default_cogs_gl",
+		"default_opex_gl",
+		"default_finance_cost_gl",
 		"production_readiness_section",
 		"production_demo_branch",
 		"production_demo_activity",
@@ -158,6 +183,187 @@
 			"fieldname": "global_erp_strict_workflow",
 			"fieldtype": "Check",
 			"label": "Strict Global ERP chain validations"
+		},
+		{
+			"collapsible": 1,
+			"fieldname": "ifrs_reporting_section",
+			"fieldtype": "Section Break",
+			"label": "Reporting framework (international)"
+		},
+		{
+			"default": "IFRS",
+			"description": "Primary reporting basis for disclosure packs, KPI taxonomy, and default account mapping guidance (IFRS / local GAAP may both be configured in parallel at document level).",
+			"fieldname": "reporting_framework",
+			"fieldtype": "Select",
+			"label": "Reporting framework",
+			"options": "IFRS\nLocal GAAP\nIFRS + Local GAAP (dual)"
+		},
+		{
+			"default": "1",
+			"description": "First calendar month of the fiscal year (1 = January). Used for period-close and statutory calendars.",
+			"fieldname": "fiscal_year_start_month",
+			"fieldtype": "Int",
+			"label": "Fiscal year start month"
+		},
+		{
+			"collapsible": 1,
+			"depends_on": "eval:!doc.__islocal",
+			"description": "Maps to the professional bilingual chart (account numbers 1101\u20135109). Use \u201cFill from CoA\u201d on save or the Production demo button after generating the chart. Site-level Global Defaults (company/currency) stay in sync from this company when it is the primary entity.",
+			"fieldname": "ifrs_gl_defaults_section",
+			"fieldtype": "Section Break",
+			"label": "Default GL accounts (IFRS-oriented)"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 1101 \u2014 operating cash on hand",
+			"fieldname": "default_petty_cash_gl",
+			"fieldtype": "Link",
+			"label": "Default petty cash GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 1102",
+			"fieldname": "default_bank_operating_gl",
+			"fieldtype": "Link",
+			"label": "Default bank (operating) GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 1103 \u2014 trade receivables",
+			"fieldname": "default_receivable_gl",
+			"fieldtype": "Link",
+			"label": "Default trade receivable GL",
+			"options": "GL Account"
+		},
+		{
+			"fieldname": "column_ifrs_gl_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 1104 (IAS 2)",
+			"fieldname": "default_inventory_gl",
+			"fieldtype": "Link",
+			"label": "Default inventory GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 1105",
+			"fieldname": "default_advance_to_supplier_gl",
+			"fieldtype": "Link",
+			"label": "Default advances to suppliers GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 1106",
+			"fieldname": "default_input_vat_gl",
+			"fieldtype": "Link",
+			"label": "Default input VAT / recoverable GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 1107",
+			"fieldname": "default_other_receivable_gl",
+			"fieldtype": "Link",
+			"label": "Default other receivables GL",
+			"options": "GL Account"
+		},
+		{
+			"fieldname": "column_ifrs_gl_2",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 2101",
+			"fieldname": "default_trade_payable_gl",
+			"fieldtype": "Link",
+			"label": "Default trade payables GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 2103",
+			"fieldname": "default_output_vat_gl",
+			"fieldtype": "Link",
+			"label": "Default output VAT / payable GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 2105 \u2014 deferred revenue / customer advances",
+			"fieldname": "default_customer_advances_gl",
+			"fieldtype": "Link",
+			"label": "Default customer advances GL",
+			"options": "GL Account"
+		},
+		{
+			"fieldname": "column_ifrs_gl_3",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 3101",
+			"fieldname": "default_share_capital_gl",
+			"fieldtype": "Link",
+			"label": "Default share capital GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 3102 (IAS 1 equity)",
+			"fieldname": "default_retained_earnings_gl",
+			"fieldtype": "Link",
+			"label": "Default retained earnings GL",
+			"options": "GL Account"
+		},
+		{
+			"fieldname": "column_ifrs_gl_4",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 4101",
+			"fieldname": "default_sales_revenue_gl",
+			"fieldtype": "Link",
+			"label": "Default sales revenue GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 4102",
+			"fieldname": "default_service_revenue_gl",
+			"fieldtype": "Link",
+			"label": "Default service revenue GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 5101",
+			"fieldname": "default_cogs_gl",
+			"fieldtype": "Link",
+			"label": "Default cost of goods sold GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 5102",
+			"fieldname": "default_opex_gl",
+			"fieldtype": "Link",
+			"label": "Default operating expense (G&A) GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"description": "CoA 5109 \u2014 interest and bank charges",
+			"fieldname": "default_finance_cost_gl",
+			"fieldtype": "Link",
+			"label": "Default finance cost GL",
+			"options": "GL Account"
 		},
 		{
 			"collapsible": 1,
