@@ -15,6 +15,7 @@
 		"parent_branch",
 		"is_head_office",
 		"tax_section",
+		"default_vat_rate",
 		"eta_einvoice_enabled",
 		"tax_authority_profile",
 		"signing_profile",
@@ -85,6 +86,13 @@
 			"fieldname": "tax_section",
 			"fieldtype": "Section Break",
 			"label": "Tax & e-Invoice (Branch)"
+		},
+		{
+			"default": "0",
+			"description": "Branch default VAT rate (percentage). Used by setup intelligence and document defaults when applicable.",
+			"fieldname": "default_vat_rate",
+			"fieldtype": "Float",
+			"label": "Default VAT Rate (%)"
 		},
 		{
 			"default": "0",

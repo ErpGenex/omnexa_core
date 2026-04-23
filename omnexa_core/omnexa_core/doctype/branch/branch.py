@@ -10,10 +10,21 @@ class Branch(Document):
 	def validate(self):
 		self.branch_code = (self.branch_code or "").strip().upper()
 		self.branch_name = (self.branch_name or "").strip()
+		self._validate_default_vat_rate()
 		self._validate_unique_code_per_company()
 		self._validate_parent_branch_company()
 		self._validate_einvoice_profiles()
 		self._validate_single_head_office()
+
+	def _validate_default_vat_rate(self):
+		if not getattr(self, "default_vat_rate", None):
+			return
+		try:
+			rate = float(self.default_vat_rate)
+		except Exception:
+			frappe.throw(_("Default VAT Rate must be a number."), title=_("Validation"))
+		if rate < 0 or rate > 100:
+			frappe.throw(_("Default VAT Rate must be between 0 and 100."), title=_("Validation"))
 
 	def _validate_unique_code_per_company(self):
 		if not self.company or not self.branch_code:

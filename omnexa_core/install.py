@@ -411,6 +411,7 @@ def setup_wizard_create_core_masters(args):
 	_apply_company_profile_fields(company, business_activity, industry_sector)
 	branch = _ensure_branch(company, branch_name, branch_code, branch_tax_id)
 	_ensure_tax_accounts(company, company_abbr, branch_code, default_vat_rate, use_advanced_numbering)
+	_set_default_company_branch(company=company, branch=branch, args=args)
 	if enable_starter_coa:
 		_ensure_starter_chart_of_accounts(company, company_abbr, branch_code, use_advanced_numbering)
 	if seed_demo_data:
@@ -493,8 +494,33 @@ def _grant_full_access_to_setup_user(args: dict) -> None:
 
 		user_doc.flags.ignore_permissions = True
 		user_doc.save(ignore_permissions=True)
+
+		# Prefer head-office context for first login.
+		company = frappe.db.get_single_value("Global Defaults", "default_company") if frappe.db.exists("DocType", "Global Defaults") else None
+		if company:
+			head_branch = frappe.db.get_value("Branch", {"company": company, "is_head_office": 1}, "name")
+			if head_branch:
+				frappe.db.set_default("Branch", head_branch, parent=email)
+			frappe.db.set_default("Company", company, parent=email)
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: grant full access to setup user")
+
+
+def _set_default_company_branch(company: str, branch: str, args: dict) -> None:
+	"""Ensure system defaults and the setup user start from head-office branch context."""
+	try:
+		if company:
+			frappe.db.set_default("Company", company)
+		if branch:
+			frappe.db.set_default("Branch", branch)
+		email = (args.get("email") or "").strip()
+		if email and frappe.db.exists("User", email):
+			if company:
+				frappe.db.set_default("Company", company, parent=email)
+			if branch:
+				frappe.db.set_default("Branch", branch, parent=email)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: set default company/branch")
 
 
 def _ensure_company(company_name, company_abbr, currency, country, tax_id):

@@ -108,8 +108,9 @@
 		},
 		{
 			"fieldname": "business_activity",
-			"fieldtype": "Data",
-			"label": "Business Activity"
+			"fieldtype": "Select",
+			"label": "Business Activity",
+			"options": "\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
 		},
 		{
 			"fieldname": "industry_sector",

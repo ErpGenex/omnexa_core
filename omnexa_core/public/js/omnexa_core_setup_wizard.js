@@ -10,8 +10,20 @@ frappe.setup.on("before_load", function () {
 				{ fieldname: "omnexa_country", label: __("Country"), fieldtype: "Data", reqd: 1, default: "Egypt" },
 				{ fieldtype: "Column Break" },
 				{ fieldname: "omnexa_tax_id", label: __("Tax ID"), fieldtype: "Data" },
-				{ fieldname: "omnexa_business_activity", label: __("Business Activity"), fieldtype: "Data" },
-				{ fieldname: "omnexa_industry_sector", label: __("Industry Sector"), fieldtype: "Data" },
+				{
+					fieldname: "omnexa_business_activity",
+					label: __("Business Activity"),
+					fieldtype: "Select",
+					options:
+						"\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit",
+				},
+				{
+					fieldname: "omnexa_industry_sector",
+					label: __("Industry Sector"),
+					fieldtype: "Select",
+					options:
+						"\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit",
+				},
 			],
 		},
 		{
