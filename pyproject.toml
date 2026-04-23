@@ -1,7 +1,7 @@
 [project]
 name = "omnexa_core"
 authors = [
-    { name = "Omnexa", email = "dev@omnexa.local"}
+    { name = "ErpGenEx", email = "dev@erpgenex.com"}
 ]
 description = "Core platform for ErpGenEx (omnexa_core)"
 requires-python = ">=3.10"
