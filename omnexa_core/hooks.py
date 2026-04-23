@@ -1,8 +1,8 @@
 app_name = "omnexa_core"
 app_title = "ERPGENEX — Core"
-app_publisher = "Omnexa"
+app_publisher = "ErpGenEx"
 app_description = "Core platform for ERPGENEX (omnexa_core)"
-app_email = "dev@omnexa.local"
+app_email = "dev@erpgenex.com"
 app_license = "mit"
 
 # Apps
