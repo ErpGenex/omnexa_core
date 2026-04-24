@@ -1,6 +1,9 @@
 # Copyright (c) 2026, Omnexa and contributors
 # License: MIT. See license.txt
 
+import os
+import shutil
+import subprocess
 from pathlib import Path
 
 import frappe
@@ -32,14 +35,90 @@ REQUIRED_SITE_APPS = [
 	"omnexa_user_academy",
 ]
 
+# Auto `bench get-app` for REQUIRED_SITE_APPS when sources are missing (set OMNEXA_AUTO_GET_APPS=0 to disable).
+DEFAULT_APPS_GIT_ORG = os.environ.get("ERPGENEX_GITHUB_ORG", "ErpGenex")
+DEFAULT_APPS_GIT_BRANCH = os.environ.get("OMNEXA_APPS_BRANCH", "develop")
+
+
+def _auto_get_apps_enabled() -> bool:
+	return str(os.environ.get("OMNEXA_AUTO_GET_APPS", "1")).strip().lower() not in (
+		"0",
+		"false",
+		"no",
+		"off",
+	)
+
+
+def _required_app_hooks_path(app: str) -> Path:
+	return Path(get_bench_path()) / "apps" / app / app / "hooks.py"
+
+
+def _app_source_present(app: str) -> bool:
+	return _required_app_hooks_path(app).is_file()
+
+
+def _run_bench_cli(args: list[str]) -> subprocess.CompletedProcess[str]:
+	bench_cmd = shutil.which("bench")
+	if not bench_cmd:
+		frappe.throw(
+			"The `bench` CLI is not in PATH; cannot clone ErpGenEx apps automatically. "
+			"Add bench to PATH or run `bench get-app` for missing apps, then install omnexa_core again."
+		)
+	bench_path = get_bench_path()
+	return subprocess.run(
+		[bench_cmd, *args],
+		cwd=bench_path,
+		capture_output=True,
+		text=True,
+		timeout=3600,
+		check=False,
+	)
+
+
+def _bench_cli_or_throw(args: list[str], intro: str) -> None:
+	proc = _run_bench_cli(args)
+	if proc.returncode != 0:
+		err = (proc.stderr or proc.stdout or "").strip() or f"exit code {proc.returncode}"
+		frappe.throw(f"{intro}\n{err}")
+
+
+def ensure_required_apps_fetched():
+	"""Clone missing ErpGenEx apps into the bench via `bench get-app` (skip-assets build race).
+
+	Called from before_install / before_migrate so sources exist before site install and migrate.
+	"""
+	if not _auto_get_apps_enabled():
+		return
+
+	missing = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
+	if not missing:
+		return
+
+	org = (os.environ.get("ERPGENEX_GITHUB_ORG") or DEFAULT_APPS_GIT_ORG).strip()
+	branch = (os.environ.get("OMNEXA_APPS_BRANCH") or DEFAULT_APPS_GIT_BRANCH).strip()
+
+	for app in missing:
+		url = f"https://github.com/{org}/{app}.git"
+		_bench_cli_or_throw(
+			["get-app", url, "--branch", branch, "--skip-assets"],
+			f"Failed to fetch app `{app}` from {url} (branch {branch}).",
+		)
+
+	_bench_cli_or_throw(
+		["setup", "requirements"],
+		"Fetched required apps but `bench setup requirements` failed.",
+	)
+
 
 def before_install():
 	enforce_supported_frappe_version()
+	ensure_required_apps_fetched()
 	ensure_required_apps_are_registered()
 
 
 def before_migrate():
 	enforce_supported_frappe_version()
+	ensure_required_apps_fetched()
 	ensure_required_apps_are_registered()
 
 
@@ -222,10 +301,16 @@ def install_required_site_apps():
 
 	missing_sources = [app for app in REQUIRED_SITE_APPS if app not in available]
 	if missing_sources:
+		ensure_required_apps_fetched()
+		ensure_required_apps_are_registered()
+		available = set(frappe.get_all_apps())
+		missing_sources = [app for app in REQUIRED_SITE_APPS if app not in available]
+	if missing_sources:
 		frappe.throw(
 			"Required apps are missing from bench (apps.txt): "
 			+ ", ".join(missing_sources)
-			+ ". Please run bench get-app for them, then install omnexa_core again."
+			+ ". Run `bench get-app` for them (or set OMNEXA_AUTO_GET_APPS=1 and ensure `bench` is on PATH), "
+			"then install omnexa_core again."
 		)
 
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
@@ -270,6 +355,7 @@ def sync_stack(run_migrate=1, skip_search_index=1):
 	bench --site <site> execute "omnexa_core.install.sync_stack" --kwargs "{'run_migrate': 0}"
 	"""
 	enforce_supported_frappe_version()
+	ensure_required_apps_fetched()
 	ensure_required_apps_are_registered()
 
 	missing_sources = _missing_source_apps()
@@ -277,7 +363,7 @@ def sync_stack(run_migrate=1, skip_search_index=1):
 		frappe.throw(
 			"Required apps are missing from bench (apps.txt): "
 			+ ", ".join(missing_sources)
-			+ ". Please run bench get-app for them first."
+			+ ". Run `bench get-app` for them or enable auto-fetch (OMNEXA_AUTO_GET_APPS=1, `bench` on PATH)."
 		)
 
 	installed_now, skipped = _install_missing_required_apps()
