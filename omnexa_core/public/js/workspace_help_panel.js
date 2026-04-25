@@ -178,8 +178,18 @@
 		return r[1] || "";
 	}
 
+	function safe_route_parts() {
+		const r = frappe.get_route();
+		return Array.isArray(r) ? r : [];
+	}
+
+	function safe_route_str() {
+		const parts = safe_route_parts();
+		return parts.length ? parts.join("/") : "";
+	}
+
 	function route_context_line() {
-		const r = frappe.get_route() || [];
+		const r = safe_route_parts();
 		const g = (s) => frappe.utils.xss_sanitise ? frappe.utils.xss_sanitise(String(s)) : String(s);
 		if (r[0] === "Workspaces") {
 			const t = workspace_title();
@@ -195,7 +205,7 @@
 		if (r[0] === "query-report" && r[1]) return `${__("Report")}: ${g(r[1])}`;
 		if (r[0] === "dashboard-view" && r[1]) return `${__("Dashboard")}: ${g(r[1])}`;
 		if (r[0] === "Tree" && r[1]) return `${__("Tree")}: ${g(r[1])}`;
-		return frappe.get_route_str() || __("Desk");
+		return safe_route_str() || __("Desk");
 	}
 
 	function read_ls(key, def) {
@@ -408,7 +418,7 @@
 		}
 
 		current_context_args() {
-			const r = frappe.get_route() || [];
+			const r = safe_route_parts();
 			const map = {
 				Workspaces: "Workspace",
 				List: "List",
@@ -420,7 +430,7 @@
 				context_type: map[r[0]] || "Desk",
 				reference_doctype: r[1] || "",
 				workspace_name: r[0] === "Workspaces" ? (r[1] === "private" ? r[2] || "" : r[1] || "") : "",
-				route_str: frappe.get_route_str() || "",
+				route_str: safe_route_str(),
 			};
 		}
 
@@ -503,7 +513,7 @@
 			this.refresh_tips();
 
 			if (is_workspace_route()) {
-				const key = `${frappe.get_route().join("/")}`;
+				const key = safe_route_str();
 				const changed = key !== this._last_workspace_key;
 				this._last_workspace_key = key;
 
