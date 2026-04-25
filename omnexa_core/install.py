@@ -244,6 +244,11 @@ def ensure_global_defaults_compat():
 	if frappe.db.exists("DocType", "Global Defaults"):
 		return
 
+	# On pure-Frappe sites (no ERPNext), DocTypes like Company/Currency might not exist.
+	# Use Data fields in that case to avoid invalid Link options during DocType validation.
+	company_exists = frappe.db.exists("DocType", "Company")
+	currency_exists = frappe.db.exists("DocType", "Currency")
+
 	doc = frappe.get_doc(
 		{
 			"doctype": "DocType",
@@ -257,14 +262,14 @@ def ensure_global_defaults_compat():
 				{
 					"fieldname": "default_company",
 					"label": "Default Company",
-					"fieldtype": "Link",
-					"options": "Company",
+					"fieldtype": "Link" if company_exists else "Data",
+					"options": "Company" if company_exists else "",
 				},
 				{
 					"fieldname": "default_currency",
 					"label": "Default Currency",
-					"fieldtype": "Link",
-					"options": "Currency",
+					"fieldtype": "Link" if currency_exists else "Data",
+					"options": "Currency" if currency_exists else "",
 				},
 			],
 			"permissions": [
@@ -279,6 +284,10 @@ def ensure_global_defaults_compat():
 		}
 	)
 	doc.insert(ignore_permissions=True)
+
+	if not company_exists:
+		frappe.clear_cache()
+		return
 
 	company = frappe.db.get_value("Company", {}, "name")
 	if company:
