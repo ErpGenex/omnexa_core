@@ -4,6 +4,8 @@
 import os
 import shutil
 import subprocess
+import sys
+import importlib
 from pathlib import Path
 from json import dumps
 from json import loads
@@ -58,6 +60,20 @@ def _required_app_hooks_path(app: str) -> Path:
 
 def _app_source_present(app: str) -> bool:
 	return _required_app_hooks_path(app).is_file()
+
+
+def _ensure_app_import_path(app: str) -> None:
+	"""Make a fetched app importable in the current Python process."""
+	app_root = str(Path(get_bench_path()) / "apps" / app)
+	if app_root not in sys.path:
+		sys.path.insert(0, app_root)
+
+
+def _ensure_required_apps_importable() -> None:
+	for app in REQUIRED_SITE_APPS:
+		if _app_source_present(app):
+			_ensure_app_import_path(app)
+	importlib.invalidate_caches()
 
 
 def _repair_apps_txt_entries(lines: list[str]) -> list[str]:
@@ -156,6 +172,7 @@ def ensure_required_apps_fetched():
 		["setup", "requirements"],
 		"Fetched required apps but `bench setup requirements` failed.",
 	)
+	_ensure_required_apps_importable()
 
 
 def before_install():
@@ -446,6 +463,7 @@ def install_required_site_apps():
 		available = set(frappe.get_all_apps())
 		missing_on_disk = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
 		missing_sources = [app for app in REQUIRED_SITE_APPS if app not in available or app in missing_on_disk]
+	_ensure_required_apps_importable()
 	if missing_sources:
 		frappe.throw(
 			"Required apps are missing from bench sources/apps.txt: "
