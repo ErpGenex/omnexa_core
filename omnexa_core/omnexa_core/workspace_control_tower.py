@@ -1340,7 +1340,15 @@ def _trim_chart_suffix(text: str, max_len: int = 28) -> str:
 
 
 def _ensure_timeseries_chart(chart_name: str, module: str, document_type: str, viz: str) -> None:
-	if frappe.db.exists("Dashboard Chart", chart_name) or not _aggregatable_doctype(document_type):
+	if not _aggregatable_doctype(document_type):
+		return
+	if frappe.db.exists("Dashboard Chart", chart_name):
+		# Keep chart globally visible on fresh sites/users (avoid module-gated filtering in Workspace API).
+		try:
+			frappe.db.set_value("Dashboard Chart", chart_name, "module", None, update_modified=False)
+			frappe.db.set_value("Dashboard Chart", chart_name, "is_public", 1, update_modified=False)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), f"Omnexa: normalize chart visibility {chart_name}")
 		return
 	if viz not in ("Line", "Bar"):
 		return
@@ -1348,7 +1356,7 @@ def _ensure_timeseries_chart(chart_name: str, module: str, document_type: str, v
 		{
 			"doctype": "Dashboard Chart",
 			"chart_name": chart_name,
-			"module": module,
+			"module": None,
 			"is_public": 1,
 			"chart_type": "Count",
 			"document_type": document_type,
@@ -1375,7 +1383,14 @@ def _ensure_group_by_chart(
 	viz: str,
 	number_of_groups: int = 8,
 ) -> None:
-	if frappe.db.exists("Dashboard Chart", chart_name) or not _aggregatable_doctype(document_type):
+	if not _aggregatable_doctype(document_type):
+		return
+	if frappe.db.exists("Dashboard Chart", chart_name):
+		try:
+			frappe.db.set_value("Dashboard Chart", chart_name, "module", None, update_modified=False)
+			frappe.db.set_value("Dashboard Chart", chart_name, "is_public", 1, update_modified=False)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), f"Omnexa: normalize chart visibility {chart_name}")
 		return
 	if viz not in ("Bar", "Pie", "Donut", "Percentage"):
 		return
@@ -1385,7 +1400,7 @@ def _ensure_group_by_chart(
 		{
 			"doctype": "Dashboard Chart",
 			"chart_name": chart_name,
-			"module": module,
+			"module": None,
 			"is_public": 1,
 			"chart_type": "Group By",
 			"document_type": document_type,
