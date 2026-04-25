@@ -8,6 +8,7 @@ from pathlib import Path
 
 import frappe
 from frappe.installer import install_app as install_site_app
+from frappe.installer import update_site_config
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 from frappe.utils import cint, flt
 from frappe.utils import get_bench_path
@@ -207,6 +208,27 @@ def run_site_hardening_after_app_changes():
 	remove_legacy_finance_workspace()
 	remove_legacy_finance_group_stub_workspaces()
 	run_workspace_desk_sync()
+	ensure_site_runtime_ready()
+
+
+def ensure_site_runtime_ready():
+	"""Prevent stale 'Updating / 503' after app install on fresh environments.
+
+	Some benches keep maintenance/scheduler flags from earlier operations in common/site config.
+	Force site runtime to ready state after successful install/migrate flows.
+	"""
+	try:
+		update_site_config("maintenance_mode", 0)
+		update_site_config("pause_scheduler", 0)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: clear maintenance/pause flags")
+
+	try:
+		from frappe.utils.scheduler import enable_scheduler
+
+		enable_scheduler()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: enable scheduler")
 
 
 def ensure_required_apps_are_registered():
@@ -376,6 +398,8 @@ def sync_stack(run_migrate=1, skip_search_index=1):
 		)
 
 	installed_now, skipped = _install_missing_required_apps()
+	# Ensure workspaces/charts are materialized even when caller skips migrate.
+	run_site_hardening_after_app_changes()
 	result = {
 		"installed_now": installed_now,
 		"already_installed": skipped,
