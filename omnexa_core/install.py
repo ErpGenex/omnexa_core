@@ -60,6 +60,51 @@ def _app_source_present(app: str) -> bool:
 	return _required_app_hooks_path(app).is_file()
 
 
+def _repair_apps_txt_entries(lines: list[str]) -> list[str]:
+	"""Repair malformed apps.txt entries where two app names were concatenated."""
+	known = ["frappe", "erpnext", "payments", *REQUIRED_SITE_APPS]
+	known_set = set(known)
+	out = []
+	changed = False
+
+	for raw in lines:
+		line = (raw or "").strip()
+		if not line:
+			continue
+		if line in known_set:
+			out.append(line)
+			continue
+
+		# Try splitting concatenated app names (e.g. omnexa_coreerpgenex_theme_0426).
+		split_done = False
+		for left in known:
+			if not line.startswith(left):
+				continue
+			right = line[len(left) :]
+			if right in known_set:
+				out.extend([left, right])
+				changed = True
+				split_done = True
+				break
+		if split_done:
+			continue
+
+		out.append(line)
+
+	# Preserve order while removing duplicates.
+	deduped = []
+	seen = set()
+	for app in out:
+		if app in seen:
+			if app in known_set:
+				changed = True
+			continue
+		seen.add(app)
+		deduped.append(app)
+
+	return deduped if changed else [ln.strip() for ln in lines if (ln or "").strip()]
+
+
 def _run_bench_cli(args: list[str]) -> subprocess.CompletedProcess[str]:
 	bench_cmd = shutil.which("bench")
 	if not bench_cmd:
@@ -242,7 +287,13 @@ def ensure_required_apps_are_registered():
 	if not apps_txt.exists() or not apps_dir.exists():
 		return
 
-	current = [line.strip() for line in apps_txt.read_text().splitlines() if line.strip()]
+	raw_text = apps_txt.read_text(encoding="utf-8")
+	lines = raw_text.splitlines()
+	current = _repair_apps_txt_entries(lines)
+	normalized_text = ("\n".join(current) + "\n") if current else ""
+	if normalized_text != raw_text:
+		apps_txt.write_text(normalized_text, encoding="utf-8")
+
 	missing_in_txt = []
 	for app in REQUIRED_SITE_APPS:
 		if app in current:
@@ -254,6 +305,12 @@ def ensure_required_apps_are_registered():
 		return
 
 	with apps_txt.open("a", encoding="utf-8") as f:
+		# Ensure previous line is terminated to avoid concatenated app names.
+		if apps_txt.stat().st_size > 0:
+			with apps_txt.open("rb") as r:
+				r.seek(-1, 2)
+				if r.read(1) != b"\n":
+					f.write("\n")
 		for app in missing_in_txt:
 			f.write(f"{app}\n")
 
@@ -380,16 +437,18 @@ def install_required_site_apps():
 	"""
 	available = set(frappe.get_all_apps())
 	installed = set(frappe.get_installed_apps())
+	missing_on_disk = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
 
-	missing_sources = [app for app in REQUIRED_SITE_APPS if app not in available]
+	missing_sources = [app for app in REQUIRED_SITE_APPS if app not in available or app in missing_on_disk]
 	if missing_sources:
 		ensure_required_apps_fetched()
 		ensure_required_apps_are_registered()
 		available = set(frappe.get_all_apps())
-		missing_sources = [app for app in REQUIRED_SITE_APPS if app not in available]
+		missing_on_disk = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
+		missing_sources = [app for app in REQUIRED_SITE_APPS if app not in available or app in missing_on_disk]
 	if missing_sources:
 		frappe.throw(
-			"Required apps are missing from bench (apps.txt): "
+			"Required apps are missing from bench sources/apps.txt: "
 			+ ", ".join(missing_sources)
 			+ ". Run `bench get-app` for them (or set OMNEXA_AUTO_GET_APPS=1 and ensure `bench` is on PATH), "
 			"then install omnexa_core again."
@@ -407,7 +466,7 @@ def install_required_site_apps():
 
 def _missing_source_apps() -> list[str]:
 	available = set(frappe.get_all_apps())
-	return [app for app in REQUIRED_SITE_APPS if app not in available]
+	return [app for app in REQUIRED_SITE_APPS if app not in available or not _app_source_present(app)]
 
 
 def _install_missing_required_apps() -> tuple[list[str], list[str]]:
