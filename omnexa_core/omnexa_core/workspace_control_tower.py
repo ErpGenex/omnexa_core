@@ -2291,7 +2291,9 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 	_bind_workspace_onboarding_name(ws, spec)
 	_enrich_spec_analytics_from_module(spec, ws)
 	chart_names = _collect_workspace_chart_names(spec, prefix, module)
-	chart_row_labels = [_workspace_row_label(ch) for ch in chart_names]
+	# Frappe workspace Chart block resolves chart rows by label text equality with block chart_name.
+	# Keep row label identical to chart_name to avoid silent chart-block drops in Desk render.
+	chart_row_labels = list(chart_names)
 
 	number_card_ids: list[str] = []
 	number_card_labels: list[str] = []
