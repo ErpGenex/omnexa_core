@@ -1409,6 +1409,14 @@ def _collect_workspace_chart_names(spec: dict[str, Any], prefix: str, module: st
 	names: list[str] = []
 	seen: set[str] = set()
 
+	def has_rows(doctype: str) -> bool:
+		# Group-by/Pie/Donut chart payload can be empty on brand-new sites.
+		# Keep those charts only when there is at least one source row to render.
+		try:
+			return bool(doctype) and cint(frappe.db.count(doctype, limit=1)) > 0
+		except Exception:
+			return False
+
 	def add(chart_name: str) -> None:
 		if chart_name and chart_name not in seen and frappe.db.exists("Dashboard Chart", chart_name):
 			seen.add(chart_name)
@@ -1434,6 +1442,8 @@ def _collect_workspace_chart_names(spec: dict[str, Any], prefix: str, module: st
 		gf = row.get("group_by")
 		if viz not in ("Bar", "Pie", "Percentage") or not dt or not gf or not _aggregatable_doctype(dt):
 			continue
+		if not has_rows(dt):
+			continue
 		lbl = _trim_chart_suffix(row.get("label") or str(gf), 22)
 		tag = str(viz)[:4]
 		cn = f"{prefix} · {lbl} {tag}"
@@ -1442,6 +1452,8 @@ def _collect_workspace_chart_names(spec: dict[str, Any], prefix: str, module: st
 
 	for dt in spec.get("status_doctypes") or []:
 		if not _aggregatable_doctype(dt):
+			continue
+		if not has_rows(dt):
 			continue
 		su = _trim_chart_suffix(dt, 24)
 		cn = f"{prefix} · {su} Mix"
