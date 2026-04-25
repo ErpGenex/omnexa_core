@@ -477,18 +477,16 @@ def force_repair_workspace_charts():
 			(ws["name"],),
 		)
 
-		existing = set(
-			frappe.db.sql(
-				"""
-				SELECT chart_name
-				FROM `tabWorkspace Chart`
-				WHERE parent = %s
-				""",
-				(ws["name"],),
-				as_list=True,
-			)
+		existing_rows = frappe.db.sql(
+			"""
+			SELECT chart_name
+			FROM `tabWorkspace Chart`
+			WHERE parent = %s
+			""",
+			(ws["name"],),
+			as_list=True,
 		)
-		existing = {row[0] for row in existing if row and row[0]}
+		existing = {row[0] for row in existing_rows if row and row[0]}
 
 		next_idx = cint(
 			frappe.db.sql(
