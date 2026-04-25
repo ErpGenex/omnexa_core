@@ -5,6 +5,8 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
+from json import dumps
+from json import loads
 
 import frappe
 from frappe.installer import install_app as install_site_app
@@ -414,6 +416,122 @@ def sync_stack(run_migrate=1, skip_search_index=1):
 		result["migrated"] = True
 
 	return result
+
+
+@frappe.whitelist()
+def debug_workspace_payload(workspace_name="Trading"):
+	"""Diagnostics: inspect workspace payload as served by Desk API."""
+	from frappe.desk.desktop import get_desktop_page
+
+	ws = frappe.get_doc("Workspace", workspace_name)
+	payload = get_desktop_page(dumps({"name": ws.name, "title": ws.title, "public": ws.public}))
+	charts = ((payload or {}).get("charts") or {}).get("items") or []
+	number_cards = ((payload or {}).get("number_cards") or {}).get("items") or []
+	shortcuts = ((payload or {}).get("shortcuts") or {}).get("items") or []
+	return {
+		"workspace": workspace_name,
+		"charts_count": len(charts),
+		"chart_names": [c.get("chart_name") for c in charts],
+		"number_cards_count": len(number_cards),
+		"shortcuts_count": len(shortcuts),
+	}
+
+
+@frappe.whitelist()
+def force_repair_workspace_charts():
+	"""Force-repair Workspace Chart rows from workspace content blocks.
+
+	This bypasses full Workspace save/validation (which may fail on unrelated broken links)
+	and keeps chart rows aligned with chart blocks so Desk chart widgets always resolve.
+	"""
+	workspaces = frappe.get_all("Workspace", fields=["name", "content"])
+	patched = 0
+	inserted = 0
+	missing_dashboard_charts = []
+
+	for ws in workspaces:
+		content = ws.get("content") or "[]"
+		try:
+			blocks = loads(content)
+		except Exception:
+			blocks = []
+
+		chart_names = []
+		for b in blocks:
+			if (b or {}).get("type") != "chart":
+				continue
+			chart_name = ((b or {}).get("data") or {}).get("chart_name")
+			if chart_name and chart_name not in chart_names:
+				chart_names.append(chart_name)
+
+		if not chart_names:
+			continue
+
+		# Keep label identical to chart_name so workspace chart block lookup succeeds.
+		frappe.db.sql(
+			"""
+			UPDATE `tabWorkspace Chart`
+			SET label = chart_name
+			WHERE parent = %s
+			""",
+			(ws["name"],),
+		)
+
+		existing = set(
+			frappe.db.sql(
+				"""
+				SELECT chart_name
+				FROM `tabWorkspace Chart`
+				WHERE parent = %s
+				""",
+				(ws["name"],),
+				as_list=True,
+			)
+		)
+		existing = {row[0] for row in existing if row and row[0]}
+
+		next_idx = cint(
+			frappe.db.sql(
+				"SELECT COALESCE(MAX(idx), 0) FROM `tabWorkspace Chart` WHERE parent = %s",
+				(ws["name"],),
+			)[0][0]
+		)
+
+		for chart_name in chart_names:
+			if not frappe.db.exists("Dashboard Chart", chart_name):
+				missing_dashboard_charts.append({"workspace": ws["name"], "chart_name": chart_name})
+				continue
+			if chart_name in existing:
+				continue
+
+			next_idx += 1
+			inserted += 1
+			frappe.db.sql(
+				"""
+				INSERT INTO `tabWorkspace Chart`
+					(name, creation, modified, modified_by, owner, docstatus, idx, parent, parentfield, parenttype, chart_name, label)
+				VALUES
+					(%s, NOW(), NOW(), %s, %s, 0, %s, %s, 'charts', 'Workspace', %s, %s)
+				""",
+				(
+					frappe.generate_hash(length=10),
+					frappe.session.user,
+					frappe.session.user,
+					next_idx,
+					ws["name"],
+					chart_name,
+					chart_name,
+				),
+			)
+		patched += 1
+
+	frappe.db.commit()
+	return {
+		"patched_workspaces": patched,
+		"inserted_rows": inserted,
+		"missing_dashboard_charts": missing_dashboard_charts[:100],
+		"missing_dashboard_charts_count": len(missing_dashboard_charts),
+	}
 
 
 
