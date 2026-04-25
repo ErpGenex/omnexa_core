@@ -3,6 +3,16 @@
 	const LS_AUTO = "omnexa_wh_auto_open";
 	const BRAND = "👉 User Assistant";
 
+	// Guard against transient null route during desk bootstrap.
+	// Some environments trigger route-change before router state is ready.
+	if (window.frappe && typeof frappe.get_route_str === "function" && !frappe.__omnexa_safe_route_str) {
+		frappe.__omnexa_safe_route_str = true;
+		frappe.get_route_str = function () {
+			const r = frappe.get_route && frappe.get_route();
+			return Array.isArray(r) ? r.join("/") : "";
+		};
+	}
+
 	function base_tips() {
 		return [
 			{
