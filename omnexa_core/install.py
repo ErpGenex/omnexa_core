@@ -206,6 +206,7 @@ def after_migrate():
 def run_site_hardening_after_app_changes():
 	"""Run all site-side fixes so fresh installs and migrations behave the same."""
 	ensure_global_supporting_attachment_fields()
+	ensure_project_contract_link_compat()
 	remove_legacy_people_workspace()
 	remove_legacy_finance_workspace()
 	remove_legacy_finance_group_stub_workspaces()
@@ -321,6 +322,54 @@ def ensure_global_defaults_compat():
 			frappe.db.set_single_value("Global Defaults", "default_currency", currency)
 
 	frappe.clear_cache()
+
+
+def ensure_project_contract_link_compat():
+	"""Fallback Link->Data when `Project Contract` DocType is unavailable.
+
+	Several PM doctypes use `project` Link fields targeting `Project Contract`.
+	On stacks where this DocType is not present, Frappe raises:
+	`Field project is referring to non-existing doctype Project Contract`.
+	To keep installs/migrations stable, downgrade these links to Data until
+	the target DocType is available.
+	"""
+	if frappe.db.exists("DocType", "Project Contract"):
+		return
+
+	patched = 0
+
+	docfields = frappe.get_all(
+		"DocField",
+		filters={"fieldtype": "Link", "options": "Project Contract"},
+		fields=["name", "parent", "fieldname"],
+		limit_page_length=500,
+	)
+	for row in docfields:
+		frappe.db.set_value(
+			"DocField",
+			row["name"],
+			{"fieldtype": "Data", "options": ""},
+			update_modified=False,
+		)
+		patched += 1
+
+	custom_fields = frappe.get_all(
+		"Custom Field",
+		filters={"fieldtype": "Link", "options": "Project Contract"},
+		fields=["name", "dt", "fieldname"],
+		limit_page_length=500,
+	)
+	for row in custom_fields:
+		frappe.db.set_value(
+			"Custom Field",
+			row["name"],
+			{"fieldtype": "Data", "options": ""},
+			update_modified=False,
+		)
+		patched += 1
+
+	if patched:
+		frappe.clear_cache()
 
 
 def install_required_site_apps():
@@ -530,6 +579,95 @@ def force_repair_workspace_charts():
 		"missing_dashboard_charts": missing_dashboard_charts[:100],
 		"missing_dashboard_charts_count": len(missing_dashboard_charts),
 	}
+
+
+@frappe.whitelist()
+def force_seed_workspace_charts(workspace_name="Fixed Assets", limit=4):
+	"""Seed charts for one workspace when chart blocks/rows are missing."""
+	limit = max(1, min(cint(limit), 8))
+	if not frappe.db.exists("Workspace", workspace_name):
+		return {"workspace": workspace_name, "seeded": 0, "reason": "workspace_not_found"}
+
+	ws = frappe.get_doc("Workspace", workspace_name)
+	module = ws.module or ""
+	title = ws.title or ws.name
+
+	# Pick aggregatable doctypes from same module.
+	dts = frappe.get_all(
+		"DocType",
+		fields=["name"],
+		filters={"module": module, "issingle": 0, "is_virtual": 0},
+		order_by="modified desc",
+		limit_page_length=40,
+	)
+	doctypes = [d["name"] for d in dts if d.get("name")]
+	if not doctypes:
+		return {"workspace": workspace_name, "seeded": 0, "reason": "no_doctypes"}
+
+	charts = []
+	for dt in doctypes:
+		if len(charts) >= limit:
+			break
+		chart_name = f"{title} · {dt[:28]} Trend"
+		if not frappe.db.exists("Dashboard Chart", chart_name):
+			doc = frappe.get_doc(
+				{
+					"doctype": "Dashboard Chart",
+					"chart_name": chart_name,
+					"module": None,
+					"is_public": 1,
+					"chart_type": "Count",
+					"document_type": dt,
+					"based_on": "creation",
+					"timeseries": 1,
+					"timespan": "Last Month",
+					"time_interval": "Daily",
+					"type": "Line",
+					"filters_json": "[]",
+				}
+			)
+			doc.insert(ignore_permissions=True)
+		charts.append(chart_name)
+
+	# Rebuild workspace chart child rows.
+	ws.charts = []
+	for ch in charts:
+		ws.append("charts", {"chart_name": ch, "label": ch})
+
+	# Ensure chart blocks exist in content.
+	try:
+		blocks = loads(ws.content or "[]")
+		if not isinstance(blocks, list):
+			blocks = []
+	except Exception:
+		blocks = []
+
+	blocks = [b for b in blocks if (b or {}).get("type") != "chart"]
+	header_idx = None
+	for i, b in enumerate(blocks):
+		if (b or {}).get("type") == "header":
+			text = (((b or {}).get("data") or {}).get("text") or "").lower()
+			if "charts" in text:
+				header_idx = i
+				break
+
+	new_chart_blocks = []
+	for i, ch in enumerate(charts):
+		new_chart_blocks.append(
+			{"id": f"seed-ch-{i}", "type": "chart", "data": {"chart_name": ch, "col": 4}}
+		)
+
+	if header_idx is None:
+		blocks.append({"id": "seed-ch-h", "type": "header", "data": {"text": "<span class=\"h5\"><b>Charts</b></span>", "col": 12}})
+		blocks.extend(new_chart_blocks)
+	else:
+		blocks[header_idx + 1 : header_idx + 1] = new_chart_blocks
+
+	ws.content = dumps(blocks)
+	ws.save(ignore_permissions=True)
+	frappe.db.commit()
+
+	return {"workspace": workspace_name, "seeded": len(charts), "chart_names": charts}
 
 
 
