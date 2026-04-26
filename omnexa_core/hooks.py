@@ -57,7 +57,9 @@ app_logo_url = "/files/erpgenex-logo.png"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+	"Event Dead Letter": "public/js/event_dead_letter.js",
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -168,26 +170,35 @@ doc_events = {
 	}
 }
 
+_event_overlay_doctypes = [
+	"Sales Invoice",
+	"Purchase Invoice",
+	"Payment Entry",
+	"Stock Entry",
+	"Delivery Note",
+	"Purchase Receipt",
+	"Journal Entry",
+]
+
+for _dt in _event_overlay_doctypes:
+	doc_events.setdefault(_dt, {})
+	doc_events[_dt]["on_submit"] = "omnexa_core.omnexa_core.event_dispatcher.on_submit_emit"
+	doc_events[_dt]["on_cancel"] = "omnexa_core.omnexa_core.event_dispatcher.on_cancel_emit"
+
+# Default event subscribers (overlay-safe; can be extended by other apps).
+omnexa_core_event_handlers = [
+	"omnexa_core.omnexa_core.default_event_handlers.accounting_audit_handler",
+	"omnexa_core.omnexa_core.default_event_handlers.inventory_audit_handler",
+]
+
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"omnexa_core.tasks.all"
-# 	],
-# 	"daily": [
-# 		"omnexa_core.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"omnexa_core.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"omnexa_core.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"omnexa_core.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"hourly": [
+		"omnexa_core.omnexa_core.event_dispatcher.monitor_event_pipeline",
+	]
+}
 
 # Testing
 # -------
