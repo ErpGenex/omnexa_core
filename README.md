@@ -1,33 +1,75 @@
-### Omnexa Core
+# ERPGENEX Core (`omnexa_core`)
 
-Core platform for **ErpGenEx** (`omnexa_core`)
+[![Open Source](https://img.shields.io/badge/Open%20Source-Yes-2ea44f?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![ERP System](https://img.shields.io/badge/ERP-System-1f6feb?style=for-the-badge)](#)
+[![SaaS Ready](https://img.shields.io/badge/SaaS-Ready-8250df?style=for-the-badge)](#)
 
-### Installation
+Core platform for ERPGENEX: workspace orchestration, app lifecycle management, licensing flow, integration extensibility, and enterprise desk experience on top of Frappe.
 
-You can install this app using the [bench](https://github.com/frappe/bench) CLI:
+## Why ERPGENEX Core
+
+- Unified control layer for modular ERP applications.
+- Marketplace-driven install/update/uninstall workflow.
+- Multi-app onboarding and workspace synchronization.
+- Integration-ready architecture with hook-based extension points.
+- Designed for production operations and SaaS deployment models.
+
+## UI Preview
+
+Add your UI screenshots under `screenshot/` with the names below and they will render automatically.
+
+![ERPGENEX Dashboard](./screenshot/ui-dashboard.png)
+![ERPGENEX Marketplace](./screenshot/ui-marketplace.png)
+![ERPGENEX Workspace](./screenshot/ui-workspace.png)
+![ERPGENEX Integrations](./screenshot/ui-integrations.png)
+
+## Installation
+
+### Option A: Docker (recommended for fast bootstrapping)
+
+Use your existing Frappe/ERPNext Docker stack, then install `omnexa_core` into the running bench:
+
+```bash
+# inside your dockerized bench container
+cd /home/frappe/frappe-bench
+bench get-app https://github.com/ErpGenex/omnexa_core.git --branch develop
+bench --site <your-site> install-app omnexa_core
+bench --site <your-site> migrate
+```
+
+### Option B: Script / Bench CLI
+
+For VM or bare-metal environments:
 
 ```bash
 cd $PATH_TO_YOUR_BENCH
-bench get-app $URL_OF_THIS_REPO --branch develop
-bench install-app omnexa_core
+bench get-app https://github.com/ErpGenex/omnexa_core.git --branch develop
+bench --site <your-site> install-app omnexa_core
+bench --site <your-site> migrate
 ```
 
-### Contributing
+## Post-Install
 
-This app uses `pre-commit` for code formatting and linting. Please [install pre-commit](https://pre-commit.com/#installation) and enable it for this repository:
+- Open Desk and verify ERPGENEX workspaces are visible.
+- Confirm app dependencies are fetched and installed.
+- Run smoke checks for onboarding, marketplace, and reports.
+
+## Contributing
+
+This app uses `pre-commit` for formatting and linting.
 
 ```bash
 cd apps/omnexa_core
 pre-commit install
 ```
 
-Pre-commit is configured to use the following tools for checking and formatting your code:
+Enabled checks:
 
-- ruff
-- eslint
-- prettier
-- pyupgrade
+- `ruff`
+- `eslint`
+- `prettier`
+- `pyupgrade`
 
-### License
+## License
 
-mit
+MIT
