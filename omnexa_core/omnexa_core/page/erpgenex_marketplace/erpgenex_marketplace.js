@@ -895,6 +895,8 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 					fieldname: "activation_key",
 					fieldtype: "Password",
 					label: __("License or developer key"),
+					length: 2048,
+					description: __("Supports long JWT / armored activation keys."),
 					reqd: 1,
 				},
 			],

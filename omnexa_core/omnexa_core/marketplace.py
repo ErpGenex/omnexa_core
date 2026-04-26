@@ -20,6 +20,7 @@ from omnexa_core.omnexa_core.omnexa_license import (
 	clear_license_key,
 	clear_trial_for_app,
 	get_stored_license_key,
+	is_license_status_ok,
 	is_free_app,
 	record_online_license_check,
 	set_license_key,
@@ -899,7 +900,7 @@ def activate_app_license(app_slug: str, activation_key: str):
 	previous = get_stored_license_key(app_slug)
 	set_license_key(app_slug=app_slug, license_value=activation_key)
 	status = verify_app_license(app_slug)
-	if status.status not in ("licensed", "licensed_free", "licensed_dev_override", "trial"):
+	if not is_license_status_ok(status.status):
 		if previous:
 			set_license_key(app_slug=app_slug, license_value=previous)
 		else:

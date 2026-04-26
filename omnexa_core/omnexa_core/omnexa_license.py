@@ -532,6 +532,56 @@ def _is_erpgenex_platform() -> bool:
 	return False
 
 
+def _require_platform_binding() -> bool:
+	"""
+	Platform binding is optional.
+	Enable only when deployment wants strict platform lock:
+	  omnexa_license_require_platform = 1/true
+	"""
+	return frappe.conf.get("omnexa_license_require_platform") in (1, True, "1", "true", "True")
+
+
+def _allow_unsigned_local_keys() -> bool:
+	"""
+	When enabled, JWT keys are decoded without signature verification.
+	Use only for offline/local licensing where the marketplace key itself is trusted.
+	  omnexa_license_allow_unsigned_keys = 1/true
+	"""
+	return frappe.conf.get("omnexa_license_allow_unsigned_keys") in (1, True, "1", "true", "True")
+
+
+def _decode_unverified_license_jwt(token: str, expect_app: str) -> LicenseCheckResult:
+	"""Decode JWT payload only (no signature validation), enforcing exp and app match."""
+	try:
+		import jwt
+	except ImportError as e:
+		return LicenseCheckResult(status="misconfigured", reason=f"jwt library missing: {e}")
+
+	try:
+		claims = jwt.decode(
+			token,
+			options={
+				"verify_signature": False,
+				"verify_exp": True,
+				"require": ["exp"],
+			},
+		)
+	except Exception as e:
+		err_name = type(e).__name__
+		if err_name == "ExpiredSignatureError" or "ExpiredSignature" in err_name:
+			return LicenseCheckResult(status="expired_license", reason="jwt expired")
+		return LicenseCheckResult(status="invalid", reason=str(e)[:500])
+
+	if "app" in claims and str(claims.get("app")) != expect_app:
+		return LicenseCheckResult(
+			status="invalid",
+			reason="app claim mismatch",
+			claims=claims,
+		)
+
+	return LicenseCheckResult(status="licensed", reason="unsigned_key_mode", claims=claims)
+
+
 def verify_app_license(app_slug: str) -> LicenseCheckResult:
 	"""
 	Verify license for a Frappe app (e.g. omnexa_einvoice).
@@ -548,7 +598,7 @@ def verify_app_license(app_slug: str) -> LicenseCheckResult:
 		return LicenseCheckResult(status="licensed_free", reason="free_app")
 	if is_manual_revoke(app_slug):
 		return LicenseCheckResult(status="revoked_manual", reason="manual_revoke")
-	if app_slug.startswith("omnexa_") and not _is_erpgenex_platform():
+	if _require_platform_binding() and app_slug.startswith("omnexa_") and not _is_erpgenex_platform():
 		return LicenseCheckResult(
 			status="invalid_platform",
 			reason="omnexa_platform must be set to 'erpgenex'",
@@ -558,6 +608,9 @@ def verify_app_license(app_slug: str) -> LicenseCheckResult:
 		token, token_reason = _extract_jwt_from_license_value(token)
 		if not token:
 			return LicenseCheckResult(status="invalid", reason=token_reason or "invalid_license_value")
+		if _allow_unsigned_local_keys():
+			base = _decode_unverified_license_jwt(token, expect_app=app_slug)
+			return _apply_time_policies(app_slug, base)
 		public_pem, pem_reason = _get_verifying_pem(token)
 		if not public_pem:
 			return LicenseCheckResult(

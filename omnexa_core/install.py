@@ -48,6 +48,7 @@ DEFAULT_APPS_GIT_ORG = os.environ.get("ERPGENEX_GITHUB_ORG", "ErpGenex")
 DEFAULT_APPS_GIT_BRANCH = os.environ.get("OMNEXA_APPS_BRANCH", "develop")
 GITHUB_API_BASE = "https://api.github.com"
 CORE_APP_SLUG = "omnexa_core"
+_DISCOVERED_ORG_APP_DEFAULT_BRANCH: dict[str, str] = {}
 
 
 def _auto_get_apps_enabled() -> bool:
@@ -79,14 +80,16 @@ def _is_installable_omnexa_repo(repo_name: str) -> bool:
 
 def _discover_org_apps_from_github() -> list[str]:
 	"""List installable app repositories from the configured GitHub organization."""
+	global _DISCOVERED_ORG_APP_DEFAULT_BRANCH
 	org = (os.environ.get("ERPGENEX_GITHUB_ORG") or DEFAULT_APPS_GIT_ORG).strip()
 	token = (os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN") or "").strip()
 	page = 1
 	per_page = 100
 	found: list[str] = []
+	_DISCOVERED_ORG_APP_DEFAULT_BRANCH = {}
 
 	while True:
-		url = f"{GITHUB_API_BASE}/orgs/{quote(org)}/repos?type=public&per_page={per_page}&page={page}"
+		url = f"{GITHUB_API_BASE}/orgs/{quote(org)}/repos?type=all&per_page={per_page}&page={page}"
 		req = Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "omnexa-core-installer"})
 		if token:
 			req.add_header("Authorization", f"Bearer {token}")
@@ -105,14 +108,42 @@ def _discover_org_apps_from_github() -> list[str]:
 
 		for repo in payload:
 			name = str((repo or {}).get("name") or "").strip()
+			is_archived = bool((repo or {}).get("archived"))
+			default_branch = str((repo or {}).get("default_branch") or "").strip()
+			repo_size = int((repo or {}).get("size") or 0)
 			if _is_installable_omnexa_repo(name):
+				if is_archived:
+					continue
+				# Empty repositories (size=0 / no default branch) cannot be installed via bench get-app.
+				if repo_size <= 0 or not default_branch:
+					continue
 				found.append(name)
+				_DISCOVERED_ORG_APP_DEFAULT_BRANCH[name] = default_branch
 
 		if len(payload) < per_page:
 			break
 		page += 1
 
 	return sorted(set(found))
+
+
+def _branch_candidates_for_app(app: str) -> list[str]:
+	"""Build branch fallback order for cloning an app."""
+	candidates: list[str] = []
+	seen = set()
+	for item in (
+		(os.environ.get("OMNEXA_APPS_BRANCH") or "").strip(),
+		(_DISCOVERED_ORG_APP_DEFAULT_BRANCH.get(app) or "").strip(),
+		DEFAULT_APPS_GIT_BRANCH.strip(),
+		"develop",
+		"main",
+		"master",
+	):
+		if not item or item in seen:
+			continue
+		seen.add(item)
+		candidates.append(item)
+	return candidates
 
 
 def _target_site_apps() -> list[str]:
@@ -200,11 +231,15 @@ def _run_bench_cli(args: list[str]) -> subprocess.CompletedProcess[str]:
 			"Add bench to PATH or run `bench get-app` for missing apps, then install omnexa_core again."
 		)
 	bench_path = get_bench_path()
+	env = os.environ.copy()
+	# Never block waiting for interactive git credentials during automated app discovery.
+	env["GIT_TERMINAL_PROMPT"] = "0"
 	return subprocess.run(
 		[bench_cmd, *args],
 		cwd=bench_path,
 		capture_output=True,
 		text=True,
+		env=env,
 		timeout=3600,
 		check=False,
 	)
@@ -231,13 +266,43 @@ def ensure_required_apps_fetched():
 		return
 
 	org = (os.environ.get("ERPGENEX_GITHUB_ORG") or DEFAULT_APPS_GIT_ORG).strip()
-	branch = (os.environ.get("OMNEXA_APPS_BRANCH") or DEFAULT_APPS_GIT_BRANCH).strip()
+	required_set = set(REQUIRED_SITE_APPS)
+	required_failures = []
 
 	for app in missing:
 		url = f"https://github.com/{org}/{app}.git"
-		_bench_cli_or_throw(
-			["get-app", url, "--branch", branch, "--skip-assets"],
-			f"Failed to fetch app `{app}` from {url} (branch {branch}).",
+		fetched = False
+		last_err = ""
+
+		for branch in _branch_candidates_for_app(app):
+			proc = _run_bench_cli(["get-app", url, "--branch", branch, "--skip-assets"])
+			if proc.returncode == 0:
+				fetched = True
+				break
+			last_err = (proc.stderr or proc.stdout or "").strip() or f"exit code {proc.returncode}"
+
+		if not fetched:
+			proc = _run_bench_cli(["get-app", url, "--skip-assets"])
+			if proc.returncode == 0:
+				fetched = True
+			else:
+				last_err = (proc.stderr or proc.stdout or "").strip() or f"exit code {proc.returncode}"
+
+		if fetched:
+			continue
+
+		if app in required_set:
+			required_failures.append((app, url, last_err))
+		else:
+			frappe.log_error(
+				title="Omnexa: optional org app fetch skipped",
+				message=f"App: {app}\nURL: {url}\nError:\n{last_err}",
+			)
+
+	if required_failures:
+		first = required_failures[0]
+		frappe.throw(
+			f"Failed to fetch required app `{first[0]}` from {first[1]}.\n{first[2]}"
 		)
 
 	_bench_cli_or_throw(
@@ -527,27 +592,28 @@ def install_required_site_apps():
 	target_apps = _target_site_apps()
 	available = set(frappe.get_all_apps())
 	installed = set(frappe.get_installed_apps())
-	missing_on_disk = [app for app in target_apps if not _app_source_present(app)]
+	missing_on_disk_required = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
 
-	missing_sources = [app for app in target_apps if app not in available or app in missing_on_disk]
-	if missing_sources:
+	missing_sources_required = [app for app in REQUIRED_SITE_APPS if app not in available or app in missing_on_disk_required]
+	if missing_sources_required:
 		ensure_required_apps_fetched()
 		ensure_required_apps_are_registered()
 		available = set(frappe.get_all_apps())
-		missing_on_disk = [app for app in target_apps if not _app_source_present(app)]
-		missing_sources = [app for app in target_apps if app not in available or app in missing_on_disk]
+		missing_on_disk_required = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
+		missing_sources_required = [app for app in REQUIRED_SITE_APPS if app not in available or app in missing_on_disk_required]
 	_ensure_required_apps_importable()
-	if missing_sources:
+	if missing_sources_required:
 		frappe.throw(
-			"Required apps are missing from bench sources/apps.txt: "
-			+ ", ".join(missing_sources)
+			"Required apps are missing from bench sources/apps.txt (mandatory core set): "
+			+ ", ".join(missing_sources_required)
 			+ ". Run `bench get-app` for them (or set OMNEXA_AUTO_GET_APPS=1 and ensure `bench` is on PATH), "
 			"then install omnexa_core again."
 		)
 
+	install_candidates = [app for app in target_apps if app in available and _app_source_present(app)]
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
 	try:
-		for app in target_apps:
+		for app in install_candidates:
 			if app in installed:
 				continue
 			install_site_app(app, verbose=False, set_as_patched=True, force=False)
@@ -557,11 +623,11 @@ def install_required_site_apps():
 
 def _missing_source_apps() -> list[str]:
 	available = set(frappe.get_all_apps())
-	return [app for app in _target_site_apps() if app not in available or not _app_source_present(app)]
+	return [app for app in REQUIRED_SITE_APPS if app not in available or not _app_source_present(app)]
 
 
 def _install_missing_required_apps() -> tuple[list[str], list[str]]:
-	target_apps = _target_site_apps()
+	target_apps = [app for app in _target_site_apps() if _app_source_present(app)]
 	installed = set(frappe.get_installed_apps())
 	installed_now = []
 	skipped = []
