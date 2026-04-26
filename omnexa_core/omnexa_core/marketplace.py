@@ -803,11 +803,13 @@ def get_marketplace_catalog(with_git_meta: int = 0):
 		git_meta: dict = {}
 		if include_git_meta and app in installed_set:
 			git_meta = get_git_update_meta_for_app(app, use_cache=True)
+		# Always compute the real license result for expiry metadata, even in bundle-mode UI.
+		real_result = verify_app_license(app)
 		if bundle_mode and not use_real:
 			status = "licensed_bundle"
-			result = None
+			result = real_result
 		else:
-			result = verify_app_license(app)
+			result = real_result
 			status = result.status
 		expires_on, expires_source = _license_expiry_meta(result)
 		items.append(
