@@ -6,6 +6,9 @@ import shutil
 import subprocess
 import sys
 import importlib
+from urllib.error import HTTPError, URLError
+from urllib.parse import quote
+from urllib.request import Request, urlopen
 from pathlib import Path
 from json import dumps
 from json import loads
@@ -43,6 +46,8 @@ REQUIRED_SITE_APPS = [
 # Auto `bench get-app` for REQUIRED_SITE_APPS when sources are missing (set OMNEXA_AUTO_GET_APPS=0 to disable).
 DEFAULT_APPS_GIT_ORG = os.environ.get("ERPGENEX_GITHUB_ORG", "ErpGenex")
 DEFAULT_APPS_GIT_BRANCH = os.environ.get("OMNEXA_APPS_BRANCH", "develop")
+GITHUB_API_BASE = "https://api.github.com"
+CORE_APP_SLUG = "omnexa_core"
 
 
 def _auto_get_apps_enabled() -> bool:
@@ -52,6 +57,72 @@ def _auto_get_apps_enabled() -> bool:
 		"no",
 		"off",
 	)
+
+
+def _auto_discover_github_apps_enabled() -> bool:
+	return str(os.environ.get("OMNEXA_INSTALL_ALL_GITHUB_APPS", "1")).strip().lower() not in (
+		"0",
+		"false",
+		"no",
+		"off",
+	)
+
+
+def _is_installable_omnexa_repo(repo_name: str) -> bool:
+	name = (repo_name or "").strip()
+	if not name or name == CORE_APP_SLUG:
+		return False
+	if name in {"frappe", "erpnext", "payments"}:
+		return False
+	return name.startswith("omnexa_") or name.startswith("erpgenex_")
+
+
+def _discover_org_apps_from_github() -> list[str]:
+	"""List installable app repositories from the configured GitHub organization."""
+	org = (os.environ.get("ERPGENEX_GITHUB_ORG") or DEFAULT_APPS_GIT_ORG).strip()
+	token = (os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN") or "").strip()
+	page = 1
+	per_page = 100
+	found: list[str] = []
+
+	while True:
+		url = f"{GITHUB_API_BASE}/orgs/{quote(org)}/repos?type=public&per_page={per_page}&page={page}"
+		req = Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "omnexa-core-installer"})
+		if token:
+			req.add_header("Authorization", f"Bearer {token}")
+		try:
+			with urlopen(req, timeout=30) as resp:
+				payload = loads(resp.read().decode("utf-8"))
+		except (HTTPError, URLError, TimeoutError):
+			frappe.log_error(frappe.get_traceback(), "Omnexa: GitHub app discovery failed")
+			return []
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: GitHub app discovery failed")
+			return []
+
+		if not isinstance(payload, list) or not payload:
+			break
+
+		for repo in payload:
+			name = str((repo or {}).get("name") or "").strip()
+			if _is_installable_omnexa_repo(name):
+				found.append(name)
+
+		if len(payload) < per_page:
+			break
+		page += 1
+
+	return sorted(set(found))
+
+
+def _target_site_apps() -> list[str]:
+	"""Apps that should be fetched/installed with omnexa_core bootstrap."""
+	out = list(REQUIRED_SITE_APPS)
+	if _auto_discover_github_apps_enabled():
+		for app in _discover_org_apps_from_github():
+			if app not in out:
+				out.append(app)
+	return out
 
 
 def _required_app_hooks_path(app: str) -> Path:
@@ -70,7 +141,7 @@ def _ensure_app_import_path(app: str) -> None:
 
 
 def _ensure_required_apps_importable() -> None:
-	for app in REQUIRED_SITE_APPS:
+	for app in _target_site_apps():
 		if _app_source_present(app):
 			_ensure_app_import_path(app)
 	importlib.invalidate_caches()
@@ -154,7 +225,8 @@ def ensure_required_apps_fetched():
 	if not _auto_get_apps_enabled():
 		return
 
-	missing = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
+	target_apps = _target_site_apps()
+	missing = [app for app in target_apps if not _app_source_present(app)]
 	if not missing:
 		return
 
@@ -312,7 +384,7 @@ def ensure_required_apps_are_registered():
 		apps_txt.write_text(normalized_text, encoding="utf-8")
 
 	missing_in_txt = []
-	for app in REQUIRED_SITE_APPS:
+	for app in _target_site_apps():
 		if app in current:
 			continue
 		if (apps_dir / app).exists():
@@ -452,17 +524,18 @@ def install_required_site_apps():
 	Important: This runs after omnexa_core install to avoid circular required_apps recursion.
 	Frappe installer already skips apps that are already installed.
 	"""
+	target_apps = _target_site_apps()
 	available = set(frappe.get_all_apps())
 	installed = set(frappe.get_installed_apps())
-	missing_on_disk = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
+	missing_on_disk = [app for app in target_apps if not _app_source_present(app)]
 
-	missing_sources = [app for app in REQUIRED_SITE_APPS if app not in available or app in missing_on_disk]
+	missing_sources = [app for app in target_apps if app not in available or app in missing_on_disk]
 	if missing_sources:
 		ensure_required_apps_fetched()
 		ensure_required_apps_are_registered()
 		available = set(frappe.get_all_apps())
-		missing_on_disk = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
-		missing_sources = [app for app in REQUIRED_SITE_APPS if app not in available or app in missing_on_disk]
+		missing_on_disk = [app for app in target_apps if not _app_source_present(app)]
+		missing_sources = [app for app in target_apps if app not in available or app in missing_on_disk]
 	_ensure_required_apps_importable()
 	if missing_sources:
 		frappe.throw(
@@ -474,7 +547,7 @@ def install_required_site_apps():
 
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
 	try:
-		for app in REQUIRED_SITE_APPS:
+		for app in target_apps:
 			if app in installed:
 				continue
 			install_site_app(app, verbose=False, set_as_patched=True, force=False)
@@ -484,16 +557,17 @@ def install_required_site_apps():
 
 def _missing_source_apps() -> list[str]:
 	available = set(frappe.get_all_apps())
-	return [app for app in REQUIRED_SITE_APPS if app not in available or not _app_source_present(app)]
+	return [app for app in _target_site_apps() if app not in available or not _app_source_present(app)]
 
 
 def _install_missing_required_apps() -> tuple[list[str], list[str]]:
+	target_apps = _target_site_apps()
 	installed = set(frappe.get_installed_apps())
 	installed_now = []
 	skipped = []
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
 	try:
-		for app in REQUIRED_SITE_APPS:
+		for app in target_apps:
 			if app in installed:
 				skipped.append(app)
 				continue
