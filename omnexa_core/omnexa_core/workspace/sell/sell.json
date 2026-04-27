@@ -193,6 +193,17 @@
   },
   {
    "hidden": 0,
+   "is_query_report": 1,
+   "label": "Point of Sale",
+   "link_count": 0,
+   "link_to": "Point of Sale Invoices",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Sales Invoice",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
    "is_query_report": 0,
    "label": "Logistics & fulfillment",
    "link_count": 0,
@@ -252,7 +263,7 @@
    "is_query_report": 0,
    "label": "Authority submissions (invoice & receipt)",
    "link_count": 0,
-   "link_to": "E-Document Submission",
+   "link_to": "E Invoice Submission",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"

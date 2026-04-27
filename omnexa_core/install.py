@@ -410,6 +410,7 @@ def run_site_hardening_after_app_changes():
 	remove_legacy_finance_workspace()
 	remove_legacy_finance_group_stub_workspaces()
 	run_workspace_desk_sync()
+	ensure_default_sidebar_workspace_order()
 	ensure_unified_list_view_columns()
 	ensure_default_workspace_dashboard()
 	ensure_site_runtime_ready()
@@ -445,6 +446,76 @@ def ensure_default_workspace_dashboard():
 		frappe.db.commit()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure default workspace dashboard")
+
+
+def ensure_default_sidebar_workspace_order():
+	"""Apply default left-sidebar workspace order across the site."""
+	try:
+		workspaces = frappe.get_all(
+			"Workspace",
+			filters={"public": 1, "is_hidden": 0},
+			fields=["name", "title", "module", "sequence_id"],
+			limit_page_length=1000,
+		)
+		if not workspaces:
+			return
+
+		# Requested fixed order at top.
+		priority_buckets = [
+			{"dashboard"},
+			{"accounting"},
+			{"sell", "sales"},
+			{"buy", "purchase", "purchasing"},
+			{"stock", "inventory", "warehouse"},
+			{"hr", "employee", "employees"},
+			{"settings", "core"},
+			{"marketplace", "market"},
+		]
+
+		def norm(text):
+			return (text or "").strip().lower()
+
+		def workspace_tokens(ws):
+			# For the top fixed order, match by workspace identity (name/title), not module.
+			return {norm(ws.get("name")), norm(ws.get("title"))}
+
+		used = set()
+		ordered = []
+		for bucket in priority_buckets:
+			for ws in workspaces:
+				if ws["name"] in used:
+					continue
+				tokens = workspace_tokens(ws)
+				if tokens & bucket:
+					ordered.append(ws)
+					used.add(ws["name"])
+					break
+
+		remaining = [ws for ws in workspaces if ws["name"] not in used]
+
+		# Logical fallback by app install order (from installed apps list), then previous sequence/title.
+		installed_apps = frappe.get_installed_apps()
+		app_rank = {app: idx for idx, app in enumerate(installed_apps)}
+		module_rows = frappe.get_all("Module Def", fields=["name", "app_name"], limit_page_length=2000)
+		module_to_app = {row.name: row.app_name for row in module_rows}
+
+		def remaining_sort_key(ws):
+			app_name = module_to_app.get(ws.get("module"))
+			return (
+				app_rank.get(app_name, 10_000),
+				float(ws.get("sequence_id") or 9999),
+				norm(ws.get("title")) or norm(ws.get("name")),
+			)
+
+		remaining.sort(key=remaining_sort_key)
+		ordered.extend(remaining)
+
+		for idx, ws in enumerate(ordered, start=1):
+			frappe.db.set_value("Workspace", ws["name"], "sequence_id", idx, update_modified=False)
+
+		frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure default sidebar workspace order")
 
 
 def ensure_site_runtime_ready():

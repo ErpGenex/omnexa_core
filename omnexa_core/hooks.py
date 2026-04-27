@@ -38,6 +38,7 @@ app_include_js = [
 	"/assets/omnexa_core/js/erpgenex_brand_desk.js",
 	"/assets/omnexa_core/js/desk_license_guard.js",
 	"/assets/omnexa_core/js/global_long_ops_progress.js",
+	"/assets/omnexa_core/js/sell_pos_quick_action.js",
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.
@@ -208,10 +209,9 @@ scheduler_events = {
 
 # Overriding Methods
 # ------------------------------
-#
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "omnexa_core.event.get_events"
-# }
+override_whitelisted_methods = {
+	"frappe.desk.search.get_link_title": "omnexa_core.omnexa_core.link_titles.get_link_title"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,

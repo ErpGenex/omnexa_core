@@ -10,8 +10,19 @@
 	const LEVEL_CLASS_PREFIX = "omnexa-layout-";
 	const SECTION_CAP = 8;
 	let glAccountUiHooksBound = false;
+	let genericLinkUiHooksBound = false;
 	let itemUiHooksBound = false;
 	let universalItemGridSyncBound = false;
+
+	function format_code_name(code, name, fallback) {
+		const c = (code || "").toString().trim();
+		const n = (name || "").toString().trim();
+		const f = (fallback || "").toString().trim();
+		if (c && n) return `${c} - ${n}`;
+		if (n) return n;
+		if (c) return c;
+		return f;
+	}
 
 	function get_layout_level(frm) {
 		const meta = frm && frm.meta ? frm.meta : {};
@@ -169,9 +180,7 @@
 		frappe.form.link_formatters["GL Account"] = function (value, doc) {
 			const accountName = (doc && doc.account_name) || "";
 			const accountNumber = (doc && doc.account_number) || "";
-			if (accountName && accountNumber) return `${accountName} (${accountNumber})`;
-			if (accountName) return accountName;
-			return value;
+			return format_code_name(accountNumber, accountName, value);
 		};
 	}
 
@@ -182,8 +191,7 @@
 		frappe.form.link_formatters["Item"] = function (value, doc) {
 			const itemName = (doc && doc.item_name) || "";
 			const itemCode = (doc && doc.item_code) || value || "";
-			if (itemName && itemCode) return `${itemName} (${itemCode})`;
-			return itemName || itemCode;
+			return format_code_name(itemCode, itemName, value);
 		};
 	}
 
@@ -195,8 +203,7 @@
 			frappe.form.link_formatters["Customer"] = function (value, doc) {
 				const code = (doc && doc.customer_code) || "";
 				const name = (doc && doc.customer_name) || value || "";
-				if (code && name) return `${code} - ${name}`;
-				return name || value || "";
+				return format_code_name(code, name, value);
 			};
 		}
 
@@ -204,8 +211,7 @@
 			frappe.form.link_formatters["Supplier"] = function (value, doc) {
 				const code = (doc && doc.supplier_code) || "";
 				const name = (doc && doc.supplier_name) || value || "";
-				if (code && name) return `${code} - ${name}`;
-				return name || value || "";
+				return format_code_name(code, name, value);
 			};
 		}
 
@@ -213,8 +219,36 @@
 			frappe.form.link_formatters["Account"] = function (value, doc) {
 				const number = (doc && doc.account_number) || "";
 				const name = (doc && doc.account_name) || value || "";
-				if (number && name) return `${number} - ${name}`;
-				return name || value || "";
+				return format_code_name(number, name, value);
+			};
+		}
+	}
+
+	function setup_master_link_formatters() {
+		if (!frappe || !frappe.form) return;
+		frappe.form.link_formatters = frappe.form.link_formatters || {};
+
+		if (!frappe.form.link_formatters["Employee"]) {
+			frappe.form.link_formatters["Employee"] = function (value, doc) {
+				const code = (doc && doc.employee_code) || "";
+				const name = (doc && doc.employee_name) || value || "";
+				return format_code_name(code, name, value);
+			};
+		}
+
+		if (!frappe.form.link_formatters["Fixed Asset"]) {
+			frappe.form.link_formatters["Fixed Asset"] = function (value, doc) {
+				const code = (doc && (doc.asset_tag || doc.name)) || value || "";
+				const name = (doc && doc.asset_name) || value || "";
+				return format_code_name(code, name, value);
+			};
+		}
+
+		if (!frappe.form.link_formatters["Bank Account"]) {
+			frappe.form.link_formatters["Bank Account"] = function (value, doc) {
+				const number = (doc && (doc.account_number || doc.iban)) || "";
+				const name = (doc && (doc.account_name || doc.bank_name)) || value || "";
+				return format_code_name(number, name, value);
 			};
 		}
 	}
@@ -353,6 +387,15 @@
 		});
 	}
 
+	function normalize_generic_link_dropdown_rows() {
+		document.querySelectorAll(".awesomplete ul li .small").forEach((el) => {
+			const txt = (el.textContent || "").trim();
+			if (!txt) return;
+			const cleaned = txt.replace(/^[^\s,]+\s*,\s*/, "");
+			if (cleaned !== txt) el.textContent = cleaned;
+		});
+	}
+
 	function bind_gl_account_ui_hooks() {
 		if (glAccountUiHooksBound) return;
 		glAccountUiHooksBound = true;
@@ -392,6 +435,16 @@
 		observer.observe(document.body, { childList: true, subtree: true });
 	}
 
+	function bind_generic_link_ui_hooks() {
+		if (genericLinkUiHooksBound) return;
+		genericLinkUiHooksBound = true;
+
+		const observer = new MutationObserver(() => {
+			window.requestAnimationFrame(normalize_generic_link_dropdown_rows);
+		});
+		observer.observe(document.body, { childList: true, subtree: true });
+	}
+
 	function apply_form_layout(frm) {
 		if (!frm || !frm.wrapper || !frm.meta) return;
 		const wrapper = frm.wrapper;
@@ -426,7 +479,9 @@
 		setup_gl_account_link_formatter();
 		setup_item_link_formatter();
 		setup_party_link_formatters();
+		setup_master_link_formatters();
 		bind_gl_account_ui_hooks();
+		bind_generic_link_ui_hooks();
 		bind_item_ui_hooks();
 		bind_universal_item_grid_sync();
 		apply_company_branch_user_defaults(frm);
