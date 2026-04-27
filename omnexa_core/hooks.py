@@ -37,6 +37,7 @@ app_include_js = [
 	"/assets/omnexa_core/js/form_layout_optimizer.js",
 	"/assets/omnexa_core/js/erpgenex_brand_desk.js",
 	"/assets/omnexa_core/js/desk_license_guard.js",
+	"/assets/omnexa_core/js/global_long_ops_progress.js",
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.

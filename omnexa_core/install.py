@@ -410,7 +410,41 @@ def run_site_hardening_after_app_changes():
 	remove_legacy_finance_workspace()
 	remove_legacy_finance_group_stub_workspaces()
 	run_workspace_desk_sync()
+	ensure_unified_list_view_columns()
+	ensure_default_workspace_dashboard()
 	ensure_site_runtime_ready()
+
+
+def ensure_unified_list_view_columns():
+	"""Standardize list view columns across doctypes (best-effort)."""
+	try:
+		from omnexa_core.omnexa_core.listview_unifier import apply_unified_list_view_columns
+
+		apply_unified_list_view_columns()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: unified listview columns")
+
+
+def ensure_default_workspace_dashboard():
+	"""Set default landing page to /app/dashboard by setting User.default_workspace."""
+	try:
+		if not frappe.db.exists("Workspace", "Dashboard"):
+			return
+		# Apply to system users only, and only if unset.
+		frappe.db.sql(
+			"""
+			UPDATE `tabUser`
+			SET default_workspace = 'Dashboard'
+			WHERE user_type != 'Website User'
+			  AND enabled = 1
+			  AND IFNULL(default_workspace, '') = ''
+			"""
+		)
+		# Ensure Administrator always lands on Dashboard.
+		frappe.db.set_value("User", "Administrator", "default_workspace", "Dashboard", update_modified=False)
+		frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure default workspace dashboard")
 
 
 def ensure_site_runtime_ready():
