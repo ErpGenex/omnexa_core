@@ -1048,12 +1048,17 @@ def ensure_omnexa_roles():
 
 def apply_default_branding():
 	"""Set desk logo after install/migrate with resilient file-based fallback."""
-	bench_logo = Path(get_bench_path()) / "Docs" / "logo" / "logo.png"
+	bench_path = Path(get_bench_path())
+	logo_candidates = [
+		bench_path / "Docs" / "OLDDOC" / "docs" / "Docs" / "logo" / "logo.png",
+		bench_path / "Docs" / "logo" / "logo.png",
+	]
+	bench_logo = next((p for p in logo_candidates if p.exists()), None)
 	bundled_logo = Path(__file__).resolve().parent / "public" / "images" / "erpgenex-logo.svg"
 	target_logo_url = ""
 
 	# Prefer a custom bench-level logo when present.
-	if bench_logo.exists():
+	if bench_logo:
 		file_name = "erpgenex-logo.png"
 		target_logo_url = f"/files/{file_name}"
 		if not frappe.db.exists("File", {"file_url": target_logo_url}):
