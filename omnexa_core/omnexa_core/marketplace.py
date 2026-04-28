@@ -402,13 +402,28 @@ def _git_run(app_root: str, args: list[str], timeout: int = 120) -> tuple[int, s
 		return 1, frappe.get_traceback()[-2000:]
 
 
-def _git_default_upstream_branch(app_root: str) -> str:
-	rc, out = _git_run(app_root, ["symbolic-ref", "-q", "refs/remotes/origin/HEAD"], timeout=30)
+def _git_preferred_remote(app_root: str) -> str | None:
+	rc, out = _git_run(app_root, ["remote"], timeout=30)
+	if rc != 0:
+		return None
+	remotes = [r.strip() for r in out.splitlines() if r.strip()]
+	if not remotes:
+		return None
+	if "origin" in remotes:
+		return "origin"
+	if "upstream" in remotes:
+		return "upstream"
+	return remotes[0]
+
+
+def _git_default_upstream_branch(app_root: str, remote: str | None = None) -> str:
+	remote = remote or _git_preferred_remote(app_root) or "origin"
+	rc, out = _git_run(app_root, ["symbolic-ref", "-q", f"refs/remotes/{remote}/HEAD"], timeout=30)
 	if rc == 0 and out.strip():
 		ref = out.strip().split("/")[-1]
 		if ref:
 			return ref
-	rc, out = _git_run(app_root, ["remote", "show", "origin"], timeout=60)
+	rc, out = _git_run(app_root, ["remote", "show", remote], timeout=60)
 	if rc == 0 and "HEAD branch:" in out:
 		for line in out.splitlines():
 			if "HEAD branch:" in line:
@@ -426,8 +441,9 @@ def _git_local_head(app_root: str) -> str | None:
 	return s or None
 
 
-def _git_ls_remote_branch_tip(app_root: str, branch: str) -> str | None:
-	rc, out = _git_run(app_root, ["ls-remote", "origin", f"refs/heads/{branch}"], timeout=120)
+def _git_ls_remote_branch_tip(app_root: str, branch: str, remote: str | None = None) -> str | None:
+	remote = remote or _git_preferred_remote(app_root) or "origin"
+	rc, out = _git_run(app_root, ["ls-remote", remote, f"refs/heads/{branch}"], timeout=120)
 	if rc != 0 or not out.strip():
 		return None
 	line = out.strip().splitlines()[0]
@@ -435,8 +451,9 @@ def _git_ls_remote_branch_tip(app_root: str, branch: str) -> str | None:
 	return parts[0] if parts else None
 
 
-def _git_list_remote_tags(app_root: str, limit: int = 25) -> list[dict[str, str]]:
-	rc, out = _git_run(app_root, ["ls-remote", "--tags", "origin"], timeout=180)
+def _git_list_remote_tags(app_root: str, limit: int = 25, remote: str | None = None) -> list[dict[str, str]]:
+	remote = remote or _git_preferred_remote(app_root) or "origin"
+	rc, out = _git_run(app_root, ["ls-remote", "--tags", remote], timeout=180)
 	if rc != 0:
 		return []
 	tags: dict[str, str] = {}
@@ -487,18 +504,23 @@ def get_git_update_meta_for_app(app_slug: str, use_cache: bool = True) -> dict:
 		meta["error"] = "no_git_repo"
 		frappe.cache().set_value(cache_key, meta, expires_in_sec=_marketplace_git_cache_ttl())
 		return meta
-	br = _git_default_upstream_branch(root)
+	remote_name = _git_preferred_remote(root)
+	if not remote_name:
+		meta["error"] = "no_git_remote"
+		frappe.cache().set_value(cache_key, meta, expires_in_sec=_marketplace_git_cache_ttl())
+		return meta
+	br = _git_default_upstream_branch(root, remote=remote_name)
 	meta["tracked_branch"] = br
 	local = _git_local_head(root)
 	if local:
 		meta["local_sha"] = local[:12]
-	remote = _git_ls_remote_branch_tip(root, br)
-	if remote:
-		meta["remote_sha"] = remote[:12]
-	meta["tags_sample"] = _git_list_remote_tags(root, limit=20)
-	meta["ok"] = bool(local and remote)
-	if local and remote:
-		meta["update_available"] = local != remote
+	remote_sha = _git_ls_remote_branch_tip(root, br, remote=remote_name)
+	if remote_sha:
+		meta["remote_sha"] = remote_sha[:12]
+	meta["tags_sample"] = _git_list_remote_tags(root, limit=20, remote=remote_name)
+	meta["ok"] = bool(local and remote_sha)
+	if local and remote_sha:
+		meta["update_available"] = local != remote_sha
 	else:
 		meta["update_available"] = False
 	frappe.cache().set_value(cache_key, meta, expires_in_sec=_marketplace_git_cache_ttl())
@@ -521,7 +543,7 @@ def _build_update_ref_choices(app_slug: str, meta: dict) -> list[dict[str, str]]
 		},
 		{
 			"value": br,
-			"label": frappe._("Branch {0} — match origin (checkout + pull)").format(br),
+			"label": frappe._("Branch {0} — match tracked remote (checkout + pull)").format(br),
 		},
 	]
 	seen = {"", br}
@@ -540,12 +562,15 @@ def _build_update_ref_choices(app_slug: str, meta: dict) -> list[dict[str, str]]
 
 
 def _git_update_app_to_ref(app_slug: str, target_ref: str) -> tuple[bool, str]:
-	"""Fetch origin; then ``git pull`` (empty ref) or ``git checkout`` + pull if on that branch."""
+	"""Fetch selected remote; then pull/checkout requested ref."""
 	root = _git_app_repo_root(app_slug)
 	if not root:
 		return False, "missing_app_or_git"
+	remote_name = _git_preferred_remote(root)
+	if not remote_name:
+		return False, "missing_git_remote"
 	target_ref = (target_ref or "").strip()
-	rc, out = _git_run(root, ["fetch", "origin", "--tags", "--prune"], timeout=600)
+	rc, out = _git_run(root, ["fetch", remote_name, "--tags", "--prune"], timeout=600)
 	if rc != 0:
 		return False, out[-3000:]
 	if not target_ref:
@@ -558,9 +583,9 @@ def _git_update_app_to_ref(app_slug: str, target_ref: str) -> tuple[bool, str]:
 	rc, out = _git_run(root, ["checkout", target_ref], timeout=600)
 	if rc != 0:
 		return False, out[-3000:]
-	br = _git_default_upstream_branch(root)
+	br = _git_default_upstream_branch(root, remote=remote_name)
 	if target_ref == br:
-		rc, out = _git_run(root, ["pull", "origin", br], timeout=600)
+		rc, out = _git_run(root, ["pull", remote_name, br], timeout=600)
 		return rc == 0, out[-3000:]
 	return True, out[-3000:]
 
@@ -978,7 +1003,7 @@ def get_update_plan(app_slug: str):
 				"value": "github",
 				"label": "GitHub (fetch + pull)",
 				"enabled": True,
-				"note": "Fetch latest commits/tags from origin, then pull/check out selected ref.",
+				"note": "Fetch latest commits/tags from tracked remote, then pull/check out selected ref.",
 			},
 			{
 				"value": "local",
