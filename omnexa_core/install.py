@@ -1057,7 +1057,19 @@ def apply_default_branding():
 	bundled_logo = Path(__file__).resolve().parent / "public" / "images" / "erpgenex-logo.svg"
 	target_logo_url = ""
 
-	# Prefer a custom bench-level logo when present.
+	# Primary source: bundled core logo (guaranteed on any server).
+	if bundled_logo.exists():
+		file_name = "erpgenex-logo.svg"
+		target_logo_url = f"/files/{file_name}"
+		if not frappe.db.exists("File", {"file_url": target_logo_url}):
+			save_file(
+				file_name,
+				bundled_logo.read_bytes(),
+				"Navbar Settings",
+				"Navbar Settings",
+				is_private=0,
+			)
+	# Optional override: bench-level custom logo when present.
 	if bench_logo:
 		file_name = "erpgenex-logo.png"
 		target_logo_url = f"/files/{file_name}"
@@ -1069,19 +1081,7 @@ def apply_default_branding():
 				"Navbar Settings",
 				is_private=0,
 			)
-	elif bundled_logo.exists():
-		# Always publish bundled fallback as File to avoid broken logo when assets are not rebuilt yet.
-		file_name = "erpgenex-logo.svg"
-		target_logo_url = f"/files/{file_name}"
-		if not frappe.db.exists("File", {"file_url": target_logo_url}):
-			save_file(
-				file_name,
-				bundled_logo.read_bytes(),
-				"Navbar Settings",
-				"Navbar Settings",
-				is_private=0,
-			)
-	else:
+	if not target_logo_url:
 		target_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
 
 	try:
