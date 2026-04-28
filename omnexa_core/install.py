@@ -404,6 +404,7 @@ def after_migrate():
 
 def run_site_hardening_after_app_changes():
 	"""Run all site-side fixes so fresh installs and migrations behave the same."""
+	ensure_company_branding_fields()
 	ensure_global_supporting_attachment_fields()
 	ensure_project_contract_link_compat()
 	remove_legacy_people_workspace()
@@ -1490,6 +1491,43 @@ def _last_insert_anchor_fieldname(doctype: str):
 			continue
 		return df.fieldname
 	return None
+
+
+def ensure_company_branding_fields():
+	"""Ensure Company has a dedicated logo field for branding."""
+	try:
+		if not frappe.db.exists("DocType", "Company"):
+			return
+		meta = frappe.get_meta("Company")
+		if meta.has_field("company_logo"):
+			return
+
+		anchor = _last_insert_anchor_fieldname("Company")
+		if not anchor:
+			return
+
+		create_custom_fields(
+			{
+				"Company": [
+					{
+						"fieldname": "branding_section",
+						"label": "Branding",
+						"fieldtype": "Section Break",
+						"insert_after": anchor,
+					},
+					{
+						"fieldname": "company_logo",
+						"label": "Company Logo",
+						"fieldtype": "Attach Image",
+						"insert_after": "branding_section",
+						"description": "Used as desk app logo when this company is active/default.",
+					},
+				]
+			},
+			update=True,
+		)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_company_branding_fields")
 
 
 def ensure_global_supporting_attachment_fields():
