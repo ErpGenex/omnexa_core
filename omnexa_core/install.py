@@ -1046,10 +1046,10 @@ def ensure_omnexa_roles():
 
 
 def apply_default_branding():
-	"""Set desk logo after install/migrate with bundled fallback for fresh servers."""
+	"""Set desk logo after install/migrate with resilient file-based fallback."""
 	bench_logo = Path(get_bench_path()) / "Docs" / "logo" / "logo.png"
-	bundled_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
-	target_logo_url = bundled_logo_url
+	bundled_logo = Path(__file__).resolve().parent / "public" / "images" / "erpgenex-logo.svg"
+	target_logo_url = ""
 
 	# Prefer a custom bench-level logo when present.
 	if bench_logo.exists():
@@ -1063,6 +1063,20 @@ def apply_default_branding():
 				"Navbar Settings",
 				is_private=0,
 			)
+	elif bundled_logo.exists():
+		# Always publish bundled fallback as File to avoid broken logo when assets are not rebuilt yet.
+		file_name = "erpgenex-logo.svg"
+		target_logo_url = f"/files/{file_name}"
+		if not frappe.db.exists("File", {"file_url": target_logo_url}):
+			save_file(
+				file_name,
+				bundled_logo.read_bytes(),
+				"Navbar Settings",
+				"Navbar Settings",
+				is_private=0,
+			)
+	else:
+		target_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
 
 	try:
 		frappe.db.set_single_value("Navbar Settings", "app_logo", target_logo_url)
