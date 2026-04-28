@@ -1046,26 +1046,26 @@ def ensure_omnexa_roles():
 
 
 def apply_default_branding():
-	"""Set ErpGenEx logo as default desk logo after install/migrate."""
-	logo_path = Path(get_bench_path()) / "Docs" / "logo" / "logo.png"
-	if not logo_path.exists():
-		return
+	"""Set desk logo after install/migrate with bundled fallback for fresh servers."""
+	bench_logo = Path(get_bench_path()) / "Docs" / "logo" / "logo.png"
+	bundled_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
+	target_logo_url = bundled_logo_url
 
-	file_name = "erpgenex-logo.png"
-	file_url = f"/files/{file_name}"
-
-	# Ensure a public File exists for the logo.
-	if not frappe.db.exists("File", {"file_url": file_url}):
-		save_file(
-			file_name,
-			logo_path.read_bytes(),
-			"Navbar Settings",
-			"Navbar Settings",
-			is_private=0,
-		)
+	# Prefer a custom bench-level logo when present.
+	if bench_logo.exists():
+		file_name = "erpgenex-logo.png"
+		target_logo_url = f"/files/{file_name}"
+		if not frappe.db.exists("File", {"file_url": target_logo_url}):
+			save_file(
+				file_name,
+				bench_logo.read_bytes(),
+				"Navbar Settings",
+				"Navbar Settings",
+				is_private=0,
+			)
 
 	try:
-		frappe.db.set_single_value("Navbar Settings", "app_logo", file_url)
+		frappe.db.set_single_value("Navbar Settings", "app_logo", target_logo_url)
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: set navbar app_logo")
 

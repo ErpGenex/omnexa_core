@@ -42,7 +42,7 @@ app_include_js = [
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.
-app_logo_url = "/files/erpgenex-logo.png"
+app_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/omnexa_core/css/omnexa_core.css"
