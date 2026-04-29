@@ -432,14 +432,13 @@ def ensure_default_workspace_dashboard():
 	try:
 		if not frappe.db.exists("Workspace", "Dashboard"):
 			return
-		# Apply to system users only, and only if unset.
+		# Apply to system users only (non Website User) and force default workspace.
 		frappe.db.sql(
 			"""
 			UPDATE `tabUser`
 			SET default_workspace = 'Dashboard'
 			WHERE user_type != 'Website User'
 			  AND enabled = 1
-			  AND IFNULL(default_workspace, '') = ''
 			"""
 		)
 		# Ensure Administrator always lands on Dashboard.
