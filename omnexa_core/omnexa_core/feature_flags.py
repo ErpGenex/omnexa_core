@@ -1,6 +1,8 @@
 # Copyright (c) 2026, Omnexa and contributors
 # License: MIT. See license.txt
 
+import json
+
 import frappe
 
 
@@ -17,6 +19,15 @@ def _normalize_bool(value) -> bool:
 def get_feature_flags() -> dict:
 	conf = frappe.get_conf() or {}
 	flags = conf.get("omnexa_feature_flags") or {}
+	if isinstance(flags, str) and flags.strip():
+		# Support JSON-encoded dict stored in site_config/common_site_config.
+		# (bench set-config sometimes persists dicts as JSON strings)
+		try:
+			parsed = json.loads(flags)
+			if isinstance(parsed, dict):
+				flags = parsed
+		except Exception:
+			return {}
 	if not isinstance(flags, dict):
 		return {}
 	return flags
