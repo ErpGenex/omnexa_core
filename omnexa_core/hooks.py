@@ -168,7 +168,10 @@ after_app_install = "omnexa_core.install.after_any_app_install"
 # }
 doc_events = {
 	"*": {
-		"before_validate": "omnexa_core.omnexa_core.user_context.apply_company_branch_defaults",
+		"before_validate": [
+			"omnexa_core.omnexa_core.user_context.apply_company_branch_defaults",
+			"omnexa_core.omnexa_core.compliance_guard.enforce_global_enterprise_compliance",
+		],
 	}
 }
 
