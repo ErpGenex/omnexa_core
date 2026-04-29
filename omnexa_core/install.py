@@ -41,6 +41,7 @@ REQUIRED_SITE_APPS = [
 	"omnexa_theme_manager",
 	"omnexa_trading",
 	"omnexa_user_academy",
+	"omnexa_n8n_bridge",
 ]
 
 # Auto `bench get-app` for REQUIRED_SITE_APPS when sources are missing (set OMNEXA_AUTO_GET_APPS=0 to disable).
