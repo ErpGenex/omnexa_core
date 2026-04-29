@@ -1076,6 +1076,10 @@ def apply_default_branding():
 
 	try:
 		frappe.db.set_single_value("Navbar Settings", "app_logo", target_logo_url)
+		# Login page uses Website Settings.app_logo with higher priority than Navbar Settings.
+		# Keep them in sync so /login shows the same logo everywhere.
+		if frappe.db.has_column("Website Settings", "app_logo"):
+			frappe.db.set_single_value("Website Settings", "app_logo", target_logo_url, update_modified=False)
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: set navbar app_logo")
 
