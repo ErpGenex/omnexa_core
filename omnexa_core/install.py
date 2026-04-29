@@ -1047,40 +1047,27 @@ def ensure_omnexa_roles():
 
 
 def apply_default_branding():
-	"""Set desk logo after install/migrate with resilient file-based fallback."""
-	bench_path = Path(get_bench_path())
-	logo_candidates = [
-		bench_path / "Docs" / "OLDDOC" / "docs" / "Docs" / "logo" / "logo.png",
-		bench_path / "Docs" / "logo" / "logo.png",
-	]
-	bench_logo = next((p for p in logo_candidates if p.exists()), None)
+	"""Set desk logo from bundled omnexa_core asset on every server."""
 	bundled_logo = Path(__file__).resolve().parent / "public" / "images" / "erpgenex-logo.svg"
 	target_logo_url = ""
 
 	# Primary source: bundled core logo (guaranteed on any server).
 	if bundled_logo.exists():
-		file_name = "erpgenex-logo.svg"
+		file_name = "erpgenex-core-bundled-logo.svg"
 		target_logo_url = f"/files/{file_name}"
-		if not frappe.db.exists("File", {"file_url": target_logo_url}):
-			save_file(
-				file_name,
-				bundled_logo.read_bytes(),
-				"Navbar Settings",
-				"Navbar Settings",
-				is_private=0,
-			)
-	# Optional override: bench-level custom logo when present.
-	if bench_logo:
-		file_name = "erpgenex-logo.png"
-		target_logo_url = f"/files/{file_name}"
-		if not frappe.db.exists("File", {"file_url": target_logo_url}):
-			save_file(
-				file_name,
-				bench_logo.read_bytes(),
-				"Navbar Settings",
-				"Navbar Settings",
-				is_private=0,
-			)
+		# Force refresh on migrate/install so old cached file content does not persist.
+		for old_file in frappe.get_all("File", filters={"file_url": target_logo_url}, pluck="name"):
+			try:
+				frappe.delete_doc("File", old_file, force=1, ignore_permissions=True)
+			except Exception:
+				pass
+		save_file(
+			file_name,
+			bundled_logo.read_bytes(),
+			"Navbar Settings",
+			"Navbar Settings",
+			is_private=0,
+		)
 	if not target_logo_url:
 		target_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
 
