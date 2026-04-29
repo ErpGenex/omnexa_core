@@ -1173,7 +1173,12 @@ def setup_wizard_create_core_masters(args):
 	_ensure_tax_accounts(company, company_abbr, branch_code, default_vat_rate, use_advanced_numbering)
 	_set_default_company_branch(company=company, branch=branch, args=args)
 	if enable_starter_coa:
-		_ensure_starter_chart_of_accounts(company, company_abbr, branch_code, use_advanced_numbering)
+		_ensure_starter_chart_of_accounts(
+			company=company,
+			branch=branch,
+			activity=business_activity or industry_sector or "General",
+			use_advanced_numbering=use_advanced_numbering,
+		)
 	if seed_demo_data:
 		_seed_demo_data(company=company, branch=branch, activity=business_activity or industry_sector)
 	_grant_full_access_to_setup_user(args)
@@ -1414,87 +1419,48 @@ def _ensure_tax_accounts(company, company_abbr, branch_code, default_vat_rate, u
 		frappe.log_error(frappe.get_traceback(), "Omnexa: set default VAT rate")
 
 
-def _ensure_starter_chart_of_accounts(company, company_abbr, branch_code, use_advanced_numbering):
-	root_assets = _ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Asset", "CA", "1000", "00", use_advanced_numbering),
-		"Assets",
-		"Asset",
-		is_group=1,
-	)
-	root_liabilities = _ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Liability", "AP", "2000", "00", use_advanced_numbering),
-		"Liabilities",
-		"Liability",
-		is_group=1,
-	)
-	root_equity = _ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Equity", "OE", "3000", "00", use_advanced_numbering),
-		"Equity",
-		"Equity",
-		is_group=1,
-	)
-	root_income = _ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Income", "RV", "4000", "00", use_advanced_numbering),
-		"Income",
-		"Income",
-		is_group=1,
-	)
-	root_expense = _ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Expense", "OE", "5000", "00", use_advanced_numbering),
-		"Expenses",
-		"Expense",
-		is_group=1,
-	)
+def _ensure_starter_chart_of_accounts(
+	company: str,
+	branch: str | None = None,
+	activity: str | None = None,
+	use_advanced_numbering: bool | int = 0,
+):
+	"""Generate a production-ready IFRS-oriented CoA and seed cost centers.
 
-	_ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Asset", "CS", "1100", "01", use_advanced_numbering),
-		"Cash",
-		"Asset",
-		parent_account=root_assets,
-	)
-	_ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Asset", "AR", "1200", "01", use_advanced_numbering),
-		"Accounts Receivable",
-		"Asset",
-		parent_account=root_assets,
-	)
-	_ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Liability", "AP", "2100", "01", use_advanced_numbering),
-		"Accounts Payable",
-		"Liability",
-		parent_account=root_liabilities,
-	)
-	_ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Equity", "OE", "3100", "01", use_advanced_numbering),
-		"Owner Equity",
-		"Equity",
-		parent_account=root_equity,
-	)
-	_ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Income", "RV", "4100", "01", use_advanced_numbering),
-		"Sales Revenue",
-		"Income",
-		parent_account=root_income,
-		pl_bucket="Revenue",
-	)
-	_ensure_gl_account(
-		company,
-		_account_no(company_abbr, branch_code, "Expense", "OE", "5100", "01", use_advanced_numbering),
-		"Operating Expenses",
-		"Expense",
-		parent_account=root_expense,
-		pl_bucket="Operating Expense",
-	)
+	The professional CoA lives in `omnexa_accounting.utils.coa_seed_templates.BASE_COA_TEMPLATE`
+	and its activity extensions. We apply it from setup wizard so every new company starts
+	with a consistent, enterprise-ready hierarchy.
+	"""
+	try:
+		if "omnexa_accounting" not in set(frappe.get_installed_apps()):
+			return
+		from omnexa_accounting.utils.production_readiness import generate_professional_chart_of_accounts
+
+		generate_professional_chart_of_accounts(company=company, branch=branch, activity=activity or "General")
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: setup wizard professional CoA seed failed")
+
+	# Seed simple cost centers for branch / departments / projects.
+	try:
+		if not frappe.db.exists("DocType", "Cost Center"):
+			return
+		cc_names = [
+			f"{branch} – Branch" if branch else "Head Office – Branch",
+			"Sales – Department",
+			"Purchasing – Department",
+			"Warehouse – Department",
+			"Manufacturing – Department",
+			"Finance – Department",
+			"Administration – Department",
+			"Projects – Cost Center",
+		]
+		for cc in cc_names:
+			if frappe.db.exists("Cost Center", {"company": company, "cost_center_name": cc}):
+				continue
+			doc = frappe.get_doc({"doctype": "Cost Center", "company": company, "cost_center_name": cc})
+			doc.insert(ignore_permissions=True)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: setup wizard cost center seed failed")
 
 
 def _ensure_gl_account(
