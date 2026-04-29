@@ -48,6 +48,18 @@ def _ifrs_submit_enabled() -> bool:
 	return is_feature_enabled("global_ifrs_submit_controls", default=True)
 
 
+def _ifrs16_enabled() -> bool:
+	return is_feature_enabled("global_ifrs16_lease_controls", default=True)
+
+
+def _ias21_enabled() -> bool:
+	return is_feature_enabled("global_ias21_fx_controls", default=True)
+
+
+def _ifrs9_enabled() -> bool:
+	return is_feature_enabled("global_ifrs9_ecl_controls", default=True)
+
+
 def _sum_payment_schedule(doc) -> float:
 	total = 0.0
 	for row in doc.get("payment_schedule") or []:
@@ -70,6 +82,29 @@ def _contains_stock_items(doc) -> bool:
 		if frappe.db.get_value("Item", item, "is_stock_item"):
 			return True
 	return False
+
+
+def _is_foreign_currency_doc(doc) -> bool:
+	if not doc.meta.has_field("currency") or not doc.get("company"):
+		return False
+	company_currency = frappe.db.get_value("Company", doc.get("company"), "default_currency")
+	return bool(company_currency and doc.get("currency") and doc.get("currency") != company_currency)
+
+
+def _journal_has_lease_accounts(doc) -> tuple[bool, bool]:
+	"""Return (has_rou_asset, has_lease_liability) by account_number lookup."""
+	has_rou = False
+	has_lease_liability = False
+	for row in doc.get("accounts") or []:
+		acc = row.get("account")
+		if not acc:
+			continue
+		acc_no = frappe.db.get_value("GL Account", acc, "account_number") or ""
+		if str(acc_no).startswith("1204"):
+			has_rou = True
+		if str(acc_no).startswith("2106") or str(acc_no).startswith("2202"):
+			has_lease_liability = True
+	return has_rou, has_lease_liability
 
 
 def enforce_global_submit_compliance(doc, method=None):
@@ -113,6 +148,44 @@ def enforce_global_submit_compliance(doc, method=None):
 			if abs(total_schedule - grand_total) > 0.0001:
 				frappe.throw(
 					_("Payment Schedule total must equal Grand Total."),
+					title=_("Compliance"),
+				)
+
+	# IAS 21: foreign-currency transactions require explicit conversion rate.
+	if _ias21_enabled() and doc.doctype in {"Sales Invoice", "Purchase Invoice", "Payment Entry"}:
+		if _is_foreign_currency_doc(doc):
+			if not doc.meta.has_field("conversion_rate") or flt(doc.get("conversion_rate")) <= 0:
+				frappe.throw(
+					_("IAS 21 control failed: foreign-currency transaction requires valid conversion rate."),
+					title=_("Compliance"),
+				)
+
+	# IFRS 9: high credit utilization needs explicit risk note/approval context.
+	if _ifrs9_enabled() and doc.doctype == "Sales Invoice" and not cint(doc.get("is_return")):
+		customer = doc.get("customer")
+		if customer:
+			limit = flt(frappe.db.get_value("Customer", customer, "credit_limit") or 0)
+			if limit > 0 and flt(doc.get("grand_total")) >= (0.8 * limit):
+				reason = (doc.get("credit_limit_override_reason") or "").strip() if doc.meta.has_field("credit_limit_override_reason") else ""
+				if not reason:
+					frappe.throw(
+						_(
+							"IFRS 9 control: high credit utilization invoice requires risk/override reason."
+						),
+						title=_("Compliance"),
+					)
+
+	# IFRS 16: lease journal entries should include both ROU asset and lease liability legs.
+	if _ifrs16_enabled() and doc.doctype == "Journal Entry":
+		remarks = (doc.get("remarks") or "").lower()
+		is_lease_context = "lease" in remarks or "ifrs 16" in remarks or "ايجار" in remarks
+		if is_lease_context:
+			has_rou, has_lease_liability = _journal_has_lease_accounts(doc)
+			if not (has_rou and has_lease_liability):
+				frappe.throw(
+					_(
+						"IFRS 16 control failed: lease entry must include both Right-of-Use asset and Lease Liability accounts."
+					),
 					title=_("Compliance"),
 				)
 
