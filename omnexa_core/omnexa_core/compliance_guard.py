@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import frappe
 from frappe import _
-from frappe.utils import flt, getdate
+from frappe.utils import cint, flt, getdate
 
 from omnexa_core.omnexa_core.feature_flags import is_feature_enabled
 
@@ -41,6 +41,91 @@ def _strict_enabled() -> bool:
 def _require_cost_center() -> bool:
 	# Optional hardening; can be enabled globally when teams are ready.
 	return is_feature_enabled("global_require_cost_center", default=False)
+
+
+def _ifrs_submit_enabled() -> bool:
+	# User-requested strict enterprise posture.
+	return is_feature_enabled("global_ifrs_submit_controls", default=True)
+
+
+def _sum_payment_schedule(doc) -> float:
+	total = 0.0
+	for row in doc.get("payment_schedule") or []:
+		total += flt(row.get("payment_amount"))
+	return total
+
+
+def _has_any_line_tax_rule(doc) -> bool:
+	for row in doc.get("items") or []:
+		if row.get("tax_rule"):
+			return True
+	return False
+
+
+def _contains_stock_items(doc) -> bool:
+	for row in doc.get("items") or []:
+		item = row.get("item")
+		if not item:
+			continue
+		if frappe.db.get_value("Item", item, "is_stock_item"):
+			return True
+	return False
+
+
+def enforce_global_submit_compliance(doc, method=None):
+	"""Submit-time controls for IFRS/enterprise governance."""
+	if not _is_runtime_safe() or not _strict_enabled() or not _ifrs_submit_enabled():
+		return
+	if not getattr(doc, "doctype", None):
+		return
+
+	# IFRS 15: sales revenue recognition should not be detached from delivery for stock items.
+	if doc.doctype == "Sales Invoice" and not cint(doc.get("is_return")):
+		if _contains_stock_items(doc):
+			has_delivery_link = bool(doc.get("delivery_note")) if doc.meta.has_field("delivery_note") else False
+			update_stock = cint(doc.get("update_stock")) if doc.meta.has_field("update_stock") else 0
+			is_pos = cint(doc.get("is_pos")) if doc.meta.has_field("is_pos") else 0
+			if not has_delivery_link and not update_stock and not is_pos:
+				frappe.throw(
+					_(
+						"IFRS 15 control transfer check failed: stock sales invoice must reference Delivery Note, "
+						"or be POS/update_stock flow."
+					),
+					title=_("Compliance"),
+				)
+
+	# VAT governance: invoice must have tax rule at header or line-level (unless explicitly exempt process).
+	if doc.doctype in {"Sales Invoice", "Purchase Invoice"} and (doc.get("items") or []):
+		header_tax = doc.get("default_tax_rule") if doc.meta.has_field("default_tax_rule") else None
+		if not header_tax and not _has_any_line_tax_rule(doc):
+			frappe.throw(
+				_("Tax Rule is required at header or item row for invoice compliance."),
+				title=_("Compliance"),
+			)
+
+	# IFRS 9 / credit governance: credit invoices should have due date and coherent schedule.
+	if doc.doctype in {"Sales Invoice", "Purchase Invoice"}:
+		if doc.meta.has_field("due_date") and not doc.get("due_date"):
+			frappe.throw(_("Due Date is mandatory for invoice compliance."), title=_("Compliance"))
+		if doc.meta.has_field("payment_schedule") and (doc.get("payment_schedule") or []):
+			total_schedule = _sum_payment_schedule(doc)
+			grand_total = flt(doc.get("grand_total"))
+			if abs(total_schedule - grand_total) > 0.0001:
+				frappe.throw(
+					_("Payment Schedule total must equal Grand Total."),
+					title=_("Compliance"),
+				)
+
+	# Payment governance: allocated references cannot exceed paid amount.
+	if doc.doctype == "Payment Entry" and doc.meta.has_field("references"):
+		allocated = 0.0
+		for row in doc.get("references") or []:
+			allocated += flt(row.get("allocated_amount"))
+		if allocated - flt(doc.get("paid_amount")) > 0.0001:
+			frappe.throw(
+				_("Allocated amount cannot exceed Paid Amount."),
+				title=_("Compliance"),
+			)
 
 
 def enforce_global_enterprise_compliance(doc, method=None):

@@ -187,6 +187,7 @@ _event_overlay_doctypes = [
 
 for _dt in _event_overlay_doctypes:
 	doc_events.setdefault(_dt, {})
+	doc_events[_dt]["before_submit"] = "omnexa_core.omnexa_core.compliance_guard.enforce_global_submit_compliance"
 	doc_events[_dt]["on_submit"] = "omnexa_core.omnexa_core.event_dispatcher.on_submit_emit"
 	doc_events[_dt]["on_cancel"] = "omnexa_core.omnexa_core.event_dispatcher.on_cancel_emit"
 
