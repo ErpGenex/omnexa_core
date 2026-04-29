@@ -1047,29 +1047,33 @@ def ensure_omnexa_roles():
 
 
 def apply_default_branding():
-	"""Set desk logo from bundled omnexa_core asset on every server."""
-	bundled_logo = Path(__file__).resolve().parent / "public" / "images" / "erpgenex-logo.svg"
-	target_logo_url = ""
+	"""Set desk logo to the fixed corporate logo PNG (legacy OLDDOC)."""
+	legacy_logo_path = Path(get_bench_path()) / "Docs" / "OLDDOC" / "docs" / "Docs" / "logo" / "logo.png"
+	file_name = "erpgenex-logo.png"
+	target_logo_url = f"/files/{file_name}"
 
-	# Primary source: bundled core logo (guaranteed on any server).
-	if bundled_logo.exists():
-		file_name = "erpgenex-core-bundled-logo.svg"
-		target_logo_url = f"/files/{file_name}"
-		# Force refresh on migrate/install so old cached file content does not persist.
-		for old_file in frappe.get_all("File", filters={"file_url": target_logo_url}, pluck="name"):
-			try:
-				frappe.delete_doc("File", old_file, force=1, ignore_permissions=True)
-			except Exception:
-				pass
-		save_file(
-			file_name,
-			bundled_logo.read_bytes(),
-			"Navbar Settings",
-			"Navbar Settings",
-			is_private=0,
-		)
-	if not target_logo_url:
-		target_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
+	# Replace any existing File records for the same URL to avoid stale/broken cached content.
+	for old_file in frappe.get_all("File", filters={"file_url": target_logo_url}, pluck="name"):
+		try:
+			frappe.delete_doc("File", old_file, force=1, ignore_permissions=True)
+		except Exception:
+			pass
+
+	try:
+		if legacy_logo_path.exists():
+			save_file(
+				file_name,
+				legacy_logo_path.read_bytes(),
+				"Navbar Settings",
+				"Navbar Settings",
+				is_private=0,
+			)
+		else:
+			# Fallback to bundled asset if legacy file missing.
+			# (But your request expects the OLDDOC PNG to exist on the server.)
+			target_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: set navbar app_logo")
 
 	try:
 		frappe.db.set_single_value("Navbar Settings", "app_logo", target_logo_url)
