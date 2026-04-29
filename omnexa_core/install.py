@@ -1046,13 +1046,16 @@ def ensure_omnexa_roles():
 
 
 def apply_default_branding():
-	"""Set desk/login logo from the canonical bench Docs/logo.svg (preferred)."""
+	"""Set desk/login logo to the canonical `logo.svg` shipped with omnexa_core.
+
+	We store it as a public File so it works consistently on any new server.
+	"""
 	bench_path = Path(get_bench_path())
 
-	# Client requested canonical logo.
-	primary_svg_path = bench_path / "Docs" / "logo.svg"
-	primary_svg_file_name = "logo.svg"
-	primary_svg_file_url = f"/files/{primary_svg_file_name}"
+	# Preferred source: packaged file inside omnexa_core.
+	app_logo_svg_path = Path(__file__).resolve().parent / "public" / "images" / "logo.svg"
+	logo_file_name = "logo.svg"
+	logo_file_url = f"/files/{logo_file_name}"
 
 	# Legacy fallback (previous requirement).
 	legacy_png_path = bench_path / "Docs" / "OLDDOC" / "docs" / "Docs" / "logo" / "logo.png"
@@ -1061,38 +1064,63 @@ def apply_default_branding():
 
 	target_logo_url = ""
 	try:
-		if primary_svg_path.exists():
+		# 1) Canonical logo.svg from inside the app (preferred).
+		if app_logo_svg_path.exists():
 			# Replace stale File record so content updates.
-			for old_file in frappe.get_all("File", filters={"file_url": primary_svg_file_url}, pluck="name"):
+			for old_file in frappe.get_all("File", filters={"file_url": logo_file_url}, pluck="name"):
 				try:
 					frappe.delete_doc("File", old_file, force=1, ignore_permissions=True)
 				except Exception:
 					pass
+
 			save_file(
-				primary_svg_file_name,
-				primary_svg_path.read_bytes(),
+				logo_file_name,
+				app_logo_svg_path.read_bytes(),
 				"Navbar Settings",
 				"Navbar Settings",
 				is_private=0,
 			)
-			target_logo_url = primary_svg_file_url
-		elif legacy_png_path.exists():
-			for old_file in frappe.get_all("File", filters={"file_url": legacy_png_file_url}, pluck="name"):
-				try:
-					frappe.delete_doc("File", old_file, force=1, ignore_permissions=True)
-				except Exception:
-					pass
-			save_file(
-				legacy_png_file_name,
-				legacy_png_path.read_bytes(),
-				"Navbar Settings",
-				"Navbar Settings",
-				is_private=0,
-			)
-			target_logo_url = legacy_png_file_url
+			target_logo_url = logo_file_url
+
+		# 2) Optional compatibility: older setups where logo.svg existed in bench root.
 		else:
-			# Final fallback: app-bundled placeholder.
-			target_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
+			bench_logo_svg_path = bench_path / "Docs" / "logo.svg"
+			if bench_logo_svg_path.exists():
+				for old_file in frappe.get_all("File", filters={"file_url": logo_file_url}, pluck="name"):
+					try:
+						frappe.delete_doc("File", old_file, force=1, ignore_permissions=True)
+					except Exception:
+						pass
+
+				save_file(
+					logo_file_name,
+					bench_logo_svg_path.read_bytes(),
+					"Navbar Settings",
+					"Navbar Settings",
+					is_private=0,
+				)
+				target_logo_url = logo_file_url
+
+			# 3) Legacy PNG fallback (previous requirement).
+			elif legacy_png_path.exists():
+				for old_file in frappe.get_all("File", filters={"file_url": legacy_png_file_url}, pluck="name"):
+					try:
+						frappe.delete_doc("File", old_file, force=1, ignore_permissions=True)
+					except Exception:
+						pass
+
+				save_file(
+					legacy_png_file_name,
+					legacy_png_path.read_bytes(),
+					"Navbar Settings",
+					"Navbar Settings",
+					is_private=0,
+				)
+				target_logo_url = legacy_png_file_url
+
+			# 4) Last resort: app-bundled placeholder.
+			else:
+				target_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: set navbar app_logo")
 
