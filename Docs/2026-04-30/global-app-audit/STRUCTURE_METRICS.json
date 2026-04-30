@@ -1,0 +1,48 @@
+{
+  "generated_on": "2026-04-30",
+  "notes": [
+    "Counts are derived from repo structure (doctype/report/workspace JSON presence, tests folder, hooks/tasks/api files).",
+    "This file is intended as an objective baseline; depth scoring and recommendations are in the accompanying markdown reports."
+  ],
+  "apps": {
+    "omnexa_accounting": {"doctypes": 76, "reports": 53, "workspaces": 1, "dashboards": 0, "patches": 5, "tests": 11, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_agriculture": {"doctypes": 6, "reports": 4, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 2, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_alm": {"doctypes": 18, "reports": 10, "workspaces": 4, "dashboards": 0, "patches": 0, "tests": 8, "has_hooks": true, "has_tasks": false, "api_files": 2},
+    "omnexa_backup": {"doctypes": 1, "reports": 0, "workspaces": 1, "dashboards": 0, "patches": 0, "tests": 1, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_car_rental": {"doctypes": 13, "reports": 8, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 1, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_construction": {"doctypes": 11, "reports": 6, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 4, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_consumer_finance": {"doctypes": 12, "reports": 10, "workspaces": 4, "dashboards": 0, "patches": 0, "tests": 6, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_core": {"doctypes": 9, "reports": 3, "workspaces": 12, "dashboards": 1, "patches": 2, "tests": 21, "has_hooks": true, "has_tasks": false, "api_files": 3},
+    "omnexa_credit_engine": {"doctypes": 16, "reports": 10, "workspaces": 4, "dashboards": 0, "patches": 0, "tests": 7, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_credit_risk": {"doctypes": 16, "reports": 2, "workspaces": 4, "dashboards": 0, "patches": 0, "tests": 8, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_customer_core": {"doctypes": 6, "reports": 3, "workspaces": 2, "dashboards": 0, "patches": 0, "tests": 1, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_education": {"doctypes": 19, "reports": 7, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 2, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_einvoice": {"doctypes": 3, "reports": 2, "workspaces": 1, "dashboards": 0, "patches": 0, "tests": 4, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_engineering_consulting": {"doctypes": 7, "reports": 6, "workspaces": 1, "dashboards": 0, "patches": 2, "tests": 2, "has_hooks": true, "has_tasks": true, "api_files": 0},
+    "omnexa_experience": {"doctypes": 7, "reports": 7, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 1, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_factoring": {"doctypes": 14, "reports": 10, "workspaces": 4, "dashboards": 0, "patches": 0, "tests": 6, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_finance_engine": {"doctypes": 20, "reports": 2, "workspaces": 4, "dashboards": 0, "patches": 0, "tests": 10, "has_hooks": true, "has_tasks": false, "api_files": 2},
+    "omnexa_fixed_assets": {"doctypes": 31, "reports": 15, "workspaces": 1, "dashboards": 0, "patches": 2, "tests": 4, "has_hooks": true, "has_tasks": true, "api_files": 1},
+    "omnexa_healthcare": {"doctypes": 25, "reports": 14, "workspaces": 1, "dashboards": 0, "patches": 4, "tests": 3, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_hr": {"doctypes": 14, "reports": 9, "workspaces": 2, "dashboards": 0, "patches": 2, "tests": 1, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_intelligence_core": {"doctypes": 4, "reports": 0, "workspaces": 0, "dashboards": 0, "patches": 0, "tests": 1, "has_hooks": true, "has_tasks": true, "api_files": 1},
+    "omnexa_leasing_finance": {"doctypes": 18, "reports": 10, "workspaces": 2, "dashboards": 0, "patches": 0, "tests": 4, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_manufacturing": {"doctypes": 14, "reports": 9, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 1, "has_hooks": true, "has_tasks": true, "api_files": 1},
+    "omnexa_mortgage_finance": {"doctypes": 16, "reports": 10, "workspaces": 4, "dashboards": 0, "patches": 0, "tests": 6, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_n8n_bridge": {"doctypes": 4, "reports": 0, "workspaces": 0, "dashboards": 0, "patches": 0, "tests": 0, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_operational_risk": {"doctypes": 20, "reports": 10, "workspaces": 4, "dashboards": 0, "patches": 0, "tests": 7, "has_hooks": true, "has_tasks": false, "api_files": 2},
+    "omnexa_projects_pm": {"doctypes": 8, "reports": 6, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 5, "has_hooks": true, "has_tasks": true, "api_files": 1},
+    "omnexa_reporting_compliance": {"doctypes": 5, "reports": 4, "workspaces": 0, "dashboards": 0, "patches": 0, "tests": 3, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_restaurant": {"doctypes": 16, "reports": 6, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 1, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_services": {"doctypes": 15, "reports": 5, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 1, "has_hooks": true, "has_tasks": true, "api_files": 1},
+    "omnexa_setup_intelligence": {"doctypes": 1, "reports": 0, "workspaces": 0, "dashboards": 0, "patches": 0, "tests": 1, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_sme_retail_finance": {"doctypes": 14, "reports": 10, "workspaces": 2, "dashboards": 0, "patches": 0, "tests": 6, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_statutory_audit": {"doctypes": 10, "reports": 3, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 2, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_theme_manager": {"doctypes": 0, "reports": 0, "workspaces": 1, "dashboards": 0, "patches": 0, "tests": 1, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_tourism": {"doctypes": 25, "reports": 13, "workspaces": 1, "dashboards": 0, "patches": 2, "tests": 2, "has_hooks": true, "has_tasks": false, "api_files": 0},
+    "omnexa_trading": {"doctypes": 18, "reports": 8, "workspaces": 1, "dashboards": 0, "patches": 1, "tests": 1, "has_hooks": true, "has_tasks": true, "api_files": 0},
+    "omnexa_user_academy": {"doctypes": 2, "reports": 0, "workspaces": 0, "dashboards": 0, "patches": 0, "tests": 1, "has_hooks": true, "has_tasks": false, "api_files": 1},
+    "omnexa_vehicle_finance": {"doctypes": 22, "reports": 10, "workspaces": 4, "dashboards": 0, "patches": 0, "tests": 6, "has_hooks": true, "has_tasks": false, "api_files": 1}
+  }
+}
+
