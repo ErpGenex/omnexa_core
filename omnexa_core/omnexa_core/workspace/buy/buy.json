@@ -60,6 +60,26 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Supplier Category",
+   "link_count": 0,
+   "link_to": "Supplier Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supplier Contract (pricing)",
+   "link_count": 0,
+   "link_to": "Supplier Contract",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Procurement cycle (Request → PO → Receipt → Invoice → Payment)",
    "link_count": 0,
    "onboard": 0,
@@ -71,6 +91,16 @@
    "label": "Purchase Request",
    "link_count": 0,
    "link_to": "Purchase Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Quotation",
+   "link_count": 0,
+   "link_to": "Purchase Quotation",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -146,6 +176,16 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Purchase Budget",
+   "link_count": 0,
+   "link_to": "Purchase Budget",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Local procurement reports (workspace only)",
    "link_count": 0,
    "onboard": 0,
@@ -193,6 +233,17 @@
    "link_type": "Report",
    "onboard": 0,
    "report_ref_doctype": "Purchase Order",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Quotation Comparison",
+   "link_count": 0,
+   "link_to": "Purchase Quotation Comparison",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Purchase Quotation",
    "type": "Link"
   }
  ],

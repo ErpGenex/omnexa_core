@@ -1,0 +1,14 @@
+{
+ "doctype": "Page",
+ "name": "finance-control-center",
+ "module": "Omnexa Core",
+ "title": "Finance Control Center",
+ "icon": "accounting",
+ "restrict_to_domain": null,
+ "roles": [
+  {"role": "System Manager"},
+  {"role": "Accounts Manager"},
+  {"role": "Accounts User"}
+ ]
+}
+

@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Dashboard\", \"col\": 12}}, {\"id\": \"egx-home-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Dashboard</b></span>\", \"col\": 12}}, {\"id\": \"egx-home-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"Home\", \"col\": 4}}, {\"id\": \"egx-home-c2\", \"type\": \"card\", \"data\": {\"card_name\": \"My work\", \"col\": 4}}, {\"id\": \"egx-home-c3\", \"type\": \"card\", \"data\": {\"card_name\": \"Insights\", \"col\": 4}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Dashboard\", \"col\": 12}}, {\"id\": \"egx-home-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Dashboard</b></span>\", \"col\": 12}}, {\"id\": \"egx-home-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"Home\", \"col\": 4}}, {\"id\": \"egx-home-c2\", \"type\": \"card\", \"data\": {\"card_name\": \"My work\", \"col\": 4}}, {\"id\": \"egx-home-c3\", \"type\": \"card\", \"data\": {\"card_name\": \"Insights\", \"col\": 4}}, {\"id\": \"egx-comp-h1\", \"type\": \"header\", \"data\": {\"text\": \"<b>Compliance</b>\", \"col\": 12}}, {\"id\": \"egx-comp-nc0\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Compliance Exceptions\", \"col\": 4}}, {\"id\": \"egx-comp-nc1\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Compliance Exceptions (IFRS)\", \"col\": 4}}, {\"id\": \"egx-comp-nc2\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Compliance Exceptions (Tax)\" , \"col\": 4}}, {\"id\": \"egx-comp-ops\", \"type\": \"header\", \"data\": {\"text\": \"<b>Compliance Reports</b>\", \"col\": 12}}, {\"id\": \"egx-comp-sc0\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Compliance Exceptions Dashboard\", \"col\": 3}}, {\"id\": \"egx-inv-h1\", \"type\": \"header\", \"data\": {\"text\": \"<b>Inventory KPIs</b>\", \"col\": 12}}, {\"id\": \"egx-inv-nc0\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Inventory Stock Items\", \"col\": 4}}, {\"id\": \"egx-inv-nc1\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Inventory Low Stock Items\", \"col\": 4}}, {\"id\": \"egx-inv-nc2\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Inventory Reorder Needed\", \"col\": 4}}, {\"id\": \"egx-inv-sc0\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Inventory KPI Dashboard\", \"col\": 3}}, {\"id\": \"egx-fin-h1\", \"type\": \"header\", \"data\": {\"text\": \"<b>Finance Controls</b>\", \"col\": 12}}, {\"id\": \"egx-fin-nc0\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Finance Control Violations\", \"col\": 4}}, {\"id\": \"egx-fin-nc1\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Finance SoD Blocks\", \"col\": 4}}, {\"id\": \"egx-fin-nc2\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Bank Unmatched Statement Lines\", \"col\": 4}}, {\"id\": \"egx-fin-sc0\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Finance Control Exceptions\", \"col\": 3}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -80,7 +80,44 @@
  "modified_by": "Administrator",
  "module": "Omnexa Core",
  "name": "Dashboard",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Compliance Exceptions",
+   "number_card_name": "Compliance Exceptions"
+  },
+  {
+   "label": "Compliance Exceptions (IFRS)",
+   "number_card_name": "Compliance Exceptions (IFRS)"
+  },
+  {
+   "label": "Compliance Exceptions (Tax)",
+   "number_card_name": "Compliance Exceptions (Tax)"
+  },
+  {
+   "label": "Inventory Stock Items",
+   "number_card_name": "Inventory Stock Items"
+  },
+  {
+   "label": "Inventory Low Stock Items",
+   "number_card_name": "Inventory Low Stock Items"
+  },
+  {
+   "label": "Inventory Reorder Needed",
+   "number_card_name": "Inventory Reorder Needed"
+  },
+  {
+   "label": "Finance Control Violations",
+   "number_card_name": "Finance Control Violations"
+  },
+  {
+   "label": "Finance SoD Blocks",
+   "number_card_name": "Finance SoD Blocks"
+  },
+  {
+   "label": "Bank Unmatched Statement Lines",
+   "number_card_name": "Bank Unmatched Statement Lines"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
@@ -88,6 +125,31 @@
  "restrict_to_domain": "",
  "roles": [],
  "sequence_id": 1.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "color": "Red",
+   "doc_view": "",
+   "label": "Compliance Exceptions Dashboard",
+   "link_to": "Compliance Exceptions Dashboard",
+   "report_ref_doctype": "Error Log",
+   "type": "Report"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "Inventory KPI Dashboard",
+   "link_to": "Inventory KPI Dashboard",
+   "report_ref_doctype": "Item",
+   "type": "Report"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "",
+   "label": "Finance Control Exceptions",
+   "link_to": "Finance Control Exceptions",
+   "report_ref_doctype": "Error Log",
+   "type": "Report"
+  }
+ ],
  "title": "Dashboard"
 }

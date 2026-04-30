@@ -407,6 +407,9 @@ def run_site_hardening_after_app_changes():
 	"""Run all site-side fixes so fresh installs and migrations behave the same."""
 	ensure_company_branding_fields()
 	ensure_global_supporting_attachment_fields()
+	ensure_procurement_enterprise_fields()
+	ensure_inventory_enterprise_fields()
+	ensure_finance_enterprise_fields()
 	ensure_project_contract_link_compat()
 	remove_legacy_people_workspace()
 	remove_legacy_finance_workspace()
@@ -415,6 +418,11 @@ def run_site_hardening_after_app_changes():
 	ensure_default_sidebar_workspace_order()
 	ensure_unified_list_view_columns()
 	ensure_default_workspace_dashboard()
+	ensure_dashboard_compliance_cards()
+	ensure_dashboard_inventory_cards()
+	backfill_bank_statement_line_company()
+	ensure_dashboard_finance_cards()
+	ensure_finance_workflow_templates()
 	ensure_site_runtime_ready()
 
 
@@ -447,6 +455,556 @@ def ensure_default_workspace_dashboard():
 		frappe.db.commit()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure default workspace dashboard")
+
+
+def ensure_dashboard_compliance_cards():
+	"""Seed default compliance KPIs into Dashboard workspace (best-effort)."""
+	try:
+		if not frappe.db.exists("Workspace", "Dashboard"):
+			return
+		if not frappe.db.exists("DocType", "Number Card"):
+			return
+
+		def upsert_card(label: str, filters: list[tuple[str, str, str]]):
+			"""Keep filters in sync on migrate (global scope — payloads may omit company)."""
+			fj = dumps(filters, separators=(",", ":"))
+			card_name = frappe.db.get_value("Number Card", {"label": label}, "name")
+			if card_name:
+				frappe.db.set_value("Number Card", card_name, "filters_json", fj)
+				return card_name
+			doc = frappe.get_doc(
+				{
+					"doctype": "Number Card",
+					"label": label,
+					"type": "Document Type",
+					"document_type": "Error Log",
+					"function": "Count",
+					"filters_json": fj,
+					"module": "Omnexa Core",
+					"is_public": 1,
+					"show_percentage_stats": 1,
+					"stats_time_interval": "Daily",
+					"show_full_number": 1,
+				}
+			)
+			doc.insert(ignore_permissions=True)
+			return doc.name
+
+		upsert_card("Compliance Exceptions", [["method", "=", "Global Compliance Guard"]])
+		upsert_card(
+			"Compliance Exceptions (IFRS)",
+			[["method", "=", "Global Compliance Guard"], ["error", "like", "%IFRS%"]],
+		)
+		upsert_card(
+			"Compliance Exceptions (Tax)",
+			[["method", "=", "Global Compliance Guard"], ["error", "like", "%Tax Rule%"]],
+		)
+		frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure dashboard compliance cards")
+
+
+def ensure_dashboard_inventory_cards():
+	"""Seed default inventory KPIs into Dashboard workspace (best-effort)."""
+	try:
+		if not frappe.db.exists("Workspace", "Dashboard"):
+			return
+		if not frappe.db.exists("DocType", "Number Card"):
+			return
+
+		def upsert_card(label: str, filters: list[tuple[str, str, str]]):
+			fj = dumps(filters, separators=(",", ":"))
+			card_name = frappe.db.get_value("Number Card", {"label": label}, "name")
+			if card_name:
+				frappe.db.set_value("Number Card", card_name, "filters_json", fj)
+				return card_name
+			doc = frappe.get_doc(
+				{
+					"doctype": "Number Card",
+					"label": label,
+					"type": "Document Type",
+					"document_type": "Item",
+					"function": "Count",
+					"filters_json": fj,
+					"module": "Omnexa Core",
+					"is_public": 1,
+					"show_percentage_stats": 1,
+					"stats_time_interval": "Daily",
+					"show_full_number": 1,
+				}
+			)
+			doc.insert(ignore_permissions=True)
+			return doc.name
+
+		upsert_card("Inventory Stock Items", [["is_stock_item", "=", "1"], ["disabled", "=", "0"]])
+		upsert_card("Inventory Low Stock Items", [["is_stock_item", "=", "1"], ["disabled", "=", "0"], ["current_stock_qty", "<=", "0"]])
+		upsert_card("Inventory Reorder Needed", [["is_stock_item", "=", "1"], ["disabled", "=", "0"], ["reorder_level", ">", "0"]])
+		frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure dashboard inventory cards")
+
+
+def backfill_bank_statement_line_company():
+	"""Copy Company from Bank Statement Import onto each line for KPI filters (non-destructive)."""
+	try:
+		if not frappe.db.exists("DocType", "Bank Statement Line"):
+			return
+		if not frappe.db.has_column("Bank Statement Line", "company"):
+			return
+		frappe.db.sql(
+			"""
+			update `tabBank Statement Line` child
+			inner join `tabBank Statement Import` par
+				on par.name = child.parent and child.parenttype = %s
+			set child.company = par.company
+			where ifnull(child.company, '') = ''
+			   or child.company != par.company
+			""",
+			("Bank Statement Import",),
+		)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: backfill bank statement line company")
+
+
+def ensure_dashboard_finance_cards():
+	"""Seed finance control KPIs into Dashboard workspace (best-effort)."""
+	try:
+		if not frappe.db.exists("Workspace", "Dashboard"):
+			return
+		if not frappe.db.exists("DocType", "Number Card"):
+			return
+
+		default_company = ""
+		try:
+			default_company = (frappe.db.get_single_value("Global Defaults", "default_company") or "").strip()
+		except Exception:
+			default_company = ""
+
+		def upsert_error_log_card(label: str, filters: list[tuple[str, str, str]]):
+			card_filters = list(filters or [])
+			if default_company:
+				card_filters.append(["error", "like", f'%\"company\": \"{default_company}\"%'])
+			fj = dumps(card_filters, separators=(",", ":"))
+			card_name = frappe.db.get_value("Number Card", {"label": label}, "name")
+			if card_name:
+				frappe.db.set_value("Number Card", card_name, "filters_json", fj)
+				return card_name
+			doc = frappe.get_doc(
+				{
+					"doctype": "Number Card",
+					"label": label,
+					"type": "Document Type",
+					"document_type": "Error Log",
+					"function": "Count",
+					"filters_json": fj,
+					"module": "Omnexa Core",
+					"is_public": 1,
+					"show_percentage_stats": 1,
+					"stats_time_interval": "Daily",
+					"show_full_number": 1,
+				}
+			)
+			doc.insert(ignore_permissions=True)
+			return doc.name
+
+		upsert_error_log_card(
+			"Finance Control Violations",
+			[
+				["method", "=", "Global Compliance Guard"],
+				["error", "like", "%FINANCE_%"],
+			],
+		)
+		upsert_error_log_card(
+			"Finance SoD Blocks",
+			[
+				["method", "=", "Global Compliance Guard"],
+				["error", "like", "%SoD policy%"],
+			],
+		)
+		# Unmatched statement lines; scoped by default company when set (see `company` on child row).
+		if frappe.db.exists("DocType", "Bank Statement Line"):
+			bank_filters: list[tuple[str, str, str]] = [["match_status", "=", "Unmatched"]]
+			if default_company:
+				bank_filters.append(["company", "=", default_company])
+			fj_bank = dumps(bank_filters, separators=(",", ":"))
+			bank_card = frappe.db.get_value("Number Card", {"label": "Bank Unmatched Statement Lines"}, "name")
+			if bank_card:
+				frappe.db.set_value("Number Card", bank_card, "filters_json", fj_bank)
+			else:
+				doc = frappe.get_doc(
+					{
+						"doctype": "Number Card",
+						"label": "Bank Unmatched Statement Lines",
+						"type": "Document Type",
+						"document_type": "Bank Statement Line",
+						"function": "Count",
+						"filters_json": fj_bank,
+						"module": "Omnexa Core",
+						"is_public": 1,
+						"show_percentage_stats": 1,
+						"stats_time_interval": "Daily",
+						"show_full_number": 1,
+					}
+				)
+				doc.insert(ignore_permissions=True)
+
+		frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure dashboard finance cards")
+
+
+def ensure_procurement_enterprise_fields():
+	"""Add enterprise purchasing fields (supplier + PO lines) without breaking standard doctypes."""
+	try:
+		custom_fields_map = {}
+
+		if frappe.db.exists("DocType", "Supplier"):
+			meta = frappe.get_meta("Supplier")
+			anchor = _last_insert_anchor_fieldname("Supplier")
+			if anchor and not meta.has_field("supplier_name_ar"):
+				custom_fields_map.setdefault("Supplier", []).extend(
+					[
+						{
+							"fieldname": "enterprise_section",
+							"label": "Enterprise Procurement",
+							"fieldtype": "Section Break",
+							"insert_after": anchor,
+						},
+						{
+							"fieldname": "supplier_name_ar",
+							"label": "Supplier Name (Arabic)",
+							"fieldtype": "Data",
+							"insert_after": "enterprise_section",
+						},
+						{
+							"fieldname": "supplier_category",
+							"label": "Supplier Category",
+							"fieldtype": "Link",
+							"options": "Supplier Category",
+							"insert_after": "supplier_name_ar",
+						},
+						{
+							"fieldname": "is_vat_registered",
+							"label": "VAT Registered",
+							"fieldtype": "Check",
+							"default": "0",
+							"insert_after": "supplier_category",
+						},
+						{
+							"fieldname": "trn",
+							"label": "TRN / VAT Registration No.",
+							"fieldtype": "Data",
+							"depends_on": "eval:doc.is_vat_registered==1",
+							"insert_after": "is_vat_registered",
+						},
+						{
+							"fieldname": "credit_limit",
+							"label": "Credit Limit",
+							"fieldtype": "Currency",
+							"insert_after": "trn",
+						},
+						{
+							"fieldname": "performance_rating",
+							"label": "Performance Rating (0-5)",
+							"fieldtype": "Float",
+							"precision": "2",
+							"insert_after": "credit_limit",
+						},
+					]
+				)
+
+		# Line-level enterprise fields for Purchase Order Item.
+		if frappe.db.exists("DocType", "Purchase Order Item"):
+			meta = frappe.get_meta("Purchase Order Item")
+			anchor = _last_insert_anchor_fieldname("Purchase Order Item")
+			if anchor and not meta.has_field("schedule_date"):
+				custom_fields_map.setdefault("Purchase Order Item", []).extend(
+					[
+						{
+							"fieldname": "schedule_date",
+							"label": "Delivery Schedule Date",
+							"fieldtype": "Date",
+							"insert_after": anchor,
+						},
+						{
+							"fieldname": "warehouse",
+							"label": "Warehouse",
+							"fieldtype": "Link",
+							"options": "Warehouse",
+							"insert_after": "schedule_date",
+						},
+						{
+							"fieldname": "discount_percentage",
+							"label": "Discount %",
+							"fieldtype": "Float",
+							"precision": "2",
+							"default": "0",
+							"insert_after": "warehouse",
+						},
+						{
+							"fieldname": "tax_rule",
+							"label": "Tax Rule",
+							"fieldtype": "Link",
+							"options": "Tax Rule",
+							"insert_after": "discount_percentage",
+						},
+					]
+				)
+
+		# Approval helper fields (optional enforcement via feature flags).
+		for dt in ("Purchase Order", "Purchase Invoice"):
+			if not frappe.db.exists("DocType", dt):
+				continue
+			meta = frappe.get_meta(dt)
+			anchor = _last_insert_anchor_fieldname(dt)
+			if not anchor:
+				continue
+			if not meta.has_field("required_approver_role"):
+				custom_fields_map.setdefault(dt, []).extend(
+					[
+						{
+							"fieldname": "approval_section",
+							"label": "Approvals",
+							"fieldtype": "Section Break",
+							"insert_after": anchor,
+							"collapsible": 1,
+						},
+						{
+							"fieldname": "required_approver_role",
+							"label": "Required Approver Role",
+							"fieldtype": "Link",
+							"options": "Role",
+							"read_only": 1,
+							"insert_after": "approval_section",
+						},
+					]
+				)
+
+		# Quotation reference field on Purchase Order (optional, for traceability).
+		if frappe.db.exists("DocType", "Purchase Order"):
+			meta = frappe.get_meta("Purchase Order")
+			anchor = _last_insert_anchor_fieldname("Purchase Order")
+			if anchor and not meta.has_field("purchase_quotation"):
+				custom_fields_map.setdefault("Purchase Order", []).append(
+					{
+						"fieldname": "purchase_quotation",
+						"label": "Purchase Quotation",
+						"fieldtype": "Link",
+						"options": "Purchase Quotation",
+						"insert_after": anchor,
+					}
+				)
+
+		if custom_fields_map:
+			create_custom_fields(custom_fields_map, update=True)
+			frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_procurement_enterprise_fields")
+
+
+def ensure_inventory_enterprise_fields():
+	"""Add enterprise inventory fields to Item/Warehouse/Stock Entry (non-breaking)."""
+	try:
+		custom_fields_map = {}
+
+		if frappe.db.exists("DocType", "Item"):
+			meta = frappe.get_meta("Item")
+			anchor = _last_insert_anchor_fieldname("Item")
+			if anchor and not meta.has_field("item_name_ar"):
+				custom_fields_map.setdefault("Item", []).extend(
+					[
+						{"fieldname": "inventory_enterprise_section", "label": "Enterprise Inventory", "fieldtype": "Section Break", "insert_after": anchor},
+						{"fieldname": "item_name_ar", "label": "Item Name (Arabic)", "fieldtype": "Data", "insert_after": "inventory_enterprise_section"},
+						{"fieldname": "barcode", "label": "Barcode", "fieldtype": "Data", "insert_after": "item_name_ar"},
+						{"fieldname": "qr_code", "label": "QR Code", "fieldtype": "Data", "insert_after": "barcode"},
+						{"fieldname": "has_serial_no", "label": "Track Serial Numbers", "fieldtype": "Check", "default": "0", "insert_after": "qr_code"},
+						{"fieldname": "reorder_level", "label": "Reorder Level", "fieldtype": "Float", "default": "0", "insert_after": "has_serial_no"},
+						{"fieldname": "safety_stock", "label": "Safety Stock", "fieldtype": "Float", "default": "0", "insert_after": "reorder_level"},
+						{
+							"fieldname": "valuation_method",
+							"label": "Valuation Method",
+							"fieldtype": "Select",
+							"options": "FIFO\nWeighted Average",
+							"default": "FIFO",
+							"insert_after": "safety_stock",
+						},
+						{"fieldname": "default_purchase_account", "label": "Default Purchase Account", "fieldtype": "Link", "options": "GL Account", "insert_after": "valuation_method"},
+						{"fieldname": "default_sales_account", "label": "Default Sales Account", "fieldtype": "Link", "options": "GL Account", "insert_after": "default_purchase_account"},
+					]
+				)
+
+		if frappe.db.exists("DocType", "Warehouse"):
+			meta = frappe.get_meta("Warehouse")
+			anchor = _last_insert_anchor_fieldname("Warehouse")
+			if anchor and not meta.has_field("warehouse_type"):
+				custom_fields_map.setdefault("Warehouse", []).extend(
+					[
+						{"fieldname": "warehouse_enterprise_section", "label": "Enterprise Warehouse", "fieldtype": "Section Break", "insert_after": anchor},
+						{"fieldname": "branch", "label": "Branch", "fieldtype": "Link", "options": "Branch", "insert_after": "warehouse_enterprise_section"},
+						{
+							"fieldname": "warehouse_type",
+							"label": "Warehouse Type",
+							"fieldtype": "Select",
+							"options": "Main\nSub\nTransit\nPOS",
+							"default": "Main",
+							"insert_after": "branch",
+						},
+						{"fieldname": "capacity_qty", "label": "Capacity (Qty)", "fieldtype": "Float", "insert_after": "warehouse_type"},
+						{"fieldname": "location_code", "label": "Location/Bin Code", "fieldtype": "Data", "insert_after": "capacity_qty"},
+					]
+				)
+
+		if frappe.db.exists("DocType", "Stock Entry"):
+			meta = frappe.get_meta("Stock Entry")
+			anchor = _last_insert_anchor_fieldname("Stock Entry")
+			if anchor and not meta.has_field("entry_type"):
+				custom_fields_map.setdefault("Stock Entry", []).extend(
+					[
+						{"fieldname": "inventory_control_section", "label": "Inventory Controls", "fieldtype": "Section Break", "insert_after": anchor, "collapsible": 1},
+						{
+							"fieldname": "entry_type",
+							"label": "Entry Type",
+							"fieldtype": "Select",
+							"options": "Standard\nStock Adjustment\nOpening Stock",
+							"default": "Standard",
+							"insert_after": "inventory_control_section",
+						},
+						{
+							"fieldname": "adjustment_reason",
+							"label": "Adjustment Reason",
+							"fieldtype": "Link",
+							"options": "Stock Adjustment Reason",
+							"depends_on": "eval:doc.entry_type=='Stock Adjustment' || doc.entry_type=='Opening Stock'",
+							"insert_after": "entry_type",
+						},
+						{"fieldname": "quality_check_required", "label": "Quality Check Required", "fieldtype": "Check", "default": "0", "insert_after": "adjustment_reason"},
+						{"fieldname": "transfer_request", "label": "Transfer Request", "fieldtype": "Link", "options": "Stock Transfer Request", "insert_after": "quality_check_required"},
+					]
+				)
+
+		if custom_fields_map:
+			create_custom_fields(custom_fields_map, update=True)
+			frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_inventory_enterprise_fields")
+
+
+def ensure_finance_enterprise_fields():
+	"""Add enterprise accounting/banking helper fields (non-breaking)."""
+	try:
+		custom_fields_map = {}
+
+		if frappe.db.exists("DocType", "Journal Entry"):
+			meta = frappe.get_meta("Journal Entry")
+			anchor = _last_insert_anchor_fieldname("Journal Entry")
+			if anchor and not meta.has_field("approval_reference"):
+				custom_fields_map.setdefault("Journal Entry", []).extend(
+					[
+						{"fieldname": "finance_control_section", "label": "Finance Controls", "fieldtype": "Section Break", "insert_after": anchor, "collapsible": 1},
+						{"fieldname": "approval_reference", "label": "Approval Reference", "fieldtype": "Data", "insert_after": "finance_control_section"},
+						{"fieldname": "approved_by_user", "label": "Approved By User", "fieldtype": "Link", "options": "User", "read_only": 1, "insert_after": "approval_reference"},
+						{"fieldname": "required_approval_level", "label": "Required Approval Level", "fieldtype": "Select", "options": "None\nManager\nCFO", "read_only": 1, "insert_after": "approved_by_user"},
+					]
+				)
+
+		if frappe.db.exists("DocType", "Payment Entry"):
+			meta = frappe.get_meta("Payment Entry")
+			anchor = _last_insert_anchor_fieldname("Payment Entry")
+			if anchor and not meta.has_field("cheque_no"):
+				custom_fields_map.setdefault("Payment Entry", []).extend(
+					[
+						{"fieldname": "banking_control_section", "label": "Banking Controls", "fieldtype": "Section Break", "insert_after": anchor, "collapsible": 1},
+						{"fieldname": "cheque_no", "label": "Cheque No.", "fieldtype": "Data", "insert_after": "banking_control_section"},
+						{"fieldname": "cheque_date", "label": "Cheque Date", "fieldtype": "Date", "insert_after": "cheque_no"},
+						{"fieldname": "value_date", "label": "Value Date", "fieldtype": "Date", "insert_after": "cheque_date"},
+						{"fieldname": "required_approval_level", "label": "Required Approval Level", "fieldtype": "Select", "options": "None\nManager\nCFO", "read_only": 1, "insert_after": "value_date"},
+						{"fieldname": "approved_by_user", "label": "Approved By User", "fieldtype": "Link", "options": "User", "read_only": 1, "insert_after": "required_approval_level"},
+					]
+				)
+
+		if frappe.db.exists("DocType", "Bank Reconciliation"):
+			meta = frappe.get_meta("Bank Reconciliation")
+			anchor = _last_insert_anchor_fieldname("Bank Reconciliation")
+			if anchor and not meta.has_field("import_source"):
+				custom_fields_map.setdefault("Bank Reconciliation", []).extend(
+					[
+						{"fieldname": "statement_control_section", "label": "Statement Controls", "fieldtype": "Section Break", "insert_after": anchor, "collapsible": 1},
+						{"fieldname": "import_source", "label": "Import Source", "fieldtype": "Select", "options": "Manual\nCSV\nAPI", "default": "Manual", "insert_after": "statement_control_section"},
+						{"fieldname": "statement_reference", "label": "Statement Reference", "fieldtype": "Data", "insert_after": "import_source"},
+					]
+				)
+
+		if custom_fields_map:
+			create_custom_fields(custom_fields_map, update=True)
+			frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_finance_enterprise_fields")
+
+
+def ensure_finance_workflow_templates():
+	"""Seed workflow templates for JE/Payment (best-effort, skip if custom workflows already exist)."""
+	try:
+		if not frappe.db.exists("DocType", "Workflow"):
+			return
+
+		def _has_existing(doc_type: str) -> bool:
+			try:
+				return bool(frappe.db.get_value("Workflow", {"document_type": doc_type, "is_active": 1}, "name"))
+			except Exception:
+				return False
+
+		def _make_workflow(name: str, doc_type: str, states: list[dict], transitions: list[dict]):
+			if _has_existing(doc_type):
+				return
+			if frappe.db.exists("Workflow", name):
+				return
+			wf = frappe.new_doc("Workflow")
+			if wf.meta.has_field("workflow_name"):
+				wf.workflow_name = name
+			wf.document_type = doc_type
+			if wf.meta.has_field("workflow_state_field"):
+				wf.workflow_state_field = "workflow_state"
+			if wf.meta.has_field("is_active"):
+				wf.is_active = 1
+			if wf.meta.has_field("send_email_alert"):
+				wf.send_email_alert = 0
+
+			for s in states:
+				wf.append("states", s)
+			for t in transitions:
+				wf.append("transitions", t)
+			wf.insert(ignore_permissions=True)
+			frappe.db.commit()
+
+		_make_workflow(
+			name="Omnexa Journal Entry Approval",
+			doc_type="Journal Entry",
+			states=[
+				{"state": "Draft", "doc_status": 0, "allow_edit": "Accounts User"},
+				{"state": "Manager Approved", "doc_status": 0, "allow_edit": "Accounts Manager"},
+				{"state": "CFO Approved", "doc_status": 1, "allow_edit": "CFO"},
+			],
+			transitions=[
+				{"state": "Draft", "action": "Manager Review", "next_state": "Manager Approved", "allowed": "Accounts Manager"},
+				{"state": "Manager Approved", "action": "CFO Approve", "next_state": "CFO Approved", "allowed": "CFO"},
+			],
+		)
+
+		_make_workflow(
+			name="Omnexa Payment Entry Approval",
+			doc_type="Payment Entry",
+			states=[
+				{"state": "Draft", "doc_status": 0, "allow_edit": "Accounts User"},
+				{"state": "Manager Approved", "doc_status": 0, "allow_edit": "Accounts Manager"},
+				{"state": "CFO Approved", "doc_status": 1, "allow_edit": "CFO"},
+			],
+			transitions=[
+				{"state": "Draft", "action": "Manager Review", "next_state": "Manager Approved", "allowed": "Accounts Manager"},
+				{"state": "Manager Approved", "action": "CFO Approve", "next_state": "CFO Approved", "allowed": "CFO"},
+			],
+		)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_finance_workflow_templates")
 
 
 def ensure_default_sidebar_workspace_order():

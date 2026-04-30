@@ -26,6 +26,46 @@
   },
   {
    "hidden": 0,
+   "icon": "setting",
+   "label": "Finance Control Center",
+   "link_to": "finance-control-center",
+   "link_type": "Page",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon": "reports",
+   "label": "Bank Reconciliation Suggestions",
+   "link_to": "Bank Reconciliation Suggestions",
+   "link_type": "Report",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon": "reports",
+   "label": "Bank Balance Summary",
+   "link_to": "Bank Balance Summary",
+   "link_type": "Report",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon": "quality",
+   "label": "Finance Posting Rule",
+   "link_to": "Finance Posting Rule",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon": "tool",
+   "label": "Bank Statement Import",
+   "link_to": "Bank Statement Import",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
    "icon": "workflow",
    "label": "Credit Engine",
    "link_to": "Credit Engine",

@@ -68,9 +68,39 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Inventory Control Center",
+   "link_count": 0,
+   "link_to": "inventory-control-center",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Stock Entry",
    "link_count": 0,
    "link_to": "Stock Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Transfer Request",
+   "link_count": 0,
+   "link_to": "Stock Transfer Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Adjustment Reason",
+   "link_count": 0,
+   "link_to": "Stock Adjustment Reason",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -129,6 +159,17 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Warehouse Transfer Report",
+   "link_count": 0,
+   "link_to": "Warehouse Transfer Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Stock Entry",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Inventory Valuation Summary",
    "link_count": 0,
    "link_to": "Inventory Valuation Summary",
@@ -154,6 +195,50 @@
    "label": "Low Stock",
    "link_count": 0,
    "link_to": "Low Stock",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Item",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Aging Report",
+   "link_count": 0,
+   "link_to": "Stock Aging Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Item",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dead Stock Report",
+   "link_count": 0,
+   "link_to": "Dead Stock Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Item",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "ABC Analysis Report",
+   "link_count": 0,
+   "link_to": "ABC Analysis Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Item",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Inventory KPI Dashboard",
+   "link_count": 0,
+   "link_to": "Inventory KPI Dashboard",
    "link_type": "Report",
    "onboard": 0,
    "report_ref_doctype": "Item",

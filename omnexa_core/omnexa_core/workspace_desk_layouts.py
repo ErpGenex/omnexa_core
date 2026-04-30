@@ -253,6 +253,11 @@ HR_DESK: list[DeskSection] = [
 	(
 		"Payroll & benefits",
 		[
+			("HR Payroll Company Settings", "DocType", "HR Payroll Company Settings", None),
+			("HR Salary Slip", "DocType", "HR Salary Slip", None),
+			("HR Payroll Run", "DocType", "HR Payroll Run", None),
+			("HR Salary Advance", "DocType", "HR Salary Advance", None),
+			("HR End of Service Settlement", "DocType", "HR End of Service Settlement", None),
 			("HR Payroll Entry", "DocType", "HR Payroll Entry", None),
 		],
 	),
@@ -289,6 +294,7 @@ HR_DESK: list[DeskSection] = [
 		"Reports · Payroll & talent",
 		[
 			("Payroll summary", "Report", "HR Payroll Summary", "HR Payroll Entry"),
+			("Salary slip register", "Report", "HR Salary Slip Register", "HR Salary Slip"),
 			("Training summary", "Report", "HR Training Summary", "HR Training Record"),
 			("Recruitment pipeline", "Report", "HR Recruitment Pipeline", "HR Recruitment Request"),
 		],
