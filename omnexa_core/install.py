@@ -1784,13 +1784,17 @@ def _seed_demo_data(company: str, branch: str, activity: str) -> None:
 		if "omnexa_accounting" not in set(frappe.get_installed_apps()):
 			return
 		from omnexa_accounting.utils.production_readiness import seed_activity_demo_data
+		from omnexa_accounting.utils.demo_workspace_seed import ensure_demo_workspace_seed
 
+		# Seed masters + a small transaction chain, then run the full aligned demo horizon
+		# so cross-module reports (sell/buy/stock/accounting) are not empty by default.
 		seed_activity_demo_data(
 			company=company,
 			branch=branch,
 			activity=activity or "General",
-			include_transactions=0,
+			include_transactions=1,
 		)
+		ensure_demo_workspace_seed(company=company, branch=branch, forced=True)
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: setup wizard demo data seed")
 
