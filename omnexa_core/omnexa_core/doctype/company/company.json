@@ -110,13 +110,13 @@
 			"fieldname": "business_activity",
 			"fieldtype": "Select",
 			"label": "Business Activity",
-			"options": "\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
+			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
 		},
 		{
 			"fieldname": "industry_sector",
 			"fieldtype": "Select",
 			"label": "Industry Sector",
-			"options": "\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
+			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
 		},
 		{
 			"default": "1",
@@ -385,7 +385,7 @@
 			"fieldname": "production_demo_activity",
 			"fieldtype": "Select",
 			"label": "Demo activity",
-			"options": "\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
+			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
 		},
 		{
 			"fieldname": "external_reference",

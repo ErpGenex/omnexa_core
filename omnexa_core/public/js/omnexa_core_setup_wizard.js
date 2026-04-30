@@ -15,14 +15,14 @@ frappe.setup.on("before_load", function () {
 					label: __("Business Activity"),
 					fieldtype: "Select",
 					options:
-						"\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit",
+						"\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit",
 				},
 				{
 					fieldname: "omnexa_industry_sector",
 					label: __("Industry Sector"),
 					fieldtype: "Select",
 					options:
-						"\nGeneral\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit",
+						"\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit",
 				},
 			],
 		},
