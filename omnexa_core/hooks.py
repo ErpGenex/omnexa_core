@@ -39,6 +39,7 @@ app_include_js = [
 	"/assets/omnexa_core/js/desk_license_guard.js",
 	"/assets/omnexa_core/js/global_long_ops_progress.js",
 	"/assets/omnexa_core/js/sell_pos_quick_action.js",
+	"/assets/omnexa_core/js/query_report_date_range_defaults.js",
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.
