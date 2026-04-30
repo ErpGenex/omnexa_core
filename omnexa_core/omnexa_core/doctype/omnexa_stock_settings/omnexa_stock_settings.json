@@ -1,0 +1,93 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "autoname": "prompt",
+  "creation": "2026-05-01 02:30:00",
+  "custom": 1,
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "stock_settings_section",
+    "enforce_batch_expiry_on_transactions",
+    "enforce_fefo_for_expiring_items",
+    "warehouse_section",
+    "default_pos_warehouse_type"
+  ],
+  "fields": [
+    {
+      "fieldname": "stock_settings_section",
+      "fieldtype": "Section Break",
+      "label": "Stock & Warehouse Settings"
+    },
+    {
+      "default": "0",
+      "description": "When enabled, stock transactions must include Batch/Expiry for items configured to track expiry (best-effort enforcement).",
+      "fieldname": "enforce_batch_expiry_on_transactions",
+      "fieldtype": "Check",
+      "label": "Enforce batch/expiry on stock transactions"
+    },
+    {
+      "default": "0",
+      "description": "Prefer FEFO (first-expiry-first-out) selection where expiry is tracked (best-effort; depends on transaction UIs).",
+      "fieldname": "enforce_fefo_for_expiring_items",
+      "fieldtype": "Check",
+      "label": "Prefer FEFO for expiring items"
+    },
+    {
+      "collapsible": 1,
+      "fieldname": "warehouse_section",
+      "fieldtype": "Section Break",
+      "label": "Warehouses"
+    },
+    {
+      "default": "POS",
+      "description": "Warehouse Type value used for POS-facing warehouses in enterprise warehouse extensions.",
+      "fieldname": "default_pos_warehouse_type",
+      "fieldtype": "Select",
+      "label": "Default POS Warehouse Type",
+      "options": "Main\nSub\nTransit\nPOS"
+    }
+  ],
+  "grid_page_length": 50,
+  "index_web_pages_for_search": 1,
+  "istable": 0,
+  "issingle": 1,
+  "links": [],
+  "modified": "2026-05-01 02:30:00",
+  "modified_by": "Administrator",
+  "module": "Omnexa Core",
+  "name": "Omnexa Stock Settings",
+  "naming_rule": "By fieldname",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Company Admin",
+      "share": 0,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}
+

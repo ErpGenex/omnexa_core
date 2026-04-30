@@ -612,6 +612,7 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Pipeline opportunities", "Pipeline Opportunity", []),
 		],
 		"shortcuts": [
+			("Sell Settings", "DocType", "Omnexa Sales Settings"),
 			("Tax Rule", "DocType", "Tax Rule"),
 			("Currency Exchange Rate", "DocType", "Currency Exchange Rate"),
 			("Customer", "DocType", "Customer"),
@@ -664,6 +665,7 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Purchase approval rules", "Purchase Approval Rule", []),
 		],
 		"shortcuts": [
+			("Buy Settings", "DocType", "Omnexa Purchase Settings"),
 			("Tax Rule", "DocType", "Tax Rule"),
 			("Currency Exchange Rate", "DocType", "Currency Exchange Rate"),
 			("Supplier", "DocType", "Supplier"),
@@ -703,6 +705,7 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Stock reconciliations", "Stock Reconciliation", []),
 		],
 		"shortcuts": [
+			("Stock Settings", "DocType", "Omnexa Stock Settings"),
 			("Warehouse", "DocType", "Warehouse"),
 			("Item", "DocType", "Item"),
 			("Stock Entry", "DocType", "Stock Entry"),
@@ -741,6 +744,7 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Budgets", "Budget", []),
 		],
 		"shortcuts": [
+			("Accounting Settings", "DocType", "Omnexa Accounting Settings"),
 			("GL Account", "DocType", "GL Account"),
 			("Item (stock↔GL)", "DocType", "Item"),
 			("Budget", "DocType", "Budget"),

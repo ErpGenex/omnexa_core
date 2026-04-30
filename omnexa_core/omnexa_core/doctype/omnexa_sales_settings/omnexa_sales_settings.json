@@ -1,0 +1,100 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "autoname": "prompt",
+  "creation": "2026-05-01 02:30:00",
+  "custom": 1,
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "sales_settings_section",
+    "require_customer_credit_terms",
+    "enforce_credit_limit_on_submit",
+    "require_delivery_note_for_stock_invoice",
+    "sales_tax_section",
+    "default_sales_tax_rule"
+  ],
+  "fields": [
+    {
+      "fieldname": "sales_settings_section",
+      "fieldtype": "Section Break",
+      "label": "Sales Settings"
+    },
+    {
+      "default": "0",
+      "description": "When enabled, Sales Invoices (credit) should require Payment Terms on Customer/Sales documents (best-effort enforcement).",
+      "fieldname": "require_customer_credit_terms",
+      "fieldtype": "Check",
+      "label": "Require credit terms for credit sales"
+    },
+    {
+      "default": "0",
+      "description": "Block submit of credit sales when customer credit limit is exceeded (best-effort enforcement; app policies may override).",
+      "fieldname": "enforce_credit_limit_on_submit",
+      "fieldtype": "Check",
+      "label": "Enforce credit limit on submit"
+    },
+    {
+      "default": "0",
+      "description": "When enabled, Sales Invoice items that are stock items must reference a Delivery Note (strict chain).",
+      "fieldname": "require_delivery_note_for_stock_invoice",
+      "fieldtype": "Check",
+      "label": "Require Delivery Note for stock Sales Invoice"
+    },
+    {
+      "collapsible": 1,
+      "fieldname": "sales_tax_section",
+      "fieldtype": "Section Break",
+      "label": "Taxes"
+    },
+    {
+      "description": "Optional default Tax Rule for sales documents (company-specific policies may override).",
+      "fieldname": "default_sales_tax_rule",
+      "fieldtype": "Link",
+      "label": "Default Sales Tax Rule",
+      "options": "Tax Rule"
+    }
+  ],
+  "grid_page_length": 50,
+  "index_web_pages_for_search": 1,
+  "istable": 0,
+  "issingle": 1,
+  "links": [],
+  "modified": "2026-05-01 02:30:00",
+  "modified_by": "Administrator",
+  "module": "Omnexa Core",
+  "name": "Omnexa Sales Settings",
+  "naming_rule": "By fieldname",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Company Admin",
+      "share": 0,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}
+
