@@ -1725,6 +1725,11 @@ def setup_wizard_create_core_masters(args):
 	country = (args.get("omnexa_country") or args.get("country") or "Egypt").strip() or "Egypt"
 	use_advanced_numbering = numbering_mode.lower().startswith("advanced")
 
+	# Ensure Custom Field rows exist and tables are altered before first Company/Branch INSERT
+	# (avoids Unknown column 'supporting_attachment' if install hooks ran out of order).
+	ensure_company_branding_fields()
+	ensure_global_supporting_attachment_fields()
+
 	company = _ensure_company(company_name, company_abbr, currency, country, tax_id)
 	_apply_company_profile_fields(company, business_activity, industry_sector)
 	branch = _ensure_branch(company, branch_name, branch_code, branch_tax_id)
@@ -1846,10 +1851,26 @@ def _set_default_company_branch(company: str, branch: str, args: dict) -> None:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: set default company/branch")
 
 
+def _sync_doctype_database_schema(doctype: str) -> None:
+	"""Align MySQL columns with DocType meta (custom fields e.g. supporting_attachment).
+
+	Setup wizard can run when Custom Field rows exist but ``updatedb`` was skipped on an edge install path.
+	"""
+	if not frappe.db.exists("DocType", doctype):
+		return
+	try:
+		frappe.db.updatedb(doctype)
+		frappe.clear_cache(doctype=doctype)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), f"Omnexa: updatedb {doctype} (schema sync)")
+
+
 def _ensure_company(company_name, company_abbr, currency, country, tax_id):
 	existing = frappe.db.get_value("Company", {"abbr": company_abbr}, "name")
 	if existing:
 		return existing
+
+	_sync_doctype_database_schema("Company")
 
 	doc = frappe.get_doc(
 		{
@@ -1885,6 +1906,8 @@ def _ensure_branch(company, branch_name, branch_code, tax_id):
 			if not current_tax_id:
 				frappe.db.set_value("Branch", existing_same_code, "tax_id", tax_id, update_modified=False)
 		return existing_same_code
+
+	_sync_doctype_database_schema("Branch")
 
 	doc = frappe.get_doc(
 		{
