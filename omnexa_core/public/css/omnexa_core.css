@@ -361,3 +361,31 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 		--omnexa-zebra-list: rgba(30, 41, 59, 0.35);
 	}
 }
+
+/* -------- Query Report: full-width content + clearer Link filter affordance -------- */
+#page-query-report .layout-main-section {
+	max-width: 100% !important;
+}
+
+#page-query-report .page-container,
+#page-query-report .container,
+#page-query-report .page-body,
+#page-query-report .page-content {
+	max-width: 100%;
+}
+
+#page-query-report .report-wrapper,
+#page-query-report .report-container,
+#page-query-report .datatable {
+	width: 100%;
+}
+
+#page-query-report .page-form .link-field .input-with-feedback,
+#page-query-report .page-form .frappe-control[data-fieldtype="Link"] .input-with-feedback {
+	position: relative;
+}
+
+#page-query-report .page-form .link-field .link-btn,
+#page-query-report .page-form .frappe-control[data-fieldtype="Link"] .link-btn {
+	opacity: 1;
+}

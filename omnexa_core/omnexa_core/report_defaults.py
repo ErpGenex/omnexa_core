@@ -11,10 +11,10 @@ from omnexa_core.omnexa_core.branch_access import get_default_branch, get_defaul
 
 
 def auto_apply_company_branch_report_filters():
-	"""Inject default company/branch for query reports if user didn't set filters.
+	"""Inject default company, branch, from_date, to_date for Query Report API if unset.
 
-	This keeps report UX aligned with user context and avoids hard failures like:
-	'Company filter is required.'
+	Keeps UX aligned with session context and avoids errors like 'Company filter is required.'
+	Dates default to today (`frappe.utils.today()`).
 	"""
 	if frappe.session.user == "Guest":
 		return
@@ -46,6 +46,13 @@ def auto_apply_company_branch_report_filters():
 		branch = get_default_branch(filters["company"])
 		if branch:
 			filters["branch"] = branch
+
+	# Align with desk defaults: bounded date window defaults to Today when unset.
+	td = frappe.utils.today()
+	if not filters.get("from_date"):
+		filters["from_date"] = td
+	if not filters.get("to_date"):
+		filters["to_date"] = td
 
 	# Keep payload format stable for frappe.desk.query_report.run
 	frappe.form_dict["filters"] = json.dumps(filters, separators=(",", ":"))

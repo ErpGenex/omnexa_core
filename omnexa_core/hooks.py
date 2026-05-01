@@ -40,6 +40,7 @@ app_include_js = [
 	"/assets/omnexa_core/js/global_long_ops_progress.js",
 	"/assets/omnexa_core/js/sell_pos_quick_action.js",
 	"/assets/omnexa_core/js/query_report_date_range_defaults.js",
+	"/assets/omnexa_core/js/query_report_ux_enhancements.js",
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.
@@ -215,6 +216,7 @@ scheduler_events = {
 # Overriding Methods
 # ------------------------------
 override_whitelisted_methods = {
+	"frappe.desk.query_report.run": "omnexa_core.omnexa_core.report_link_titles.query_report_run_with_link_titles",
 	"frappe.desk.search.get_link_title": "omnexa_core.omnexa_core.link_titles.get_link_title",
 	# Some deployments ship with `frappe.sessions.get` not registered as whitelisted.
 	# Desk relies on it for boot; we route it to an Omnexa-managed endpoint.

@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Buy\", \"col\": 12}}, {\"id\": \"omx-buy-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Buy</b></span><br><span class=\\\"text-muted\\\">Request-to-pay — إعدادات المشتريات (شركة/فرع/ضريبة/عملات)، الموردين، الدورة، التقارير المحلية</span>\", \"col\": 12}}, {\"id\": \"omx-buy-c0\", \"type\": \"card\", \"data\": {\"card_name\": \"Procurement setup (tax & FX)\", \"col\": 4}}, {\"id\": \"omx-buy-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"Suppliers\", \"col\": 4}}, {\"id\": \"omx-buy-c2\", \"type\": \"card\", \"data\": {\"card_name\": \"Procurement cycle\", \"col\": 4}}, {\"id\": \"omx-buy-c3\", \"type\": \"card\", \"data\": {\"card_name\": \"Governance & approvals\", \"col\": 4}}, {\"id\": \"omx-buy-c4\", \"type\": \"card\", \"data\": {\"card_name\": \"Local procurement reports\", \"col\": 4}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Buy\", \"col\": 12}}, {\"id\": \"omx-buy-h1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Buy</b></span><br><span class=\\\"text-muted\\\">Request-to-pay — إعدادات المشتريات (شركة/فرع/ضريبة/عملات)، الموردين، الدورة، التقارير المحلية</span>\", \"col\": 12}}, {\"id\": \"omx-buy-csettings\", \"type\": \"card\", \"data\": {\"card_name\": \"Purchase settings\", \"col\": 4}}, {\"id\": \"omx-buy-c0\", \"type\": \"card\", \"data\": {\"card_name\": \"Procurement setup (tax & FX)\", \"col\": 4}}, {\"id\": \"omx-buy-c1\", \"type\": \"card\", \"data\": {\"card_name\": \"Suppliers\", \"col\": 4}}, {\"id\": \"omx-buy-c2\", \"type\": \"card\", \"data\": {\"card_name\": \"Procurement cycle\", \"col\": 4}}, {\"id\": \"omx-buy-c3\", \"type\": \"card\", \"data\": {\"card_name\": \"Governance & approvals\", \"col\": 4}}, {\"id\": \"omx-buy-c4\", \"type\": \"card\", \"data\": {\"card_name\": \"Local procurement reports\", \"col\": 4}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -11,6 +11,24 @@
  "is_hidden": 0,
  "label": "Buy",
  "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase settings",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Omnexa Purchase Settings",
+   "link_count": 0,
+   "link_to": "Omnexa Purchase Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
   {
    "hidden": 0,
    "is_query_report": 0,
