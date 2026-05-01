@@ -215,7 +215,10 @@ scheduler_events = {
 # Overriding Methods
 # ------------------------------
 override_whitelisted_methods = {
-	"frappe.desk.search.get_link_title": "omnexa_core.omnexa_core.link_titles.get_link_title"
+	"frappe.desk.search.get_link_title": "omnexa_core.omnexa_core.link_titles.get_link_title",
+	# Some deployments ship with `frappe.sessions.get` not registered as whitelisted.
+	# Desk relies on it for boot; we route it to an Omnexa-managed endpoint.
+	"frappe.sessions.get": "omnexa_core.session_boot.sessions_get",
 }
 #
 # each overriding function accepts a `data` argument;

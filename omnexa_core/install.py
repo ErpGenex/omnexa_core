@@ -2057,12 +2057,77 @@ def _ensure_gl_account(
 	is_group=0,
 	pl_bucket=None,
 ):
+	def _apply_gl_labels(gl_doc) -> None:
+		account_name_value = (gl_doc.account_name or "").strip()
+		account_number_value = (gl_doc.account_number or "").strip()
+		gl_doc.account_label = account_name_value or _("Unnamed Account")
+		gl_doc.tree_label = (
+			f"{account_name_value} - {account_number_value}"
+			if account_name_value and account_number_value
+			else (account_name_value or account_number_value or _("Unnamed Account"))
+		)
+
+	def _ensure_gl_account_doctype_binding() -> None:
+		"""Ensure GL Account DocType points to omnexa_accounting controller.
+
+		On some restored/misaligned databases, `DocType.module/app` for "GL Account" may incorrectly
+		point to `frappe.core...`, which causes setup wizard to crash when `frappe.get_doc` tries to
+		import the controller.
+		"""
+		try:
+			if not frappe.db.exists("DocType", "GL Account"):
+				return
+			# Frappe v15 has `app` column on DocType; keep backwards-safe access.
+			fields = ["module"]
+			if frappe.db.has_column("DocType", "app"):
+				fields.append("app")
+			if frappe.db.has_column("DocType", "custom"):
+				fields.append("custom")
+			row = frappe.db.get_value("DocType", "GL Account", fields, as_dict=True) or {}
+
+			current_module = (row.get("module") or "").strip()
+			current_app = (row.get("app") or "").strip()
+			# Desired binding for controller: omnexa_accounting/omnexa_accounting/doctype/gl_account/gl_account.py
+			desired_module = "Omnexa Accounting"
+			desired_app = "omnexa_accounting"
+
+			needs_fix = False
+			if current_module.lower() in {"core", "frappe"}:
+				needs_fix = True
+			if current_app and current_app.lower() == "frappe":
+				needs_fix = True
+
+			if needs_fix:
+				frappe.db.set_value("DocType", "GL Account", "module", desired_module, update_modified=False)
+				if frappe.db.has_column("DocType", "app"):
+					frappe.db.set_value("DocType", "GL Account", "app", desired_app, update_modified=False)
+				frappe.clear_cache(doctype="GL Account")
+		except Exception:
+			# Never fail setup wizard due to a repair attempt; original error will surface if still broken.
+			frappe.log_error(frappe.get_traceback(), "Omnexa: ensure GL Account DocType binding")
+
+	_ensure_gl_account_doctype_binding()
+
+	if not frappe.db.exists("DocType", "GL Account"):
+		frappe.throw(
+			_("GL Account DocType is missing. Please run bench migrate / install omnexa_accounting."),
+			title=_("Setup Wizard"),
+		)
+
 	existing = frappe.db.get_value(
 		"GL Account",
 		{"company": company, "account_number": account_number},
 		"name",
 	)
 	if existing:
+		# Legacy wizard runs may have created rows with missing labels.
+		try:
+			existing_doc = frappe.get_doc("GL Account", existing)
+			if not (existing_doc.account_label or "").strip() or not (existing_doc.tree_label or "").strip():
+				_apply_gl_labels(existing_doc)
+				existing_doc.save(ignore_permissions=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: backfill existing GL labels in setup")
 		return existing
 
 	doc = frappe.get_doc(
@@ -2077,6 +2142,7 @@ def _ensure_gl_account(
 			"pl_bucket": pl_bucket,
 		}
 	)
+	_apply_gl_labels(doc)
 	doc.insert(ignore_permissions=True)
 	return doc.name
 
