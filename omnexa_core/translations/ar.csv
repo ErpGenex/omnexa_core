@@ -1,20 +1,39 @@
+AP Aging Report,تقرير أعمار الذمم الدائنة
+AR Aging Report,تقرير أعمار الذمم المدينة
 "AR, AP & working capital (global)",المدينون والدائنون ورأس المال العامل (عام)
 Accounting,المحاسبة
 Accounting & Finance المحرك المالي — شركة/فرع، دليل الحسابات، الأبعاد، الربط المخزني↔GL، التقارير العالمية,المحاسبة والمالية المحرك المالي — شركة/فرع، دليل الحسابات، الأبعاد، الربط المخزني↔GL، التقارير العالمية
 Accounting settings,إعدادات المحاسبة
+Accounts Payable (AP),الذمم الدائنة (AP)
+Accounts Receivable (AR),الذمم المدينة (AR)
+Additional global registers & cash flow views,سجلات عالمية إضافية وعروض التدفقات النقدية
+Additional inventory reports,تقارير مخزون إضافية
+Additional sales reports,تقارير مبيعات إضافية
 Admin,الإدارة
 Agriculture,الزراعة
+Approval Workflows,سير عمل الاعتمادات
+Audit Logs,سجلات التدقيق
 Authority submissions (invoice & receipt),قائمة إرسال المستندات للمصلحة (فاتورة وإيصال)
 Backup,النسخ الاحتياطي
+Balance Sheet,الميزانية العمومية
+Banking Transactions,معاملات بنكية
+Batch / Serial Tracking,تتبع الدُفعات/الأرقام التسلسلية
 Branches,الفروع
 Budget,ميزانية
 Budget & inventory (financial view),الميزانية والمخزون (المنظور المالي)
+Budget vs Actual Report,تقرير الموازنة مقابل الفعلي
 Buy,المشتريات
 COA Settings,إعدادات دليل الحسابات
 CRM,إدارة علاقات العملاء
+CRM & campaigns (supporting),إدارة العملاء والحملات (مساند)
 Capture a web order,التقاط طلب ويب
 Car Rental,تأجير السيارات
+Cash Activity Summary,ملخص حركة النقد
+Cash Flow (indirect),تدفق نقدي (غير مباشر)
+Cash Flow (simplified),تدفق نقدي (مبسّط)
+Cash Flow Statement,قائمة التدفقات النقدية
 Cash flow & liquidity (global),التدفقات النقدية والسيولة (عام)
+Chart of Accounts,دليل الحسابات
 Chart of accounts,دليل الحسابات
 "Chart of accounts, company & dimensions",دليل الحسابات والشركة والأبعاد
 Commerce,التجارة
@@ -24,6 +43,7 @@ Construction,المقاولات
 Consumer Finance,التمويل الاستهلاكي
 Core financial operations,العمليات المالية الأساسية
 Cost Analysis Report,تقرير تحليل التكلفة
+Cost Centers,مراكز التكلفة
 Create,إنشاء
 Create Entry,إنشاء سجل
 Create catalog item,إنشاء بند كتالوج
@@ -65,14 +85,18 @@ Customer & KYC,العميل والتحقق من الهوية (KYC)
 Customer 360,عميل 360
 Customer Core CRM,إدارة علاقات العملاء الأساسية (CRM)
 Customer Ledger,دفتر أستاذ العملاء
+Customer Management,إدارة العملاء
 Customer Profile,ملف العميل
 Customer ledger,عميل دفتر أستاذ
 Customer management,إدارة العملاء
 Dashboard,لوحة التحكم
 Data & imports,البيانات والاستيراد
 "Define what you sell or book: SKU, pricing, and availability for web orders and bookings.",عرّف ما تبيعه أو تحجزه: الرمز، التسعير، والتوفر لطلبات الويب والحجوزات.
+Deliveries,التسليمات
 Delivery Delay Report,تقرير تأخير التسليم
+Document versions,إصدارات المستندات
 Domain setup (tax · FX),تهيئة النطاق (الضريبة · العملات)
+Domain setup · UOM,تهيئة النطاق · وحدات القياس
 E-Invoice,الفوترة الإلكترونية
 E-Invoice Signing Profile,ملف توقيع الفاتورة الإلكترونية
 E-Invoice Submissions,إرسالات الفاتورة الإلكترونية
@@ -85,16 +109,21 @@ ERPGENEX — Settings,ERPGENEX — إعدادات
 ERPGENEX — Stock,ERPGENEX — المخازن
 ERPNext,ERPGENEX
 Education,التعليم
+Employee Ledger,دفتر الأستاذ للموظف
 Engineering Consulting,الاستشارات الهندسية
 ErpNext,ERPGENEX
 Executive KPIs (global),مؤشرات الأداء التنفيذية (عام)
+Expiry Report,تقرير انتهاء الصلاحية
 Explore this workspace,استكشف هذه المساحة
 Factoring,الفوترة (Factoring)
 Finance,مالية
 Finance Engine,المحرك المالي
 Finance Group,مجموعة التمويل
+Financial Consolidation Report,تقرير التوحيد المالي
+Financial KPI Summary,ملخص مؤشرات الأداء المالية
 Financial Operations,العمليات المالية
 Fixed assets,الأصول الثابتة
+General Journal,دفتر اليومية العام
 Get started with,ابدأ مع
 Get started with Audit Balance Snapshot,ابدأ مع لقطة أرصدة المراجعة
 Get started with Audit Engagement,ابدأ مع مهمة تدقيق
@@ -127,6 +156,7 @@ Get started with User Permission,ابدأ مع صلاحية المستخدم
 Get started with Warehouse,ابدأ مع المخزن
 Get started with Workflow,ابدأ مع سير العمل
 Get started with Workspace,ابدأ مع مساحة العمل
+Global Financial Reports,التقارير المالية العالمية
 Global registers & ledgers,السجلات ودفاتر الأستاذ العالمية
 Go to Page,الانتقال إلى الصفحة
 Goods Receipt,استلام البضائع
@@ -136,15 +166,25 @@ Healthcare,الرعاية الصحية
 Integrations,التكاملات
 Inventory KPI Dashboard,لوحة مؤشرات أداء المخزون (KPI)
 Inventory KPIs,مؤشرات أداء المخزون
+Inventory Valuation (GL),تقييم المخزون (دفتر الأستاذ)
+Inventory Valuation Report,تقرير تقييم المخزون
+Invoices,الفواتير
+Item Master,سجل الأصناف
+Item Stock Balance,رصيد المخزون للصنف
 Item master (stock ↔ GL account mapping),إدارة الأصناف (ربط المخزون ↔ الأستاذ العام)
+Journal Entries,قيود اليومية
 Landed Cost Voucher,مستند التكلفة الإضافية
+Leads Management,إدارة العملاء المحتملين
 Leasing Finance,تمويل التأجير
+Local Inventory Reports,تقارير المخزون المحلية
 Local Procurement Reports,تقارير المشتريات المحلية
+Local Sales Reports,تقارير المبيعات المحلية
 Local inventory reports,تقارير المخزون المحلية
 Local procurement reports,تقارير المشتريات المحلية
 Local procurement reports (workspace only),تقارير المشتريات المحلية (هذه المساحة فقط)
 Local sales reports,تقارير المبيعات المحلية
 Logistics & fulfillment,اللوجستيات والتنفيذ
+Low Stock Report,تقرير انخفاض المخزون
 Manufacturing,التصنيع
 Marketplace,الماركت
 Mode of Payment,طريقة الدفع
@@ -158,14 +198,19 @@ Open Purchase Order Lines,بنود أوامر الشراء المفتوحة
 Open workspace,فتح مساحة العمل
 Operational Risk,المخاطر التشغيلية
 Operations,العمليات
+Opportunities,الفرص
 POS Sales Invoice,فاتورة مبيعات نقطة البيع (POS)
 Payment Entry (supplier payments),قيد الدفع (مدفوعات المورد)
 Payment entries (e-receipt source),قائمة إيصالات القبض / التحصيل (مصدر الإيصال الإلكتروني)
 Payments,مدفوعات
+Payments · counter sales,المدفوعات · مبيعات الكاونتر
 Pending Orders Report,تقرير الأوامر المعلقة
+Permissions & Access Control,الصلاحيات والتحكم بالوصول
+Pipeline Conversion Report,تقرير تحويل القناة
 Procurement cycle,دورة المشتريات
 Procurement cycle (Request → PO → Receipt → Invoice → Payment),دورة المشتريات (طلب شراء → أمر شراء → استلام → فاتورة → دفع)
 Procurement setup (tax & FX),تهيئة المشتريات (الضريبة والعملات)
+Profit & Loss Statement,قائمة الأرباح والخسائر
 Project Reports,تقارير المشاريع
 Projects,المشاريع
 Purchase Approval Rule,قاعدة اعتماد المشتريات
@@ -183,11 +228,14 @@ Purchase Request,طلب الشراء
 Purchase Requests,طلبات الشراء
 Purchase Summary Report,تقرير ملخص المشتريات
 Purchase settings,إعدادات المشتريات
+Quotations,عروض الأسعار
+Receivables and DSO,التحصيل وDSO
 Reject,رفض
 Report,تقرير
 Reporting Compliance,التقارير والامتثال
 Reports,تقارير
 Reports · Finance,تقارير · مالية
+Reports · setup & compliance audit,تقارير · الإعدادات وتدقيق الامتثال
 Reserve capacity against bookable resources without double-booking.,احجز السعة مقابل الموارد القابلة للحجز دون ازدواجية في الحجز.
 Restaurant,المطاعم
 "Return here for shortcuts, charts, and lists for **Admin**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **الإدارة**.
@@ -200,11 +248,19 @@ Restaurant,المطاعم
 "Return here for shortcuts, charts, and lists for **Sell**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **المبيعات**.
 "Return here for shortcuts, charts, and lists for **Settings**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **الإعدادات**.
 "Return here for shortcuts, charts, and lists for **Stock**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **المخازن**.
+Returns,المرتجعات
+Revenue Analysis Report,تقرير تحليل الإيرادات
 "Run order-to-cash: customer, lines, channel, and status through invoicing and fulfilment.",شغّل دورة الطلب حتى التحصيل: العميل، البنود، القناة، والحالة عبر الفوترة والتنفيذ.
 SME Retail Finance,تمويل التجزئة للمشاريع الصغيرة
 Sales Invoice,فاتورة بيع
 Sales Invoice Settings,إعدادات فاتورة المبيعات
+Sales Orders,أوامر المبيعات
+Sales Performance Report,تقرير أداء المبيعات
+Sales Pipeline,قناة المبيعات
 Sales Register,سجل المبيعات
+Sales by Customer,المبيعات حسب العميل
+Sales by Product,المبيعات حسب الصنف
+Sales by Region,المبيعات حسب المنطقة
 Sales invoices (e-invoice source),قائمة فواتير المبيعات (مصدر الفاتورة الإلكترونية)
 Sales register,سجل المبيعات
 Sales settings,إعدادات المبيعات
@@ -217,6 +273,12 @@ Signing Profile,ملف التوقيع الإلكتروني
 Skip,تخطي
 Statutory Audit,التدقيق النظامي
 Stock,المخازن
+Stock Adjustments,تسويات المخزون
+Stock Ledger Report,تقرير دفتر المخزون
+Stock Movement Report,تقرير حركة المخزون
+Stock Movements,حركات المخزون
+Stock Summary Report,تقرير ملخص المخزون
+Stock Voucher Register,سجل سندات المخزون
 Stock settings,إعدادات المخزون
 Stock دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية,مخزون دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية
 Submissions,إرسالات
@@ -229,6 +291,9 @@ Supplier Payments,مدفوعات المورد
 Supplier Performance Report,تقرير أداء المورد
 Suppliers,الموردون
 Supporting (approvals · landed cost),الدعم (الاعتمادات · التكلفة الإضافية)
+Supporting (e-invoice · integrations · desk),الدعم (فوترة إلكترونية · تكاملات · مساحة العمل)
+Supporting setup & dimensions,إعدادات مساندة وأبعاد
+System Reports,تقارير النظام
 System Settings,إعدادات النظام
 Tax Authority Profile,ملف الربط بمصلحة الضرائب
 Tax Rule,قاعدة الضريبة
@@ -237,10 +302,13 @@ Theme Manager,إدارة السمات
 Tourism,السياحة
 "Track initiation, confirmation, capture, refund, and reconciliation outcomes.",تتبّع البدء، التأكيد، التحصيل، الاسترداد، ومخرجات التسوية.
 Trading,التجارة
+Transfers,التحويلات
+Trial Balance (periodic — primary),ميزان المراجعة (دوري — أساسي)
 Trial balance & primary statements,ميزان المراجعة والقوائم الأساسية
 User Academy,أكاديمية المستخدم
 User Branch Access,صلاحيات المستخدم على الفروع
 Vehicle Finance,تمويل المركبات
+Warehouses,المخازن
 ⚙ Operations,⚙ عمليات
 📈 KPIs,📈 مؤشرات الأداء
 📊 KPIs,📊 مؤشرات الأداء
