@@ -1,43 +1,104 @@
-E-Invoicing & e-receipt,الفاتورة والإيصال الإلكتروني
-Sales invoices (e-invoice source),قائمة فواتير المبيعات (مصدر الفاتورة الإلكترونية)
-Payment entries (e-receipt source),قائمة إيصالات القبض / التحصيل (مصدر الإيصال الإلكتروني)
+"AR, AP & working capital (global)",المدينون والدائنون ورأس المال العامل (عام)
+Accounting,المحاسبة
+Accounting & Finance المحرك المالي — شركة/فرع، دليل الحسابات، الأبعاد، الربط المخزني↔GL، التقارير العالمية,المحاسبة والمالية المحرك المالي — شركة/فرع، دليل الحسابات، الأبعاد، الربط المخزني↔GL، التقارير العالمية
+Accounting settings,إعدادات المحاسبة
+Admin,الإدارة
 Authority submissions (invoice & receipt),قائمة إرسال المستندات للمصلحة (فاتورة وإيصال)
-Tax Authority Profile,ملف الربط بمصلحة الضرائب
-Signing Profile,ملف التوقيع الإلكتروني
-ERPNext,ERPGENEX
-ErpNext,ERPGENEX
-Settings,الإعدادات
-Operations,العمليات
-Financial Operations,العمليات المالية
-Guided setup for this workspace.,إعداد موجه لهذه المساحة.
-Explore this workspace,استكشف هذه المساحة
-Get started with,ابدأ مع
+Branches,الفروع
+Budget,ميزانية
+Budget & inventory (financial view),الميزانية والمخزون (المنظور المالي)
+Buy,المشتريات
+COA Settings,إعدادات دليل الحسابات
+Cash flow & liquidity (global),التدفقات النقدية والسيولة (عام)
+Chart of accounts,دليل الحسابات
+"Chart of accounts, company & dimensions",دليل الحسابات والشركة والأبعاد
+Commerce,التجارة
+Company Settings,إعدادات الشركة
+Company setup,تهيئة الشركة
+Core financial operations,العمليات المالية الأساسية
 Create,إنشاء
-Skip,تخطي
-Get started with Tax Authority Profile,ابدأ مع ملف الربط بمصلحة الضرائب
-Get started with Signing Profile,ابدأ مع ملف التوقيع الإلكتروني
-Get started with E-Document Submission,ابدأ مع إرسال المستندات الإلكترونية
-Get started with User Branch Access,ابدأ مع صلاحيات المستخدم على الفروع
-Create or review your first **Tax Authority Profile** record from this workspace.,أنشئ أو راجع أول سجل **ملف الربط بمصلحة الضرائب** من هذه المساحة.
-Create or review your first **Signing Profile** record from this workspace.,أنشئ أو راجع أول سجل **ملف التوقيع الإلكتروني** من هذه المساحة.
-Create or review your first **Company** record from this workspace.,أنشئ أو راجع أول سجل **شركة** من هذه المساحة.
 Create or review your first **Branch** record from this workspace.,أنشئ أو راجع أول سجل **فرع** من هذه المساحة.
+Create or review your first **Company** record from this workspace.,أنشئ أو راجع أول سجل **شركة** من هذه المساحة.
+Create or review your first **Signing Profile** record from this workspace.,أنشئ أو راجع أول سجل **ملف التوقيع الإلكتروني** من هذه المساحة.
+Create or review your first **Tax Authority Profile** record from this workspace.,أنشئ أو راجع أول سجل **ملف الربط بمصلحة الضرائب** من هذه المساحة.
 Create or review your first **Tax Category** record from this workspace.,أنشئ أو راجع أول سجل **فئة ضريبية** من هذه المساحة.
 Create or review your first **Tax Rule** record from this workspace.,أنشئ أو راجع أول سجل **قاعدة ضريبية** من هذه المساحة.
-Return here for shortcuts, charts, and lists for **Settings**.,عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **الإعدادات**.
-Company Settings,إعدادات الشركة
-Branches,الفروع
-Tax categories (VAT / GST),فئات الضرائب (VAT / GST)
+Customer,العميل
+Customer & KYC,العميل والتحقق من الهوية (KYC)
+Customer 360,عميل 360
+Customer Core CRM,إدارة علاقات العملاء الأساسية (CRM)
+Customer Ledger,دفتر أستاذ العملاء
+Customer Profile,ملف العميل
+Customer ledger,عميل دفتر أستاذ
+Customer management,إدارة العملاء
+Dashboard,لوحة التحكم
+Data & imports,البيانات والاستيراد
 E-Invoice Signing Profile,ملف توقيع الفاتورة الإلكترونية
 E-Invoice Submissions,إرسالات الفاتورة الإلكترونية
-System Settings,إعدادات النظام
-User Branch Access,صلاحيات المستخدم على الفروع
-Integrations,التكاملات
-Commerce,التجارة
+E-Invoicing & e-receipt,الفاتورة والإيصال الإلكتروني
+ERPGENEX — Accounting,ERPGENEX — المحاسبة
+ERPGENEX — Buy,ERPGENEX — المشتريات
+ERPGENEX — Dashboard,ERPGENEX — لوحة التحكم
+ERPGENEX — Sell,ERPGENEX — المبيعات
+ERPGENEX — Settings,ERPGENEX — إعدادات
+ERPGENEX — Stock,ERPGENEX — المخازن
+ERPNext,ERPGENEX
+ErpNext,ERPGENEX
+Executive KPIs (global),مؤشرات الأداء التنفيذية (عام)
+Explore this workspace,استكشف هذه المساحة
+Finance,مالية
 Finance Group,مجموعة التمويل
-Dashboard,لوحة التحكم
-Sell,المبيعات
-Buy,المشتريات
-Stock,المخازن
+Financial Operations,العمليات المالية
+Get started with,ابدأ مع
+Get started with E-Document Submission,ابدأ مع إرسال المستندات الإلكترونية
+Get started with Signing Profile,ابدأ مع ملف التوقيع الإلكتروني
+Get started with Tax Authority Profile,ابدأ مع ملف الربط بمصلحة الضرائب
+Get started with User Branch Access,ابدأ مع صلاحيات المستخدم على الفروع
+Global registers & ledgers,السجلات ودفاتر الأستاذ العالمية
+Guided setup for this workspace.,إعداد موجه لهذه المساحة.
+Integrations,التكاملات
+Inventory KPI Dashboard,لوحة مؤشرات أداء المخزون (KPI)
+Inventory KPIs,مؤشرات أداء المخزون
+Item master (stock ↔ GL account mapping),إدارة الأصناف (ربط المخزون ↔ الأستاذ العام)
+Local inventory reports,تقارير المخزون المحلية
+Local sales reports,تقارير المبيعات المحلية
+Logistics & fulfillment,اللوجستيات والتنفيذ
 Marketplace,الماركت
-Admin,الإدارة
+Mode of Payment,طريقة الدفع
+Operations,العمليات
+POS Sales Invoice,فاتورة مبيعات نقطة البيع (POS)
+Payment entries (e-receipt source),قائمة إيصالات القبض / التحصيل (مصدر الإيصال الإلكتروني)
+Payments,مدفوعات
+Project Reports,تقارير المشاريع
+Purchase Invoice,فاتورة شراء
+Report,تقرير
+Reports,تقارير
+Reports · Finance,تقارير · مالية
+"Return here for shortcuts, charts, and lists for **Settings**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **الإعدادات**.
+Sales Invoice,فاتورة بيع
+Sales Invoice Settings,إعدادات فاتورة المبيعات
+Sales Register,سجل المبيعات
+Sales invoices (e-invoice source),قائمة فواتير المبيعات (مصدر الفاتورة الإلكترونية)
+Sales register,سجل المبيعات
+Sales settings,إعدادات المبيعات
+Sell,المبيعات
+Settings,الإعدادات
+Setup,تهيئة
+Signing Profile,ملف التوقيع الإلكتروني
+Skip,تخطي
+Stock,المخازن
+Stock settings,إعدادات المخزون
+Stock دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية,مخزون دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية
+Submissions,إرسالات
+Supplier,المورد
+Supplier Ledger,مورد دفتر أستاذ
+System Settings,إعدادات النظام
+Tax Authority Profile,ملف الربط بمصلحة الضرائب
+Tax categories (VAT / GST),فئات الضرائب (VAT / GST)
+Trial balance & primary statements,ميزان المراجعة والقوائم الأساسية
+User Branch Access,صلاحيات المستخدم على الفروع
+⚙ Operations,⚙ عمليات
+📈 KPIs,📈 مؤشرات الأداء
+📊 KPIs,📊 مؤشرات الأداء
+📊 Reports,📊 تقارير
+📌 Operations,📌 عمليات
