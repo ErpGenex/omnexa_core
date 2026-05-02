@@ -3,26 +3,63 @@ Accounting,المحاسبة
 Accounting & Finance المحرك المالي — شركة/فرع، دليل الحسابات، الأبعاد، الربط المخزني↔GL، التقارير العالمية,المحاسبة والمالية المحرك المالي — شركة/فرع، دليل الحسابات، الأبعاد، الربط المخزني↔GL، التقارير العالمية
 Accounting settings,إعدادات المحاسبة
 Admin,الإدارة
+Agriculture,الزراعة
 Authority submissions (invoice & receipt),قائمة إرسال المستندات للمصلحة (فاتورة وإيصال)
+Backup,النسخ الاحتياطي
 Branches,الفروع
 Budget,ميزانية
 Budget & inventory (financial view),الميزانية والمخزون (المنظور المالي)
 Buy,المشتريات
 COA Settings,إعدادات دليل الحسابات
+CRM,إدارة علاقات العملاء
+Capture a web order,التقاط طلب ويب
+Car Rental,تأجير السيارات
 Cash flow & liquidity (global),التدفقات النقدية والسيولة (عام)
 Chart of accounts,دليل الحسابات
 "Chart of accounts, company & dimensions",دليل الحسابات والشركة والأبعاد
 Commerce,التجارة
 Company Settings,إعدادات الشركة
 Company setup,تهيئة الشركة
+Construction,المقاولات
+Consumer Finance,التمويل الاستهلاكي
 Core financial operations,العمليات المالية الأساسية
+Cost Analysis Report,تقرير تحليل التكلفة
 Create,إنشاء
+Create Entry,إنشاء سجل
+Create catalog item,إنشاء بند كتالوج
+Create or review your first **Audit Balance Snapshot** record from this workspace.,أنشئ أو راجع أول سجل **لقطة أرصدة المراجعة** من هذه المساحة.
+Create or review your first **Audit Engagement** record from this workspace.,أنشئ أو راجع أول سجل **مهمة تدقيق** من هذه المساحة.
+Create or review your first **Audit Opinion Draft** record from this workspace.,أنشئ أو راجع أول سجل **مسودة رأي التدقيق** من هذه المساحة.
 Create or review your first **Branch** record from this workspace.,أنشئ أو راجع أول سجل **فرع** من هذه المساحة.
 Create or review your first **Company** record from this workspace.,أنشئ أو راجع أول سجل **شركة** من هذه المساحة.
+Create or review your first **Data Import** record from this workspace.,أنشئ أو راجع أول سجل **استيراد البيانات** من هذه المساحة.
+Create or review your first **DocType** record from this workspace.,أنشئ أو راجع أول سجل **نوع المستند** من هذه المساحة.
+Create or review your first **Event** record from this workspace.,أنشئ أو راجع أول سجل **الحدث** من هذه المساحة.
+Create or review your first **Item** record from this workspace.,أنشئ أو راجع أول سجل **الصنف** من هذه المساحة.
+Create or review your first **Pipeline Lead** record from this workspace.,أنشئ أو راجع أول سجل **عميل محتمل (Pipeline)** من هذه المساحة.
+Create or review your first **Pipeline Opportunity** record from this workspace.,أنشئ أو راجع أول سجل **فرصة بيع** من هذه المساحة.
+Create or review your first **Purchase Order** record from this workspace.,أنشئ أو راجع أول سجل **أمر الشراء** من هذه المساحة.
+Create or review your first **Purchase Receipt** record from this workspace.,أنشئ أو راجع أول سجل **إيصال الاستلام** من هذه المساحة.
+Create or review your first **Purchase Request** record from this workspace.,أنشئ أو راجع أول سجل **طلب الشراء** من هذه المساحة.
+Create or review your first **Report** record from this workspace.,أنشئ أو راجع أول سجل **التقرير** من هذه المساحة.
+Create or review your first **Role** record from this workspace.,أنشئ أو راجع أول سجل **الدور** من هذه المساحة.
+Create or review your first **Sales Quotation** record from this workspace.,أنشئ أو راجع أول سجل **عرض السعر** من هذه المساحة.
 Create or review your first **Signing Profile** record from this workspace.,أنشئ أو راجع أول سجل **ملف التوقيع الإلكتروني** من هذه المساحة.
+Create or review your first **Stock Entry** record from this workspace.,أنشئ أو راجع أول سجل **حركة المخزون** من هذه المساحة.
+Create or review your first **Supplier** record from this workspace.,أنشئ أو راجع أول سجل **المورد** من هذه المساحة.
 Create or review your first **Tax Authority Profile** record from this workspace.,أنشئ أو راجع أول سجل **ملف الربط بمصلحة الضرائب** من هذه المساحة.
 Create or review your first **Tax Category** record from this workspace.,أنشئ أو راجع أول سجل **فئة ضريبية** من هذه المساحة.
 Create or review your first **Tax Rule** record from this workspace.,أنشئ أو راجع أول سجل **قاعدة ضريبية** من هذه المساحة.
+Create or review your first **ToDo** record from this workspace.,أنشئ أو راجع أول سجل **المهمة** من هذه المساحة.
+Create or review your first **User Branch Access** record from this workspace.,أنشئ أو راجع أول سجل **صلاحيات المستخدم على الفروع** من هذه المساحة.
+Create or review your first **User Permission** record from this workspace.,أنشئ أو راجع أول سجل **صلاحية المستخدم** من هذه المساحة.
+Create or review your first **User** record from this workspace.,أنشئ أو راجع أول سجل **المستخدم** من هذه المساحة.
+Create or review your first **Warehouse** record from this workspace.,أنشئ أو راجع أول سجل **المخزن** من هذه المساحة.
+Create or review your first **Workflow** record from this workspace.,أنشئ أو راجع أول سجل **سير العمل** من هذه المساحة.
+Create or review your first **Workspace** record from this workspace.,أنشئ أو راجع أول سجل **مساحة العمل** من هذه المساحة.
+Credit Engine,محرك الائتمان
+Credit Risk,مخاطر الائتمان
+Currency Exchange Rate,سعر صرف العملة
 Customer,العميل
 Customer & KYC,العميل والتحقق من الهوية (KYC)
 Customer 360,عميل 360
@@ -33,6 +70,10 @@ Customer ledger,عميل دفتر أستاذ
 Customer management,إدارة العملاء
 Dashboard,لوحة التحكم
 Data & imports,البيانات والاستيراد
+"Define what you sell or book: SKU, pricing, and availability for web orders and bookings.",عرّف ما تبيعه أو تحجزه: الرمز، التسعير، والتوفر لطلبات الويب والحجوزات.
+Delivery Delay Report,تقرير تأخير التسليم
+Domain setup (tax · FX),تهيئة النطاق (الضريبة · العملات)
+E-Invoice,الفوترة الإلكترونية
 E-Invoice Signing Profile,ملف توقيع الفاتورة الإلكترونية
 E-Invoice Submissions,إرسالات الفاتورة الإلكترونية
 E-Invoicing & e-receipt,الفاتورة والإيصال الإلكتروني
@@ -43,60 +84,163 @@ ERPGENEX — Sell,ERPGENEX — المبيعات
 ERPGENEX — Settings,ERPGENEX — إعدادات
 ERPGENEX — Stock,ERPGENEX — المخازن
 ERPNext,ERPGENEX
+Education,التعليم
+Engineering Consulting,الاستشارات الهندسية
 ErpNext,ERPGENEX
 Executive KPIs (global),مؤشرات الأداء التنفيذية (عام)
 Explore this workspace,استكشف هذه المساحة
+Factoring,الفوترة (Factoring)
 Finance,مالية
+Finance Engine,المحرك المالي
 Finance Group,مجموعة التمويل
 Financial Operations,العمليات المالية
+Fixed assets,الأصول الثابتة
 Get started with,ابدأ مع
+Get started with Audit Balance Snapshot,ابدأ مع لقطة أرصدة المراجعة
+Get started with Audit Engagement,ابدأ مع مهمة تدقيق
+Get started with Audit Opinion Draft,ابدأ مع مسودة رأي التدقيق
+Get started with Branch,ابدأ مع الفرع
+Get started with Company,ابدأ مع الشركة
+Get started with Data Import,ابدأ مع استيراد البيانات
+Get started with DocType,ابدأ مع نوع المستند
 Get started with E-Document Submission,ابدأ مع إرسال المستندات الإلكترونية
+Get started with Event,ابدأ مع الحدث
+Get started with Item,ابدأ مع الصنف
+Get started with Pipeline Lead,ابدأ مع عميل محتمل (Pipeline)
+Get started with Pipeline Opportunity,ابدأ مع فرصة بيع
+Get started with Purchase Order,ابدأ مع أمر الشراء
+Get started with Purchase Receipt,ابدأ مع إيصال الاستلام
+Get started with Purchase Request,ابدأ مع طلب الشراء
+Get started with Report,ابدأ مع التقرير
+Get started with Role,ابدأ مع الدور
+Get started with Sales Quotation,ابدأ مع عرض السعر
 Get started with Signing Profile,ابدأ مع ملف التوقيع الإلكتروني
+Get started with Stock Entry,ابدأ مع حركة المخزون
+Get started with Supplier,ابدأ مع المورد
 Get started with Tax Authority Profile,ابدأ مع ملف الربط بمصلحة الضرائب
+Get started with Tax Category,ابدأ مع فئة الضريبة
+Get started with Tax Rule,ابدأ مع قاعدة الضريبة
+Get started with ToDo,ابدأ مع المهمة
+Get started with User,ابدأ مع المستخدم
 Get started with User Branch Access,ابدأ مع صلاحيات المستخدم على الفروع
+Get started with User Permission,ابدأ مع صلاحية المستخدم
+Get started with Warehouse,ابدأ مع المخزن
+Get started with Workflow,ابدأ مع سير العمل
+Get started with Workspace,ابدأ مع مساحة العمل
 Global registers & ledgers,السجلات ودفاتر الأستاذ العالمية
+Go to Page,الانتقال إلى الصفحة
+Goods Receipt,استلام البضائع
+Governance & approvals,الحوكمة والاعتمادات
 Guided setup for this workspace.,إعداد موجه لهذه المساحة.
+Healthcare,الرعاية الصحية
 Integrations,التكاملات
 Inventory KPI Dashboard,لوحة مؤشرات أداء المخزون (KPI)
 Inventory KPIs,مؤشرات أداء المخزون
 Item master (stock ↔ GL account mapping),إدارة الأصناف (ربط المخزون ↔ الأستاذ العام)
+Landed Cost Voucher,مستند التكلفة الإضافية
+Leasing Finance,تمويل التأجير
+Local Procurement Reports,تقارير المشتريات المحلية
 Local inventory reports,تقارير المخزون المحلية
+Local procurement reports,تقارير المشتريات المحلية
+Local procurement reports (workspace only),تقارير المشتريات المحلية (هذه المساحة فقط)
 Local sales reports,تقارير المبيعات المحلية
 Logistics & fulfillment,اللوجستيات والتنفيذ
+Manufacturing,التصنيع
 Marketplace,الماركت
 Mode of Payment,طريقة الدفع
+Mortgage Finance,تمويل الرهن
+N8n Bridge,جسر n8n
+New booking,حجز جديد
+New payment intent,نية دفع جديدة
+New web order,طلب ويب جديد
+Omnexa Purchase Settings,إعدادات مشتريات Omnexa
+Open Purchase Order Lines,بنود أوامر الشراء المفتوحة
+Open workspace,فتح مساحة العمل
+Operational Risk,المخاطر التشغيلية
 Operations,العمليات
 POS Sales Invoice,فاتورة مبيعات نقطة البيع (POS)
+Payment Entry (supplier payments),قيد الدفع (مدفوعات المورد)
 Payment entries (e-receipt source),قائمة إيصالات القبض / التحصيل (مصدر الإيصال الإلكتروني)
 Payments,مدفوعات
+Pending Orders Report,تقرير الأوامر المعلقة
+Procurement cycle,دورة المشتريات
+Procurement cycle (Request → PO → Receipt → Invoice → Payment),دورة المشتريات (طلب شراء → أمر شراء → استلام → فاتورة → دفع)
+Procurement setup (tax & FX),تهيئة المشتريات (الضريبة والعملات)
 Project Reports,تقارير المشاريع
+Projects,المشاريع
+Purchase Approval Rule,قاعدة اعتماد المشتريات
+Purchase Budget,ميزانية المشتريات
+Purchase Delivery Performance,أداء تسليم المشتريات
 Purchase Invoice,فاتورة شراء
+Purchase Invoices,فواتير الشراء
+Purchase Order,أمر الشراء
+Purchase Orders,أوامر الشراء
+Purchase Quotation,عرض سعر الشراء
+Purchase Quotation Comparison,مقارنة عروض أسعار الشراء
+Purchase Receipt,إيصال الاستلام
+Purchase Register,سجل المشتريات
+Purchase Request,طلب الشراء
+Purchase Requests,طلبات الشراء
+Purchase Summary Report,تقرير ملخص المشتريات
+Purchase settings,إعدادات المشتريات
+Reject,رفض
 Report,تقرير
+Reporting Compliance,التقارير والامتثال
 Reports,تقارير
 Reports · Finance,تقارير · مالية
+Reserve capacity against bookable resources without double-booking.,احجز السعة مقابل الموارد القابلة للحجز دون ازدواجية في الحجز.
+Restaurant,المطاعم
+"Return here for shortcuts, charts, and lists for **Admin**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **الإدارة**.
+"Return here for shortcuts, charts, and lists for **Audit**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **التدقيق**.
+"Return here for shortcuts, charts, and lists for **Buy**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **المشتريات**.
+"Return here for shortcuts, charts, and lists for **Dashboard**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **لوحة التحكم**.
+"Return here for shortcuts, charts, and lists for **Finance Group**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **مجموعة التمويل**.
+"Return here for shortcuts, charts, and lists for **Governance**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **الحوكمة**.
+"Return here for shortcuts, charts, and lists for **Marketplace**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **الماركت**.
+"Return here for shortcuts, charts, and lists for **Sell**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **المبيعات**.
 "Return here for shortcuts, charts, and lists for **Settings**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **الإعدادات**.
+"Return here for shortcuts, charts, and lists for **Stock**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **المخازن**.
+"Run order-to-cash: customer, lines, channel, and status through invoicing and fulfilment.",شغّل دورة الطلب حتى التحصيل: العميل، البنود، القناة، والحالة عبر الفوترة والتنفيذ.
+SME Retail Finance,تمويل التجزئة للمشاريع الصغيرة
 Sales Invoice,فاتورة بيع
 Sales Invoice Settings,إعدادات فاتورة المبيعات
 Sales Register,سجل المبيعات
 Sales invoices (e-invoice source),قائمة فواتير المبيعات (مصدر الفاتورة الإلكترونية)
 Sales register,سجل المبيعات
 Sales settings,إعدادات المبيعات
+Search or type a command (Ctrl + G),ابحث أو اكتب أمرًا (Ctrl + G)
 Sell,المبيعات
+Services,الخدمات
 Settings,الإعدادات
 Setup,تهيئة
 Signing Profile,ملف التوقيع الإلكتروني
 Skip,تخطي
+Statutory Audit,التدقيق النظامي
 Stock,المخازن
 Stock settings,إعدادات المخزون
 Stock دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية,مخزون دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية
 Submissions,إرسالات
 Supplier,المورد
+Supplier Category,فئة المورد
+Supplier Contract (pricing),عقد المورد (التسعير)
 Supplier Ledger,مورد دفتر أستاذ
+Supplier Management,إدارة الموردين
+Supplier Payments,مدفوعات المورد
+Supplier Performance Report,تقرير أداء المورد
+Suppliers,الموردون
+Supporting (approvals · landed cost),الدعم (الاعتمادات · التكلفة الإضافية)
 System Settings,إعدادات النظام
 Tax Authority Profile,ملف الربط بمصلحة الضرائب
+Tax Rule,قاعدة الضريبة
 Tax categories (VAT / GST),فئات الضرائب (VAT / GST)
+Theme Manager,إدارة السمات
+Tourism,السياحة
+"Track initiation, confirmation, capture, refund, and reconciliation outcomes.",تتبّع البدء، التأكيد، التحصيل، الاسترداد، ومخرجات التسوية.
+Trading,التجارة
 Trial balance & primary statements,ميزان المراجعة والقوائم الأساسية
+User Academy,أكاديمية المستخدم
 User Branch Access,صلاحيات المستخدم على الفروع
+Vehicle Finance,تمويل المركبات
 ⚙ Operations,⚙ عمليات
 📈 KPIs,📈 مؤشرات الأداء
 📊 KPIs,📊 مؤشرات الأداء
