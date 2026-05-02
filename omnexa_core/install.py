@@ -14,6 +14,7 @@ from json import dumps
 from json import loads
 
 import frappe
+from frappe import _
 from frappe.installer import install_app as install_site_app
 from frappe.installer import update_site_config
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
