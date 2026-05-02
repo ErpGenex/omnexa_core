@@ -2,27 +2,27 @@ ABC Analysis Report,تقرير تحليل ABC
 AEC Suite,حزمة AEC
 ALM,إدارة الأصول والخصوم (ALM)
 ALM Analytics,تحليلات إدارة الأصول والخصوم
-ALM Daily Run Trend,ALM يومي تشغيل Trend
-ALM Daily Run Vol,ALM يومي تشغيل Vol
-ALM Daily Runs,ALM يومي تشغيلات
-ALM Gap Report,ALM Gap تقرير
+ALM Daily Run Trend,تشغيل يومي لإدارة الأصول والخصوم (اتجاه)
+ALM Daily Run Vol,تشغيل يومي لإدارة الأصول والخصوم (حجم)
+ALM Daily Runs,تشغيلات يومية لإدارة الأصول والخصوم
+ALM Gap Report,تقرير فجوات إدارة الأصول والخصوم
 ALM Governance,ALM الحوكمة
-ALM Liquidity Compliance Monitor,ALM Liquidity الامتثال Monitor
-ALM Policy Version Mix,ALM السياسات Version Mix
-ALM Position Snapshot Trend,ALM مركز لقطة Trend
-ALM Position Snapshots,ALM مركز لقطات
-ALM Stress Outlier Report,ALM ضغط Outlier تقرير
-ALM Stress Scenario Mix,ALM ضغط سيناريو Mix
-ALM Stress Scenarios,ALM ضغط سيناريوهات
+ALM Liquidity Compliance Monitor,امتثال سيولة إدارة الأصول والخصوم (مراقب)
+ALM Policy Version Mix,ALM سياسة (مزيج الإصدارات)
+ALM Position Snapshot Trend,لقطة مركز إدارة الأصول والخصوم (اتجاه)
+ALM Position Snapshots,لقطات مراكز إدارة الأصول والخصوم
+ALM Stress Outlier Report,تقرير شاذّ ضغط إدارة الأصول والخصوم
+ALM Stress Scenario Mix,سيناريو ضغط إدارة الأصول والخصوم (مزيج)
+ALM Stress Scenarios,سيناريوهات ضغط إدارة الأصول والخصوم
 ALM book bars Bar,ALM (أعمدة دفاتر)
-ALM · ALM Daily Run Trend,ALM · ALM يومي تشغيل Trend
-ALM · ALM Daily Run Vol,ALM · ALM يومي تشغيل Vol
-ALM · ALM Position Snapshot Trend,ALM · ALM مركز لقطة Trend
-ALM · ALM Stress Scenario Mix,ALM · ALM ضغط سيناريو Mix
+ALM · ALM Daily Run Trend,إدارة الأصول والخصوم · تشغيل يومي لإدارة الأصول والخصوم (اتجاه)
+ALM · ALM Daily Run Vol,إدارة الأصول والخصوم · تشغيل يومي لإدارة الأصول والخصوم (حجم)
+ALM · ALM Position Snapshot Trend,إدارة الأصول والخصوم · لقطة مركز إدارة الأصول والخصوم (اتجاه)
+ALM · ALM Stress Scenario Mix,إدارة الأصول والخصوم · سيناريو ضغط إدارة الأصول والخصوم (مزيج)
 ALM · ALM book bars Bar,إدارة الأصول والخصوم · ALM (أعمدة دفاتر)
-ALM · Run outcomes Perc,ALM · تشغيل outcomes Perc
-ALM · Scenarios Pie,ALM · سيناريوهات Pie
-ALMGovernance · ALM Policy Version Mix,ALMGovernance · ALM السياسات Version Mix
+ALM · Run outcomes Perc,إدارة الأصول والخصوم · تشغيل (نسبة مئوية للمخرجات)
+ALM · Scenarios Pie,إدارة الأصول والخصوم · سيناريوهات (دائري)
+ALMGovernance · ALM Policy Version Mix,حوكمة إدارة الأصول والخصوم · ALM سياسة (مزيج الإصدارات)
 ALMGovernance · Status Bar,حوكمة إدارة الأصول والخصوم · شريط الحالة
 AP Aging Report,تقرير أعمار الذمم الدائنة
 AR Aging Report,تقرير أعمار الذمم المدينة
@@ -30,14 +30,14 @@ AR Aging Report,تقرير أعمار الذمم المدينة
 AUDIT ENGAGEMENTS,مهام التدقيق
 AUDIT EVIDENCE ITEMS,بنود أدلة التدقيق
 AUDIT FINDINGS,ملاحظات التدقيق
-About Us Settings,About Us إعدادات
+About Us Settings,إعدادات صفحة من نحن
 Academic Year,السنة الدراسية
 Academic structure,الهيكل الأكاديمي
-Access Log,الوصول Log
-Access control summary,Access تحكم ملخص
-Account Snapshots,Account لقطات
+Access Log,سجل الوصول
+Access control summary,الوصول تحكم ملخص
+Account Snapshots,لقطات الحساب
 Accounting,المحاسبة
-Accounting & Finance المحرك المالي — شركة/فرع، دليل الحسابات، الأبعاد، الربط المخزني↔GL، التقارير العالمية,المحاسبة والمالية المحرك المالي — شركة/فرع، دليل الحسابات، الأبعاد، الربط المخزني↔GL، التقارير العالمية
+Accounting & Finance المحرك المالي — شركة/فرع، دليل الحسابات، الأبعاد، الربط المخزني↔GL، التقارير العالمية,Accounting & Finance المحرك المالي — شركة/فرع، دليل الحسابات، الأبعاد، الربط المخزني↔GL، التقارير العالمية
 Accounting Templates,قوالب المحاسبة
 Accounting settings,إعدادات المحاسبة
 Accounts Payable (AP),الذمم الدائنة (AP)
@@ -50,38 +50,38 @@ Active Rule Profiles,ملفات القواعد النشطة
 Active Scorecards,بطاقات التقييم النشطة
 Active Strategies,الاستراتيجيات النشطة
 Activity Booking,نشاط حجز
-Activity Log,نشاط Log
-Activity log,نشاط log
+Activity Log,سجل النشاط
+Activity log,سجل النشاط
 Additional global registers & cash flow views,سجلات عالمية إضافية وعروض التدفقات النقدية
 Additional inventory reports,تقارير مخزون إضافية
 Additional sales reports,تقارير مبيعات إضافية
 Address,عنوان
 Admin,الإدارة
-Admin · Data Import Mix,الإدارة · Data استيراد Mix
+Admin · Data Import Mix,الإدارة · استيراد البيانات (مزيج)
 Administration,الإدارة
 Admission,قبول
-Admission LOS analysis,قبول LOS analysis
+Admission LOS analysis,تحليل مدة الإقامة للقبول
 Advanced Analytics,تحليلات متقدمة
 Agriculture,الزراعة
 Alerts and Notifications,التنبيهات والإشعارات
 All tenant themes,جميع سمات المستأجرين
 Allergy intolerance,حساسية
-Analytics (IFRS 15 / IFRS 8 / O2C / ISO-style KPIs),Analytics (IFRS 15 / IFRS 8 / O2C / ISO-style مؤشرات الأداء)
-Analytics Reports,Analytics التقارير
+Analytics (IFRS 15 / IFRS 8 / O2C / ISO-style KPIs),تحليلات (IFRS 15 / IFRS 8 / O2C / ISO ومؤشرات الأداء)
+Analytics Reports,تقارير التحليلات
 Appointment,موعد
-Appointment status summary,Appointment status ملخص
-Appointment utilization,Appointment الاستغلال
+Appointment status summary,ملخص حالة المواعيد
+Appointment utilization,موعد الاستغلال
 Approval Workflows,سير عمل الاعتمادات
 Apps & licensing,التطبيقات والترخيص
-Asset & Liability Management,Asset & المسؤولية Management
+Asset & Liability Management,إدارة الأصول والخصوم
 Asset Alert,تنبيه أصل
-Asset Health Report,Asset الصحة تقرير
+Asset Health Report,تقرير صحة الأصول
 Asset Meter Reading,قراءة عداد الأصل
 Asset Recommendation,توصية أصل
 Asset Registry,سجل الأصول
 Asset Registry Rows,صفوف سجل الأصول
-Asset Risk Register,Asset المخاطر Register
-Asset Work Order,Asset عمل أمر
+Asset Risk Register,سجل مخاطر الأصول
+Asset Work Order,أمر عمل الأصول
 Assignment Rule,قاعدة الإسناد
 Attendance & Payroll,الحضور والرواتب
 Audit,التدقيق
@@ -106,37 +106,37 @@ Audit · Audit Opinion Draft Mix,التدقيق · مزيج مسودات رأي 
 Audit · Status Bar,التدقيق · شريط الحالة
 Authentication,المصادقة
 Authority submissions (invoice & receipt),قائمة إرسال المستندات للمصلحة (فاتورة وإيصال)
-Auto Email Report,Auto Email تقرير
+Auto Email Report,تقرير البريد التلقائي
 Auto Repeat,تكرار تلقائي
 Automation,الأتمتة
 BALANCE SNAPSHOT LINES,بنود لقطة الرصيد
-BOQ Cost Overrun,حصر كميات (BOQ) تكلفة Overrun
-BOQ Item,حصر كميات (BOQ) Item
-BOQ Progress,حصر كميات (BOQ) Progress
+BOQ Cost Overrun,تجاوز تكلفة حصر الكميات
+BOQ Item,حصر كميات (BOQ) الصنف
+BOQ Progress,تقدم حصر الكميات
 Background Jobs,مهام الخلفية
 Backtest Datasets,بيانات الاختبار الخلفي
 Backup,النسخ الاحتياطي
-Backup policy,Backup السياسات
+Backup policy,سياسة النسخ الاحتياطي
 Balance Sheet,الميزانية العمومية
 Balance sheet,الميزانية العمومية
 Balance snapshot lines,بنود لقطة الرصيد
 Balances,الأرصدة
 Bank Account,حساب بنكي
-Bank Balance Summary,ملخص رصيد البنك
+Bank Balance Summary,ملخص الرصيد البنكي
 Bank Reconciliation,تسوية بنكية
 Bank Reconciliation Suggestions,اقتراحات تسوية البنك
 Bank Statement Import,استيراد كشف الحساب البنكي
 Bank Unmatched Statement Lines,بنود كشف غير مطابقة
 Banking Transactions,معاملات بنكية
-Baseline & KPIs,Baseline & مؤشرات الأداء
+Baseline & KPIs,خط الأساس ومؤشرات الأداء
 Batch / Serial Tracking,تتبع الدُفعات/الأرقام التسلسلية
 Beach Booking,شاطئ حجز
-Beach Facility,شاطئ Facility
+Beach Facility,منشأة الشاطئ
 Bed,سرير
 Billing,الفوترة
-Billing Cycle,الفوترة Cycle
+Billing Cycle,دورة الفوترة
 Billing Invoice,الفوترة فاتورة
-Billing summary,Billing ملخص
+Billing summary,الفوترة ملخص
 Blog,المدونة
 Blog Category,فئة المدونة
 Blog Post,مقال مدونة
@@ -144,25 +144,25 @@ Blogger,مدون
 Book by status Bar,الدفتر حسب الحالة (عمودي)
 Bookable Resource,مورد قابل للحجز
 Booking,حجز
-Booking Mix,حجز Mix
-Booking pipeline,حجز pipeline
-Booking service hours,حجز service hours
-Booking status summary,Booking status ملخص
+Booking Mix,مزيج الحجوزات
+Booking pipeline,حجز قناة المبيعات
+Booking service hours,ساعات خدمة الحجز
+Booking status summary,ملخص حالة الحجوزات
 Bookings & travel,الحجوزات & travel
 Branch access,Branch الوصول
 Branches,الفروع
 Budget,ميزانية
-Budget & inventory (financial view),الميزانية والمخزون (المنظور المالي)
+Budget & inventory (financial view),Budget & المخزون (financial view)
 Budget vs Actual,الموازنة مقابل الفعلي
 Budget vs Actual Report,تقرير الموازنة مقابل الفعلي
 Build,البناء
 Bulk Update,تحديث جماعي
 Buy,المشتريات
 Buy Request-to-pay — إعدادات المشتريات (شركة/فرع/ضريبة/عملات)، الموردين، الدورة، التقارير المحلية,Buy Request-to-pay — إعدادات المشتريات (شركة/فرع/ضريبة/عملات)، الموردين، الدورة، التقارير المحلية
-COA Settings,إعدادات دليل الحسابات
+COA Settings,COA إعدادات
 CRM,إدارة علاقات العملاء
 CRM & campaigns (supporting),إدارة العملاء والحملات (مساند)
-CRM & pipeline (Lead → Opportunity),إدارة العملاء وقناة المبيعات (عميل محتمل → فرصة)
+CRM & pipeline (Lead → Opportunity),CRM & قناة المبيعات (Lead → Opportunity)
 CRM Activity,CRM نشاط
 CRM Campaign,حملة إدارة علاقات العملاء
 CRM Case SLA Compliance,CRM Case SLA الامتثال
@@ -177,7 +177,7 @@ CRM · CRM Opportunity Mix,إدارة علاقات العملاء · مزيج ف
 CRM · Customer Profile Mix,إدارة علاقات العملاء · مزيج ملفات العملاء
 CRM · Status Bar,إدارة علاقات العملاء · شريط الحالة
 Calc Runs,Calc تشغيلات
-Calc run mix Perc,Calc تشغيل mix Perc
+Calc run mix Perc,مزيج تشغيل الحساب (نسبة مئوية)
 Calculation Runs,Calculation تشغيلات
 Calendar,التقويم
 Calibration Runs,Calibration تشغيلات
@@ -186,12 +186,12 @@ Campus,حرم
 Cancellation & no-show,إلغاء & no-show
 Capture a web order,التقاط طلب ويب
 Car Rental,تأجير السيارات
-CarRental · Rental Driver Mix,CarRental · تأجير سائق Mix
+CarRental · Rental Driver Mix,تأجير السيارات · مزيج سائقي التأجير
 CarRental · Status Bar,تأجير السيارات · شريط الحالة
-CarRental · Vehicle Mix,CarRental · مركبة Mix
+CarRental · Vehicle Mix,تأجير السيارات · مزيج المركبات
 Care episodes,حلقات الرعاية
 Case lifecycle Pie,دورة الحالة (دائري)
-Cash Activity Summary,ملخص حركة النقد
+Cash Activity Summary,Cash نشاط ملخص
 Cash Flow (Simplified),التدفق النقدي (مبسّط)
 Cash Flow (indirect),تدفق نقدي (غير مباشر)
 Cash Flow (simplified),تدفق نقدي (مبسّط)
@@ -207,7 +207,7 @@ Channel performance,قناة الأداء
 Channels Perc,القنوات (نسبة مئوية)
 Charge Entry,قيد الرسوم
 Chart of Accounts,دليل الحسابات
-Chart of Accounts (GL Account),رسم بياني of Accounts (GL Account)
+Chart of Accounts (GL Account),دليل الحسابات (حساب دفتر الأستاذ العام)
 Chart of accounts,دليل الحسابات
 "Chart of accounts, company & dimensions",دليل الحسابات والشركة والأبعاد
 Client Communication Log,سجل تواصل العميل
@@ -221,15 +221,15 @@ Collections Actions,Collections إجراءات
 Collections Performance,Collections الأداء
 Collections Tracker,متتبع التحصيل
 Commerce,التجارة
-Commerce Booking Pipeline,Commerce حجز Pipeline
-Commerce Booking Service Hours,Commerce حجز Service Hours
-Commerce Order Cycle Time,Commerce أمر Cycle مدة
+Commerce Booking Pipeline,Commerce حجز قناة المبيعات
+Commerce Booking Service Hours,Commerce ساعات خدمة الحجز
+Commerce Order Cycle Time,Commerce أمر الدورة مدة
 Commerce Order-to-Cash Pipeline,قناة الطلب حتى التحصيل للتجارة
 Commerce Payment Outcomes,مخرجات مدفوعات التجارة
 Commerce Revenue Disaggregation,Commerce إيراد Disaggregation
-Commerce Web Order Line Mix,Commerce Web أمر بند Mix
-Commerce · Booking Mix,Commerce · حجز Mix
-Commerce · Web Order Mix,Commerce · Web أمر Mix
+Commerce Web Order Line Mix,مزيج بنود طلب الويب للتجارة
+Commerce · Booking Mix,التجارة الإلكترونية · مزيج الحجوزات
+Commerce · Web Order Mix,التجارة الإلكترونية · مزيج طلبات الويب
 Commercial & finance,التجاري & المالية
 Commercial strategy & credit,التجاري strategy & credit
 Commission summary,Commission ملخص
@@ -237,52 +237,52 @@ Commissions & incentives,العمولات والحوافز
 Communication Logs,سجلات التواصل
 Companies,الشركات
 Company & desk themes,سمات الشركة والمساحة
-Company Settings,إعدادات الشركة
-Company setup,تهيئة الشركة
+Company Settings,Company إعدادات
+Company setup,Company تهيئة
 Compliance,الامتثال
 Compliance & e-invoice,الامتثال & e-invoice
-Compliance Analytics,الامتثال Analytics
+Compliance Analytics,الامتثال التحليلات
 Compliance Exceptions,الامتثال استثناءات
 Compliance Exceptions (IFRS),الامتثال استثناءات (IFRS)
 Compliance Exceptions (Tax),الامتثال استثناءات (Tax)
 Compliance Exceptions Dashboard,الامتثال استثناءات لوحة التحكم
-Compliance Gap Register,الامتثال Gap Register
+Compliance Gap Register,سجل فجوات الامتثال
 Compliance Reports,الامتثال التقارير
-Compliance mix Perc,الامتثال mix Perc
+Compliance mix Perc,مزيج الامتثال (نسبة مئوية)
 Components to build your app,مكوّنات بناء تطبيقك
-Configuration change summary,Configuration change ملخص
+Configuration change summary,التهيئة تغيير ملخص
 Connector Requests,طلبات الموصل
-Connector outcomes Perc,مخرجات الموصل (نسبة مئوية)
+Connector outcomes Perc,Connector (نسبة مئوية للمخرجات)
 Construction,المقاولات
 Construction Change Order,المقاولات تغيير أمر
 Construction Claim,المقاولات مطالبة
-Construction Contract Control,Construction Contract تحكم
-Construction · Project Contract Mix,المقاولات · مشروع عقد Mix
-Construction · Status Bar,المقاولات · Status Bar
-Construction · Subcontract Work Order Mix,المقاولات · مقاولة فرعية عمل أمر Mix
+Construction Contract Control,المقاولات عقد تحكم
+Construction · Project Contract Mix,المقاولات · مزيج عقود المشروع
+Construction · Status Bar,المقاولات · شريط الحالة
+Construction · Subcontract Work Order Mix,المقاولات · أمر عمل مقاولة فرعية (مزيج)
 Consultant Engagement,إسناد المستشار
 Consultant Workload Summary,Consultant Workload ملخص
 Consumer Cases,حالات التمويل الاستهلاكي
-Consumer Finance,التمويل الاستهلاكي
-Consumer Finance Case Trend,Consumer المالية Case Trend
-Consumer Finance Case Vol,Consumer المالية Case Vol
-Consumer Finance Governance,Consumer Finance الحوكمة
-Consumer Finance Policy  Mix,Consumer Finance Policy Mix
-Consumer Repayment Schedule Trend,Consumer Repayment الجدول Trend
+Consumer Finance,Consumer المالية
+Consumer Finance Case Trend,حالة التمويل الاستهلاكي (اتجاه)
+Consumer Finance Case Vol,حالة التمويل الاستهلاكي (حجم)
+Consumer Finance Governance,Consumer المالية الحوكمة
+Consumer Finance Policy  Mix,مزيج سياسة التمويل الاستهلاكي
+Consumer Repayment Schedule Trend,جدول سداد التمويل الاستهلاكي (اتجاه)
 ConsumerFin · Channels Perc,التمويل الاستهلاكي · القنوات (نسبة مئوية)
-ConsumerFin · Consumer Finance Case Trend,ConsumerFin · Consumer المالية Case Trend
-ConsumerFin · Consumer Finance Case Vol,ConsumerFin · Consumer المالية Case Vol
-ConsumerFin · Consumer Repayment Schedule Trend,ConsumerFin · Consumer Repayment الجدول Trend
+ConsumerFin · Consumer Finance Case Trend,التمويل الاستهلاكي · حالة التمويل الاستهلاكي (اتجاه)
+ConsumerFin · Consumer Finance Case Vol,التمويل الاستهلاكي · حالة التمويل الاستهلاكي (حجم)
+ConsumerFin · Consumer Repayment Schedule Trend,التمويل الاستهلاكي · جدول سداد التمويل الاستهلاكي (اتجاه)
 ConsumerFin · DPD buckets Bar,التمويل الاستهلاكي · DPD (سلال)
 ConsumerFin · IFRS9 Pie,التمويل الاستهلاكي · IFRS9 (دائري)
-ConsumerFinanceGov · Consumer Finance Policy  Mix,ConsumerFinanceGov · Consumer Finance Policy Mix
+ConsumerFinanceGov · Consumer Finance Policy  Mix,حوكمة التمويل الاستهلاكي · مزيج سياسة التمويل الاستهلاكي
 ConsumerFinanceGov · Status Bar,حوكمة التمويل الاستهلاكي · شريط الحالة
 Contact,جهة اتصال
-Contact Us Settings,Contact Us إعدادات
+Contact Us Settings,جهة اتصال Us إعدادات
 Contingency Playbooks,أدلة الطوارئ
 Contract Accounts,عقد Accounts
-Contract International Summary,Contract International ملخص
-Contract summary,Contract ملخص
+Contract International Summary,عقد International ملخص
+Contract summary,عقد ملخص
 "Contracting, Disbursement & Servicing",التعاقد والصرف وخدمة التمويل
 Contracts & BOQ,العقود & حصر كميات (BOQ)
 Control Effectiveness,تحكم Effectiveness
@@ -293,14 +293,14 @@ Core Transactions: Employee,Core Transactions: الموظف
 Core Transactions: HR Attendance,Core Transactions: الموارد البشرية Attendance
 Core Transactions: HR Leave Application,Core Transactions: الموارد البشرية Leave Application
 Core Transactions: HR Payroll Entry,Core Transactions: الموارد البشرية Payroll Entry
-Core Transactions: HR Recruitment Request,Core Transactions: الموارد البشرية Recruitment Request
+Core Transactions: HR Recruitment Request,Core Transactions: الموارد البشرية التوظيف Request
 Core Transactions: Healthcare Admission,Core Transactions: Healthcare قبول
 Core Transactions: Healthcare Appointment,Core Transactions: Healthcare موعد
 Core Transactions: Healthcare Encounter,Core Transactions: Healthcare زيارة طبية
 Core Transactions: Healthcare Service Request,معاملات أساسية: طلب خدمة رعاية صحية
-Core financial operations,العمليات المالية الأساسية
+Core financial operations,Core financial العمليات
 Cost Analysis Report,تقرير تحليل التكلفة
-Cost Center,Cost مركز
+Cost Center,تكلفة مركز
 Cost Centers,مراكز التكلفة
 Cost centers,تكلفة centers
 Cost variance,تكلفة انحراف
@@ -347,7 +347,7 @@ Create or review your first **Education Teacher** record from this workspace.,أ
 Create or review your first **Employee** record from this workspace.,أنشئ أو راجع أول سجل **الموظف** من هذه المساحة.
 Create or review your first **Engineering Consultant Engagement** record from this workspace.,أنشئ أو راجع أول سجل **إسناد المستشار الهندسي** من هذه المساحة.
 Create or review your first **Event** record from this workspace.,أنشئ أو راجع أول سجل **الحدث** من هذه المساحة.
-Create or review your first **Experience Tenant Theme** record from this workspace.,أنشئ أو راجع أول سجل **Experience Tenant Theme** من هذه المساحة.
+Create or review your first **Experience Tenant Theme** record from this workspace.,Create or مراجعة your first **Experience Tenant Theme** record from this workspace.
 Create or review your first **Factoring Case** record from this workspace.,أنشئ أو راجع أول سجل **حالة الفوترة (Factoring)** من هذه المساحة.
 Create or review your first **Factoring Invoice** record from this workspace.,أنشئ أو راجع أول سجل **فاتورة الفوترة (Factoring)** من هذه المساحة.
 Create or review your first **Farm** record from this workspace.,أنشئ أو راجع أول سجل **مزرعة** من هذه المساحة.
@@ -429,36 +429,36 @@ Credit Decision Case Trend,اتجاه حالات قرار الائتمان
 Credit Decision Case Vol,حجم حالات قرار الائتمان
 Credit Engine,محرك الائتمان
 Credit Engine Governance,Credit Engine الحوكمة
-Credit Policy Version Mix,Credit السياسات Version Mix
-Credit Quality Monitor,Credit الجودة Monitor
-Credit Risk,مخاطر الائتمان
-Credit Risk Account Snap Vol,Credit المخاطر Account Snap Vol
-Credit Risk Account Snapshot Trend,Credit Risk Account لقطة Trend
-Credit Risk Calibration  Mix,Credit Risk Calibration Mix
-Credit Risk Governance,Credit Risk الحوكمة
-Credit Risk Policy Versi Mix,Credit المخاطر السياسات Versi Mix
-Credit Risk Portfolio Stress Trend,Credit Risk Portfolio ضغط Trend
+Credit Policy Version Mix,Credit سياسة (مزيج الإصدارات)
+Credit Quality Monitor,مراقب جودة الائتمان
+Credit Risk,Credit المخاطر
+Credit Risk Account Snap Vol,Credit المخاطر لقطة حساب (حجم)
+Credit Risk Account Snapshot Trend,لقطة حساب مخاطر الائتمان (اتجاه)
+Credit Risk Calibration  Mix,مزيج معايرة مخاطر الائتمان
+Credit Risk Governance,Credit المخاطر الحوكمة
+Credit Risk Policy Versi Mix,Credit المخاطر سياسة (مزيج الإصدارات)
+Credit Risk Portfolio Stress Trend,ضغط محفظة مخاطر الائتمان (اتجاه)
 Credit Rule Profile Mix,مزيج ملفات قواعد الائتمان
 Credit Scorecard Mix,مزيج بطاقات التقييم
 Credit notes & returns,إشعارات دائن ومرتجعات
-CreditEngin · Connector outcomes Perc,محرك الائتمان · مخرجات الموصل (نسبة مئوية)
+CreditEngin · Connector outcomes Perc,محرك الائتمان · Connector (نسبة مئوية للمخرجات)
 CreditEngin · Credit Connector Request Trend,محرك الائتمان · اتجاه طلبات موصل الائتمان
 CreditEngin · Credit Decision Case Trend,محرك الائتمان · اتجاه حالات قرار الائتمان
 CreditEngin · Credit Decision Case Vol,محرك الائتمان · حجم حالات قرار الائتمان
 CreditEngin · Credit Rule Profile Mix,محرك الائتمان · مزيج ملفات قواعد الائتمان
 CreditEngin · Credit Scorecard Mix,محرك الائتمان · مزيج بطاقات التقييم
 CreditEngin · Decision funnel Bar,محرك الائتمان · Decision (قمع)
-CreditEngin · Risk grades Pie,CreditEngin · المخاطر grades Pie
-CreditEngineGovern · Credit Policy Version Mix,CreditEngineGovern · Credit السياسات Version Mix
+CreditEngin · Risk grades Pie,محرك الائتمان · المخاطر grades (دائري)
+CreditEngineGovern · Credit Policy Version Mix,حوكمة محرك الائتمان · Credit سياسة (مزيج الإصدارات)
 CreditEngineGovern · Status Bar,حوكمة محرك الائتمان · شريط الحالة
 CreditRisk · Calibration methods Perc,مخاطر الائتمان · طرق المعايرة (نسبة مئوية)
-CreditRisk · Credit Risk Account Snap Vol,CreditRisk · Credit المخاطر Account Snap Vol
-CreditRisk · Credit Risk Account Snapshot Trend,CreditRisk · Credit Risk Account لقطة Trend
-CreditRisk · Credit Risk Calibration  Mix,CreditRisk · Credit Risk Calibration Mix
-CreditRisk · Credit Risk Portfolio Stress Trend,CreditRisk · Credit Risk Portfolio ضغط Trend
+CreditRisk · Credit Risk Account Snap Vol,مخاطر الائتمان · Credit المخاطر لقطة حساب (حجم)
+CreditRisk · Credit Risk Account Snapshot Trend,مخاطر الائتمان · لقطة حساب مخاطر الائتمان (اتجاه)
+CreditRisk · Credit Risk Calibration  Mix,مخاطر الائتمان · مزيج معايرة مخاطر الائتمان
+CreditRisk · Credit Risk Portfolio Stress Trend,مخاطر الائتمان · ضغط محفظة مخاطر الائتمان (اتجاه)
 CreditRisk · ECL stage bars Bar,مخاطر الائتمان · ECL (أعمدة مراحل)
 CreditRisk · Segments Pie,مخاطر الائتمان · الشرائح (دائري)
-CreditRiskGovernan · Credit Risk Policy Versi Mix,CreditRiskGovernan · Credit المخاطر السياسات Versi Mix
+CreditRiskGovernan · Credit Risk Policy Versi Mix,حوكمة مخاطر الائتمان · Credit المخاطر سياسة (مزيج الإصدارات)
 CreditRiskGovernan · Status Bar,حوكمة مخاطر الائتمان · شريط الحالة
 Crop Cycle,دورة المحصول
 Crop Cycle Mix,مزيج دورة المحصول
@@ -474,31 +474,31 @@ Customer 360,عميل 360
 Customer Core CRM,إدارة علاقات العملاء الأساسية (CRM)
 Customer Ledger,دفتر أستاذ العملاء
 Customer Management,إدارة العملاء
-Customer Mix,مزيج العملاء
+Customer Mix,Customer (مزيج)
 Customer Profile,ملف العميل
 Customer Profile Mix,مزيج ملفات العملاء
-Customer Trend,اتجاه العملاء
+Customer Trend,Customer (اتجاه)
 Customer ledger,عميل دفتر أستاذ
 Customer management,إدارة العملاء
-Customer status Pie,حالة العملاء (دائري)
+Customer status Pie,Customer الحالة (دائري)
 Customers,العملاء
-Customers (AR master),Customers (AR أساسي)
+Customers (AR master),العملاء (AR master)
 Customization,التخصيص
 Customize Form,تخصيص النموذج
 DPD buckets Bar,DPD (سلال)
 Daily ALM Runs,يومي ALM تشغيلات
 Daily Runs,يومي تشغيلات
-Daily revenue,يومي revenue
+Daily revenue,يومي إيراد
 Damage & liability,الأضرار & المسؤولية
 Dashboard,لوحة التحكم
-Dashboard Chart,لوحة التحكم رسم بياني
+Dashboard Chart,لوحة التحكم Chart
 Data,البيانات
-Data & imports,البيانات والاستيراد
-Data & setup,البيانات والإعداد
-Data Import,Data استيراد
+Data & imports,البيانات & imports
+Data & setup,البيانات & تهيئة
+Data Import,استيراد البيانات
 Data Import (CRM),استيراد البيانات (CRM)
-Data Import Mix,مزيج استيراد البيانات
-Dead Stock Report,تقرير المخزون الراكد
+Data Import Mix,استيراد البيانات (مزيج)
+Dead Stock Report,Dead Stock تقرير
 Debtor Exposure,تعرض المدين
 Decision Cases,حالات القرار
 Decision Outcome Distribution,توزيع مخرجات القرار
@@ -510,14 +510,14 @@ Default Prediction,التنبؤ بالتعثر
 Deleted Documents,مستندات محذوفة
 Deliveries,التسليمات
 Delivery Delay Report,تقرير تأخير التسليم
-Delivery Driver,Delivery سائق
+Delivery Driver,سائق التوصيل
 Delivery Note,إيصال التسليم
 Delivery Zone,منطقة التوصيل
 Department,قسم
 Design (RIBA 0–4),التصميم (RIBA 0–4)
 Design Delay Report,Design Delay تقرير
 Diagnostic category summary,Diagnostic category ملخص
-Diagnostic report,Diagnostic تقرير
+Diagnostic report,تقرير تشخيصي
 Disclosure Readiness,جاهزية الإفصاح
 Discount Rule,قاعدة الخصم
 Distribution Order,Distribution أمر
@@ -538,7 +538,7 @@ E-Invoice & E-Receipt Queue,E-Invoice & E-Receipt طابور
 E-Invoice Signing Profile,ملف توقيع الفاتورة الإلكترونية
 E-Invoice Submissions,إرسالات الفاتورة الإلكترونية
 E-Invoicing,الفوترة الإلكترونية
-E-Invoicing & e-receipt,الفاتورة والإيصال الإلكتروني
+E-Invoicing & e-receipt,الفوترة الإلكترونية & e-receipt
 E-document submissions,إرسالات المستند الإلكتروني
 EAM Intelligence,ذكاء إدارة الأصول
 ECL Movements,حركات خسائر الائتمان المتوقعة (ECL)
@@ -548,7 +548,7 @@ ERPGENEX — Admin,ERPGENEX — الإدارة
 ERPGENEX — Audit,ERPGENEX — التدقيق
 ERPGENEX — Buy,ERPGENEX — المشتريات
 ERPGENEX — Dashboard,ERPGENEX — لوحة التحكم
-ERPGENEX — Finance Group,ERPGENEX — مجموعة التمويل
+ERPGENEX — Finance Group,ERPGENEX — المالية Group
 ERPGENEX — Sell,ERPGENEX — المبيعات
 ERPGENEX — Settings,ERPGENEX — إعدادات
 ERPGENEX — Stock,ERPGENEX — المخازن
@@ -556,10 +556,10 @@ ERPNext,ERPGENEX
 ETA E-Invoice Review Queue,ETA E-Invoice مراجعة طابور
 ETA E-Receipt Review Queue,ETA E-Receipt مراجعة طابور
 Education,التعليم
-Education Campus Mix,Education حرم Mix
-Education Institution Mix,Education مؤسسة Mix
-Education · Education Campus Mix,Education · Education حرم Mix
-Education · Education Institution Mix,Education · Education مؤسسة Mix
+Education Campus Mix,Education حرم (مزيج)
+Education Institution Mix,Education مؤسسة (مزيج)
+Education · Education Campus Mix,التعليم · Education حرم (مزيج)
+Education · Education Institution Mix,التعليم · Education مؤسسة (مزيج)
 Education · Status Bar,التعليم · شريط الحالة
 Email,البريد
 Email Account,حساب البريد
@@ -567,16 +567,16 @@ Email Domain,نطاق البريد
 Email Group,مجموعة البريد
 Email Template,قالب البريد
 Employee,الموظف
-Employee Ledger,دفتر الأستاذ للموظف
+Employee Ledger,الموظف Ledger
 Employees,الموظفون
 Encounter,زيارة طبية
-Encounter summary,Encounter ملخص
+Encounter summary,زيارة طبية ملخص
 Engagement & opinion,مهام التدقيق والرأي
 Engagement summary,ملخص مهام التدقيق
-Engagements,مهام التدقيق
+Engagements,الإسنادات
 Engineering (RIBA),الهندسة (RIBA)
-Engineering Consulting,الاستشارات الهندسية
-Engineering Document Register,الهندسة Document Register
+Engineering Consulting,الهندسة Consulting
+Engineering Document Register,الهندسة Document سجل
 Engineering Site Record,الهندسة Site Record
 Engineering Stage,الهندسة Stage
 Engineering Submittal,الهندسة Submittal
@@ -586,20 +586,20 @@ ErpGenEx Marketplace,ErpGenEx الماركت
 ErpNext,ERPGENEX
 Error Logs,سجلات الأخطاء
 Escalation Matrices,مصفوفات التصعيد
-Escalation Policy,Escalation السياسات
+Escalation Policy,Escalation سياسة
 Event,الحدث
 Event Outbox,صندوق إرسال الأحداث
 Events by type Bar,Events (حسب النوع)
 Evidence & findings,الأدلة والملاحظات
 Evidence summary,ملخص الأدلة
 Execution,التنفيذ
-Executive KPIs (global),مؤشرات الأداء التنفيذية (عام)
+Executive KPIs (global),Executive مؤشرات الأداء (global)
 Expense by branch,مصروفات حسب الفرع
 Experience,تجربة العميل
 Experience Tenant Theme,سمة مستأجر تجربة العميل
 Expiry Report,تقرير انتهاء الصلاحية
 Explore this workspace,استكشف هذه المساحة
-Export Data,تصدير Data
+Export Data,تصدير البيانات
 Extension of Time (EOT),تمديد of مدة (EOT)
 External & integration,الخارجي والتكامل
 External Ingestion,الاستيعاب الخارجي
@@ -610,60 +610,60 @@ Factoring Case Trend,اتجاه حالات الفوترة
 Factoring Case Vol,حجم حالات الفوترة
 Factoring Cases,حالات الفوترة (Factoring)
 Factoring Governance,Factoring الحوكمة
-Factoring Governance - Policies by Status,Factoring الحوكمة - Policies by Status
+Factoring Governance - Policies by Status,Factoring الحوكمة - السياسات حسب الحالة
 Factoring Governance - Snapshots (Last Month),Factoring الحوكمة - لقطات (Last Month)
-Factoring Invoice Trend,Factoring فاتورة Trend
+Factoring Invoice Trend,Factoring فاتورة (اتجاه)
 Factoring Invoices,فواتير الفوترة (Factoring)
 Factoring · Case lifecycle Pie,الفوترة · دورة الحالة (دائري)
 Factoring · Factoring Case Trend,الفوترة · اتجاه حالات الفوترة
 Factoring · Factoring Case Vol,الفوترة · حجم حالات الفوترة
-Factoring · Factoring Invoice Trend,Factoring · Factoring فاتورة Trend
-Factoring · Invoice status Bar,Factoring · فاتورة status Bar
+Factoring · Factoring Invoice Trend,الفوترة · Factoring فاتورة (اتجاه)
+Factoring · Invoice status Bar,الفوترة · فاتورة الحالة (عمودي)
 Factoring · Recourse mix Perc,الفوترة · مزيج بغير الرجوع (نسبة مئوية)
 Failure Analysis Report,Failure Analysis تقرير
 Farm,مزرعة
-Farm Cost Profitability,Farm تكلفة الربحية
-Farm Mix,مزرعة Mix
+Farm Cost Profitability,مزرعة تكلفة الربحية
+Farm Mix,مزرعة (مزيج)
 Farm Structure,مزرعة Structure
 Fee Item,Fee الصنف
 Fee Plan,خطة الرسوم
 Fee Plans,خطط الرسوم
 Fee aging,أعمار الرسوم
-Fee catalog & billing setup,Fee catalog & billing تهيئة
-Fee revenue by item,Fee إيراد by item
+Fee catalog & billing setup,Fee catalog & الفوترة تهيئة
+Fee revenue by item,Fee إيراد by الصنف
 Field Plot,قطعة أرض
 Field sales & distribution,مبيعات الميدان والتوزيع
 File,ملف
 Files,الملفات
-Finance,مالية
-Finance Calc Run Trend,Finance Calc تشغيل Trend
+Finance,المالية
+Finance Calc Run Trend,المالية Calc تشغيل (اتجاه)
 Finance Cases,المالية Cases
-Finance Contract Account Trend,المالية عقد Account Trend
-Finance Contract Account Vol,المالية عقد Account Vol
-Finance Control Center,مركز التحكم المالي
-Finance Control Exceptions,Finance تحكم استثناءات
-Finance Control Violations,Finance تحكم Violations
-Finance Controls,المالية Controls
-Finance Engine,المحرك المالي
-Finance Engine Governance,Finance Engine الحوكمة
-Finance Engine Governance - Policies by Status,Finance Engine الحوكمة - Policies by Status
-Finance Engine Governance - Snapshots (Last Month),Finance Engine الحوكمة - لقطات (Last Month)
-Finance Group,مجموعة التمويل
-Finance Group Use the sidebar to open each finance workspace. Governance desks are nested under their main app.,Finance Group Use the sidebar to open each finance workspace. الحوكمة desks are nested under their main app.
-Finance Posting Rule,قاعدة ترحيل مالي
-Finance Product Mix,المالية Product Mix
+Finance Contract Account Trend,المالية عقد Account (اتجاه)
+Finance Contract Account Vol,المالية عقد Account (حجم)
+Finance Control Center,المالية مركز التحكم
+Finance Control Exceptions,المالية تحكم استثناءات
+Finance Control Violations,المالية تحكم Violations
+Finance Controls,المالية الضوابط
+Finance Engine,المالية Engine
+Finance Engine Governance,المالية Engine الحوكمة
+Finance Engine Governance - Policies by Status,المالية Engine الحوكمة - السياسات حسب الحالة
+Finance Engine Governance - Snapshots (Last Month),المالية Engine الحوكمة - لقطات (Last Month)
+Finance Group,المالية Group
+Finance Group Use the sidebar to open each finance workspace. Governance desks are nested under their main app.,المالية Group Use the sidebar to open each المالية workspace. الحوكمة desks are nested under their main app.
+Finance Posting Rule,المالية Posting Rule
+Finance Product Mix,المالية Product (مزيج)
 Finance Products,المالية Products
 Finance SoD Blocks,المالية SoD Blocks
 FinanceEngi · Book by status Bar,المحرك المالي · الدفتر حسب الحالة (عمودي)
-FinanceEngi · Calc run mix Perc,FinanceEngi · Calc تشغيل mix Perc
-FinanceEngi · Finance Calc Run Trend,FinanceEngi · Finance Calc تشغيل Trend
-FinanceEngi · Finance Contract Account Trend,FinanceEngi · المالية عقد Account Trend
-FinanceEngi · Finance Contract Account Vol,FinanceEngi · المالية عقد Account Vol
-FinanceEngi · Finance Product Mix,FinanceEngi · المالية Product Mix
+FinanceEngi · Calc run mix Perc,المحرك المالي · مزيج تشغيل الحساب (نسبة مئوية)
+FinanceEngi · Finance Calc Run Trend,المحرك المالي · المالية Calc تشغيل (اتجاه)
+FinanceEngi · Finance Contract Account Trend,المحرك المالي · المالية عقد Account (اتجاه)
+FinanceEngi · Finance Contract Account Vol,المحرك المالي · المالية عقد Account (حجم)
+FinanceEngi · Finance Product Mix,المحرك المالي · المالية Product (مزيج)
 FinanceEngi · IFRS9 mix Pie,المحرك المالي · مزيج IFRS9 (دائري)
 Financial Consolidation (Consolidated Trial Balance),التوحيد المالي (ميزان مراجعة موحّد)
 Financial Consolidation Report,تقرير التوحيد المالي
-Financial KPI Summary,ملخص مؤشرات الأداء المالية
+Financial KPI Summary,Financial مؤشر أداء ملخص
 Financial Operations,العمليات المالية
 Finding summary,ملخص الملاحظات
 First pass yield,إنتاجية المرة الأولى
@@ -725,7 +725,7 @@ Get started with Education Teacher,ابدأ مع المعلم
 Get started with Employee,ابدأ مع الموظف
 Get started with Engineering Consultant Engagement,ابدأ مع إسناد المستشار الهندسي
 Get started with Event,ابدأ مع الحدث
-Get started with Experience Tenant Theme,ابدأ مع Experience Tenant Theme
+Get started with Experience Tenant Theme,ابدأ with سمة مستأجر تجربة العميل
 Get started with Factoring Case,ابدأ مع حالة الفوترة (Factoring)
 Get started with Factoring Invoice,ابدأ مع فاتورة الفوترة (Factoring)
 Get started with Farm,ابدأ مع مزرعة
@@ -802,7 +802,7 @@ Get started with Warehouse,ابدأ مع المخزن
 Get started with Work Center,ابدأ مع مركز العمل
 Get started with Workflow,ابدأ مع سير العمل
 Get started with Workspace,ابدأ مع مساحة العمل
-Global Farm Compliance Summary,Global Farm الامتثال ملخص
+Global Farm Compliance Summary,Global مزرعة الامتثال ملخص
 Global Financial Reports,التقارير المالية العالمية
 Global Integration,تكامل عالمي
 Global registers & ledgers,السجلات ودفاتر الأستاذ العالمية
@@ -814,10 +814,10 @@ Google Drive,Google Drive
 Google Services,خدمات Google
 Google Settings,Google إعدادات
 Governance,الحوكمة
-Governance & approvals,الحوكمة والاعتمادات
+Governance & approvals,الحوكمة & approvals
 Governance Overview,الحوكمة Overview
 Grade Level,الصف الدراسي
-Grade level profitability,Grade level الربحية
+Grade level profitability,الصف الدراسي الربحية
 Guest Folio,ضيف ملف إقامة
 Guest folio outstanding,ضيف ملف إقامة المستحق
 Guest services & folio,ضيف services & ملف إقامة
@@ -825,30 +825,30 @@ Guests & CRM,الضيوف & CRM
 Guided setup for this workspace.,إعداد موجه لهذه المساحة.
 HR,الموارد البشرية
 HR Attendance,الموارد البشرية Attendance
-HR Attendance Mix,الموارد البشرية Attendance Mix
-HR Attendance Summary,HR Attendance ملخص
+HR Attendance Mix,الموارد البشرية Attendance (مزيج)
+HR Attendance Summary,الموارد البشرية Attendance ملخص
 HR Headcount,الموارد البشرية Headcount
 HR Interview,الموارد البشرية Interview
 HR Leave Application,الموارد البشرية Leave Application
-HR Leave Application Summary,HR Leave Application ملخص
+HR Leave Application Summary,الموارد البشرية Leave Application ملخص
 HR Leave Type,الموارد البشرية Leave Type
 HR Payroll Entry,الموارد البشرية Payroll Entry
-HR Payroll Summary,HR Payroll ملخص
-HR Recruitment Pipeline,الموارد البشرية Recruitment Pipeline
-HR Recruitment Request,الموارد البشرية Recruitment Request
-HR Recruitment Request Mix,الموارد البشرية Recruitment Request Mix
-HR Salary Slip Register,الموارد البشرية Salary Slip Register
-HR Training Record,الموارد البشرية Training Record
-HR Training Summary,HR Training ملخص
-HR · HR Attendance Mix,الموارد البشرية · الموارد البشرية Attendance Mix
-HR · HR Recruitment Request Mix,الموارد البشرية · الموارد البشرية Recruitment Request Mix
-HR · Status Bar,الموارد البشرية · Status Bar
+HR Payroll Summary,الموارد البشرية Payroll ملخص
+HR Recruitment Pipeline,الموارد البشرية التوظيف قناة المبيعات
+HR Recruitment Request,الموارد البشرية التوظيف Request
+HR Recruitment Request Mix,الموارد البشرية التوظيف Request (مزيج)
+HR Salary Slip Register,الموارد البشرية Salary Slip سجل
+HR Training Record,الموارد البشرية التدريب Record
+HR Training Summary,الموارد البشرية التدريب ملخص
+HR · HR Attendance Mix,الموارد البشرية · الموارد البشرية Attendance (مزيج)
+HR · HR Recruitment Request Mix,الموارد البشرية · الموارد البشرية التوظيف Request (مزيج)
+HR · Status Bar,الموارد البشرية · شريط الحالة
 Harvest Record,سجل الحصاد
 Healthcare,الرعاية الصحية
-Healthcare Appointment Mix,Healthcare موعد Mix
-Healthcare Encounter Mix,Healthcare زيارة طبية Mix
-Healthcare · Healthcare Appointment Mix,Healthcare · Healthcare موعد Mix
-Healthcare · Healthcare Encounter Mix,Healthcare · Healthcare زيارة طبية Mix
+Healthcare Appointment Mix,Healthcare موعد (مزيج)
+Healthcare Encounter Mix,Healthcare زيارة طبية (مزيج)
+Healthcare · Healthcare Appointment Mix,الرعاية الصحية · Healthcare موعد (مزيج)
+Healthcare · Healthcare Encounter Mix,الرعاية الصحية · Healthcare زيارة طبية (مزيج)
 Healthcare · Status Bar,الرعاية الصحية · شريط الحالة
 Help Article,مقالة المساعدة
 Help Category,فئة المساعدة
@@ -860,8 +860,8 @@ Hotel Floor,فندق Floor
 Hotels & rooms,الفنادق & rooms
 Housekeeping Task,خدمة الغرف Task
 Housekeeping performance,خدمة الغرف الأداء
-"I guess you don't have access to any workspace yet, but you can create one just for yourself. Click on the Create Workspace button to create one.","I guess you don't have الوصول to any workspace yet, but you can create one just for yourself. Click on the Create Workspace button to create one."
-IFRS9 & Stress Analytics,IFRS9 & ضغط Analytics
+"I guess you don't have access to any workspace yet, but you can create one just for yourself. Click on the Create Workspace button to create one.","I guess you don't have الوصول to any مساحة العمل yet, but you can create one just for yourself. Click on the Create مساحة العمل button to create one."
+IFRS9 & Stress Analytics,IFRS9 & ضغط التحليلات
 IFRS9 Pie,IFRS9 (دائري)
 IFRS9 mix Perc,مزيج IFRS9 (نسبة مئوية)
 IFRS9 mix Pie,مزيج IFRS9 (دائري)
@@ -870,8 +870,8 @@ IRRBB Assessments,تقييمات IRRBB
 IRRBB Assessments Pending,تقييمات IRRBB المعلّقة
 Immunization,تطعيم
 Immunizations,التطعيمات
-Import Chart Template,استيراد رسم بياني Template
-Import Data,استيراد Data
+Import Chart Template,استيراد Chart Template
+Import Data,استيراد البيانات
 Incident SLA Monitor,مراقب اتفاقية مستوى خدمة الحوادث
 Incidents,الحوادث
 Income Statement,قائمة الدخل
@@ -884,31 +884,31 @@ Inspection Compliance Report,Inspection الامتثال تقرير
 Installment portfolio,Installment المحفظة
 Institution,مؤسسة
 Institution & people,مؤسسة & people
-Insurance Compliance,Insurance الامتثال
+Insurance Compliance,التأمين الامتثال
 Integrations,التكاملات
 Inventory & procurement,المخزون & المشتريات
-Inventory Control Center,مركز التحكم بالمخزون
-Inventory KPI Dashboard,لوحة مؤشرات أداء المخزون (KPI)
-Inventory KPIs,مؤشرات أداء المخزون
-Inventory Low Stock Items,المخزون Low Stock Items
+Inventory Control Center,المخزون مركز التحكم
+Inventory KPI Dashboard,المخزون مؤشر أداء لوحة التحكم
+Inventory KPIs,المخزون مؤشرات الأداء
+Inventory Low Stock Items,المخزون Low Stock الأصناف
 Inventory Reorder Needed,المخزون Reorder Needed
-Inventory Stock Items,المخزون Stock Items
-Inventory Valuation (GL),تقييم المخزون (دفتر الأستاذ)
+Inventory Stock Items,المخزون Stock الأصناف
+Inventory Valuation (GL),المخزون Valuation (GL)
 Inventory Valuation Report,تقرير تقييم المخزون
-Inventory Valuation Summary,ملخص تقييم المخزون
-Invoice Lifecycle,فاتورة Lifecycle
-Invoice status Bar,فاتورة status Bar
+Inventory Valuation Summary,المخزون Valuation ملخص
+Invoice Lifecycle,فاتورة دورة الحياة
+Invoice status Bar,فاتورة الحالة (عمودي)
 Invoices,الفواتير
 Item,الصنف
 Item Master,سجل الأصناف
-Item Profitability,Item الربحية
-Item Stock Balance,رصيد المخزون للصنف
-Item Trend,اتجاه الأصناف
-Item master (stock ↔ GL account mapping),إدارة الأصناف (ربط المخزون ↔ الأستاذ العام)
-Item master (stock ↔ GL),Item أساسي (stock ↔ GL)
-Item types Bar,أنواع الأصناف (عمودي)
+Item Profitability,ربحية الصنف
+Item Stock Balance,الصنف Stock Balance
+Item Trend,الصنف (اتجاه)
+Item master (stock ↔ GL account mapping),الصنف أساسي (stock ↔ حساب الأستاذ العام mapping)
+Item master (stock ↔ GL),الصنف أساسي (stock ↔ GL)
+Item types Bar,الصنف types (عمودي)
 Items,الأصناف
-Items (product master),Items (product أساسي)
+Items (product master),الأصناف (product master)
 Journal Entries,قيود اليومية
 Journal Entry,قيد اليومية
 KPI summary (ADR/RevPAR),مؤشر أداء ملخص (ADR/RevPAR)
@@ -918,7 +918,7 @@ Kitchen Print Job,مهمة طباعة المطبخ
 Kitchen Print Template,قالب طباعة المطبخ
 Kitchen Printer,طابعة المطبخ
 Kitchen Station,محطة المطبخ
-Kitchen Station Performance,Kitchen Station الأداء
+Kitchen Station Performance,محطة المطبخ الأداء
 Kitchen Ticket,تذكرة المطبخ
 Knowledge Base,قاعدة المعرفة
 LDAP Settings,LDAP إعدادات
@@ -926,34 +926,34 @@ LTV / DSTI Monitor,مراقب LTV / DSTI
 LTV Monitor,مراقب نسبة القرض إلى القيمة (LTV)
 Lab sample,عينة مخبرية
 Laboratory & diagnostics,المختبر والتشخيص
-Landed Cost Voucher,مستند التكلفة الإضافية
+Landed Cost Voucher,Landed تكلفة Voucher
 Late Fee Rule,قاعدة رسوم التأخير
 Lead time analysis,Lead مدة analysis
 Leads Management,إدارة العملاء المحتملين
 Lease Accounting Entries,قيود محاسبة التأجير
 Lease Assets,أصول التأجير
 Lease Contracts,Lease العقود
-Lease Liability Report,Lease Liability تقرير
+Lease Liability Report,Lease المسؤولية تقرير
 Lease Payments,مدفوعات التأجير
 Lease Schedules,جداول التأجير
 Lease lifecycle Bar,دورة الإيجار (عمودي)
 Lease types Pie,أنواع الإيجار (دائري)
 Leasing Analytics & IFRS16,تحليلات التأجير وIFRS16
 Leasing Delinquency,التعثر في عقود التأجير
-Leasing Finance,تمويل التأجير
-Leasing Finance Contract Trend,Leasing المالية عقد Trend
-Leasing Finance Contract Vol,Leasing المالية عقد Vol
-Leasing Finance Payment Trend,Leasing المالية Payment Trend
+Leasing Finance,Leasing المالية
+Leasing Finance Contract Trend,Leasing المالية عقد (اتجاه)
+Leasing Finance Contract Vol,Leasing المالية عقد (حجم)
+Leasing Finance Payment Trend,Leasing المالية Payment (اتجاه)
 Leasing Operations,Leasing العمليات
 Leasing Portfolio,Leasing المحفظة
 Leasing Revenue Forecast,Leasing إيراد Forecast
 LeasingFina · IFRS9 mix Perc,تمويل التأجير · مزيج IFRS9 (نسبة مئوية)
 LeasingFina · Lease lifecycle Bar,تمويل التأجير · دورة الإيجار (عمودي)
 LeasingFina · Lease types Pie,تمويل التأجير · أنواع الإيجار (دائري)
-LeasingFina · Leasing Finance Contract Trend,LeasingFina · Leasing المالية عقد Trend
-LeasingFina · Leasing Finance Contract Vol,LeasingFina · Leasing المالية عقد Vol
-LeasingFina · Leasing Finance Payment Trend,LeasingFina · Leasing المالية Payment Trend
-Leave Policy,Leave السياسات
+LeasingFina · Leasing Finance Contract Trend,تمويل التأجير · Leasing المالية عقد (اتجاه)
+LeasingFina · Leasing Finance Contract Vol,تمويل التأجير · Leasing المالية عقد (حجم)
+LeasingFina · Leasing Finance Payment Trend,تمويل التأجير · Leasing المالية Payment (اتجاه)
+Leave Policy,Leave سياسة
 Leaves,الإجازات
 Legal Pipeline,قناة العمل القانونية
 Legal stage Pie,المرحلة القانونية (دائري)
@@ -964,12 +964,12 @@ Livestock Animal,حيوان ماشية
 Local Inventory Reports,تقارير المخزون المحلية
 Local Procurement Reports,تقارير المشتريات المحلية
 Local Sales Reports,تقارير المبيعات المحلية
-Local inventory reports,تقارير المخزون المحلية
-Local inventory reports (workspace only),تقارير المخزون المحلية (هذه المساحة فقط)
-Local procurement reports,تقارير المشتريات المحلية
-Local procurement reports (workspace only),تقارير المشتريات المحلية (هذه المساحة فقط)
-Local sales reports,تقارير المبيعات المحلية
-Local sales reports (workspace only),تقارير المبيعات المحلية (هذه المساحة فقط)
+Local inventory reports,Local المخزون التقارير
+Local inventory reports (workspace only),Local المخزون التقارير (workspace only)
+Local procurement reports,Local المشتريات التقارير
+Local procurement reports (workspace only),Local المشتريات التقارير (workspace only)
+Local sales reports,Local sales التقارير
+Local sales reports (workspace only),Local sales التقارير (workspace only)
 Logistics & fulfillment,اللوجستيات والتنفيذ
 Logs,السجلات
 Loss Event Trend,اتجاه أحداث الخسارة
@@ -982,18 +982,18 @@ Manufacturing,التصنيع
 Manufacturing BOM,التصنيع BOM
 Manufacturing Product Profile,التصنيع Product Profile
 Manufacturing Quality Check,التصنيع الجودة Check
-Manufacturing Rework Ord Mix,التصنيع إعادة عمل Ord Mix
+Manufacturing Rework Ord Mix,التصنيع إعادة عمل Ord (مزيج)
 Manufacturing Rework Order,التصنيع إعادة عمل أمر
 Manufacturing Routing,التصنيع مسار
-Manufacturing · Manufacturing Rework Ord Mix,التصنيع · التصنيع إعادة عمل Ord Mix
-Manufacturing · Work Order Mix,التصنيع · عمل أمر Mix
+Manufacturing · Manufacturing Rework Ord Mix,التصنيع · التصنيع إعادة عمل Ord (مزيج)
+Manufacturing · Work Order Mix,التصنيع · عمل أمر (مزيج)
 Marketplace,الماركت
-Master Data,أساسي Data
-Master data,البيانات الأساسية
-Master data & engineering,أساسي data & الهندسة
+Master Data,أساسي البيانات
+Master data,أساسي البيانات
+Master data & engineering,أساسي البيانات & الهندسة
 Masters,البيانات الأساسية
-Masters: HR Leave Type,البيانات الأساسية: الموارد البشرية Leave Type
-Masters: Leave Policy,Masters: Leave السياسات
+Masters: HR Leave Type,Masters: الموارد البشرية Leave Type
+Masters: Leave Policy,Masters: Leave سياسة
 Material consumption,مواد استهلاك
 Medication dispense,صرف دواء
 Medication statement,بيان الدواء
@@ -1008,19 +1008,19 @@ Module Onboarding,تهيئة الوحدة
 Module Profile,ملف الوحدة
 Modules,الوحدات
 Mortgage Cases,حالات التمويل العقاري
-Mortgage Finance,تمويل الرهن
-Mortgage Finance Case Trend,Mortgage المالية Case Trend
-Mortgage Finance Case Vol,Mortgage المالية Case Vol
-Mortgage Finance Governance,Mortgage Finance الحوكمة
-Mortgage Finance Governance - Policies by Status,Mortgage Finance الحوكمة - Policies by Status
-Mortgage Finance Governance - Snapshots (Last Month),Mortgage Finance الحوكمة - لقطات (Last Month)
-Mortgage Finance Valuation Trend,Mortgage المالية Valuation Trend
+Mortgage Finance,Mortgage المالية
+Mortgage Finance Case Trend,Mortgage المالية Case (اتجاه)
+Mortgage Finance Case Vol,Mortgage المالية Case (حجم)
+Mortgage Finance Governance,Mortgage المالية الحوكمة
+Mortgage Finance Governance - Policies by Status,Mortgage المالية الحوكمة - السياسات حسب الحالة
+Mortgage Finance Governance - Snapshots (Last Month),Mortgage المالية الحوكمة - لقطات (Last Month)
+Mortgage Finance Valuation Trend,Mortgage المالية Valuation (اتجاه)
 MortgageFin · IFRS9 mix Perc,التمويل العقاري · مزيج IFRS9 (نسبة مئوية)
 MortgageFin · Legal stage Pie,التمويل العقاري · المرحلة القانونية (دائري)
 MortgageFin · Lifecycle Bar,التمويل العقاري · شريط دورة الحياة
-MortgageFin · Mortgage Finance Case Trend,MortgageFin · Mortgage المالية Case Trend
-MortgageFin · Mortgage Finance Case Vol,MortgageFin · Mortgage المالية Case Vol
-MortgageFin · Mortgage Finance Valuation Trend,MortgageFin · Mortgage المالية Valuation Trend
+MortgageFin · Mortgage Finance Case Trend,التمويل العقاري · Mortgage المالية Case (اتجاه)
+MortgageFin · Mortgage Finance Case Vol,التمويل العقاري · Mortgage المالية Case (حجم)
+MortgageFin · Mortgage Finance Valuation Trend,التمويل العقاري · Mortgage المالية Valuation (اتجاه)
 Movements & reconciliation,الحركات والتسوية
 "Movements, reconciliation & batch / serial",الحركات والتسوية وتتبع الدُفعات/التسلسلات
 My work,My عمل
@@ -1035,48 +1035,48 @@ New web order,طلب ويب جديد
 Newsletter,النشرة البريدية
 Note,ملاحظة
 Notification,إشعار
-Notification Settings,Notification إعدادات
+Notification Settings,إشعار إعدادات
 OAuth Client,عميل OAuth
-OAuth Provider Settings,OAuth Provider إعدادات
+OAuth Provider Settings,OAuth مزود إعدادات
 OEE overview,نظرة عامة على OEE
 OPINION DRAFTS,مسودات الرأي
 Observation,ملاحظة سريرية
 Occupancy,الإشغال
-Omnexa Accounting Settings,Omnexa Accounting إعدادات
+Omnexa Accounting Settings,Omnexa إعدادات المحاسبة
 Omnexa Backup,نسخ Omnexa الاحتياطي
-Omnexa Backup Policy,Omnexa Backup السياسات
-Omnexa Purchase Settings,إعدادات مشتريات Omnexa
+Omnexa Backup Policy,نسخ Omnexa الاحتياطي سياسة
+Omnexa Purchase Settings,Omnexa Purchase إعدادات
 Omnexa Sales Settings,Omnexa Sales إعدادات
-Omnexa Stock Settings,إعدادات مخزون Omnexa
+Omnexa Stock Settings,Omnexa Stock إعدادات
 Online Booking Request,عبر الإنترنت حجز Request
 Open Audit Issues,ملاحظات التدقيق المفتوحة
 Open Incidents,الحوادث المفتوحة
-Open Purchase Order Lines,بنود أوامر الشراء المفتوحة
+Open Purchase Order Lines,Open Purchase أمر Lines
 Open Schedules,الجداول المفتوحة
 Open workspace,فتح مساحة العمل
 Operation Model,نموذج التشغيل
 Operational Loss Event Trend,اتجاه أحداث الخسارة التشغيلية
-Operational Risk,المخاطر التشغيلية
-Operational Risk Governance,Operational Risk الحوكمة
-Operational Risk Governance - Policies by Status,Operational Risk الحوكمة - Policies by Status
-Operational Risk Governance - Snapshots (Last Month),Operational Risk الحوكمة - لقطات (Last Month)
-Operational Risk Inciden Mix,Operational المخاطر Inciden Mix
-Operational Risk Inciden Vol,Operational المخاطر Inciden Vol
-Operational Risk Incident Trend,Operational المخاطر Incident Trend
+Operational Risk,Operational المخاطر
+Operational Risk Governance,Operational المخاطر الحوكمة
+Operational Risk Governance - Policies by Status,Operational المخاطر الحوكمة - السياسات حسب الحالة
+Operational Risk Governance - Snapshots (Last Month),Operational المخاطر الحوكمة - لقطات (Last Month)
+Operational Risk Inciden Mix,Operational المخاطر Inciden (مزيج)
+Operational Risk Inciden Vol,Operational المخاطر Inciden (حجم)
+Operational Risk Incident Trend,Operational المخاطر Incident (اتجاه)
 Operational expenses,مصروفات تشغيلية
 Operational queues (exception monitoring),Operational queues (استثناء monitoring)
-Operational · Compliance mix Perc,Operational · الامتثال mix Perc
+Operational · Compliance mix Perc,المخاطر التشغيلية · مزيج الامتثال (نسبة مئوية)
 Operational · Events by type Bar,المخاطر التشغيلية · Events (حسب النوع)
 Operational · Operational Loss Event Trend,المخاطر التشغيلية · اتجاه أحداث الخسارة التشغيلية
-Operational · Operational Risk Inciden Mix,Operational · Operational المخاطر Inciden Mix
-Operational · Operational Risk Inciden Vol,Operational · Operational المخاطر Inciden Vol
-Operational · Operational Risk Incident Trend,Operational · Operational المخاطر Incident Trend
-Operational · Risk rating Pie,Operational · المخاطر rating Pie
+Operational · Operational Risk Inciden Mix,المخاطر التشغيلية · Operational المخاطر Inciden (مزيج)
+Operational · Operational Risk Inciden Vol,المخاطر التشغيلية · Operational المخاطر Inciden (حجم)
+Operational · Operational Risk Incident Trend,المخاطر التشغيلية · Operational المخاطر Incident (اتجاه)
+Operational · Risk rating Pie,المخاطر التشغيلية · المخاطر rating (دائري)
 Operations,العمليات
 Opinion drafts,مسودات الرأي
 Opportunities,الفرص
-Order cycle time,أمر cycle مدة
-Organization & facility,الهيكل & facility
+Order cycle time,أمر الدورة مدة
+Organization & facility,الهيكل & منشأة
 Organization & fleet,الهيكل & الأسطول
 Organization & network,الهيكل & network
 Origination & Analysis,الإصدار والتحليل
@@ -1092,10 +1092,10 @@ PM Resource Assignment,إسناد موارد المشروع
 PM Resource Loading,تحميل موارد المشروع
 PM Schedule (Gantt),PM الجدول (Gantt)
 PM WBS Task,مهمة هيكل تقسيم العمل (WBS)
-POS Sales Invoice,فاتورة مبيعات نقطة البيع (POS)
+POS Sales Invoice,POS Sales فاتورة
 Package,باقة
 Package Booking,باقة حجز
-Package Import,Package استيراد
+Package Import,باقة استيراد
 Package profitability,باقة الربحية
 Packages,الحزم
 Patient,المريض
@@ -1104,16 +1104,16 @@ Payables Aging,أعمار الذمم الدائنة
 Payables aging,أعمار الذمم الدائنة
 Payment & channels,الدفع والقنوات
 Payment Entry,قيد الدفع
-Payment Entry (supplier payments),قيد الدفع (مدفوعات المورد)
+Payment Entry (supplier payments),قيد الدفع (supplier payments)
 Payment Intent,نية الدفع
 Payment entries (e-receipt source),قائمة إيصالات القبض / التحصيل (مصدر الإيصال الإلكتروني)
 Payments,مدفوعات
 Payments · counter sales,المدفوعات · مبيعات الكاونتر
 Payroll engine · End of Service,محرك الرواتب · نهاية الخدمة
-Payroll engine · Payroll Run,Payroll engine · Payroll تشغيل
+Payroll engine · Payroll Run,محرك الرواتب · Payroll تشغيل
 Payroll engine · Salary Advance,محرك الرواتب · سلفة الراتب
 Payroll engine · Salary Slip,محرك الرواتب · قسيمة الراتب
-Payroll engine · Settings,Payroll engine · إعدادات
+Payroll engine · Settings,محرك الرواتب · إعدادات
 Pending Connectors,الموصلات المعلّقة
 Pending Orders Report,تقرير الأوامر المعلقة
 Pending Outbox,صندوق الإرسال المعلّق
@@ -1125,7 +1125,7 @@ Permitted Documents For User,المستندات المسموح بها للمست
 Pharmacy & prescriptions,الصيدلة والوصفات
 Pipeline,قناة المبيعات
 Pipeline Conversion Report,تقرير تحويل القناة
-Pipeline Funnel,قمع القناة
+Pipeline Funnel,قناة المبيعات Funnel
 Pipeline Lead,عميل محتمل (Pipeline)
 Pipeline Opportunity,فرصة بيع
 Planning & Risk,Planning & المخاطر
@@ -1133,17 +1133,17 @@ Point of Sale,نقاط البيع
 Policies,السياسات
 Policies by Status,السياسات حسب الحالة
 Policy & access,السياسة والوصول
-Policy Versions,السياسات Versions
-Policy Versions-1,السياسات Versions-1
-Policy Versions-2,السياسات Versions-2
-Policy Versions-3,السياسات Versions-3
+Policy Versions,سياسة Versions
+Policy Versions-1,سياسة Versions-1
+Policy Versions-2,سياسة Versions-2
+Policy Versions-3,سياسة Versions-3
 Portal,البوابة
-Portal Settings,Portal إعدادات
-Portfolio & setup,Portfolio & تهيئة
-Portfolio Analytics,المحفظة Analytics
-Portfolio Clusters,المحفظة Clusters
-Portfolio Mix,المحفظة Mix
-Portfolio Risk Reports,Portfolio Risk التقارير
+Portal Settings,البوابة إعدادات
+Portfolio & setup,المحفظة & تهيئة
+Portfolio Analytics,المحفظة التحليلات
+Portfolio Clusters,المحفظة التجميعات
+Portfolio Mix,المحفظة (مزيج)
+Portfolio Risk Reports,المحفظة المخاطر التقارير
 Position Snapshots,مركز لقطات
 Pricing Rule,قاعدة التسعير
 Print Format,تنسيق الطباعة
@@ -1154,44 +1154,44 @@ Print Settings,Print إعدادات
 Printing,الطباعة
 Problems & allergies,المشكلات والحساسية
 Procurement,المشتريات
-Procurement cycle,دورة المشتريات
-Procurement cycle (Request → PO → Receipt → Invoice → Payment),دورة المشتريات (طلب شراء → أمر شراء → استلام → فاتورة → دفع)
-Procurement setup (tax & FX),تهيئة المشتريات (الضريبة والعملات)
+Procurement cycle,المشتريات الدورة
+Procurement cycle (Request → PO → Receipt → Invoice → Payment),المشتريات الدورة (Request → PO → Receipt → فاتورة → Payment)
+Procurement setup (tax & FX),المشتريات تهيئة (tax & FX)
 Production Log,الإنتاج Log
 Profit & Loss Statement,قائمة الأرباح والخسائر
 Project Contract,مشروع عقد
-Project Contract Mix,مشروع عقد Mix
-Project Profitability (Construction),مشروع الربحية (المقاولات)
-Project Reports,تقارير المشاريع
-Project WIP Snapshot,Project WIP لقطة
+Project Contract Mix,مزيج عقود المشروع
+Project Profitability (Construction),مشروع الربحية (Construction)
+Project Reports,مشروع التقارير
+Project WIP Snapshot,مشروع WIP لقطة
 Projects,المشاريع
 Projects & PM,المشاريع وإدارة المشاريع
 Purchase Approval Rule,قاعدة اعتماد المشتريات
 Purchase Budget,ميزانية المشتريات
-Purchase Delivery Performance,أداء تسليم المشتريات
-Purchase Invoice,فاتورة شراء
-Purchase Invoice Settings,Purchase Invoice إعدادات
+Purchase Delivery Performance,Purchase Delivery الأداء
+Purchase Invoice,Purchase فاتورة
+Purchase Invoice Settings,Purchase فاتورة إعدادات
 Purchase Invoices,فواتير الشراء
-Purchase Order,أمر الشراء
+Purchase Order,Purchase أمر
 Purchase Orders,أوامر الشراء
 Purchase Quotation,عرض سعر الشراء
 Purchase Quotation Comparison,مقارنة عروض أسعار الشراء
 Purchase Receipt,إيصال الاستلام
-Purchase Register,سجل المشتريات
+Purchase Register,Purchase سجل
 Purchase Request,طلب الشراء
 Purchase Requests,طلبات الشراء
 Purchase Summary Report,تقرير ملخص المشتريات
 Purchase approval rules,قواعد اعتماد المشتريات
-Purchase settings,إعدادات المشتريات
-Push Notification Settings,Push Notification إعدادات
+Purchase settings,Purchase إعدادات
+Push Notification Settings,Push إشعار إعدادات
 Push Notifications,إشعارات الدفع
 Quality & non-conformance,الجودة & عدم المطابقة
-Quick Actions,إجراءات سريعة
+Quick Actions,سريع إجراءات
 Quotations,عروض الأسعار
 RCA Playbooks,أدلة تحليل السبب الجذري
 RIBA Project Coverage,RIBA مشروع Coverage
 RIBA Stage Register,سجل مراحل RIBA
-RIBA register & quality,RIBA register & الجودة
+RIBA register & quality,RIBA سجل & الجودة
 Rate Plans,خطط الأسعار
 Reason Code Distribution,توزيع رموز الأسباب
 Receivables Aging,أعمار الذمم المدينة
@@ -1201,7 +1201,7 @@ Recourse mix Perc,مزيج بغير الرجوع (نسبة مئوية)
 Recovery Pie,التحصيل (دائري)
 Recovery Pipeline,قناة التحصيل
 Recruitment,التوظيف
-Reference reports,تقارير مرجعية
+Reference reports,Reference التقارير
 Regulatory Reports,Regulatory التقارير
 Reject,رفض
 Related accounting,محاسبة ذات صلة
@@ -1209,46 +1209,46 @@ Reliability Report,Reliability تقرير
 Rental Booking,تأجير حجز
 Rental Contract,تأجير عقد
 Rental Driver,تأجير سائق
-Rental Driver Mix,تأجير سائق Mix
+Rental Driver Mix,مزيج سائقي التأجير
 Rep target tracking,تتبع أهداف المندوبين
 Repayment Schedules,جداول السداد
 Replacement Forecast Report,Replacement Forecast تقرير
 Report,تقرير
 Reporting,التقارير
 Reporting Compliance,التقارير والامتثال
-Reports,تقارير
-Reports & Analytics,التقارير & Analytics
-Reports & Masters,التقارير & Masters
-Reports &amp; Masters,التقارير &amp; Masters
+Reports,التقارير
+Reports & Analytics,التقارير & التحليلات
+Reports & Masters,التقارير & البيانات الأساسية
+Reports &amp; Masters,التقارير &amp; البيانات الأساسية
 Reports · Audit registers,تقارير · سجلات المراجعة
-Reports · Billing & finance,التقارير · Billing & finance
-Reports · Clinical & access,التقارير · Clinical & access
-Reports · Commissions & pipeline,التقارير · Commissions & pipeline
-Reports · Cost & materials,التقارير · Cost & materials
+Reports · Billing & finance,التقارير · الفوترة & المالية
+Reports · Clinical & access,التقارير · Clinical & الوصول
+Reports · Commissions & pipeline,التقارير · Commissions & قناة المبيعات
+Reports · Cost & materials,التقارير · تكلفة & materials
 Reports · Demand & exposure,التقارير · Demand & exposure
 Reports · Enrollment & capacity,التقارير · Enrollment & capacity
-Reports · Finance,تقارير · مالية
-Reports · Fleet & utilization,التقارير · Fleet & utilization
+Reports · Finance,التقارير · المالية
+Reports · Fleet & utilization,التقارير · الأسطول & الاستغلال
 Reports · IFRS statements & ledgers,تقارير · قوائم IFRS والدفاتر
 Reports · Operations & demand,التقارير · العمليات & demand
-Reports · Operations & performance,التقارير · العمليات & performance
-Reports · Revenue & diagnostics,التقارير · Revenue & diagnostics
-Reports · Revenue & profitability,التقارير · Revenue & profitability
+Reports · Operations & performance,التقارير · العمليات & الأداء
+Reports · Revenue & diagnostics,التقارير · إيراد & diagnostics
+Reports · Revenue & profitability,التقارير · إيراد & الربحية
 Reports · Sales & routes,التقارير · Sales & routes
-Reports · setup & compliance audit,تقارير · الإعدادات وتدقيق الامتثال
+Reports · setup & compliance audit,التقارير · تهيئة & الامتثال التدقيق
 Repricing Risk,Repricing المخاطر
 Reservations & contracts,Reservations & العقود
 Reserve capacity against bookable resources without double-booking.,احجز السعة مقابل الموارد القابلة للحجز دون ازدواجية في الحجز.
 Residual Exposure,المتبقي من التعرض
 Resources,الموارد
-Restaurant,المطاعم
+Restaurant,المطعم
 Restaurant & Cafe,المطعم & Cafe
 Restaurant Floor,المطعم Floor
-Restaurant Order,Restaurant أمر
+Restaurant Order,المطعم أمر
 Restaurant POS,نقطة بيع المطعم
 Restaurant Recipe,المطعم وصفة
-Restaurant Reservation,Restaurant حجز
-Restaurant Sales Summary,Restaurant Sales ملخص
+Restaurant Reservation,المطعم حجز
+Restaurant Sales Summary,المطعم ملخص المبيعات
 Restaurant Table,المطعم Table
 Restaurant Venue,منشأة مطعم
 "Return here for shortcuts, charts, and lists for **ALM**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **ALM**.
@@ -1266,7 +1266,7 @@ Restaurant Venue,منشأة مطعم
 "Return here for shortcuts, charts, and lists for **Dashboard**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **لوحة التحكم**.
 "Return here for shortcuts, charts, and lists for **Education**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **Education**.
 "Return here for shortcuts, charts, and lists for **Engineering Consulting**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **Engineering Consulting**.
-"Return here for shortcuts, charts, and lists for **ErpGenEx User Academy**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **ErpGenEx User Academy**.
+"Return here for shortcuts, charts, and lists for **ErpGenEx User Academy**.","Return here for shortcuts, charts, and lists for **ErpGenEx المستخدم Academy**."
 "Return here for shortcuts, charts, and lists for **Factoring**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **Factoring**.
 "Return here for shortcuts, charts, and lists for **Finance Engine**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **Finance Engine**.
 "Return here for shortcuts, charts, and lists for **Finance Group**.",عد إلى هنا للوصول السريع إلى الاختصارات والمخططات والقوائم الخاصة بـ **مجموعة التمويل**.
@@ -1297,15 +1297,15 @@ Revenue Analysis Report,تقرير تحليل الإيرادات
 Revenue disaggregation,إيراد disaggregation
 Revenue per vehicle,إيراد per مركبة
 Rework analysis,إعادة عمل analysis
-Risk & Recovery,المخاطر & Recovery
-Risk Analytics,المخاطر Analytics
-Risk Register,المخاطر Register
-Risk Snapshots,Risk لقطات
-Risk grades Pie,المخاطر grades Pie
-Risk rating Pie,المخاطر rating Pie
+Risk & Recovery,المخاطر & التحصيل
+Risk Analytics,المخاطر التحليلات
+Risk Register,المخاطر سجل
+Risk Snapshots,المخاطر لقطات
+Risk grades Pie,المخاطر grades (دائري)
+Risk rating Pie,المخاطر rating (دائري)
 "Risk, Governance & Compliance","Risk, الحوكمة & الامتثال"
 Role,الدور
-Role Permission for Page and Report,Role Permission for Page and تقرير
+Role Permission for Page and Report,الدور Permission for Page and تقرير
 Role Permissions Manager,مدير صلاحيات الأدوار
 Role Profile,ملف الدور
 Roles,الأدوار
@@ -1317,48 +1317,48 @@ Route Plan,خطة المسار
 Route efficiency,كفاءة المسار
 Rule Profiles,ملفات القواعد
 "Run order-to-cash: customer, lines, channel, and status through invoicing and fulfilment.",شغّل دورة الطلب حتى التحصيل: العميل، البنود، القناة، والحالة عبر الفوترة والتنفيذ.
-Run outcomes Perc,تشغيل outcomes Perc
+Run outcomes Perc,تشغيل (نسبة مئوية للمخرجات)
 S3 Backup Settings,S3 Backup إعدادات
 SLA Compliance,SLA الامتثال
 SME Cases,حالات المشاريع الصغيرة والمتوسطة
-SME Credit Quality Monitor,SME Credit الجودة Monitor
+SME Credit Quality Monitor,SME Credit الجودة (مراقب)
 SME Default Prediction Tracker,متتبع التنبؤ بالتعثر للمشاريع الصغيرة
-SME Portfolio Cluster Trend,SME المحفظة Cluster Trend
-SME Retail Finance,تمويل التجزئة للمشاريع الصغيرة
-SME Retail Finance Case Trend,SME Retail المالية Case Trend
-SME Retail Finance Case Vol,SME Retail المالية Case Vol
+SME Portfolio Cluster Trend,SME المحفظة Cluster (اتجاه)
+SME Retail Finance,SME Retail المالية
+SME Retail Finance Case Trend,SME Retail المالية Case (اتجاه)
+SME Retail Finance Case Vol,SME Retail المالية Case (حجم)
 SMERetailF · Clusters Perc,تمويل التجزئة للمشاريع الصغيرة · التجميعات (نسبة مئوية)
 SMERetailF · Lifecycle Bar,تمويل التجزئة للمشاريع الصغيرة · شريط دورة الحياة
-SMERetailF · SME Portfolio Cluster Trend,SMERetailF · SME المحفظة Cluster Trend
-SMERetailF · SME Retail Finance Case Trend,SMERetailF · SME Retail المالية Case Trend
-SMERetailF · SME Retail Finance Case Vol,SMERetailF · SME Retail المالية Case Vol
-SMERetailF · Sector risk Pie,SMERetailF · Sector المخاطر Pie
+SMERetailF · SME Portfolio Cluster Trend,تمويل التجزئة للمشاريع الصغيرة · SME المحفظة Cluster (اتجاه)
+SMERetailF · SME Retail Finance Case Trend,تمويل التجزئة للمشاريع الصغيرة · SME Retail المالية Case (اتجاه)
+SMERetailF · SME Retail Finance Case Vol,تمويل التجزئة للمشاريع الصغيرة · SME Retail المالية Case (حجم)
+SMERetailF · Sector risk Pie,تمويل التجزئة للمشاريع الصغيرة · Sector المخاطر (دائري)
 SMS Settings,SMS إعدادات
-Sales Invoice,فاتورة بيع
-Sales Invoice Settings,إعدادات فاتورة المبيعات
+Sales Invoice,Sales فاتورة
+Sales Invoice Settings,Sales فاتورة إعدادات
 Sales Order,Sales أمر
 Sales Orders,أوامر المبيعات
 Sales Performance Report,تقرير أداء المبيعات
 Sales Pipeline,قناة المبيعات
 Sales Quotation,عرض السعر
-Sales Register,سجل المبيعات
+Sales Register,Sales سجل
 Sales Representative,مندوب مبيعات
 Sales by Country,المبيعات حسب الدولة
 Sales by Customer,المبيعات حسب العميل
-Sales by Item,المبيعات حسب الصنف
+Sales by Item,Sales by الصنف
 Sales by Product,المبيعات حسب الصنف
 Sales by Region,المبيعات حسب المنطقة
-Sales cycle (Quotation → Invoice),دورة المبيعات (عرض سعر → فاتورة)
-Sales cycle (Quotation → Order → Delivery → Invoice),دورة المبيعات (عرض سعر → أمر → تسليم → فاتورة)
+Sales cycle (Quotation → Invoice),Sales الدورة (Quotation → Invoice)
+Sales cycle (Quotation → Order → Delivery → Invoice),Sales الدورة (Quotation → أمر → Delivery → Invoice)
 Sales invoices (e-invoice source),قائمة فواتير المبيعات (مصدر الفاتورة الإلكترونية)
-Sales register,سجل المبيعات
-Sales settings,إعدادات المبيعات
-Sales setup (tax & FX),تهيئة المبيعات (الضريبة والعملات)
-Sales summary,Sales ملخص
+Sales register,Sales سجل
+Sales settings,Sales إعدادات
+Sales setup (tax & FX),Sales تهيئة (tax & FX)
+Sales summary,ملخص المبيعات
 Scenario Runs,سيناريو تشغيلات
-Scenarios Pie,سيناريوهات Pie
+Scenarios Pie,سيناريوهات (دائري)
 Schedule (PM),الجدول (PM)
-"Schedule database and file backups to a server folder, optional FTP and Google Drive, with email alerts. Configure Omnexa Backup Policy and ensure the bench scheduler is running.","الجدول database and file backups to a server folder, optional FTP and Google Drive, with email alerts. Configure Omnexa Backup السياسات and ensure the bench scheduler is running."
+"Schedule database and file backups to a server folder, optional FTP and Google Drive, with email alerts. Configure Omnexa Backup Policy and ensure the bench scheduler is running.","الجدول database and ملف backups to a server folder, optional FTP and Google Drive, with البريد alerts. Configure نسخ Omnexa الاحتياطي سياسة and ensure the bench scheduler is running."
 Schedule risk,الجدول المخاطر
 Scheduled Job Type,نوع المهمة المجدولة
 Scheduled Jobs Logs,سجلات المهام المجدولة
@@ -1368,10 +1368,10 @@ Scrap analysis,هالك analysis
 Scripting,السكربتات
 Search or type a command (Ctrl + G),ابحث أو اكتب أمرًا (Ctrl + G)
 Section,القسم
-Section utilization,Section الاستغلال
+Section utilization,القسم الاستغلال
 Sections & students,الأقسام والطلاب
 Sector Heatmap,خريطة حرارية للقطاع
-Sector risk Pie,Sector المخاطر Pie
+Sector risk Pie,Sector المخاطر (دائري)
 Segments Pie,الشرائح (دائري)
 Sell,المبيعات
 Sell Lead-to-cash — إعدادات المبيعات (شركة/فرع/ضريبة/عملات)، CRM، الدورة، التقارير المحلية,Sell Lead-to-cash — إعدادات المبيعات (شركة/فرع/ضريبة/عملات)، CRM، الدورة، التقارير المحلية
@@ -1385,29 +1385,29 @@ Service Order,Service أمر
 Service Portal,بوابة الخدمة
 Service Resource,مورد الخدمة
 Service Revenue Schedule,Service إيراد الجدول
-Service SLA Policy,Service SLA السياسات
+Service SLA Policy,اتفاقية مستوى الخدمة سياسة
 Service Skill,مهارة الخدمة
 Service Ticket,تذكرة خدمة
 Service Timesheet,جدول أوقات الخدمة
 Service charge,رسوم الخدمة
-Service charge summary,Service charge ملخص
+Service charge summary,رسوم الخدمة ملخص
 Service profitability,Service الربحية
 Service request,طلب خدمة
 Service unit,وحدة الخدمة
 Services,الخدمات
-Settings,الإعدادات
-Settings · Customer Mix,إعدادات · Customer Mix
-Settings · Customer Trend,إعدادات · Customer Trend
-Settings · Customer status Pie,إعدادات · Customer status Pie
-Settings · Enterprise setup,الإعدادات · تهيئة المؤسسة
-Settings · Item Trend,إعدادات · Item Trend
-Settings · Item types Bar,إعدادات · Item types Bar
-Settings · Supplier Mix,إعدادات · Supplier Mix
-Settings · Supplier Trend,إعدادات · Supplier Trend
-Settings · Supplier status Pie,إعدادات · Supplier status Pie
-Settings · Tax Rule Trend,إعدادات · Tax Rule Trend
-Settings · Tax Rule Vol,إعدادات · Tax Rule Vol
-Settings · Tax rules by treatment Bar,إعدادات · Tax rules by treatment Bar
+Settings,إعدادات
+Settings · Customer Mix,إعدادات · Customer (مزيج)
+Settings · Customer Trend,إعدادات · Customer (اتجاه)
+Settings · Customer status Pie,إعدادات · Customer الحالة (دائري)
+Settings · Enterprise setup,إعدادات · Enterprise تهيئة
+Settings · Item Trend,إعدادات · الصنف (اتجاه)
+Settings · Item types Bar,إعدادات · الصنف types (عمودي)
+Settings · Supplier Mix,إعدادات · Supplier (مزيج)
+Settings · Supplier Trend,إعدادات · Supplier (اتجاه)
+Settings · Supplier status Pie,إعدادات · Supplier الحالة (دائري)
+Settings · Tax Rule Trend,إعدادات · Tax Rule (اتجاه)
+Settings · Tax Rule Vol,إعدادات · Tax Rule (حجم)
+Settings · Tax rules by treatment Bar,إعدادات · قواعد الضريبة by treatment (عمودي)
 Settlement Reconciliation,تسوية المطابقة
 Setup,تهيئة
 Shop floor execution,تنفيذ خط الإنتاج
@@ -1422,14 +1422,14 @@ Snapshots (Last Month),لقطات (Last Month)
 Social Login Key,مفتاح تسجيل اجتماعي
 Statement Snapshots,Statement لقطات
 Status Bar,شريط الحالة
-Statutory Audit,التدقيق النظامي
+Statutory Audit,Statutory التدقيق
 Stock,المخازن
 Stock & warehouse,Stock & المخزن
 Stock Adjustment Reason,سبب تسوية المخزون
 Stock Adjustments,تسويات المخزون
-Stock Aging Report,تقرير أعمار المخزون
+Stock Aging Report,Stock Aging تقرير
 Stock Entry,حركة المخزون
-Stock Entry Settings,Stock Entry إعدادات
+Stock Entry Settings,حركة المخزون إعدادات
 Stock Ledger Report,تقرير دفتر المخزون
 Stock Movement,حركة المخزون
 Stock Movement Report,تقرير حركة المخزون
@@ -1437,59 +1437,59 @@ Stock Movements,حركات المخزون
 Stock Reconciliation,تسوية المخزون
 Stock Summary Report,تقرير ملخص المخزون
 Stock Transfer Request,طلب تحويل مخزون
-Stock Voucher Register,سجل سندات المخزون
-Stock settings,إعدادات المخزون
-Stock دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية,مخزون دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية
+Stock Voucher Register,Stock Voucher سجل
+Stock settings,Stock إعدادات
+Stock دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية,Stock دورة المخزون — إعدادات المخازن (شركة/فرع/موقع)، الحركات، التسوية، التقارير المحلية
 Strategy Routes,مسارات الاستراتيجية
 Stress Outlier,ضغط Outlier
 Stress Runs,ضغط تشغيلات
 Stress Scenarios,ضغط سيناريوهات
 Student,الطالب
 Subcontract Payment Certificate,مقاولة فرعية Payment Certificate
-Subcontract Work Order,مقاولة فرعية عمل أمر
-Subcontract Work Order Mix,مقاولة فرعية عمل أمر Mix
+Subcontract Work Order,أمر عمل مقاولة فرعية
+Subcontract Work Order Mix,أمر عمل مقاولة فرعية (مزيج)
 Subject,المادة
 Submissions,إرسالات
 Substantive balances,الأرصدة الجوهرية
 Supplier,المورد
 Supplier Category,فئة المورد
-Supplier Contract (pricing),عقد المورد (التسعير)
+Supplier Contract (pricing),Supplier عقد (pricing)
 Supplier Fleet Contract,Supplier الأسطول عقد
 Supplier Ledger,مورد دفتر أستاذ
 Supplier Management,إدارة الموردين
-Supplier Mix,مزيج الموردين
+Supplier Mix,Supplier (مزيج)
 Supplier Payments,مدفوعات المورد
 Supplier Performance Report,تقرير أداء المورد
-Supplier Trend,اتجاه الموردين
-Supplier status Pie,حالة الموردين (دائري)
+Supplier Trend,Supplier (اتجاه)
+Supplier status Pie,Supplier الحالة (دائري)
 Suppliers,الموردون
 Suppliers (AP master),Suppliers (AP أساسي)
 Supporting (approvals · landed cost),الدعم (الاعتمادات · التكلفة الإضافية)
 Supporting (e-invoice · integrations · desk),الدعم (فوترة إلكترونية · تكاملات · مساحة العمل)
 Supporting Processes,عمليات مساندة
 Supporting Processes: HR Interview,Supporting Processes: الموارد البشرية Interview
-Supporting Processes: HR Training Record,Supporting Processes: الموارد البشرية Training Record
-Supporting Processes: Healthcare Diagnostic Report,Supporting Processes: Healthcare Diagnostic تقرير
+Supporting Processes: HR Training Record,Supporting Processes: الموارد البشرية التدريب Record
+Supporting Processes: Healthcare Diagnostic Report,Supporting Processes: Healthcare تقرير تشخيصي
 Supporting Processes: Healthcare Medication Dispense,عمليات مساندة: صرف دواء رعاية صحية
 Supporting Processes: Healthcare Observation,Supporting Processes: Healthcare ملاحظة سريرية
 Supporting Processes: Healthcare Service Charge,عمليات مساندة: رسوم خدمة رعاية صحية
 Supporting setup & dimensions,إعدادات مساندة وأبعاد
 System Logs,سجلات النظام
 System Reports,تقارير النظام
-System Settings,إعدادات النظام
+System Settings,System إعدادات
 System design,تصميم النظام
 System settings,System إعدادات
-Tax Authority Profile,ملف الربط بمصلحة الضرائب
+Tax Authority Profile,ملف جهة الضريبة
 Tax Rule,قاعدة الضريبة
-Tax Rule Trend,اتجاه قواعد الضريبة
-Tax Rule Vol,حجم قواعد الضريبة
+Tax Rule Trend,Tax Rule (اتجاه)
+Tax Rule Vol,Tax Rule (حجم)
 Tax authority profile,ملف جهة الضريبة
 Tax categories,فئات الضريبة
-Tax categories (VAT / GST),فئات الضرائب (VAT / GST)
-Tax configuration summary,Tax configuration ملخص
+Tax categories (VAT / GST),فئات الضريبة (VAT / GST)
+Tax configuration summary,Tax التهيئة ملخص
 Tax rules,قواعد الضريبة
 Tax rules & statutory rates,قواعد الضريبة والأسعار النظامية
-Tax rules by treatment Bar,قواعد الضريبة حسب المعالجة (عمودي)
+Tax rules by treatment Bar,قواعد الضريبة by treatment (عمودي)
 Taxes (Categories),الضرائب (الفئات)
 Taxes (Rules & Rates),الضرائب (القواعد والأسعار)
 Teacher,معلم
@@ -1504,11 +1504,11 @@ Toll Allocation Rule,رسوم توزيع Rule
 Toll Invoice Line,رسوم فاتورة بند
 Toll Provider,رسوم مزود
 Toll Transaction,رسوم معاملة
-Toll cost summary,Toll cost ملخص
-Tolls & road charges,الرسوم & road charges
+Toll cost summary,رسوم تكلفة ملخص
+Tolls & road charges,الرسوم & رسوم الطريق
 Tools,الأدوات
 Tourism,السياحة
-Tourism Hotel Mix,Tourism فندق Mix
+Tourism Hotel Mix,Tourism فندق (مزيج)
 Tourism Operation Model Mix,مزيج نموذج تشغيل السياحة
 "Track initiation, confirmation, capture, refund, and reconciliation outcomes.",تتبّع البدء، التأكيد، التحصيل، الاسترداد، ومخرجات التسوية.
 Trading,التجارة
@@ -1535,99 +1535,99 @@ Travel Vendor,مزوّد السفر
 Trial Balance,ميزان المراجعة
 Trial Balance (periodic — primary),ميزان المراجعة (دوري — أساسي)
 Trial balance,ميزان المراجعة
-Trial balance & primary statements,ميزان المراجعة والقوائم الأساسية
+Trial balance & primary statements,ميزان المراجعة & primary statements
 UOM,وحدة القياس
 Units of measure,وحدات القياس
 Use the sidebar to open each finance workspace. Governance desks are nested under their main app.,استخدم الشريط الجانبي لفتح كل مساحة عمل مالية. مكاتب الحوكمة تظهر داخل تطبيقها الرئيسي.
 User,المستخدم
 User Academy,أكاديمية المستخدم
-User Branch Access,صلاحيات المستخدم على الفروع
+User Branch Access,المستخدم Branch الوصول
 User Permissions,صلاحيات المستخدم
 User Profile,ملف المستخدم
 User Type,نوع المستخدم
-User activity summary,User activity ملخص
+User activity summary,المستخدم نشاط ملخص
 User permissions,صلاحيات المستخدم
 Users,المستخدمون
-Users & roles,المستخدمون والأدوار
+Users & roles,المستخدمون & الأدوار
 Vaccination Record,سجل التطعيم
-Vaccination Status Report,Vaccination Status تقرير
+Vaccination Status Report,Vaccination الحالة تقرير
 Valuations,التقييمات
 Van Sales Invoice,Van Sales فاتورة
 Vehicle,مركبة
 Vehicle Cases,مركبة Cases
-Vehicle Damage Report,Vehicle Damage تقرير
-Vehicle Finance,تمويل المركبات
-Vehicle Finance Asset Regist Trend,مركبة المالية Asset Regist Trend
-Vehicle Finance Case Trend,مركبة المالية Case Trend
-Vehicle Finance Case Vol,مركبة المالية Case Vol
-Vehicle Finance Governance,Vehicle Finance الحوكمة
-Vehicle Finance Governance - Policies by Status,Vehicle Finance الحوكمة - Policies by Status
-Vehicle Finance Governance - Snapshots (Last Month),Vehicle Finance الحوكمة - لقطات (Last Month)
+Vehicle Damage Report,مركبة الأضرار تقرير
+Vehicle Finance,مركبة المالية
+Vehicle Finance Asset Regist Trend,مركبة المالية Asset Regist (اتجاه)
+Vehicle Finance Case Trend,مركبة المالية Case (اتجاه)
+Vehicle Finance Case Vol,مركبة المالية Case (حجم)
+Vehicle Finance Governance,مركبة المالية الحوكمة
+Vehicle Finance Governance - Policies by Status,مركبة المالية الحوكمة - السياسات حسب الحالة
+Vehicle Finance Governance - Snapshots (Last Month),مركبة المالية الحوكمة - لقطات (Last Month)
 Vehicle Fuel Log,مركبة الوقود Log
-Vehicle Insurance Policy,مركبة التأمين السياسات
+Vehicle Insurance Policy,مركبة التأمين سياسة
 Vehicle Maintenance Record,مركبة الصيانة Record
-Vehicle Mix,مركبة Mix
+Vehicle Mix,مزيج المركبات
 Vehicle Stock Transfer,مركبة Stock Transfer
-Vehicle mix Perc,مركبة mix Perc
-Vehicle transfer summary,Vehicle transfer ملخص
+Vehicle mix Perc,مزيج المركبات (نسبة مئوية)
+Vehicle transfer summary,مركبة transfer ملخص
 Vehicle-1,مركبة-1
 VehicleFina · Lifecycle Bar,تمويل المركبات · شريط دورة الحياة
 VehicleFina · Recovery Pie,تمويل المركبات · التحصيل (دائري)
-VehicleFina · Vehicle Finance Asset Regist Trend,VehicleFina · مركبة المالية Asset Regist Trend
-VehicleFina · Vehicle Finance Case Trend,VehicleFina · مركبة المالية Case Trend
-VehicleFina · Vehicle Finance Case Vol,VehicleFina · مركبة المالية Case Vol
-VehicleFina · Vehicle mix Perc,VehicleFina · مركبة mix Perc
+VehicleFina · Vehicle Finance Asset Regist Trend,تمويل المركبات · مركبة المالية Asset Regist (اتجاه)
+VehicleFina · Vehicle Finance Case Trend,تمويل المركبات · مركبة المالية Case (اتجاه)
+VehicleFina · Vehicle Finance Case Vol,تمويل المركبات · مركبة المالية Case (حجم)
+VehicleFina · Vehicle mix Perc,تمويل المركبات · مزيج المركبات (نسبة مئوية)
 Vendor Contract,Vendor عقد
-Vertical Finance Apps,تطبيقات التمويل القطاعية
+Vertical Finance Apps,Vertical المالية Apps
 Views,العروض
 Vitals & observations,العلامات الحيوية والملاحظات
 Warehouse,المخزن
-Warehouse & inventory setup,تهيئة المخازن والمخزون
-Warehouse & inventory setup (locations),تهيئة المخازن والمخزون (المواقع)
-Warehouse Transfer Report,تقرير تحويل المخزن
+Warehouse & inventory setup,المخزن & المخزون تهيئة
+Warehouse & inventory setup (locations),المخزن & المخزون تهيئة (locations)
+Warehouse Transfer Report,المخزن Transfer تقرير
 Warehouses,المخازن
 Waste Analysis,تحليل الهدر
 Waste Log,سجل الهدر
 Watchlist Events,أحداث قائمة المراقبة
 Web Form,نموذج ويب
 Web Order,Web أمر
-Web Order Mix,Web أمر Mix
+Web Order Mix,مزيج طلبات الويب
 Web Page,صفحة ويب
 Web Site,موقع الويب
-Web order line mix,Web أمر بند mix
+Web order line mix,مزيج بنود طلب الويب
 Webhook,خطاف ويب
 Website,الموقع
 Website Route Meta,بيانات مسار الموقع
 Website Script,سكربت الموقع
-Website Settings,Website إعدادات
+Website Settings,الموقع إعدادات
 Website Sidebar,الشريط الجانبي للموقع
 Website Slideshow,عرض شرائح الموقع
 Website Theme,سمة الموقع
 Welcome Workspace,Welcome مساحة العمل
-Work Center,Work مركز
+Work Center,عمل مركز
 Work Order,عمل أمر
 Work Order Cost Entry,عمل أمر تكلفة Entry
 Work Order Material Entry,عمل أمر مواد Entry
-Work Order Mix,عمل أمر Mix
+Work Order Mix,عمل أمر (مزيج)
 Work Order Scrap Entry,عمل أمر هالك Entry
-Work order status,عمل أمر status
+Work order status,عمل أمر الحالة
 Workflow,Workflow
-Workflow execution summary,Workflow execution ملخص
+Workflow execution summary,Workflow التنفيذ ملخص
 Workflows,سير العمل
 Workforce overview,نظرة عامة على القوى العاملة
 Workspace,مساحة العمل
 Your Shortcuts,اختصاراتك
 agriculture · Crop Cycle Mix,الزراعة · مزيج دورة المحصول
-agriculture · Farm Mix,agriculture · مزرعة Mix
+agriculture · Farm Mix,الزراعة · مزرعة (مزيج)
 agriculture · Status Bar,الزراعة · شريط الحالة
 tourism · Status Bar,السياحة · شريط الحالة
-tourism · Tourism Hotel Mix,tourism · Tourism فندق Mix
+tourism · Tourism Hotel Mix,السياحة · Tourism فندق (مزيج)
 tourism · Tourism Operation Model Mix,السياحة · مزيج نموذج تشغيل السياحة
-⚙ Operations,⚙ عمليات
-🏢 Company & Branch Administration,🏢 إدارة الشركة والفروع
+⚙ Operations,⚙ العمليات
+🏢 Company & Branch Administration,🏢 Company & Branch الإدارة
 📈 Charts,📈 الرسوم البيانية
 📈 KPIs,📈 مؤشرات الأداء
 📉 Charts,📉 الرسوم البيانية
 📊 KPIs,📊 مؤشرات الأداء
-📊 Reports,📊 تقارير
-📌 Operations,📌 عمليات
+📊 Reports,📊 التقارير
+📌 Operations,📌 العمليات
