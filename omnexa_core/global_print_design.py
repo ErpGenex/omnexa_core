@@ -119,7 +119,7 @@ GLOBAL_LETTER_HEAD_FOOTER_HTML = """
   <table style="width:100%; border-collapse:collapse;">
     <tr>
       <td style="width:65%;">ERPGENEX — Audit-ready enterprise print system</td>
-      <td style="width:35%; text-align:right;">{{ _("Page") }} {{ page + 1 }} {{ _("of") }} {{ topage }}</td>
+      <td style="width:35%; text-align:right;">{{ _("Page") }} {{ (page|default(0, true)|int) + 1 }} {{ _("of") }} {{ topage|default(1, true)|int }}</td>
     </tr>
   </table>
 </div>
