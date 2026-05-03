@@ -424,7 +424,18 @@ def run_site_hardening_after_app_changes():
 	backfill_bank_statement_line_company()
 	ensure_dashboard_finance_cards()
 	ensure_finance_workflow_templates()
+	ensure_global_print_design_system()
 	ensure_site_runtime_ready()
+
+
+def ensure_global_print_design_system():
+	"""Apply a single print design system default across all modules/reports."""
+	try:
+		from omnexa_core.global_print_design import ensure_global_print_design_system as _ensure
+
+		_ensure()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure global print design system")
 
 
 def ensure_unified_list_view_columns():
