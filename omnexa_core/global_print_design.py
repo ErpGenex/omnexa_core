@@ -10,6 +10,7 @@ import frappe
 
 GLOBAL_PRINT_STYLE_NAME = "ERPGENEX Global Unified"
 DEFAULT_PRINT_FORMAT_PREFIX = "ERPGENEX Default - "
+GLOBAL_LETTER_HEAD_NAME = "ERPGENEX Global Letter Head"
 
 GLOBAL_PRINT_CSS = """
 @page {
@@ -97,6 +98,33 @@ html, body {
 }
 """
 
+GLOBAL_LETTER_HEAD_HEADER_HTML = """
+<div style="width:100%; border-bottom:1px solid #D9E1EC; padding-bottom:8px; margin-bottom:10px;">
+  <table style="width:100%; border-collapse:collapse;">
+    <tr>
+      <td style="width:60%; vertical-align:top;">
+        <div style="font-size:17px; font-weight:700; color:#0F3D75;">ERPGENEX</div>
+        <div style="font-size:10px; color:#5A6B85;">Unified Enterprise Platform</div>
+      </td>
+      <td style="width:40%; text-align:right; vertical-align:top;">
+        <div style="font-size:10px; color:#5A6B85;">{{ _("Printed on") }}: {{ frappe.utils.now_datetime().strftime("%Y-%m-%d %H:%M") }}</div>
+      </td>
+    </tr>
+  </table>
+</div>
+"""
+
+GLOBAL_LETTER_HEAD_FOOTER_HTML = """
+<div style="width:100%; border-top:1px solid #D9E1EC; padding-top:6px; font-size:9px; color:#5A6B85;">
+  <table style="width:100%; border-collapse:collapse;">
+    <tr>
+      <td style="width:65%;">ERPGENEX — Audit-ready enterprise print system</td>
+      <td style="width:35%; text-align:right;">{{ _("Page") }} {{ page + 1 }} {{ _("of") }} {{ topage }}</td>
+    </tr>
+  </table>
+</div>
+"""
+
 
 DEFAULT_PRINT_DOCTYPES = (
 	# Sales
@@ -172,6 +200,37 @@ def ensure_default_print_formats() -> None:
 			frappe.log_error(frappe.get_traceback(), f"Omnexa: ensure default print format for {dt}")
 
 
+def ensure_default_letter_head() -> str | None:
+	"""Ensure a default global letter head with header + footer exists and is enabled."""
+	if not frappe.db.exists("DocType", "Letter Head"):
+		return None
+
+	name = frappe.db.get_value("Letter Head", {"letter_head_name": GLOBAL_LETTER_HEAD_NAME}, "name")
+	if name:
+		frappe.db.set_value("Letter Head", name, "disabled", 0, update_modified=False)
+		frappe.db.set_value("Letter Head", name, "is_default", 1, update_modified=False)
+		frappe.db.set_value("Letter Head", name, "source", "HTML", update_modified=False)
+		frappe.db.set_value("Letter Head", name, "footer_source", "HTML", update_modified=False)
+		frappe.db.set_value("Letter Head", name, "content", GLOBAL_LETTER_HEAD_HEADER_HTML, update_modified=False)
+		frappe.db.set_value("Letter Head", name, "footer", GLOBAL_LETTER_HEAD_FOOTER_HTML, update_modified=False)
+		return name
+
+	doc = frappe.get_doc(
+		{
+			"doctype": "Letter Head",
+			"letter_head_name": GLOBAL_LETTER_HEAD_NAME,
+			"is_default": 1,
+			"disabled": 0,
+			"source": "HTML",
+			"footer_source": "HTML",
+			"content": GLOBAL_LETTER_HEAD_HEADER_HTML,
+			"footer": GLOBAL_LETTER_HEAD_FOOTER_HTML,
+		}
+	)
+	doc.insert(ignore_permissions=True)
+	return doc.name
+
+
 def ensure_global_print_design_system() -> None:
 	"""Create/update a global print style and set it as site default."""
 	if not frappe.db.exists("DocType", "Print Style") or not frappe.db.exists("DocType", "Print Settings"):
@@ -202,5 +261,7 @@ def ensure_global_print_design_system() -> None:
 	settings.allow_page_break_inside_tables = 0
 	settings.font = "Inter"
 	settings.font_size = 9
+	# Enforce global letter head/footer visibility on all prints.
+	ensure_default_letter_head()
 	settings.save(ignore_permissions=True)
 	ensure_default_print_formats()
