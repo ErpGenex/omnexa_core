@@ -867,10 +867,34 @@ NURSE_DESK: list[DeskSection] = [
 		],
 	),
 	(
-		"Local nursery reports",
+		"Reports · Safeguarding & health",
+		[
+			("Medical & allergy register", "Report", "Nursery Medical & Allergy Register", "Nursery Student"),
+		],
+	),
+	(
+		"Reports · Enrollment & capacity",
 		[
 			("Students by class", "Report", "Nursery Students by Class", "Nursery Student"),
+			("Enrollment by age group", "Report", "Nursery Enrollment by Age Group", "Nursery Student"),
+			("Pipeline by status", "Report", "Nursery Pipeline by Status", "Nursery Student"),
+		],
+	),
+	(
+		"Reports · Learning & wellbeing",
+		[
+			("Daily wellbeing summary", "Report", "Nursery Daily Wellbeing Summary", "Nursery Daily Observation"),
+			("Observation coverage gaps", "Report", "Nursery Observation Coverage Gaps", "Nursery Student"),
+		],
+	),
+	(
+		"Reports · Operations",
+		[
 			("Attendance summary", "Report", "Nursery Attendance Summary", "Nursery Attendance"),
+			("Attendance rate by class", "Report", "Nursery Attendance Rate by Class", "Nursery Attendance"),
+			("Activity enrollment summary", "Report", "Nursery Activity Enrollment Summary", "Nursery Activity Enrollment"),
+			("Transport routes", "Report", "Nursery Transport Routes", "Nursery Transport"),
+			("Parent directory", "Report", "Nursery Parent Directory", "Nursery Parent Profile"),
 		],
 	),
 ]
