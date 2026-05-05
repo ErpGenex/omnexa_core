@@ -5,12 +5,14 @@
 	"doctype": "DocType",
 	"engine": "InnoDB",
 	"field_order": [
+		"tab_break_overview",
 		"event_name",
 		"source_doctype",
 		"source_docname",
 		"action",
 		"ledger_domain",
 		"company",
+		"tab_break_details",
 		"branch",
 		"currency",
 		"amount",
@@ -19,6 +21,16 @@
 		"event_payload"
 	],
 	"fields": [
+		{
+			"fieldname": "tab_break_overview",
+			"fieldtype": "Tab Break",
+			"label": "Overview"
+		},
+		{
+			"fieldname": "tab_break_details",
+			"fieldtype": "Tab Break",
+			"label": "Details"
+		},
 		{
 			"fieldname": "event_name",
 			"fieldtype": "Data",
@@ -100,7 +112,7 @@
 	"grid_page_length": 50,
 	"index_web_pages_for_search": 1,
 	"links": [],
-	"modified": "2026-04-26 22:50:00",
+	"modified": "2026-05-07 12:00:00",
 	"modified_by": "Administrator",
 	"module": "Omnexa Core",
 	"name": "Event Audit Log",

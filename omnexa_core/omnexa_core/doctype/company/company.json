@@ -6,6 +6,7 @@
 	"doctype": "DocType",
 	"engine": "InnoDB",
 	"field_order": [
+		"tab_break_overview",
 		"company_section",
 		"company_name",
 		"abbr",
@@ -16,6 +17,7 @@
 		"business_activity",
 		"industry_sector",
 		"enable_branches",
+		"tab_break_1",
 		"tax_section",
 		"tax_id",
 		"rin",
@@ -23,13 +25,17 @@
 		"eta_einvoice_enabled",
 		"company_tax_authority_profile",
 		"company_signing_profile",
+		"tab_break_2",
 		"group_section",
 		"parent_company",
+		"tab_break_3",
 		"global_erp_section",
 		"global_erp_strict_workflow",
+		"tab_break_4",
 		"ifrs_reporting_section",
 		"reporting_framework",
 		"fiscal_year_start_month",
+		"tab_break_5",
 		"ifrs_gl_defaults_section",
 		"default_petty_cash_gl",
 		"default_bank_operating_gl",
@@ -52,12 +58,48 @@
 		"default_cogs_gl",
 		"default_opex_gl",
 		"default_finance_cost_gl",
+		"tab_break_6",
 		"production_readiness_section",
 		"production_demo_branch",
 		"production_demo_activity",
 		"external_reference"
 	],
 	"fields": [
+		{
+			"fieldname": "tab_break_overview",
+			"fieldtype": "Tab Break",
+			"label": "Overview"
+		},
+		{
+			"fieldname": "tab_break_1",
+			"fieldtype": "Tab Break",
+			"label": "Details"
+		},
+		{
+			"fieldname": "tab_break_2",
+			"fieldtype": "Tab Break",
+			"label": "Further"
+		},
+		{
+			"fieldname": "tab_break_3",
+			"fieldtype": "Tab Break",
+			"label": "Posting"
+		},
+		{
+			"fieldname": "tab_break_4",
+			"fieldtype": "Tab Break",
+			"label": "More"
+		},
+		{
+			"fieldname": "tab_break_5",
+			"fieldtype": "Tab Break",
+			"label": "References"
+		},
+		{
+			"fieldname": "tab_break_6",
+			"fieldtype": "Tab Break",
+			"label": "Additional"
+		},
 		{
 			"fieldname": "company_section",
 			"fieldtype": "Section Break",
@@ -209,14 +251,14 @@
 		{
 			"collapsible": 1,
 			"depends_on": "eval:!doc.__islocal",
-			"description": "Maps to the professional bilingual chart (account numbers 1101\u20135109). Use \u201cFill from CoA\u201d on save or the Production demo button after generating the chart. Site-level Global Defaults (company/currency) stay in sync from this company when it is the primary entity.",
+			"description": "Maps to the professional bilingual chart (account numbers 1101–5109). Use “Fill from CoA” on save or the Production demo button after generating the chart. Site-level Global Defaults (company/currency) stay in sync from this company when it is the primary entity.",
 			"fieldname": "ifrs_gl_defaults_section",
 			"fieldtype": "Section Break",
 			"label": "Default GL accounts (IFRS-oriented)"
 		},
 		{
 			"depends_on": "eval:!doc.__islocal",
-			"description": "CoA 1101 \u2014 operating cash on hand",
+			"description": "CoA 1101 — operating cash on hand",
 			"fieldname": "default_petty_cash_gl",
 			"fieldtype": "Link",
 			"label": "Default petty cash GL",
@@ -232,7 +274,7 @@
 		},
 		{
 			"depends_on": "eval:!doc.__islocal",
-			"description": "CoA 1103 \u2014 trade receivables",
+			"description": "CoA 1103 — trade receivables",
 			"fieldname": "default_receivable_gl",
 			"fieldtype": "Link",
 			"label": "Default trade receivable GL",
@@ -296,7 +338,7 @@
 		},
 		{
 			"depends_on": "eval:!doc.__islocal",
-			"description": "CoA 2105 \u2014 deferred revenue / customer advances",
+			"description": "CoA 2105 — deferred revenue / customer advances",
 			"fieldname": "default_customer_advances_gl",
 			"fieldtype": "Link",
 			"label": "Default customer advances GL",
@@ -360,7 +402,7 @@
 		},
 		{
 			"depends_on": "eval:!doc.__islocal",
-			"description": "CoA 5109 \u2014 interest and bank charges",
+			"description": "CoA 5109 — interest and bank charges",
 			"fieldname": "default_finance_cost_gl",
 			"fieldtype": "Link",
 			"label": "Default finance cost GL",
@@ -400,7 +442,7 @@
 	"grid_page_length": 50,
 	"index_web_pages_for_search": 1,
 	"links": [],
-	"modified": "2026-05-06 12:00:00",
+	"modified": "2026-05-07 12:00:00",
 	"modified_by": "Administrator",
 	"module": "Omnexa Core",
 	"name": "Company",

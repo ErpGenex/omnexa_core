@@ -6,6 +6,7 @@
 	"doctype": "DocType",
 	"engine": "InnoDB",
 	"field_order": [
+		"tab_break_overview",
 		"branch_section",
 		"branch_name",
 		"branch_code",
@@ -14,11 +15,13 @@
 		"company",
 		"parent_branch",
 		"is_head_office",
+		"tab_break_1",
 		"tax_section",
 		"default_vat_rate",
 		"eta_einvoice_enabled",
 		"tax_authority_profile",
 		"signing_profile",
+		"tab_break_2",
 		"branch_financial_defaults_section",
 		"inherit_company_financial_defaults",
 		"branch_fiscal_reporting_unit_code",
@@ -29,6 +32,21 @@
 		"branch_default_trade_payable_gl"
 	],
 	"fields": [
+		{
+			"fieldname": "tab_break_overview",
+			"fieldtype": "Tab Break",
+			"label": "Overview"
+		},
+		{
+			"fieldname": "tab_break_1",
+			"fieldtype": "Tab Break",
+			"label": "Details"
+		},
+		{
+			"fieldname": "tab_break_2",
+			"fieldtype": "Tab Break",
+			"label": "Further"
+		},
 		{
 			"fieldname": "branch_section",
 			"fieldtype": "Section Break",
@@ -117,7 +135,7 @@
 		{
 			"collapsible": 1,
 			"depends_on": "eval:!doc.__islocal",
-			"description": "Branch-level financial context: optional operating GL overrides (e.g. local cash desk) and IFRS 8-style reporting unit code. When \u201cInherit company defaults\u201d is enabled, postings fall back to Company default GL accounts.",
+			"description": "Branch-level financial context: optional operating GL overrides (e.g. local cash desk) and IFRS 8-style reporting unit code. When “Inherit company defaults” is enabled, postings fall back to Company default GL accounts.",
 			"fieldname": "branch_financial_defaults_section",
 			"fieldtype": "Section Break",
 			"label": "Financial defaults (branch)"
@@ -176,7 +194,7 @@
 	"grid_page_length": 50,
 	"index_web_pages_for_search": 1,
 	"links": [],
-	"modified": "2026-04-14 21:30:00",
+	"modified": "2026-05-07 12:00:00",
 	"modified_by": "Administrator",
 	"module": "Omnexa Core",
 	"name": "Branch",
