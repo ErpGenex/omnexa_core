@@ -17,6 +17,15 @@ Trial: if no JWT for the app, first use records `omnexa_trial_started_<app>` via
 Built-in free apps (no license / no trial gate): see ``FREE_APPS`` (includes ``erpgenex_*`` theme slugs).
 Optional extra slugs: ``omnexa_marketplace_free_apps`` in site_config.
 
+Commercial verticals (e.g. ``omnexa_nursery``) must stay **out** of ``FREE_APPS`` and out of
+``omnexa_marketplace_free_apps`` so the ErpGenEx Marketplace shows ``price_type: paid`` and
+licensing/trial rules apply like other paid Omnexa apps. Bundle SKUs on the storefront should
+include the nursery app slug in the paid product, not the free tier.
+
+Registry ``COMMERCIAL_JWT_LICENSE_APPS`` lists verticals sold as **time-bound JWT** products
+(``omnexa_licenses`` serials with ``exp``). Other paid ``omnexa_*`` apps use the same JWT path
+when not in ``FREE_APPS``.
+
 See Docs/Omnexa_App_License_Serial_and_Laravel_Key_Generation_MVP.md
 """
 
@@ -65,6 +74,31 @@ FREE_APPS = frozenset(
 		"erpgenex_theme_0426",
 	}
 )
+
+# Paid verticals shipped under storefront time-bound JWT (``exp`` in ``omnexa_licenses``).
+# Extend when adding new commercial modules; storefront bundle SKUs should issue JWT for each.
+COMMERCIAL_JWT_LICENSE_APPS = frozenset(
+	{
+		"omnexa_education",
+		"omnexa_nursery",
+	}
+)
+
+
+def requires_storefront_jwt_license(app_slug: str) -> bool:
+	"""
+	True when the app is not on the perpetual free tier: licensing is via signed JWT (with
+	``exp``), auto-trial if enabled, or ``missing_license`` when no key and trial off.
+
+	``COMMERCIAL_JWT_LICENSE_APPS`` is the explicit checklist for bundle / QA; any other
+	``omnexa_*`` app with ``not is_free_app`` follows the same ``verify_app_license`` path.
+	"""
+	if not app_slug or not isinstance(app_slug, str):
+		return False
+	slug = app_slug.strip()
+	if not slug.startswith("omnexa_"):
+		return False
+	return not is_free_app(slug)
 
 
 def is_free_app(app_slug: str) -> bool:

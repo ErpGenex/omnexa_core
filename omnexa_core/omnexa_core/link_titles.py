@@ -56,13 +56,13 @@ def _dynamic_code_name_title(doctype, docname):
 		"iban",
 	]
 	common_name_candidates = [
-		"name",
 		"item_name",
 		"customer_name",
 		"supplier_name",
 		"employee_name",
 		"account_name",
 		"asset_name",
+		"project_name",
 		"bank_name",
 	]
 
@@ -82,6 +82,9 @@ def _dynamic_code_name_title(doctype, docname):
 			if f.endswith("_name") and f not in name_candidates and f != "naming_series"
 		)
 	)
+	# `name` is usually the internal ID; use it only as a last fallback.
+	if "name" in fieldnames:
+		name_candidates.append("name")
 
 	# Avoid unnecessary query for doctypes with neither code nor name candidates.
 	if not code_candidates and not name_candidates:
@@ -116,6 +119,10 @@ def get_link_title(doctype, docname):
 		row = frappe.db.get_value("Employee", docname, ["employee_code", "employee_name"], as_dict=True)
 		return _format_code_name(getattr(row, "employee_code", ""), getattr(row, "employee_name", ""), docname)
 
+	if doctype == "Project":
+		row = frappe.db.get_value("Project", docname, ["project_name"], as_dict=True)
+		return _format_code_name("", getattr(row, "project_name", ""), docname)
+
 	if doctype in ("GL Account", "Account"):
 		row = frappe.db.get_value("GL Account", docname, ["account_number", "account_name"], as_dict=True)
 		return _format_code_name(getattr(row, "account_number", ""), getattr(row, "account_name", ""), docname)
@@ -140,4 +147,27 @@ def get_link_title(doctype, docname):
 	if meta.show_title_field_in_link and meta.title_field:
 		return frappe.db.get_value(doctype, docname, meta.title_field) or docname
 	return docname
+
+
+def ensure_link_title_policy_defaults():
+	"""Force human-readable link titles for core doctypes across modules."""
+	policy = {
+		"GL Account": "account_name",
+		"Customer": "customer_name",
+		"Supplier": "supplier_name",
+		"Employee": "employee_name",
+		"Project": "project_name",
+		"Item": "item_name",
+	}
+	for dt, title_field in policy.items():
+		try:
+			if not frappe.db.exists("DocType", dt):
+				continue
+			meta = frappe.get_meta(dt)
+			if not meta.has_field(title_field):
+				continue
+			frappe.db.set_value("DocType", dt, "title_field", title_field, update_modified=False)
+			frappe.db.set_value("DocType", dt, "show_title_field_in_link", 1, update_modified=False)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), f"Omnexa: ensure link title policy ({dt})")
 

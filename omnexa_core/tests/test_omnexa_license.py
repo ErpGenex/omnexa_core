@@ -12,9 +12,13 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from frappe.tests.utils import FrappeTestCase
 
 from omnexa_core.omnexa_core.omnexa_license import (
+	COMMERCIAL_JWT_LICENSE_APPS,
 	DEVELOPER_BYPASS_CODE,
 	FREE_APPS,
 	assert_app_licensed_or_raise,
+	is_free_app,
+	is_license_status_ok,
+	requires_storefront_jwt_license,
 	set_manual_revoke,
 	verify_app_license,
 )
@@ -50,7 +54,9 @@ class TestOmnexaLicense(FrappeTestCase):
 
 	def test_omnexa_apps_blocked_outside_erpgenex_platform(self):
 		old_platform = frappe.local.conf.get("omnexa_platform")
+		old_req = frappe.local.conf.get("omnexa_license_require_platform")
 		try:
+			frappe.local.conf["omnexa_license_require_platform"] = True
 			frappe.local.conf["omnexa_platform"] = "erpnext"
 			r = verify_app_license("omnexa_tourism")
 			self.assertEqual(r.status, "invalid_platform")
@@ -59,11 +65,85 @@ class TestOmnexaLicense(FrappeTestCase):
 				frappe.local.conf.pop("omnexa_platform", None)
 			else:
 				frappe.local.conf["omnexa_platform"] = old_platform
+			if old_req is None:
+				frappe.local.conf.pop("omnexa_license_require_platform", None)
+			else:
+				frappe.local.conf["omnexa_license_require_platform"] = old_req
 
 	def test_free_apps_are_always_licensed(self):
 		for app in FREE_APPS:
 			r = verify_app_license(app)
 			self.assertEqual(r.status, "licensed_free")
+
+	def test_omnexa_nursery_is_paid_not_free_tier(self):
+		"""Nursery must use paid marketplace + license path (not FREE_APPS / free tier)."""
+		self.assertNotIn("omnexa_nursery", FREE_APPS)
+		self.assertFalse(is_free_app("omnexa_nursery"))
+		self.assertIn("omnexa_nursery", COMMERCIAL_JWT_LICENSE_APPS)
+		self.assertTrue(requires_storefront_jwt_license("omnexa_nursery"))
+
+	def test_omnexa_education_same_paid_jwt_tier_as_nursery(self):
+		"""Education vertical: same storefront JWT / paid rules as other commercial omnexa_* apps."""
+		self.assertNotIn("omnexa_education", FREE_APPS)
+		self.assertFalse(is_free_app("omnexa_education"))
+		self.assertIn("omnexa_education", COMMERCIAL_JWT_LICENSE_APPS)
+		self.assertTrue(requires_storefront_jwt_license("omnexa_education"))
+
+	def test_omnexa_nursery_missing_license_without_jwt_when_auto_trial_off(self):
+		frappe.local.conf["omnexa_license_auto_trial"] = False
+		app = "omnexa_nursery"
+		old_lic = frappe.local.conf.get("omnexa_licenses")
+		old_pk = frappe.local.conf.get("omnexa_license_public_key_pem")
+		try:
+			set_manual_revoke(app, False)
+			frappe.local.conf.pop("omnexa_licenses", None)
+			frappe.local.conf.pop("omnexa_license_public_key_pem", None)
+			r = verify_app_license(app)
+			self.assertEqual(r.status, "missing_license")
+		finally:
+			if old_lic is not None:
+				frappe.local.conf["omnexa_licenses"] = old_lic
+			else:
+				frappe.local.conf.pop("omnexa_licenses", None)
+			if old_pk is not None:
+				frappe.local.conf["omnexa_license_public_key_pem"] = old_pk
+			else:
+				frappe.local.conf.pop("omnexa_license_public_key_pem", None)
+
+	def test_omnexa_nursery_jwt_licensed_valid_rs256(self):
+		import jwt
+
+		priv, pub_pem = _rsa_pair()
+		app = "omnexa_nursery"
+		now = datetime.now(timezone.utc)
+		payload = {
+			"app": app,
+			"iat": now,
+			"exp": now + timedelta(days=30),
+			"sub": "cust-nursery-1",
+		}
+		token = jwt.encode(payload, priv, algorithm="RS256")
+		if isinstance(token, bytes):
+			token = token.decode("utf-8")
+
+		old_lic = frappe.local.conf.get("omnexa_licenses")
+		old_pk = frappe.local.conf.get("omnexa_license_public_key_pem")
+		try:
+			frappe.local.conf["omnexa_licenses"] = {app: token}
+			frappe.local.conf["omnexa_license_public_key_pem"] = pub_pem
+			r = verify_app_license(app)
+			self.assertIn(r.status, ("licensed", "licensed_grace"))
+			self.assertTrue(is_license_status_ok(r.status))
+			self.assertEqual(r.claims.get("app"), app)
+		finally:
+			if old_lic is None:
+				frappe.local.conf.pop("omnexa_licenses", None)
+			else:
+				frappe.local.conf["omnexa_licenses"] = old_lic
+			if old_pk is None:
+				frappe.local.conf.pop("omnexa_license_public_key_pem", None)
+			else:
+				frappe.local.conf["omnexa_license_public_key_pem"] = old_pk
 
 	def test_trial_starts_without_license_config(self):
 		app = "thirdparty_testapp_xyz"

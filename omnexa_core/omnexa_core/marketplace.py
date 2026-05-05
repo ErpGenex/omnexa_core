@@ -203,6 +203,8 @@ def _activity_for_app(app_slug: str) -> str:
 		return "Healthcare"
 	if "education" in parts:
 		return "Education"
+	if "nursery" in parts:
+		return "Education"
 	if "construction" in parts:
 		return "Construction"
 	if "agriculture" in parts:

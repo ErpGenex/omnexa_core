@@ -425,6 +425,7 @@ def run_site_hardening_after_app_changes():
 	ensure_dashboard_finance_cards()
 	ensure_finance_workflow_templates()
 	ensure_global_print_design_system()
+	ensure_link_title_policy_defaults()
 	ensure_site_runtime_ready()
 
 
@@ -436,6 +437,16 @@ def ensure_global_print_design_system():
 		_ensure()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure global print design system")
+
+
+def ensure_link_title_policy_defaults():
+	"""Force human-readable link titles instead of internal IDs."""
+	try:
+		from omnexa_core.omnexa_core.link_titles import ensure_link_title_policy_defaults as _ensure
+
+		_ensure()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure link title policy defaults")
 
 
 def ensure_unified_list_view_columns():
