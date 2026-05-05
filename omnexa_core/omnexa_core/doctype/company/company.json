@@ -110,13 +110,13 @@
 			"fieldname": "business_activity",
 			"fieldtype": "Select",
 			"label": "Business Activity",
-			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
+			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nHotel Assets (إدارة أصول الفنادق)\nTrading\nServices\nFinancial Services\nStatutory Audit"
 		},
 		{
 			"fieldname": "industry_sector",
 			"fieldtype": "Select",
 			"label": "Industry Sector",
-			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
+			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nHotel Assets (إدارة أصول الفنادق)\nTrading\nServices\nFinancial Services\nStatutory Audit"
 		},
 		{
 			"default": "1",
@@ -385,7 +385,7 @@
 			"fieldname": "production_demo_activity",
 			"fieldtype": "Select",
 			"label": "Demo activity",
-			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nTrading\nServices\nFinancial Services\nStatutory Audit"
+			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nHotel Assets (إدارة أصول الفنادق)\nTrading\nServices\nFinancial Services\nStatutory Audit"
 		},
 		{
 			"fieldname": "external_reference",
@@ -400,7 +400,7 @@
 	"grid_page_length": 50,
 	"index_web_pages_for_search": 1,
 	"links": [],
-	"modified": "2026-04-14 21:30:00",
+	"modified": "2026-05-06 12:00:00",
 	"modified_by": "Administrator",
 	"module": "Omnexa Core",
 	"name": "Company",
