@@ -1292,6 +1292,33 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		],
 		"extra_sections": [],
 	},
+	"omnexa_nursery": {
+		"_requires_app": "omnexa_nursery",
+		"workspace": "Nursery",
+		"module": "Nursery Setup",
+		"icon": "heart",
+		"headline": "Nursery",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Early-years operations — families, programs, attendance, transport, and billing.",
+		"trend_doctypes": ["Nursery Student", "Nursery Attendance"],
+		"status_doctypes": [],
+		"kpis": [
+			("Students", "Nursery Student", []),
+			("Parents", "Nursery Parent Profile", []),
+			("Attendance lines", "Nursery Attendance", []),
+		],
+		"shortcuts": [
+			("Nursery Settings", "DocType", "Nursery Settings"),
+			("Students", "DocType", "Nursery Student"),
+			("Parents", "DocType", "Nursery Parent Profile"),
+			("Attendance", "DocType", "Nursery Attendance"),
+			("Students by class", "Report", "Nursery Students by Class"),
+			("Attendance summary", "Report", "Nursery Attendance Summary"),
+		],
+		"kpi_trends": [],
+		"extra_sections": [],
+	},
 }
 
 
