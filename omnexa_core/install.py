@@ -426,6 +426,7 @@ def run_site_hardening_after_app_changes():
 	ensure_finance_workflow_templates()
 	ensure_global_print_design_system()
 	ensure_link_title_policy_defaults()
+	ensure_company_activity_select_options()
 	ensure_site_runtime_ready()
 
 
@@ -447,6 +448,56 @@ def ensure_link_title_policy_defaults():
 		_ensure()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure link title policy defaults")
+
+
+def ensure_company_activity_select_options():
+	"""Keep Company business/industry Select options aligned (Hotel Assets vertical, etc.).
+
+	Frappe stores Select ``options`` on ``DocField``; sites that migrated before new values
+	were added keep stale lists until DocField rows are updated.
+	"""
+	marker = "Hotel Assets (إدارة أصول الفنادق)"
+	canonical = (
+		"\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\n"
+		"Manufacturing\nAgriculture\nTourism\nHotel Assets (إدارة أصول الفنادق)\nTrading\nServices\n"
+		"Financial Services\nStatutory Audit"
+	)
+	try:
+		if not frappe.db.exists("DocType", "Company"):
+			return
+
+		def _merge_options(current: str) -> str:
+			if marker in current:
+				return current
+			needle = "Tourism\nTrading"
+			if needle in current:
+				return current.replace(needle, f"Tourism\n{marker}\nTrading", 1)
+			return canonical
+
+		for fieldname in ("business_activity", "industry_sector", "production_demo_activity"):
+			name = frappe.db.get_value("DocField", {"parent": "Company", "fieldname": fieldname}, "name")
+			if not name:
+				continue
+			current = frappe.db.get_value("DocField", name, "options") or ""
+			updated = _merge_options(current)
+			if updated != current:
+				frappe.db.set_value("DocField", name, "options", updated, update_modified=False)
+
+			# Customize Form stores overrides here; stale options hide new activities in Desk.
+			ps_name = frappe.db.get_value(
+				"Property Setter",
+				{"doc_type": "Company", "field_name": fieldname, "property": "options"},
+				"name",
+			)
+			if ps_name:
+				ps_val = frappe.db.get_value("Property Setter", ps_name, "value") or ""
+				ps_merged = _merge_options(ps_val)
+				if ps_merged != ps_val:
+					frappe.db.set_value("Property Setter", ps_name, "value", ps_merged, update_modified=False)
+
+		frappe.clear_cache(doctype="Company")
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_company_activity_select_options")
 
 
 def ensure_unified_list_view_columns():
