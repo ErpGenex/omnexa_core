@@ -1186,7 +1186,8 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 	},
 	"omnexa_fixed_assets": {
 		"_requires_app": "omnexa_fixed_assets",
-		"workspace": "Fixed assets",
+		# Must match `tabWorkspace.name` from omnexa_fixed_assets workspace fixture (not label/title casing).
+		"workspace": "Fixed Assets",
 		"module": "Omnexa Fixed Assets",
 		"icon": "folder-normal",
 		"headline": "Fixed Assets",
@@ -1810,7 +1811,7 @@ _DEDUPE_SIDEBAR_AGAINST_SHORTCUTS: frozenset[str] = frozenset(
 		"Factoring",
 		"SME Retail Finance",
 		"Leasing Finance",
-		"Fixed assets",
+		"Fixed Assets",
 		"Audit",
 	}
 )
