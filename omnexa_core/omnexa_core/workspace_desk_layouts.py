@@ -840,6 +840,41 @@ EDUCATION_DESK: list[DeskSection] = [
 	),
 ]
 
+# Nursery / early-years: setup → programs & fees → daily ops → local reports (aligned with omnexa_nursery).
+NURSE_DESK: list[DeskSection] = [
+	(
+		"Setup & people",
+		[
+			("Nursery Settings", "DocType", "Nursery Settings", None),
+			("Students", "DocType", "Nursery Student", None),
+			("Parents", "DocType", "Nursery Parent Profile", None),
+		],
+	),
+	(
+		"Programs, fees & activities",
+		[
+			("Educational activities", "DocType", "Nursery Educational Activity", None),
+			("Activity enrollments", "DocType", "Nursery Activity Enrollment", None),
+			("Fee structure", "DocType", "Nursery Fee Structure", None),
+		],
+	),
+	(
+		"Daily operations",
+		[
+			("Attendance", "DocType", "Nursery Attendance", None),
+			("Daily observation", "DocType", "Nursery Daily Observation", None),
+			("Transport", "DocType", "Nursery Transport", None),
+		],
+	),
+	(
+		"Local nursery reports",
+		[
+			("Students by class", "Report", "Nursery Students by Class", "Nursery Student"),
+			("Attendance summary", "Report", "Nursery Attendance Summary", "Nursery Attendance"),
+		],
+	),
+]
+
 # ISO-style flow: engineering master data → shop floor → quality → inventory bridge → costing; then KPI-style reports.
 MANUFACTURING_DESK: list[DeskSection] = [
 	(
@@ -1478,6 +1513,9 @@ _BY_WORKSPACE: dict[str, list[DeskSection]] = {
 	"Education": EDUCATION_DESK,
 	"education": EDUCATION_DESK,
 	"omnexa_education": EDUCATION_DESK,
+	"Nursery": NURSE_DESK,
+	"nursery": NURSE_DESK,
+	"omnexa_nursery": NURSE_DESK,
 	"Manufacturing": MANUFACTURING_DESK,
 	"manufacturing": MANUFACTURING_DESK,
 	"omnexa_manufacturing": MANUFACTURING_DESK,
