@@ -1,0 +1,40 @@
+/*
+Classic form tabs styling (like older Frappe UI).
+Scoped to form layout to avoid affecting other tab systems.
+*/
+
+.layout-main-section .form-tabs .nav-tabs,
+.layout-main-section .nav.nav-tabs {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+  gap: 0;
+}
+
+.layout-main-section .form-tabs .nav-tabs .nav-item,
+.layout-main-section .nav.nav-tabs .nav-item {
+  margin-bottom: -1px;
+}
+
+.layout-main-section .form-tabs .nav-tabs .nav-link,
+.layout-main-section .nav.nav-tabs .nav-link {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  padding: 10px 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.layout-main-section .form-tabs .nav-tabs .nav-link:hover,
+.layout-main-section .nav.nav-tabs .nav-link:hover {
+  color: #0f172a;
+  background: transparent;
+}
+
+.layout-main-section .form-tabs .nav-tabs .nav-link.active,
+.layout-main-section .nav.nav-tabs .nav-link.active {
+  color: #0f172a;
+  background: transparent;
+  border-bottom-color: var(--primary, #2563eb);
+}
+

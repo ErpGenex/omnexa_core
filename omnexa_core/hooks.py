@@ -30,6 +30,7 @@ app_license = "mit"
 app_include_css = [
 	"/assets/omnexa_core/css/omnexa_core.css",
 	"/assets/omnexa_core/css/workspace_help_panel.css",
+	"/assets/omnexa_core/css/classic_form_tabs.css",
 ]
 app_include_js = [
 	"/assets/omnexa_core/js/frappe_ready_shim.js",
