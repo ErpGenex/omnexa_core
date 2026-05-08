@@ -93,6 +93,16 @@ class TestWorkspaceControlTower(FrappeTestCase):
 			ws = frappe.get_doc("Workspace", name)
 			self.assertGreaterEqual(len(ws.number_cards or []), min_cards, msg=name)
 			self.assertGreaterEqual(len(ws.charts or []), min_ch, msg=name)
+		targets = {
+			"Omnexa Purchase Settings": "Buy",
+			"Omnexa Stock Settings": "Stock",
+		}
+		for link_to, ws_name in targets.items():
+			if not frappe.db.exists("DocType", link_to) or not frappe.db.exists("Workspace", ws_name):
+				continue
+			ws = frappe.get_doc("Workspace", ws_name)
+			shortcut_targets = {s.get("link_to") for s in (ws.shortcuts or []) if s.get("type") == "DocType"}
+			self.assertIn(link_to, shortcut_targets, msg=f"{ws_name} missing {link_to} shortcut")
 		if _app_installed("omnexa_accounting") and frappe.db.exists("Workspace", "Accounting"):
 			ws = frappe.get_doc("Workspace", "Accounting")
 			self.assertGreaterEqual(len(ws.number_cards or []), 4, msg="Accounting")

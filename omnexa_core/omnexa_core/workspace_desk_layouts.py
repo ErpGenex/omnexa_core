@@ -16,6 +16,9 @@ from __future__ import annotations
 # (card_title, [(label, link_type, link_to, report_ref_doctype|None), ...])
 DeskSection = tuple[str, list[tuple[str, str, str, str | None]]]
 
+# When desk_link_layout applies, workspace spec shortcuts are replaced by desk rows only — include settings here.
+_DESK_ERP_SETTINGS_URL: tuple[str, str, str, str | None] = ("ERP Settings", "URL", "/app/settings", None)
+
 # --- SALES (Global ERP § Sales workspace — lines «Operations» + «Local Sales Reports» first) ---
 SELL_DESK: list[DeskSection] = [
 	(
@@ -101,6 +104,7 @@ BUY_DESK: list[DeskSection] = [
 	(
 		"Operations",
 		[
+			("Purchase Settings", "DocType", "Omnexa Purchase Settings", None),
 			("Purchase Requests", "DocType", "Purchase Request", None),
 			("Supplier Management", "DocType", "Supplier", None),
 			("Purchase Orders", "DocType", "Purchase Order", None),
@@ -140,6 +144,7 @@ STOCK_DESK: list[DeskSection] = [
 	(
 		"Operations",
 		[
+			("Stock Settings", "DocType", "Omnexa Stock Settings", None),
 			("Item Master", "DocType", "Item", None),
 			("Warehouses", "DocType", "Warehouse", None),
 			("Stock Movements", "DocType", "Stock Entry", None),
@@ -180,6 +185,7 @@ ACCOUNTING_DESK: list[DeskSection] = [
 	(
 		"Financial Operations",
 		[
+			("Accounting Settings", "DocType", "Omnexa Accounting Settings", None),
 			("Chart of Accounts", "DocType", "GL Account", None),
 			("General Ledger", "Report", "General Ledger", "Journal Entry"),
 			("Journal Entries", "DocType", "Journal Entry", None),
@@ -234,6 +240,7 @@ HR_DESK: list[DeskSection] = [
 	(
 		"Policy & organization",
 		[
+			("HR / Payroll settings", "DocType", "HR Payroll Company Settings", None),
 			("User Branch Access", "DocType", "User Branch Access", None),
 			("Employee", "DocType", "Employee", None),
 			("HR Leave Type", "DocType", "HR Leave Type", None),
@@ -308,6 +315,7 @@ PROJECTS_DESK: list[DeskSection] = [
 	(
 		"Policy & access",
 		[
+			_DESK_ERP_SETTINGS_URL,
 			("User Branch Access", "DocType", "User Branch Access", None),
 		],
 	),
@@ -466,6 +474,7 @@ FIXED_ASSETS_DESK: list[DeskSection] = [
 	(
 		"Policy & master data",
 		[
+			_DESK_ERP_SETTINGS_URL,
 			("Fixed Asset Category", "DocType", "Fixed Asset Category", None),
 			("Fixed Asset Depreciation Method", "DocType", "Fixed Asset Depreciation Method", None),
 			("Fixed Asset Location", "DocType", "Fixed Asset Location", None),
@@ -554,6 +563,7 @@ TOURISM_DESK: list[DeskSection] = [
 	(
 		"Portfolio & setup",
 		[
+			_DESK_ERP_SETTINGS_URL,
 			("Operation Model", "DocType", "Tourism Operation Model", None),
 			("Hotel", "DocType", "Tourism Hotel", None),
 			("Hotel Floor", "DocType", "Tourism Hotel Floor", None),
@@ -648,7 +658,8 @@ HEALTHCARE_DESK: list[DeskSection] = [
 	(
 		"Setup",
 		[
-			("Settings", "DocType", "Healthcare Settings", None),
+			_DESK_ERP_SETTINGS_URL,
+			("Healthcare settings", "DocType", "Healthcare Settings", None),
 		],
 	),
 	(
@@ -760,6 +771,7 @@ EDUCATION_DESK: list[DeskSection] = [
 	(
 		"Institution & people",
 		[
+			_DESK_ERP_SETTINGS_URL,
 			("Institution", "DocType", "Education Institution", None),
 			("Campus", "DocType", "Education Campus", None),
 			("Department", "DocType", "Education Department", None),
@@ -906,6 +918,7 @@ MANUFACTURING_DESK: list[DeskSection] = [
 	(
 		"Master data & engineering",
 		[
+			("Stock Settings", "DocType", "Omnexa Stock Settings", None),
 			("Work Center", "DocType", "Work Center", None),
 			("Manufacturing Routing", "DocType", "Manufacturing Routing", None),
 			("Manufacturing Product Profile", "DocType", "Manufacturing Product Profile", None),
@@ -972,6 +985,7 @@ CAR_RENTAL_DESK: list[DeskSection] = [
 	(
 		"Organization & fleet",
 		[
+			_DESK_ERP_SETTINGS_URL,
 			("Customer Profile", "DocType", "Customer Profile", None),
 			("Customer", "DocType", "Customer", None),
 			("Vehicle", "DocType", "Vehicle", None),
@@ -1047,6 +1061,7 @@ TRADING_DESK: list[DeskSection] = [
 	(
 		"Organization & network",
 		[
+			("Sales Settings", "DocType", "Omnexa Sales Settings", None),
 			("Customer Profile", "DocType", "Customer Profile", None),
 			("Customer", "DocType", "Customer", None),
 			("Distribution Zone", "DocType", "Distribution Zone", None),
@@ -1120,6 +1135,7 @@ RESTAURANT_DESK: list[DeskSection] = [
 	(
 		"Policy & venue",
 		[
+			_DESK_ERP_SETTINGS_URL,
 			("User Branch Access", "DocType", "User Branch Access", None),
 		],
 	),
@@ -1238,6 +1254,7 @@ CRM_DESK: list[DeskSection] = [
 	(
 		"Policy & access",
 		[
+			("Sales Settings", "DocType", "Omnexa Sales Settings", None),
 			("User Branch Access", "DocType", "User Branch Access", None),
 		],
 	),
@@ -1328,6 +1345,7 @@ AGRICULTURE_DESK: list[DeskSection] = [
 	(
 		"Policy & access",
 		[
+			_DESK_ERP_SETTINGS_URL,
 			("User Branch Access", "DocType", "User Branch Access", None),
 		],
 	),
@@ -1381,6 +1399,7 @@ ENGINEERING_CONSULTING_DESK: list[DeskSection] = [
 	(
 		"Policy & access",
 		[
+			_DESK_ERP_SETTINGS_URL,
 			("User Branch Access", "DocType", "User Branch Access", None),
 		],
 	),
@@ -1441,6 +1460,7 @@ CONSTRUCTION_DESK: list[DeskSection] = [
 	(
 		"Policy & organisation",
 		[
+			_DESK_ERP_SETTINGS_URL,
 			("User Branch Access", "DocType", "User Branch Access", None),
 		],
 	),
