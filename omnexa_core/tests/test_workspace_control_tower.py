@@ -51,6 +51,13 @@ class TestWorkspaceControlTower(FrappeTestCase):
 		self.assertGreaterEqual(len(ws.number_cards or []), 4)
 		self.assertGreaterEqual(len(ws.charts or []), 2)
 		self.assertGreaterEqual(len(ws.shortcuts or []), 4)
+		settings_targets = {
+			s.get("link_to")
+			for s in (ws.shortcuts or [])
+			if (s.get("type") or "").strip() == "DocType"
+		}
+		if frappe.db.exists("DocType", "Omnexa Sales Settings"):
+			self.assertIn("Omnexa Sales Settings", settings_targets)
 		report_links = {
 			r.get("link_to")
 			for r in (ws.links or [])

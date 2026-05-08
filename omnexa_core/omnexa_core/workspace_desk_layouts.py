@@ -21,6 +21,8 @@ SELL_DESK: list[DeskSection] = [
 	(
 		"Operations",
 		[
+			# Single DocType — must live in desk seed; spec["shortcuts"] are dropped when desk_link_layout applies.
+			("Sales Settings", "DocType", "Omnexa Sales Settings", None),
 			("Leads Management", "DocType", "Pipeline Lead", None),
 			("Opportunities", "DocType", "Pipeline Opportunity", None),
 			# Pipeline board / funnel context (same DocType as opportunities in Omnexa; listed twice per standard wording)
