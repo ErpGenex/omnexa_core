@@ -23,6 +23,10 @@ Add your UI screenshots under `screenshot/` with the names below and they will r
 ![ERPGENEX Workspace](./screenshot/ui-workspace.png)
 ![ERPGENEX Integrations](./screenshot/ui-integrations.png)
 
+## تطبيقات جديدة على الـ bench (مع النواة أولاً)
+
+راجع **[docs/BENCH_NEW_APPS.md](docs/BENCH_NEW_APPS.md)** — ترتيب `apps.txt`، أوامر `bench get-app` القياسية لـ GitHub `ErpGenex/*`، وربط `required_apps` مع **`omnexa_core`**.
+
 ## Installation
 
 ### Option A: Docker (recommended for fast bootstrapping)
