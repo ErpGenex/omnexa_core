@@ -1,0 +1,18 @@
+---
+description: Bench تنزيل تطبيقات ErpGenex الجديدة مع omnexa_core
+globs:
+alwaysApply: false
+---
+
+# ErpGenex bench — تطبيق جديد
+
+عند إضافة أي تطبيق `omnexa_*` جديد إلى منصبة Frappe:
+
+1. ثبّت **`omnexa_core`** أولاً إن لم يكن موجوداً:  
+   `bench get-app https://github.com/ErpGenex/omnexa_core.git --branch develop`
+2. ثم التطبيق الجديد:  
+   `bench get-app https://github.com/ErpGenex/<APP>.git --branch develop`
+3. أضف اسم المجلد إلى **`sites/apps.txt`** مباشرة بعد سطر `omnexa_core` (أو وفق ترتيب التبعيات في [docs/BENCH_NEW_APPS.md](docs/BENCH_NEW_APPS.md)).
+4. في **`hooks.py`** للتطبيق الجديد: `required_apps` يجب أن يشمل **`omnexa_core`** عند الحاجة.
+
+المرجع الكامل: **`docs/BENCH_NEW_APPS.md`** في مستودع `omnexa_core`.
