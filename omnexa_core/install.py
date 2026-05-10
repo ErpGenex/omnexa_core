@@ -13,6 +13,8 @@ from pathlib import Path
 from json import dumps
 from json import loads
 
+from typing import Iterable
+
 import frappe
 from frappe import _
 from frappe.installer import install_app as install_site_app
@@ -1253,6 +1255,91 @@ def ensure_required_apps_are_registered():
 			f.write(f"{app}\n")
 
 
+def _walk_required_app_dependency_slugs(seed_apps: list[str]) -> list[str]:
+	"""Return unique app slugs reachable via ``required_apps`` hooks (breadth-first).
+
+	Frappe's ``install_app`` installs ``required_apps`` first. If a dependency exists on disk
+	but its slug is absent from ``sites/apps.txt``, ``parse_app_name(dep)`` wrongly falls
+	through to GitHub tag parsing and raises ``InvalidRemoteException``.
+	"""
+	order: list[str] = []
+	seen: set[str] = set()
+	queue = [a.strip() for a in seed_apps if a and str(a).strip()]
+
+	while queue:
+		app = queue.pop(0)
+		if app in seen:
+			continue
+		seen.add(app)
+		order.append(app)
+		if app in {"frappe", "erpnext", "payments"}:
+			continue
+		if not _app_source_present(app):
+			continue
+		try:
+			hooks = frappe.get_hooks(app_name=app)
+		except Exception:
+			continue
+		for raw in hooks.get("required_apps") or ():
+			if not isinstance(raw, str):
+				continue
+			dep = raw.strip()
+			if dep and dep not in seen:
+				queue.append(dep)
+
+	return order
+
+
+def ensure_hook_dependency_apps_registered(seed_apps: Iterable[str]) -> None:
+	"""Append local dependency app folders to ``sites/apps.txt`` before ``install_app`` runs.
+
+	Idempotent: skips slugs already present. Refreshes bench module map afterward.
+	"""
+	bench_path = Path(get_bench_path())
+	apps_txt = bench_path / "sites" / "apps.txt"
+	apps_dir = bench_path / "apps"
+	if not apps_txt.exists() or not apps_dir.exists():
+		return
+
+	seeds = list(dict.fromkeys([s for s in seed_apps if s]))
+	if not seeds:
+		return
+
+	walk_order = _walk_required_app_dependency_slugs(seeds)
+	raw_text = apps_txt.read_text(encoding="utf-8")
+	lines = raw_text.splitlines()
+	current_lines = _repair_apps_txt_entries(lines)
+	current_set = set(current_lines)
+
+	to_add: list[str] = []
+	for app in walk_order:
+		if app in {"frappe", "erpnext", "payments"}:
+			continue
+		if app in current_set:
+			continue
+		if (apps_dir / app).is_dir():
+			to_add.append(app)
+			current_set.add(app)
+
+	if not to_add:
+		return
+
+	with apps_txt.open("a", encoding="utf-8") as f:
+		if apps_txt.stat().st_size > 0:
+			with apps_txt.open("rb") as r:
+				r.seek(-1, 2)
+				if r.read(1) != b"\n":
+					f.write("\n")
+		for app in to_add:
+			f.write(f"{app}\n")
+
+	try:
+		frappe.cache.delete_value("app_modules")
+	except Exception:
+		pass
+	frappe.setup_module_map(include_all_apps=True)
+
+
 def ensure_global_defaults_compat():
 	"""Provide Global Defaults compatibility on sites where this DocType is absent.
 
@@ -1395,6 +1482,14 @@ def install_required_site_apps():
 		)
 
 	install_candidates = [app for app in target_apps if app in available and _app_source_present(app)]
+	# If a dependency exists under ``apps/`` but is missing from ``sites/apps.txt``,
+	# ``install_app`` prerequisite resolution calls ``parse_app_name`` and errors with
+	# ``InvalidRemoteException`` (GitHub tag parsing fallback).
+	pending = [a for a in install_candidates if a not in installed]
+	ensure_hook_dependency_apps_registered(pending)
+	available = set(frappe.get_all_apps())
+	install_candidates = [app for app in target_apps if app in available and _app_source_present(app)]
+	_ensure_required_apps_importable()
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
 	try:
 		for app in install_candidates:
@@ -1415,6 +1510,8 @@ def _install_missing_required_apps() -> tuple[list[str], list[str]]:
 	installed = set(frappe.get_installed_apps())
 	installed_now = []
 	skipped = []
+	pending_sync = [a for a in target_apps if a not in installed]
+	ensure_hook_dependency_apps_registered(pending_sync)
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
 	try:
 		for app in target_apps:
