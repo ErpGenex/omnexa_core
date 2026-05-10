@@ -441,6 +441,10 @@ def after_install():
 def after_migrate():
 	enforce_supported_frappe_version()
 	ensure_global_defaults_compat()
+	# Keep stack complete even after omnexa_core is already installed.
+	# `bench install-app omnexa_core` exits early with "already installed",
+	# so we enforce missing app install during migrate as a safe re-entry point.
+	install_required_site_apps()
 	ensure_omnexa_roles()
 	apply_default_branding()
 	run_site_hardening_after_app_changes()
