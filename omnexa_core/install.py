@@ -37,6 +37,11 @@ REQUIRED_SITE_APPS = [
 	"omnexa_hr",
 	"omnexa_intelligence_core",
 	"omnexa_projects_pm",
+	# Engineering bundle (stubs before parent; install_app still resolves required_apps).
+	"omnexa_eng_document_control",
+	"omnexa_eng_platform_integrations",
+	"omnexa_eng_workflow_engine",
+	"omnexa_engineering_consulting",
 	"omnexa_reporting_compliance",
 	"omnexa_services",
 	"omnexa_setup_intelligence",
