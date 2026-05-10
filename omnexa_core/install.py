@@ -148,13 +148,55 @@ def _branch_candidates_for_app(app: str) -> list[str]:
 	return candidates
 
 
+def _apps_from_apps_txt() -> list[str]:
+	"""Apps listed in ``sites/apps.txt`` (bench manifest), in file order.
+
+	``install_required_site_apps`` / ``sync_stack`` use :func:`_target_site_apps` so the whole stack
+	in ``apps.txt`` is installed with omnexa_core — not only :data:`REQUIRED_SITE_APPS`.
+	Framework apps and ``omnexa_core`` are skipped (core is already the install entrypoint).
+	"""
+	bench_path = Path(get_bench_path())
+	apps_txt = bench_path / "sites" / "apps.txt"
+	if not apps_txt.is_file():
+		return []
+
+	skip = frozenset({"frappe", "erpnext", "payments", "omnexa_core"})
+	out: list[str] = []
+	seen: set[str] = set()
+	for raw in apps_txt.read_text(encoding="utf-8").splitlines():
+		app = (raw or "").strip()
+		if not app or app in skip or app in seen:
+			continue
+		seen.add(app)
+		out.append(app)
+	return out
+
+
 def _target_site_apps() -> list[str]:
-	"""Apps that should be fetched/installed with omnexa_core bootstrap."""
-	out = list(REQUIRED_SITE_APPS)
+	"""Apps that should be fetched/installed with omnexa_core bootstrap.
+
+	Order: mandatory :data:`REQUIRED_SITE_APPS`, then anything extra in ``sites/apps.txt``, then
+	optional GitHub org discovery (when enabled).
+	"""
+	seen: set[str] = set()
+	out: list[str] = []
+
+	for app in REQUIRED_SITE_APPS:
+		if app not in seen:
+			seen.add(app)
+			out.append(app)
+
+	for app in _apps_from_apps_txt():
+		if app not in seen:
+			seen.add(app)
+			out.append(app)
+
 	if _auto_discover_github_apps_enabled():
 		for app in _discover_org_apps_from_github():
-			if app not in out:
+			if app not in seen:
+				seen.add(app)
 				out.append(app)
+
 	return out
 
 
@@ -1385,11 +1427,16 @@ def _install_missing_required_apps() -> tuple[list[str], list[str]]:
 
 @frappe.whitelist()
 def sync_stack(run_migrate=1, skip_search_index=1):
-	"""One-shot stack sync for omnexa_core required apps.
+	"""Install every app listed in ``sites/apps.txt`` that is not yet on the site (plus mandatory set).
+
+	Use when ``bench install-app omnexa_core`` reports "already installed" but vertical apps are missing:
+	``bench --site <site> execute omnexa_core.install.sync_stack``
+
+	Also runs migrate by default so DocTypes from newly installed apps sync.
 
 	Usage:
-	bench --site <site> execute "omnexa_core.install.sync_stack"
-	bench --site <site> execute "omnexa_core.install.sync_stack" --kwargs "{'run_migrate': 0}"
+	bench --site <site> execute omnexa_core.install.sync_stack
+	bench --site <site> execute omnexa_core.install.sync_stack --kwargs "{'run_migrate': 0}"
 	"""
 	enforce_supported_frappe_version()
 	ensure_required_apps_fetched()
