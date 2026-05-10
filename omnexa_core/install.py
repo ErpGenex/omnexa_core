@@ -301,7 +301,10 @@ def _bench_cli_or_throw(args: list[str], intro: str) -> None:
 def ensure_required_apps_fetched():
 	"""Clone missing ErpGenEx apps into the bench via `bench get-app` (skip-assets build race).
 
-	Called from before_install / before_migrate so sources exist before site install and migrate.
+	Uses :func:`_target_site_apps` (mandatory set + ``sites/apps.txt`` + optional GitHub org discovery).
+	Failures for apps outside :data:`REQUIRED_SITE_APPS` are logged; missing mandatory apps raise.
+
+	Called from before_install / before_migrate / :func:`install_required_site_apps` / :func:`sync_stack`.
 	"""
 	if not _auto_get_apps_enabled():
 		return
@@ -1517,8 +1520,14 @@ def install_required_site_apps():
 	missing_on_disk_required = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
 
 	missing_sources_required = [app for app in REQUIRED_SITE_APPS if app not in available or app in missing_on_disk_required]
-	if missing_sources_required:
+	# Also fetch when optional stack apps (apps.txt / org discovery) are missing on disk —
+	# otherwise we only ran ``ensure_required_apps_fetched`` in ``before_migrate`` and could skip
+	# re-fetch here if the mandatory set was already satisfied.
+	needs_fetch = missing_sources_required or any(not _app_source_present(a) for a in target_apps)
+	if needs_fetch:
 		ensure_required_apps_fetched()
+		ensure_local_bench_app_dirs_in_apps_txt()
+		target_apps = _target_site_apps()
 		ensure_required_apps_are_registered()
 		available = set(frappe.get_all_apps())
 		missing_on_disk_required = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
