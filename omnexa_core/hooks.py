@@ -11,6 +11,9 @@ app_license = "mit"
 # NOTE:
 # Do not set required_apps here, because many dependent apps already require omnexa_core.
 # Setting a reverse dependency causes recursive install loops (omnexa_core <-> omnexa_accounting, etc.).
+#
+# Engineering bundle (document control / integrations / workflow stubs): install
+# `omnexa_engineering_consulting` — its required_apps pull omnexa_eng_* after omnexa_core and omnexa_projects_pm.
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
