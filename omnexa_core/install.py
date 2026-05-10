@@ -1340,6 +1340,55 @@ def ensure_hook_dependency_apps_registered(seed_apps: Iterable[str]) -> None:
 	frappe.setup_module_map(include_all_apps=True)
 
 
+def ensure_local_bench_app_dirs_in_apps_txt() -> None:
+	"""Append any ``apps/<slug>`` folder that looks like a Frappe app but is missing from ``sites/apps.txt``.
+
+	``install_app`` resolves ``required_apps`` via ``parse_app_name``. Custom slugs that are not in
+	``apps.txt`` fall through to GitHub tag parsing; ``find_org`` only knows frappe/erpnext and raises
+	``InvalidRemoteException``. Cloning repos without updating ``apps.txt`` therefore breaks migrate.
+	"""
+	bench_path = Path(get_bench_path())
+	apps_txt = bench_path / "sites" / "apps.txt"
+	apps_dir = bench_path / "apps"
+	if not apps_txt.exists() or not apps_dir.is_dir():
+		return
+
+	raw_text = apps_txt.read_text(encoding="utf-8")
+	lines = raw_text.splitlines()
+	current = _repair_apps_txt_entries(lines)
+	current_set = set(current)
+
+	to_add: list[str] = []
+	for p in sorted(apps_dir.iterdir(), key=lambda x: x.name.lower()):
+		if not p.is_dir() or p.name.startswith("."):
+			continue
+		name = p.name
+		if name in current_set:
+			continue
+		if not _app_source_present(name):
+			continue
+		to_add.append(name)
+		current_set.add(name)
+
+	if not to_add:
+		return
+
+	with apps_txt.open("a", encoding="utf-8") as f:
+		if apps_txt.stat().st_size > 0:
+			with apps_txt.open("rb") as r:
+				r.seek(-1, 2)
+				if r.read(1) != b"\n":
+					f.write("\n")
+		for app in to_add:
+			f.write(f"{app}\n")
+
+	try:
+		frappe.cache.delete_value("app_modules")
+	except Exception:
+		pass
+	frappe.setup_module_map(include_all_apps=True)
+
+
 def ensure_global_defaults_compat():
 	"""Provide Global Defaults compatibility on sites where this DocType is absent.
 
@@ -1461,6 +1510,8 @@ def install_required_site_apps():
 	Frappe installer already skips apps that are already installed.
 	"""
 	target_apps = _target_site_apps()
+	ensure_local_bench_app_dirs_in_apps_txt()
+	target_apps = _target_site_apps()
 	available = set(frappe.get_all_apps())
 	installed = set(frappe.get_installed_apps())
 	missing_on_disk_required = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
@@ -1485,8 +1536,8 @@ def install_required_site_apps():
 	# If a dependency exists under ``apps/`` but is missing from ``sites/apps.txt``,
 	# ``install_app`` prerequisite resolution calls ``parse_app_name`` and errors with
 	# ``InvalidRemoteException`` (GitHub tag parsing fallback).
-	pending = [a for a in install_candidates if a not in installed]
-	ensure_hook_dependency_apps_registered(pending)
+	seed_for_hook_deps = [a for a in target_apps if _app_source_present(a)]
+	ensure_hook_dependency_apps_registered(seed_for_hook_deps)
 	available = set(frappe.get_all_apps())
 	install_candidates = [app for app in target_apps if app in available and _app_source_present(app)]
 	_ensure_required_apps_importable()
@@ -1506,12 +1557,13 @@ def _missing_source_apps() -> list[str]:
 
 
 def _install_missing_required_apps() -> tuple[list[str], list[str]]:
+	ensure_local_bench_app_dirs_in_apps_txt()
 	target_apps = [app for app in _target_site_apps() if _app_source_present(app)]
 	installed = set(frappe.get_installed_apps())
 	installed_now = []
 	skipped = []
-	pending_sync = [a for a in target_apps if a not in installed]
-	ensure_hook_dependency_apps_registered(pending_sync)
+	seed_for_hook_deps = [a for a in _target_site_apps() if _app_source_present(a)]
+	ensure_hook_dependency_apps_registered(seed_for_hook_deps)
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
 	try:
 		for app in target_apps:
