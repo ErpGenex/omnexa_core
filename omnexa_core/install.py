@@ -60,6 +60,35 @@ CORE_APP_SLUG = "omnexa_core"
 _DISCOVERED_ORG_APP_DEFAULT_BRANCH: dict[str, str] = {}
 
 
+def _truthy_env(name: str, default: str = "0") -> bool:
+	return str(os.environ.get(name, default)).strip().lower() in ("1", "true", "yes", "on")
+
+
+def _github_app_clone_urls(org: str, app: str) -> list[str]:
+	"""URLs to try with ``bench get-app`` (private org repos often need SSH when HTTPS has no token).
+
+	- ``OMNEXA_APPS_GIT_USE_SSH=1``: SSH only (``git@github.com:org/app.git``).
+	- Otherwise HTTPS first, then SSH unless ``OMNEXA_APPS_GIT_HTTPS_FALLBACK_SSH=0``.
+	- ``OMNEXA_GITHUB_SSH_HOST`` defaults to ``github.com`` (GitHub Enterprise: e.g. ``github.company.com``).
+	"""
+	org = (org or "").strip()
+	app = (app or "").strip()
+	if not org or not app:
+		return []
+
+	host = (os.environ.get("OMNEXA_GITHUB_SSH_HOST") or "github.com").strip()
+	ssh_url = f"git@{host}:{org}/{app}.git"
+	https_url = f"https://github.com/{org}/{app}.git"
+
+	if _truthy_env("OMNEXA_APPS_GIT_USE_SSH"):
+		return [ssh_url]
+
+	out = [https_url]
+	if _truthy_env("OMNEXA_APPS_GIT_HTTPS_FALLBACK_SSH", "1"):
+		out.append(ssh_url)
+	return out
+
+
 def _auto_get_apps_enabled() -> bool:
 	return str(os.environ.get("OMNEXA_AUTO_GET_APPS", "1")).strip().lower() not in (
 		"0",
@@ -324,39 +353,52 @@ def ensure_required_apps_fetched():
 	required_failures = []
 
 	for app in missing:
-		url = f"https://github.com/{org}/{app}.git"
 		fetched = False
-		last_err = ""
+		errs: list[str] = []
 
-		for branch in _branch_candidates_for_app(app):
-			proc = _run_bench_cli(["get-app", url, "--branch", branch, "--skip-assets"])
-			if proc.returncode == 0:
-				fetched = True
-				break
-			last_err = (proc.stderr or proc.stdout or "").strip() or f"exit code {proc.returncode}"
-
-		if not fetched:
-			proc = _run_bench_cli(["get-app", url, "--skip-assets"])
-			if proc.returncode == 0:
-				fetched = True
-			else:
+		for url in _github_app_clone_urls(org, app):
+			last_err = ""
+			for branch in _branch_candidates_for_app(app):
+				proc = _run_bench_cli(["get-app", url, "--branch", branch, "--skip-assets"])
+				if proc.returncode == 0:
+					fetched = True
+					break
 				last_err = (proc.stderr or proc.stdout or "").strip() or f"exit code {proc.returncode}"
+
+			if not fetched:
+				proc = _run_bench_cli(["get-app", url, "--skip-assets"])
+				if proc.returncode == 0:
+					fetched = True
+				else:
+					last_err = (proc.stderr or proc.stdout or "").strip() or f"exit code {proc.returncode}"
+
+			if fetched:
+				break
+			errs.append(f"{url}\n{last_err}")
 
 		if fetched:
 			continue
 
+		combined = "\n\n---\n\n".join(errs) if errs else "unknown error"
+		urls_tried = " | ".join(_github_app_clone_urls(org, app))
+
 		if app in required_set:
-			required_failures.append((app, url, last_err))
+			required_failures.append((app, urls_tried, combined))
 		else:
 			frappe.log_error(
 				title="Omnexa: optional org app fetch skipped",
-				message=f"App: {app}\nURL: {url}\nError:\n{last_err}",
+				message=f"App: {app}\nTried: {urls_tried}\nError:\n{combined}",
 			)
 
 	if required_failures:
 		first = required_failures[0]
+		hint = (
+			"\n\nFor private GitHub repos: add a deploy key or use "
+			"`OMNEXA_APPS_GIT_USE_SSH=1` with `git@github.com` access, or configure HTTPS credentials "
+			"(e.g. `git config credential.helper` / `GH_TOKEN`)."
+		)
 		frappe.throw(
-			f"Failed to fetch required app `{first[0]}` from {first[1]}.\n{first[2]}"
+			f"Failed to fetch required app `{first[0]}`. Tried: {first[1]}.\n{first[2]}{hint}"
 		)
 
 	_bench_cli_or_throw(
