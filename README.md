@@ -25,7 +25,10 @@ Add your UI screenshots under `screenshot/` with the names below and they will r
 
 ## تطبيقات جديدة على الـ bench (مع النواة أولاً)
 
-راجع **[docs/BENCH_NEW_APPS.md](docs/BENCH_NEW_APPS.md)** — ترتيب `apps.txt`، أوامر `bench get-app` القياسية لـ GitHub `ErpGenex/*`، وربط `required_apps` مع **`omnexa_core`**.
+1. في `sites/apps.txt`: ضع **`frappe`** ثم **`omnexa_core`** ثم باقي التطبيقات حسب تبعيات `required_apps`.  
+2. من جذر الـ bench: `bench get-app https://github.com/ErpGenex/omnexa_core.git --branch develop` ثم `bench get-app https://github.com/ErpGenex/<APP>.git --branch develop`.  
+3. أضف اسم المجلد إلى `sites/apps.txt` بالترتيب الصحيح، ثم `bench --site <site> install-app <APP>` و`migrate` و`bench build --app <APP>` عند الحاجة.  
+4. في `hooks.py` للتطبيق الجديد: `required_apps = ["omnexa_core", ...]` عند الحاجة لتجنب أخطاء التثبيت.
 
 ## Installation
 
