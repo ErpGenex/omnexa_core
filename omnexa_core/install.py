@@ -146,6 +146,20 @@ def _auto_discover_github_apps_enabled() -> bool:
 	)
 
 
+def _auto_install_site_apps_enabled() -> bool:
+	"""Whether omnexa_core should auto-install fetched apps on the site.
+
+	Default is disabled to keep fresh installs safe when vertical apps have business
+	prerequisites (for example, requiring at least one Company during before_install).
+	"""
+	return str(os.environ.get("OMNEXA_AUTO_INSTALL_SITE_APPS", "0")).strip().lower() in (
+		"1",
+		"true",
+		"yes",
+		"on",
+	)
+
+
 def _is_installable_omnexa_repo(repo_name: str) -> bool:
 	name = (repo_name or "").strip()
 	if not name or name == CORE_APP_SLUG:
@@ -1626,6 +1640,19 @@ def install_required_site_apps():
 			+ ". Run `bench get-app` for them (or set OMNEXA_AUTO_GET_APPS=1 and ensure `bench` is on PATH), "
 			"then install omnexa_core again."
 		)
+
+	# Safe default: fetch/register only. Many vertical apps require business setup
+	# (e.g. Company, GL baseline) and can fail during omnexa_core bootstrap.
+	if not _auto_install_site_apps_enabled():
+		frappe.msgprint(
+			_(
+				"Omnexa Core fetched and registered stack apps only. "
+				"Auto-install is disabled by default (set OMNEXA_AUTO_INSTALL_SITE_APPS=1 to enable)."
+			),
+			indicator="blue",
+			alert=True,
+		)
+		return
 
 	install_candidates = [app for app in target_apps if app in available and _app_source_present(app)]
 	# If a dependency exists under ``apps/`` but is missing from ``sites/apps.txt``,
