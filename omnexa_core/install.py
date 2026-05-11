@@ -13,6 +13,7 @@ from pathlib import Path
 from json import dumps
 from json import loads
 
+from contextlib import contextmanager
 from typing import Iterable
 
 import frappe
@@ -50,6 +51,45 @@ REQUIRED_SITE_APPS = [
 	"omnexa_user_academy",
 	"omnexa_n8n_bridge",
 ]
+
+# Optional bench stubs; legacy hooks on ``omnexa_engineering_consulting`` may still list them. If absent from
+# disk, Frappe's ``parse_app_name`` falls through to GitHub tag parsing → InvalidRemoteException.
+OPTIONAL_OMNEXA_ENG_STUB_APPS = frozenset(
+	{
+		"omnexa_eng_document_control",
+		"omnexa_eng_platform_integrations",
+		"omnexa_eng_workflow_engine",
+	}
+)
+
+
+@contextmanager
+def _tolerate_missing_eng_stub_required_apps():
+	"""Strip optional ``omnexa_eng_*`` from engineering consulting hooks during ``install_app``."""
+	orig = frappe.get_hooks
+
+	def _wrapped(hook=None, default="_KEEP_DEFAULT_LIST", app_name=None):
+		if hook is not None:
+			return orig(hook=hook, default=default, app_name=app_name)
+		h = orig(hook=None, default=default, app_name=app_name)
+		if app_name == "omnexa_engineering_consulting":
+			ra = h.get("required_apps") or []
+			filtered = [
+				a
+				for a in ra
+				if not (isinstance(a, str) and a.strip() in OPTIONAL_OMNEXA_ENG_STUB_APPS)
+			]
+			if len(filtered) != len(ra):
+				h = frappe._dict(dict(h))
+				h["required_apps"] = filtered
+		return h
+
+	frappe.get_hooks = _wrapped
+	try:
+		yield
+	finally:
+		frappe.get_hooks = orig
+
 
 # Auto `bench get-app` for REQUIRED_SITE_APPS when sources are missing (set OMNEXA_AUTO_GET_APPS=0 to disable).
 DEFAULT_APPS_GIT_ORG = os.environ.get("ERPGENEX_GITHUB_ORG", "ErpGenex")
@@ -1598,10 +1638,11 @@ def install_required_site_apps():
 	_ensure_required_apps_importable()
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
 	try:
-		for app in install_candidates:
-			if app in installed:
-				continue
-			install_site_app(app, verbose=False, set_as_patched=True, force=False)
+		with _tolerate_missing_eng_stub_required_apps():
+			for app in install_candidates:
+				if app in installed:
+					continue
+				install_site_app(app, verbose=False, set_as_patched=True, force=False)
 	finally:
 		frappe.flags.omnexa_suppress_after_app_workspace_sync = False
 
@@ -1621,13 +1662,14 @@ def _install_missing_required_apps() -> tuple[list[str], list[str]]:
 	ensure_hook_dependency_apps_registered(seed_for_hook_deps)
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
 	try:
-		for app in target_apps:
-			if app in installed:
-				skipped.append(app)
-				continue
-			install_site_app(app, verbose=False, set_as_patched=True, force=False)
-			installed_now.append(app)
-			installed.add(app)
+		with _tolerate_missing_eng_stub_required_apps():
+			for app in target_apps:
+				if app in installed:
+					skipped.append(app)
+					continue
+				install_site_app(app, verbose=False, set_as_patched=True, force=False)
+				installed_now.append(app)
+				installed.add(app)
 	finally:
 		frappe.flags.omnexa_suppress_after_app_workspace_sync = False
 	return installed_now, skipped
