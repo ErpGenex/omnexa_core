@@ -64,6 +64,14 @@ OPTIONAL_OMNEXA_ENG_STUB_APPS = frozenset(
 )
 
 
+def _strict_required_site_apps() -> list[str]:
+	"""Required apps that must exist for bootstrap to continue.
+
+	Engineering stub repos can be private on fresh servers, so they remain best-effort.
+	"""
+	return [app for app in REQUIRED_SITE_APPS if app not in OPTIONAL_OMNEXA_ENG_STUB_APPS]
+
+
 @contextmanager
 def _tolerate_missing_eng_stub_required_apps():
 	"""Strip optional ``omnexa_eng_*`` from engineering consulting hooks during ``install_app``."""
@@ -153,6 +161,19 @@ def _auto_install_site_apps_enabled() -> bool:
 	Default is enabled. Advanced users can disable with ``OMNEXA_AUTO_INSTALL_SITE_APPS=0``.
 	"""
 	return str(os.environ.get("OMNEXA_AUTO_INSTALL_SITE_APPS", "1")).strip().lower() in (
+		"1",
+		"true",
+		"yes",
+		"on",
+	)
+
+
+def _auto_install_full_stack_on_core_enabled() -> bool:
+	"""Install full stack during core bootstrap (apps.txt + org-discovered apps).
+
+	Default disabled for safer first install on brand-new servers.
+	"""
+	return str(os.environ.get("OMNEXA_AUTO_INSTALL_FULL_STACK_ON_CORE", "0")).strip().lower() in (
 		"1",
 		"true",
 		"yes",
@@ -402,7 +423,7 @@ def ensure_required_apps_fetched():
 		return
 
 	org = (os.environ.get("ERPGENEX_GITHUB_ORG") or DEFAULT_APPS_GIT_ORG).strip()
-	required_set = set(REQUIRED_SITE_APPS) - set(OPTIONAL_OMNEXA_ENG_STUB_APPS)
+	required_set = set(_strict_required_site_apps())
 	required_failures = []
 
 	for app in missing:
@@ -1615,11 +1636,12 @@ def install_required_site_apps():
 	target_apps = _target_site_apps()
 	ensure_local_bench_app_dirs_in_apps_txt()
 	target_apps = _target_site_apps()
+	strict_required_apps = _strict_required_site_apps()
 	available = set(frappe.get_all_apps())
 	installed = set(frappe.get_installed_apps())
-	missing_on_disk_required = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
+	missing_on_disk_required = [app for app in strict_required_apps if not _app_source_present(app)]
 
-	missing_sources_required = [app for app in REQUIRED_SITE_APPS if app not in available or app in missing_on_disk_required]
+	missing_sources_required = [app for app in strict_required_apps if app not in available or app in missing_on_disk_required]
 	# Also fetch when optional stack apps (apps.txt / org discovery) are missing on disk —
 	# otherwise we only ran ``ensure_required_apps_fetched`` in ``before_migrate`` and could skip
 	# re-fetch here if the mandatory set was already satisfied.
@@ -1630,8 +1652,8 @@ def install_required_site_apps():
 		target_apps = _target_site_apps()
 		ensure_required_apps_are_registered()
 		available = set(frappe.get_all_apps())
-		missing_on_disk_required = [app for app in REQUIRED_SITE_APPS if not _app_source_present(app)]
-		missing_sources_required = [app for app in REQUIRED_SITE_APPS if app not in available or app in missing_on_disk_required]
+		missing_on_disk_required = [app for app in strict_required_apps if not _app_source_present(app)]
+		missing_sources_required = [app for app in strict_required_apps if app not in available or app in missing_on_disk_required]
 	_ensure_required_apps_importable()
 	if missing_sources_required:
 		frappe.throw(
@@ -1653,14 +1675,17 @@ def install_required_site_apps():
 		)
 		return
 
-	install_candidates = [app for app in target_apps if app in available and _app_source_present(app)]
+	bootstrap_seed_apps = (
+		target_apps if _auto_install_full_stack_on_core_enabled() else strict_required_apps
+	)
+	install_candidates = [app for app in bootstrap_seed_apps if app in available and _app_source_present(app)]
 	# If a dependency exists under ``apps/`` but is missing from ``sites/apps.txt``,
 	# ``install_app`` prerequisite resolution calls ``parse_app_name`` and errors with
 	# ``InvalidRemoteException`` (GitHub tag parsing fallback).
-	seed_for_hook_deps = [a for a in target_apps if _app_source_present(a)]
+	seed_for_hook_deps = [a for a in bootstrap_seed_apps if _app_source_present(a)]
 	ensure_hook_dependency_apps_registered(seed_for_hook_deps)
 	available = set(frappe.get_all_apps())
-	install_candidates = [app for app in target_apps if app in available and _app_source_present(app)]
+	install_candidates = [app for app in bootstrap_seed_apps if app in available and _app_source_present(app)]
 	_ensure_required_apps_importable()
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
 	try:
@@ -1702,7 +1727,7 @@ def ensure_setup_wizard_prerequisites():
 
 def _missing_source_apps() -> list[str]:
 	available = set(frappe.get_all_apps())
-	return [app for app in REQUIRED_SITE_APPS if app not in available or not _app_source_present(app)]
+	return [app for app in _strict_required_site_apps() if app not in available or not _app_source_present(app)]
 
 
 def _install_missing_required_apps() -> tuple[list[str], list[str]]:
