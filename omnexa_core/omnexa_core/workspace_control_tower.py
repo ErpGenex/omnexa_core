@@ -1767,6 +1767,8 @@ def _merge_link_sections(ws, sections: list[tuple[str, list[tuple[str, str, str,
 			},
 		)
 		for label, link_type, link_to, fourth in links:
+			if (link_type or "").strip() == "URL":
+				continue
 			if link_type == "DocType" and not _doctype_ready(link_to):
 				continue
 			if link_type == "Report" and not frappe.db.exists("Report", link_to):
@@ -2210,6 +2212,10 @@ def _apply_desk_link_sections(ws, sections: list[tuple[str, list[tuple[str, str,
 			},
 		)
 		for label, link_type, link_to, ref_doc in rows:
+			# Workspace Link rows only support DocType / Page / Report (dynamic link options).
+			# Desk tuples may use ("…", "URL", "/app/…") for convenience; those belong in shortcuts, not links.
+			if (link_type or "").strip() == "URL":
+				continue
 			if link_type == "DocType" and not _doctype_ready(link_to):
 				continue
 			if link_type == "Report" and not frappe.db.exists("Report", link_to):
