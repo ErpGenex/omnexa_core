@@ -402,7 +402,7 @@ def ensure_required_apps_fetched():
 		return
 
 	org = (os.environ.get("ERPGENEX_GITHUB_ORG") or DEFAULT_APPS_GIT_ORG).strip()
-	required_set = set(REQUIRED_SITE_APPS)
+	required_set = set(REQUIRED_SITE_APPS) - set(OPTIONAL_OMNEXA_ENG_STUB_APPS)
 	required_failures = []
 
 	for app in missing:
