@@ -38,10 +38,11 @@ REQUIRED_SITE_APPS = [
 	"omnexa_hr",
 	"omnexa_intelligence_core",
 	"omnexa_projects_pm",
-	# Engineering vertical (logic lives in this app). Stub apps omnexa_eng_* are optional bench
-	# placeholders for future extraction — not listed here so fresh servers without GitHub access
-	# to private ErpGenex/* stub repos can still install the stack; install stubs manually if needed.
+	# Engineering vertical + shared stubs should be fetched with core bootstrap.
 	"omnexa_engineering_consulting",
+	"omnexa_eng_document_control",
+	"omnexa_eng_platform_integrations",
+	"omnexa_eng_workflow_engine",
 	"omnexa_reporting_compliance",
 	"omnexa_services",
 	"omnexa_setup_intelligence",
@@ -149,10 +150,9 @@ def _auto_discover_github_apps_enabled() -> bool:
 def _auto_install_site_apps_enabled() -> bool:
 	"""Whether omnexa_core should auto-install fetched apps on the site.
 
-	Default is disabled to keep fresh installs safe when vertical apps have business
-	prerequisites (for example, requiring at least one Company during before_install).
+	Default is enabled. Advanced users can disable with ``OMNEXA_AUTO_INSTALL_SITE_APPS=0``.
 	"""
-	return str(os.environ.get("OMNEXA_AUTO_INSTALL_SITE_APPS", "0")).strip().lower() in (
+	return str(os.environ.get("OMNEXA_AUTO_INSTALL_SITE_APPS", "1")).strip().lower() in (
 		"1",
 		"true",
 		"yes",
@@ -1641,13 +1641,12 @@ def install_required_site_apps():
 			"then install omnexa_core again."
 		)
 
-	# Safe default: fetch/register only. Many vertical apps require business setup
-	# (e.g. Company, GL baseline) and can fail during omnexa_core bootstrap.
+	# Allow operators to keep fetch-only mode when needed.
 	if not _auto_install_site_apps_enabled():
 		frappe.msgprint(
 			_(
 				"Omnexa Core fetched and registered stack apps only. "
-				"Auto-install is disabled by default (set OMNEXA_AUTO_INSTALL_SITE_APPS=1 to enable)."
+				"Auto-install is disabled (set OMNEXA_AUTO_INSTALL_SITE_APPS=1 to enable)."
 			),
 			indicator="blue",
 			alert=True,
@@ -1669,9 +1668,36 @@ def install_required_site_apps():
 			for app in install_candidates:
 				if app in installed:
 					continue
-				install_site_app(app, verbose=False, set_as_patched=True, force=False)
+				try:
+					install_site_app(app, verbose=False, set_as_patched=True, force=False)
+				except Exception:
+					# Keep omnexa_core bootstrap resilient; apps with business prerequisites
+					# (e.g. requiring Company) can be installed later after setup wizard.
+					frappe.log_error(
+						frappe.get_traceback(),
+						f"Omnexa: deferred install for app `{app}` during core bootstrap",
+					)
 	finally:
 		frappe.flags.omnexa_suppress_after_app_workspace_sync = False
+
+
+def ensure_setup_wizard_prerequisites():
+	"""Guarantee wizard dependencies exist before creating masters.
+
+	`setup_wizard_create_core_masters` writes GL Account records, which require
+	`omnexa_accounting` to be installed on the site first.
+	"""
+	ensure_required_apps_fetched()
+	ensure_required_apps_are_registered()
+	ensure_local_bench_app_dirs_in_apps_txt()
+	if "omnexa_accounting" in set(frappe.get_installed_apps()):
+		return
+	if not _app_source_present("omnexa_accounting"):
+		frappe.throw(
+			"omnexa_accounting source is missing from bench. "
+			"Please run `bench get-app https://github.com/ErpGenex/omnexa_accounting.git --branch develop`."
+		)
+	install_site_app("omnexa_accounting", verbose=False, set_as_patched=True, force=False)
 
 
 def _missing_source_apps() -> list[str]:
@@ -2093,6 +2119,7 @@ def apply_default_branding():
 
 def setup_wizard_create_core_masters(args):
 	"""Create company, head branch, tax baseline, and starter CoA from setup wizard."""
+	ensure_setup_wizard_prerequisites()
 	if not isinstance(args, dict):
 		args = {}
 
