@@ -16,7 +16,7 @@ app_license = "mit"
 # (runs after ``bench install-app omnexa_core``). On sites where core is already installed, run:
 #   bench --site <site> execute omnexa_core.install.sync_stack
 #
-# Engineering bundle: ``omnexa_engineering_consulting`` required_apps pull omnexa_eng_* stubs after core/PM.
+# Engineering: ``omnexa_engineering_consulting`` depends on core + PM only; ``omnexa_eng_*`` stub apps are optional.
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [

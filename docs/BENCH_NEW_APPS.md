@@ -50,9 +50,9 @@ required_apps = ["omnexa_core"]  # وأي تبعيات أخرى (مثل omnexa_p
 
 ---
 
-## 3) تطبيقات الاستخراج (Phase E) مثل `omnexa_eng_*`
+## 3) تطبيقات الاستخراج (Phase E) مثل `omnexa_eng_*` (اختيارية)
 
-هذه التطبيقات غالباً **`required_apps = ["omnexa_engineering_consulting"]`** أو تعتمد على النواة عبر التطبيق العمودي. تنزيلها:
+ليست مطلوبة لتثبيت **`omnexa_engineering_consulting`** (المنطق داخل التطبيق العمودي). نزّلها فقط إذا كان فريقك يستخرجها كمنتجات منفصلة أو تحتاج وصول GitHub (قد تكون خاصة — PAT أو SSH). مثال:
 
 ```bash
 bench get-app https://github.com/ErpGenex/omnexa_eng_workflow_engine.git --branch develop

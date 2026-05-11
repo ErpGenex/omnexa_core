@@ -37,10 +37,9 @@ REQUIRED_SITE_APPS = [
 	"omnexa_hr",
 	"omnexa_intelligence_core",
 	"omnexa_projects_pm",
-	# Engineering bundle (stubs before parent; install_app still resolves required_apps).
-	"omnexa_eng_document_control",
-	"omnexa_eng_platform_integrations",
-	"omnexa_eng_workflow_engine",
+	# Engineering vertical (logic lives in this app). Stub apps omnexa_eng_* are optional bench
+	# placeholders for future extraction — not listed here so fresh servers without GitHub access
+	# to private ErpGenex/* stub repos can still install the stack; install stubs manually if needed.
 	"omnexa_engineering_consulting",
 	"omnexa_reporting_compliance",
 	"omnexa_services",
