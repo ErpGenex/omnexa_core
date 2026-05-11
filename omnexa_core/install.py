@@ -171,13 +171,15 @@ def _auto_install_site_apps_enabled() -> bool:
 def _auto_install_full_stack_on_core_enabled() -> bool:
 	"""Install full stack during core bootstrap (apps.txt + org-discovered apps).
 
-	Default disabled for safer first install on brand-new servers.
+	Default **enabled** so ``bench install-app omnexa_core`` / migrate align the site with
+	``sites/apps.txt`` without extra env vars. Operators who need a minimal core-only pass can set
+	``OMNEXA_AUTO_INSTALL_FULL_STACK_ON_CORE=0``.
 	"""
-	return str(os.environ.get("OMNEXA_AUTO_INSTALL_FULL_STACK_ON_CORE", "0")).strip().lower() in (
-		"1",
-		"true",
-		"yes",
-		"on",
+	return str(os.environ.get("OMNEXA_AUTO_INSTALL_FULL_STACK_ON_CORE", "1")).strip().lower() not in (
+		"0",
+		"false",
+		"no",
+		"off",
 	)
 
 
