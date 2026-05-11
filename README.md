@@ -30,6 +30,38 @@ Add your UI screenshots under `screenshot/` with the names below and they will r
 3. أضف اسم المجلد إلى `sites/apps.txt` بالترتيب الصحيح، ثم `bench --site <site> install-app <APP>` و`migrate` و`bench build --app <APP>` عند الحاجة.  
 4. في `hooks.py` للتطبيق الجديد: `required_apps = ["omnexa_core", ...]` عند الحاجة لتجنب أخطاء التثبيت.
 
+## موقع جديد — أمر تسطيب (Bench)
+
+افتراضياً، بعد `install-app omnexa_core` تُجلب التطبيقات الناقصة (إن وُجد `bench` على الـ PATH و`OMNEXA_AUTO_GET_APPS=1` وهو الافتراضي) وتُثبَّت حسب `sites/apps.txt` + الاكتشاف من GitHub عند التفعيل. للمستودعات الخاصة ضع توكناً:
+
+```bash
+export GITHUB_TOKEN="ghp_xxxxxxxx"   # أو GH_TOKEN
+# اختياري: تثبيت الحد الأدنى فقط بدون باقي apps.txt
+# export OMNEXA_AUTO_INSTALL_FULL_STACK_ON_CORE=0
+```
+
+من جذر الـ bench (بعد `bench setup requirements` ونسخ/تجهيز `sites/apps.txt` كما تريد للإنتاج):
+
+```bash
+cd /path/to/frappe-bench
+
+bench new-site YOUR_SITE \
+  --db-root-password ROOT_DB_PASSWORD \
+  --admin-password ADMIN_PASSWORD
+
+bench --site YOUR_SITE install-app omnexa_core
+bench --site YOUR_SITE migrate
+bench build
+bench --site YOUR_SITE clear-cache
+sudo supervisorctl restart all   # أو طريقة إعادة التشغيل المناسبة لبيئتك
+```
+
+إذا كان `omnexa_core` مثبتاً مسبقاً والموقع بلا باقي الحزمة:
+
+```bash
+bench --site YOUR_SITE execute omnexa_core.install.sync_stack
+```
+
 ## Installation
 
 ### Option A: Docker (recommended for fast bootstrapping)
