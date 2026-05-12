@@ -558,6 +558,35 @@ FIXED_ASSETS_DESK: list[DeskSection] = [
 	),
 ]
 
+# Satellite desk: warranties, risk, compliance — appears in sidebar as its own workspace.
+ASSET_INSURANCE_DESK: list[DeskSection] = [
+	(
+		"Register & coverage",
+		[
+			_DESK_ERP_SETTINGS_URL,
+			("Fixed Asset", "DocType", "Fixed Asset", None),
+			("Warranty expiring", "Report", "Warranty Expiring Assets", "Fixed Asset"),
+			("Asset risk register", "Report", "Asset Risk Register", "Fixed Asset"),
+			("Replacement forecast", "Report", "Replacement Forecast Report", "Fixed Asset"),
+		],
+	),
+	(
+		"Assurance & inspections",
+		[
+			("Inspection compliance", "Report", "Inspection Compliance Report", "Fixed Asset Inspection"),
+			("Asset health", "Report", "Asset Health Report", "Fixed Asset"),
+			("Reliability report", "Report", "Reliability Report", "Asset Reliability Trend"),
+			("Failure analysis", "Report", "Failure Analysis Report", "Asset Failure Event"),
+		],
+	),
+	(
+		"Full fixed assets",
+		[
+			("Open Fixed Assets workspace", "Workspace", "Fixed Assets", None),
+		],
+	),
+]
+
 # --- Vertical workspaces: Tourism (full module navigation; sync replaces Workspace.links from this list) ---
 TOURISM_DESK: list[DeskSection] = [
 	(
@@ -1550,6 +1579,10 @@ _BY_WORKSPACE: dict[str, list[DeskSection]] = {
 	"Fixed assets": FIXED_ASSETS_DESK,
 	"fixed-assets": FIXED_ASSETS_DESK,
 	"fixed_assets": FIXED_ASSETS_DESK,
+	"Asset Insurance": ASSET_INSURANCE_DESK,
+	"asset insurance": ASSET_INSURANCE_DESK,
+	"asset-insurance": ASSET_INSURANCE_DESK,
+	"asset_insurance": ASSET_INSURANCE_DESK,
 	"Tourism": TOURISM_DESK,
 	"tourism": TOURISM_DESK,
 	"omnexa_tourism": TOURISM_DESK,
@@ -1614,6 +1647,45 @@ _BY_WORKSPACE: dict[str, list[DeskSection]] = {
 	"customer_core": CRM_DESK,
 }
 
+# Normalize titles/labels from sites that renamed workspaces or use Arabic titles in `name`.
+_DESK_NAME_ALIASES: dict[str, str] = {
+	"fixed assets": "Fixed Assets",
+	"omnexa fixed assets": "Fixed Assets",
+	"asset insurance": "Asset Insurance",
+	"تأمين الأصول": "Asset Insurance",
+}
+
+
+def _normalize_desk_workspace_key(name: str) -> str:
+	return " ".join((name or "").strip().lower().replace("_", " ").replace("-", " ").split())
+
 
 def get_desk_sections_for_workspace(workspace_name: str) -> list[DeskSection] | None:
-	return _BY_WORKSPACE.get(workspace_name)
+	if not workspace_name:
+		return None
+	raw = workspace_name.strip()
+	if raw in _BY_WORKSPACE:
+		return _BY_WORKSPACE[raw]
+	nk = _normalize_desk_workspace_key(raw)
+	mapped = _DESK_NAME_ALIASES.get(nk)
+	if mapped and mapped in _BY_WORKSPACE:
+		return _BY_WORKSPACE[mapped]
+	for k, sections in _BY_WORKSPACE.items():
+		if _normalize_desk_workspace_key(k) == nk:
+			return sections
+	return None
+
+
+def resolve_desk_sections_for_workspace_doc(ws) -> list[DeskSection] | None:
+	"""Like :func:`get_desk_sections_for_workspace` but also tries ``title`` / ``label`` on the doc."""
+	for candidate in (
+		getattr(ws, "name", None),
+		getattr(ws, "title", None),
+		getattr(ws, "label", None),
+	):
+		if not candidate:
+			continue
+		sections = get_desk_sections_for_workspace(str(candidate).strip())
+		if sections:
+			return sections
+	return None

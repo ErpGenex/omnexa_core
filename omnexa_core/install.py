@@ -1350,6 +1350,7 @@ def ensure_default_sidebar_workspace_order():
 		priority_buckets = [
 			{"dashboard"},
 			{"accounting"},
+			{"fixed assets", "asset insurance"},
 			{"sell", "sales"},
 			{"buy", "purchase", "purchasing"},
 			{"stock", "inventory", "warehouse"},
@@ -1363,7 +1364,16 @@ def ensure_default_sidebar_workspace_order():
 
 		def workspace_tokens(ws):
 			# For the top fixed order, match by workspace identity (name/title), not module.
-			return {norm(ws.get("name")), norm(ws.get("title"))}
+			out = set()
+			for key in ("name", "title"):
+				val = norm(ws.get(key))
+				if not val:
+					continue
+				out.add(val)
+				for part in val.replace("-", " ").replace("_", " ").split():
+					if len(part) > 1:
+						out.add(part)
+			return out
 
 		used = set()
 		ordered = []

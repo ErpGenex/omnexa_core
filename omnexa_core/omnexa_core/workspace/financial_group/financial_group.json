@@ -104,6 +104,14 @@
   },
   {
    "hidden": 0,
+   "icon": "assets",
+   "label": "Fixed Assets",
+   "link_to": "Fixed Assets",
+   "link_type": "Workspace",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
    "icon": "customer",
    "label": "Consumer Finance",
    "link_to": "Consumer Finance",

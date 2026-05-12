@@ -15,7 +15,10 @@ from typing import Any
 
 import frappe
 
-from omnexa_core.omnexa_core.workspace_desk_layouts import get_desk_sections_for_workspace
+from omnexa_core.omnexa_core.workspace_desk_layouts import (
+	get_desk_sections_for_workspace,
+	resolve_desk_sections_for_workspace_doc,
+)
 from omnexa_core.workspace_onboarding_sync import onboarding_name_for
 
 _COLORS = ("Cyan", "Blue", "Purple", "Orange", "Green", "Red", "Teal", "Pink")
@@ -1571,6 +1574,8 @@ def _workspace_shortcut_es_icon(link_type: str, link_to: str | None) -> str:
 		return "es-line-reports"
 	if lt == "Dashboard":
 		return "es-line-dashboard"
+	if lt == "Workspace" and link_to and frappe.db.exists("Workspace", link_to):
+		return "es-line-folder-normal"
 	if lt == "Page" and link_to and frappe.db.exists("Page", link_to):
 		pg = frappe.db.get_value("Page", link_to, "icon")
 		if isinstance(pg, str) and pg.startswith("es-"):
@@ -2222,6 +2227,8 @@ def _apply_desk_link_sections(ws, sections: list[tuple[str, list[tuple[str, str,
 				continue
 			if link_type == "Page" and not frappe.db.exists("Page", link_to):
 				continue
+			if link_type == "Workspace" and not frappe.db.exists("Workspace", link_to):
+				continue
 			row: dict[str, Any] = {
 				"type": "Link",
 				"hidden": 0,
@@ -2383,6 +2390,8 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 			continue
 		if ltype == "Page" and not frappe.db.exists("Page", lto):
 			continue
+		if ltype == "Workspace" and not frappe.db.exists("Workspace", lto):
+			continue
 		row: dict[str, Any] = {
 			"label": lbl,
 			"type": ltype,
@@ -2422,7 +2431,7 @@ def sync_workspace_kpi_generic(ws_name: str) -> None:
 	if not ws.public or getattr(ws, "for_user", None):
 		return
 	spec = infer_workspace_spec(ws)
-	canonical = get_desk_sections_for_workspace(ws_name)
+	canonical = resolve_desk_sections_for_workspace_doc(ws) or get_desk_sections_for_workspace(ws_name)
 	if canonical:
 		spec["desk_link_layout"] = canonical
 	prefix = _chart_prefix_for(ws)
@@ -2430,8 +2439,58 @@ def sync_workspace_kpi_generic(ws_name: str) -> None:
 	ws.save(ignore_permissions=True)
 
 
+def _ensure_asset_insurance_workspace() -> None:
+	"""Create public ``Asset Insurance`` desk when fixed assets is installed (parity with local sidebar)."""
+	if not _app_installed("omnexa_fixed_assets"):
+		return
+	if not get_desk_sections_for_workspace("Asset Insurance"):
+		return
+	if frappe.db.exists("Workspace", "Asset Insurance"):
+		return
+	parent = "Finance Group" if frappe.db.exists("Workspace", "Finance Group") else ""
+	ws = frappe.new_doc("Workspace")
+	ws.module = "Omnexa Fixed Assets"
+	ws.label = "Asset Insurance"
+	ws.title = "Asset Insurance"
+	ws.icon = "shield"
+	ws.public = 1
+	ws.is_hidden = 0
+	if parent:
+		ws.parent_page = parent
+	ws.sequence_id = 7.62
+	ws.insert(ignore_permissions=True)
+
+
+def _append_finance_group_workspace_nav_link(*, label: str, icon: str, link_to: str) -> None:
+	"""Append a Finance Group → Workspace link when the target exists (fixtures may omit it)."""
+	if not frappe.db.exists("Workspace", "Finance Group"):
+		return
+	if not frappe.db.exists("Workspace", link_to):
+		return
+	fg = frappe.get_doc("Workspace", "Finance Group")
+	key = ("Workspace", link_to)
+	for row in fg.links or []:
+		if row.get("type") == "Link" and (row.get("link_type"), row.get("link_to")) == key:
+			return
+	fg.append(
+		"links",
+		{
+			"type": "Link",
+			"hidden": 0,
+			"onboard": 0,
+			"label": label,
+			"link_type": "Workspace",
+			"link_to": link_to,
+			"link_count": 0,
+			"icon": icon,
+		},
+	)
+	fg.save(ignore_permissions=True)
+
+
 def sync_all_workspace_kpi_layout() -> None:
 	"""Registered finance verticals first, then every other public workspace (Omnexa + ERP)."""
+	_ensure_asset_insurance_workspace()
 	for app in _APP_SPECS:
 		sync_workspace_for_app(app)
 	registered = _registry_workspace_titles()
@@ -2443,6 +2502,8 @@ def sync_all_workspace_kpi_layout() -> None:
 			sync_workspace_kpi_generic(name)
 		except Exception:
 			frappe.log_error(title=f"Workspace KPI generic: {name}", message=frappe.get_traceback())
+	if _app_installed("omnexa_fixed_assets") and frappe.db.exists("Workspace", "Asset Insurance"):
+		_append_finance_group_workspace_nav_link(label="Asset Insurance", icon="shield", link_to="Asset Insurance")
 
 
 def sync_workspace_for_app(app_name: str) -> None:
