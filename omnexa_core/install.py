@@ -14,7 +14,7 @@ from json import dumps
 from json import loads
 
 from contextlib import contextmanager
-from typing import Iterable
+from typing import Any, Iterable
 
 import frappe
 from frappe import _
@@ -1911,6 +1911,44 @@ def sync_stack(run_migrate=1, skip_search_index=1):
 		_maybe_run_bench_build_best_effort()
 
 	return result
+
+
+@frappe.whitelist()
+def export_bench_app_git_heads():
+	"""Return ``{app: {"head": "<sha>", "dirty": bool}}`` from each ``apps/<app>`` git checkout.
+
+	Run on the **local** bench and on the **remote** bench; the ``head`` values must match for true
+	code parity with your machine. After aligning repos, run ``run_workspace_desk_sync`` on the site
+	for desk/KPI parity (that is DB state, not git)."""
+	app_root = Path(get_bench_path()) / "apps"
+	out: dict[str, dict[str, Any]] = {}
+	for app in sorted(frappe.get_all_apps()):
+		adir = app_root / app
+		if not adir.is_dir():
+			out[app] = {"head": None, "note": "missing_on_disk"}
+			continue
+		if not (adir / ".git").exists():
+			out[app] = {"head": None, "note": "not_git"}
+			continue
+		try:
+			head = subprocess.run(
+				["git", "-C", str(adir), "rev-parse", "HEAD"],
+				capture_output=True,
+				text=True,
+				timeout=45,
+				check=True,
+			).stdout.strip()
+			porcelain = subprocess.run(
+				["git", "-C", str(adir), "status", "--porcelain"],
+				capture_output=True,
+				text=True,
+				timeout=45,
+				check=True,
+			).stdout.strip()
+			out[app] = {"head": head, "dirty": bool(porcelain)}
+		except Exception as e:
+			out[app] = {"head": None, "error": str(e)}
+	return out
 
 
 @frappe.whitelist()

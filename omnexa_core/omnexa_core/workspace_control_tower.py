@@ -24,17 +24,6 @@ from omnexa_core.workspace_onboarding_sync import onboarding_name_for
 
 _COLORS = ("Cyan", "Blue", "Purple", "Orange", "Green", "Red", "Teal", "Pink")
 
-# Re-sync these last so core desks are not left on stale fixture JSON after other apps' after_migrate hooks.
-_DESK_FINAL_PASS_APP_KEYS: tuple[str, ...] = (
-	"omnexa_core",
-	"omnexa_core_buy",
-	"omnexa_core_stock",
-	"omnexa_accounting",
-	"omnexa_core_finance",
-	"omnexa_core_governance",
-	"omnexa_core_settings",
-)
-
 
 def _app_installed(app_name: str) -> bool:
 	try:
@@ -2502,7 +2491,10 @@ def _append_finance_group_workspace_nav_link(*, label: str, icon: str, link_to: 
 
 
 def sync_all_workspace_kpi_layout() -> None:
-	"""Registered finance verticals first, then every other public workspace (Omnexa + ERP)."""
+	"""Registered apps first (full control-tower specs), generic public workspaces, then **full** spec pass again.
+
+	The second pass over ``_APP_SPECS`` fixes drift when fixture JSON or other hooks touched
+	registered workspaces after the first pass (Sell/Buy/Stock and all vertical desks)."""
 	_ensure_asset_insurance_workspace()
 	for app in _APP_SPECS:
 		sync_workspace_for_app(app)
@@ -2517,7 +2509,7 @@ def sync_all_workspace_kpi_layout() -> None:
 			frappe.log_error(title=f"Workspace KPI generic: {name}", message=frappe.get_traceback())
 	if _app_installed("omnexa_fixed_assets") and frappe.db.exists("Workspace", "Asset Insurance"):
 		_append_finance_group_workspace_nav_link(label="Asset Insurance", icon="shield", link_to="Asset Insurance")
-	for app_key in _DESK_FINAL_PASS_APP_KEYS:
+	for app_key in _APP_SPECS:
 		try:
 			sync_workspace_for_app(app_key)
 		except Exception:
