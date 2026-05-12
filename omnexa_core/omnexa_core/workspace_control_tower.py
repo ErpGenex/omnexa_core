@@ -1683,7 +1683,7 @@ def _workspace_row_label(link_name: str) -> str:
 def _build_content(
 	spec: dict[str, Any],
 	chart_full_names: list[str],
-	number_card_doc_names: list[str],
+	number_card_match_labels: list[str],
 	shortcut_rows: list[dict[str, Any]],
 ) -> str:
 	slug = _slug(spec["workspace"])
@@ -1792,7 +1792,11 @@ def _build_content(
 			"data": {"text": "<span class=\"h5\"><b>KPIs</b></span>", "col": 12},
 		}
 	)
-	for i, nm in enumerate(number_card_doc_names):
+	# Desk EditorJS passes this value into ``Shortcut.make`` / number-card lookup as ``block_name`` and
+	# Frappe matches ``__(block_name)`` to ``page_data.number_cards.items[].label`` (translated row
+	# label), **not** to the Number Card document ``name``. Using the doc id here yields no match →
+	# empty KPI tiles and a blank-looking workspace body.
+	for i, nm in enumerate(number_card_match_labels[:9]):
 		blocks.append(
 			{
 				"id": f"{slug}-nc{i}",
@@ -2420,6 +2424,22 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 		for _card_title, rows in desk:
 			for lbl, ltype, lto, _ref_doc in rows:
 				shortcut_seed.append((lbl, ltype, lto))
+
+	# ``Workspace``-type shortcuts never appear in ``get_desktop_page`` for non-Administrator users
+	# (``is_item_allowed`` returns False). Convert to ``/app/<slug>`` so EditorJS blocks resolve.
+	expanded: list[Any] = []
+	for sc in shortcut_seed:
+		if not sc or len(sc) < 3:
+			expanded.append(sc)
+			continue
+		lbl, ltype, lto = sc[0], sc[1], sc[2]
+		if (ltype or "").strip() == "Workspace" and lto and frappe.db.exists("Workspace", lto):
+			wt = (frappe.db.get_value("Workspace", lto, "title") or lto or "").strip()
+			slug = "-".join(wt.lower().split())
+			expanded.append((lbl, "URL", f"/app/{slug}"))
+		else:
+			expanded.append(sc)
+	shortcut_seed = expanded
 	_ensure_min_operation_shortcuts_in_seed(shortcut_seed, module)
 	_append_module_reports_to_shortcut_seed(shortcut_seed, module)
 	shortcut_seed = _shortcut_seed_ops_before_reports(shortcut_seed)
@@ -2470,7 +2490,7 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 	ws.content = _build_content(
 		spec,
 		chart_names[:9],
-		number_card_ids[:9],
+		number_card_labels[:9],
 		shortcut_rows[:72],
 	)
 
