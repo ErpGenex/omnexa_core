@@ -556,6 +556,12 @@ FIXED_ASSETS_DESK: list[DeskSection] = [
 			("General ledger", "Report", "General Ledger", "Journal Entry"),
 		],
 	),
+	(
+		"Asset warranty & insurance",
+		[
+			("Asset Insurance", "Workspace", "Asset Insurance", None),
+		],
+	),
 ]
 
 # Satellite desk: warranties, risk, compliance — appears in sidebar as its own workspace.
