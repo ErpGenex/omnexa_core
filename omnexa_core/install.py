@@ -1813,12 +1813,19 @@ def _missing_source_apps() -> list[str]:
 	return [app for app in _strict_required_site_apps() if app not in available or not _app_source_present(app)]
 
 
-def _install_missing_required_apps() -> tuple[list[str], list[str]]:
+def _install_missing_required_apps() -> tuple[list[str], list[str], list[str]]:
+	"""Install every target app not yet on the site.
+
+	Returns ``(installed_now, already_skipped, deferred)``. Apps whose ``before_install`` or install
+	raises (e.g. ``omnexa_nursery`` requiring a Company) are logged and listed in ``deferred`` so
+	``sync_stack`` can complete; re-run after setup wizard / Company creation.
+	"""
 	ensure_local_bench_app_dirs_in_apps_txt()
 	target_apps = [app for app in _target_site_apps() if _app_source_present(app)]
 	installed = set(frappe.get_installed_apps())
 	installed_now = []
 	skipped = []
+	deferred: list[str] = []
 	seed_for_hook_deps = [a for a in _target_site_apps() if _app_source_present(a)]
 	ensure_hook_dependency_apps_registered(seed_for_hook_deps)
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
@@ -1828,12 +1835,19 @@ def _install_missing_required_apps() -> tuple[list[str], list[str]]:
 				if app in installed:
 					skipped.append(app)
 					continue
-				install_site_app(app, verbose=False, set_as_patched=True, force=False)
-				installed_now.append(app)
-				installed.add(app)
+				try:
+					install_site_app(app, verbose=False, set_as_patched=True, force=False)
+					installed_now.append(app)
+					installed.add(app)
+				except Exception:
+					frappe.log_error(
+						frappe.get_traceback(),
+						f"Omnexa: deferred install for app `{app}` during sync_stack",
+					)
+					deferred.append(app)
 	finally:
 		frappe.flags.omnexa_suppress_after_app_workspace_sync = False
-	return installed_now, skipped
+	return installed_now, skipped, deferred
 
 
 @frappe.whitelist()
@@ -1844,6 +1858,9 @@ def sync_stack(run_migrate=1, skip_search_index=1):
 	``bench --site <site> execute omnexa_core.install.sync_stack``
 
 	Also runs migrate by default so DocTypes from newly installed apps sync.
+
+	Returns a dict including ``deferred_install``: apps skipped due to prerequisites (e.g. Company
+	required by ``omnexa_nursery``) — complete setup then run ``sync_stack`` again.
 
 	Usage:
 	bench --site <site> execute omnexa_core.install.sync_stack
@@ -1861,10 +1878,11 @@ def sync_stack(run_migrate=1, skip_search_index=1):
 			+ ". Run `bench get-app` for them or enable auto-fetch (OMNEXA_AUTO_GET_APPS=1, `bench` on PATH)."
 		)
 
-	installed_now, skipped = _install_missing_required_apps()
+	installed_now, skipped, deferred = _install_missing_required_apps()
 	result = {
 		"installed_now": installed_now,
 		"already_installed": skipped,
+		"deferred_install": deferred,
 		"migrated": False,
 	}
 
