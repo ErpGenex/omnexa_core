@@ -1234,7 +1234,7 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"module": "Omnexa Fixed Assets",
 		"icon": "shield",
 		"headline": "Asset Insurance",
-		"parent_page": "",
+		"parent_page": "Fixed Assets",
 		"is_hidden": 0,
 		"tagline": "Warranty, risk register, inspection compliance — satellite desk linked from Fixed Assets.",
 		"trend_doctypes": ["Fixed Asset", "Fixed Asset Maintenance", "Fixed Asset Inspection"],
@@ -2474,14 +2474,25 @@ def sync_workspace_kpi_generic(ws_name: str) -> None:
 
 
 def _ensure_asset_insurance_workspace() -> None:
-	"""Create public ``Asset Insurance`` desk when fixed assets is installed (parity with local sidebar)."""
+	"""Ensure public ``Asset Insurance`` exists and nests under **Fixed Assets** (not Finance Group)."""
 	if not _app_installed("omnexa_fixed_assets"):
 		return
 	if not get_desk_sections_for_workspace("Asset Insurance"):
 		return
+	parent = "Fixed Assets" if frappe.db.exists("Workspace", "Fixed Assets") else ""
 	if frappe.db.exists("Workspace", "Asset Insurance"):
+		ws = frappe.get_doc("Workspace", "Asset Insurance")
+		changed = False
+		if parent and (ws.parent_page or "").strip() != parent:
+			ws.parent_page = parent
+			changed = True
+		if not ws.public:
+			ws.public = 1
+			changed = True
+		if changed:
+			ws.save(ignore_permissions=True)
 		return
-	parent = "Finance Group" if frappe.db.exists("Workspace", "Finance Group") else ""
+
 	ws = frappe.new_doc("Workspace")
 	ws.module = "Omnexa Fixed Assets"
 	ws.label = "Asset Insurance"
@@ -2493,6 +2504,24 @@ def _ensure_asset_insurance_workspace() -> None:
 		ws.parent_page = parent
 	ws.sequence_id = 7.62
 	ws.insert(ignore_permissions=True)
+
+
+def _strip_finance_group_asset_insurance_link() -> None:
+	"""Remove legacy Finance Group → Asset Insurance sidebar row (belongs under Fixed Assets)."""
+	if not frappe.db.exists("Workspace", "Finance Group"):
+		return
+	fg = frappe.get_doc("Workspace", "Finance Group")
+	removed = False
+	for row in list(fg.links or []):
+		if (
+			row.get("type") == "Link"
+			and row.get("link_type") == "Workspace"
+			and (row.get("link_to") or "").strip() == "Asset Insurance"
+		):
+			fg.remove(row)
+			removed = True
+	if removed:
+		fg.save(ignore_permissions=True)
 
 
 def _append_finance_group_workspace_nav_link(*, label: str, icon: str, link_to: str) -> None:
@@ -2539,13 +2568,23 @@ def sync_all_workspace_kpi_layout() -> None:
 			sync_workspace_kpi_generic(name)
 		except Exception:
 			frappe.log_error(title=f"Workspace KPI generic: {name}", message=frappe.get_traceback())
-	if _app_installed("omnexa_fixed_assets") and frappe.db.exists("Workspace", "Asset Insurance"):
-		_append_finance_group_workspace_nav_link(label="Asset Insurance", icon="shield", link_to="Asset Insurance")
 	for app_key in _APP_SPECS:
 		try:
 			sync_workspace_for_app(app_key)
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), f"Omnexa: final desk pass failed for `{app_key}`")
+	_strip_finance_group_asset_insurance_link()
+	# Reparent + desk: after full pass so Finance Group fixture / hooks do not leave stale links.
+	_ensure_asset_insurance_workspace()
+	if _app_installed("omnexa_fixed_assets") and frappe.db.exists("Workspace", "Asset Insurance"):
+		try:
+			sync_workspace_for_app("omnexa_fixed_assets_insurance")
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync omnexa_fixed_assets_insurance final")
+		try:
+			sync_workspace_for_app("omnexa_fixed_assets")
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync omnexa_fixed_assets final")
 
 
 def sync_workspace_for_app(app_name: str) -> None:
