@@ -15,6 +15,7 @@ from typing import Any
 
 import frappe
 
+from omnexa_core.workspace_link_prune import prune_workspace_stale_links
 from omnexa_core.omnexa_core.workspace_desk_layouts import (
 	get_desk_sections_for_workspace,
 	resolve_desk_sections_for_workspace_doc,
@@ -22,6 +23,17 @@ from omnexa_core.omnexa_core.workspace_desk_layouts import (
 from omnexa_core.workspace_onboarding_sync import onboarding_name_for
 
 _COLORS = ("Cyan", "Blue", "Purple", "Orange", "Green", "Red", "Teal", "Pink")
+
+# Re-sync these last so core desks are not left on stale fixture JSON after other apps' after_migrate hooks.
+_DESK_FINAL_PASS_APP_KEYS: tuple[str, ...] = (
+	"omnexa_core",
+	"omnexa_core_buy",
+	"omnexa_core_stock",
+	"omnexa_accounting",
+	"omnexa_core_finance",
+	"omnexa_core_governance",
+	"omnexa_core_settings",
+)
 
 
 def _app_installed(app_name: str) -> bool:
@@ -2436,6 +2448,7 @@ def sync_workspace_kpi_generic(ws_name: str) -> None:
 		spec["desk_link_layout"] = canonical
 	prefix = _chart_prefix_for(ws)
 	_apply_kpi_to_workspace(ws, spec, prefix)
+	prune_workspace_stale_links(ws)
 	ws.save(ignore_permissions=True)
 
 
@@ -2504,6 +2517,11 @@ def sync_all_workspace_kpi_layout() -> None:
 			frappe.log_error(title=f"Workspace KPI generic: {name}", message=frappe.get_traceback())
 	if _app_installed("omnexa_fixed_assets") and frappe.db.exists("Workspace", "Asset Insurance"):
 		_append_finance_group_workspace_nav_link(label="Asset Insurance", icon="shield", link_to="Asset Insurance")
+	for app_key in _DESK_FINAL_PASS_APP_KEYS:
+		try:
+			sync_workspace_for_app(app_key)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), f"Omnexa: final desk pass failed for `{app_key}`")
 
 
 def sync_workspace_for_app(app_name: str) -> None:
@@ -2539,14 +2557,40 @@ def sync_workspace_for_app(app_name: str) -> None:
 	ws.module = module
 	ws.public = 1
 	if "parent_page" in spec:
-		ws.parent_page = spec["parent_page"]
+		pp = spec.get("parent_page")
+		if isinstance(pp, str) and pp.strip():
+			ws.parent_page = pp.strip()
 	elif not ws.parent_page:
 		ws.parent_page = "Finance Group"
 	if "is_hidden" in spec:
 		ws.is_hidden = int(spec["is_hidden"])
 
+	_save_workspace_with_control_tower(ws, spec, prefix)
+
+
+def _save_workspace_with_control_tower(ws, spec: dict[str, Any], prefix: str) -> None:
+	"""Apply KPI/desk, prune stale child rows, save — retry once without ``extra_sections`` on validation errors."""
 	_apply_kpi_to_workspace(ws, spec, prefix)
-	ws.save(ignore_permissions=True)
+	prune_workspace_stale_links(ws)
+	try:
+		ws.save(ignore_permissions=True)
+	except Exception:
+		if spec.get("extra_sections"):
+			frappe.log_error(
+				frappe.get_traceback(),
+				f"Omnexa: workspace save retry without extra_sections ({spec.get('workspace')})",
+			)
+			spec2 = {**spec, "extra_sections": []}
+			ws = frappe.get_doc("Workspace", spec.get("workspace") or ws.name)
+			_apply_kpi_to_workspace(ws, spec2, prefix)
+			prune_workspace_stale_links(ws)
+			ws.save(ignore_permissions=True)
+		else:
+			frappe.log_error(
+				frappe.get_traceback(),
+				f"Omnexa: workspace save failed ({spec.get('workspace') or getattr(ws, 'name', '')})",
+			)
+			raise
 
 
 def sync_all_finance_workspaces() -> None:

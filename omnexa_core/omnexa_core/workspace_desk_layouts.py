@@ -1653,6 +1653,12 @@ _DESK_NAME_ALIASES: dict[str, str] = {
 	"omnexa fixed assets": "Fixed Assets",
 	"asset insurance": "Asset Insurance",
 	"تأمين الأصول": "Asset Insurance",
+	"sell": "Sell",
+	"buy": "Buy",
+	"stock": "Stock",
+	"accounting": "Accounting",
+	"settings": "Settings",
+	"governance": "Governance",
 }
 
 
