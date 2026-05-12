@@ -38,6 +38,9 @@ Add your UI screenshots under `screenshot/` with the names below and they will r
 export GITHUB_TOKEN="ghp_xxxxxxxx"   # أو GH_TOKEN
 # اختياري: تثبيت الحد الأدنى فقط بدون باقي apps.txt
 # export OMNEXA_AUTO_INSTALL_FULL_STACK_ON_CORE=0
+# اختياري: تسريع التثبيت — بدون migrate إضافي بعد الحزمة / بدون bench build
+# export OMNEXA_AUTO_FINAL_MIGRATE_AFTER_STACK_BOOTSTRAP=0
+# export OMNEXA_AUTO_BENCH_BUILD_AFTER_CORE_BOOTSTRAP=0
 ```
 
 من جذر الـ bench (بعد `bench setup requirements` ونسخ/تجهيز `sites/apps.txt` كما تريد للإنتاج):
@@ -55,6 +58,8 @@ bench build
 bench --site YOUR_SITE clear-cache
 sudo supervisorctl restart all   # أو طريقة إعادة التشغيل المناسبة لبيئتك
 ```
+
+بعد `install-app omnexa_core` يشغّل النواة (افتراضياً): **migrate كامل** إذا وُجدت تطبيقات جديدة في الحزمة، ثم **إعادة بناء المساحات والـ KPIs**، ثم **`bench build`** حتى تتطابق الواجهة قدر الإمكان مع بيئة التطوير (أيقونات وحزم Desk). لمطابقة **كاملة** لقاعدة بيانات وملفات السيرفر المحلي (مرفقات، تخصيصات غير مضمنة في الكود) استخدم `bench backup --with-files` من المحلي ثم `bench restore` على الجديد.
 
 إذا كان `omnexa_core` مثبتاً مسبقاً والموقع بلا باقي الحزمة:
 

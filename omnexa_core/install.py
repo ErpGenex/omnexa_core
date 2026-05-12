@@ -183,6 +183,67 @@ def _auto_install_full_stack_on_core_enabled() -> bool:
 	)
 
 
+def _auto_final_migrate_after_stack_bootstrap_enabled() -> bool:
+	"""After batch-installing stack apps, run one full ``SiteMigration`` before desk rebuild.
+
+	KPIs / Number Cards / Chart rows must exist before ``sync_all_workspace_kpi_layout`` to avoid
+	empty blocks on Desk. Disable with ``OMNEXA_AUTO_FINAL_MIGRATE_AFTER_STACK_BOOTSTRAP=0``."""
+	return str(os.environ.get("OMNEXA_AUTO_FINAL_MIGRATE_AFTER_STACK_BOOTSTRAP", "1")).strip().lower() not in (
+		"0",
+		"false",
+		"no",
+		"off",
+	)
+
+
+def _auto_bench_build_after_core_bootstrap_enabled() -> bool:
+	"""Run ``bench build`` after ``omnexa_core`` bootstrap (``bench get-app`` often uses ``--skip-assets``).
+
+	Without a build, icons and bundled desk assets can be missing compared to a dev machine.
+	Disable with ``OMNEXA_AUTO_BENCH_BUILD_AFTER_CORE_BOOTSTRAP=0`` (CI / large benches)."""
+	return str(os.environ.get("OMNEXA_AUTO_BENCH_BUILD_AFTER_CORE_BOOTSTRAP", "1")).strip().lower() not in (
+		"0",
+		"false",
+		"no",
+		"off",
+	)
+
+
+def _maybe_run_full_site_migration_for_stack(*, skip_search_index: int = 1) -> None:
+	from frappe.migrate import SiteMigration
+
+	frappe.db.commit()
+	frappe.clear_cache()
+	SiteMigration(skip_search_index=bool(cint(skip_search_index))).run(site=frappe.local.site)
+
+
+def _maybe_run_bench_build_best_effort() -> None:
+	"""Never throw: install-app must succeed even if asset build fails."""
+	bench_cmd = shutil.which("bench")
+	if not bench_cmd:
+		frappe.log_error("bench not in PATH; skipped bench build", "Omnexa: bench build skipped")
+		return
+	bench_path = get_bench_path()
+	env = os.environ.copy()
+	env.setdefault("GIT_TERMINAL_PROMPT", "0")
+	try:
+		proc = subprocess.run(
+			[bench_cmd, "build"],
+			cwd=bench_path,
+			capture_output=True,
+			text=True,
+			env=env,
+			timeout=7200,
+			check=False,
+		)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: bench build exception (non-fatal)")
+		return
+	if proc.returncode != 0:
+		msg = (proc.stderr or proc.stdout or "").strip() or f"exit code {proc.returncode}"
+		frappe.log_error(title="Omnexa: bench build failed (non-fatal)", message=msg[:8000])
+
+
 def _is_installable_omnexa_repo(repo_name: str) -> bool:
 	name = (repo_name or "").strip()
 	if not name or name == CORE_APP_SLUG:
@@ -561,9 +622,16 @@ def after_install():
 	enforce_supported_frappe_version()
 	ensure_global_defaults_compat()
 	install_required_site_apps()
+	if (
+		getattr(frappe.flags, "omnexa_stack_installed_new_apps", False)
+		and _auto_final_migrate_after_stack_bootstrap_enabled()
+	):
+		_maybe_run_full_site_migration_for_stack()
 	ensure_omnexa_roles()
 	apply_default_branding()
 	run_site_hardening_after_app_changes()
+	if _auto_bench_build_after_core_bootstrap_enabled():
+		_maybe_run_bench_build_best_effort()
 
 
 def after_migrate():
@@ -1689,6 +1757,7 @@ def install_required_site_apps():
 	available = set(frappe.get_all_apps())
 	install_candidates = [app for app in bootstrap_seed_apps if app in available and _app_source_present(app)]
 	_ensure_required_apps_importable()
+	frappe.flags.omnexa_stack_installed_new_apps = False
 	frappe.flags.omnexa_suppress_after_app_workspace_sync = True
 	try:
 		with _tolerate_missing_eng_stub_required_apps():
@@ -1697,6 +1766,7 @@ def install_required_site_apps():
 					continue
 				try:
 					install_site_app(app, verbose=False, set_as_patched=True, force=False)
+					frappe.flags.omnexa_stack_installed_new_apps = True
 				except Exception:
 					# Keep omnexa_core bootstrap resilient; apps with business prerequisites
 					# (e.g. requiring Company) can be installed later after setup wizard.
@@ -1781,8 +1851,6 @@ def sync_stack(run_migrate=1, skip_search_index=1):
 		)
 
 	installed_now, skipped = _install_missing_required_apps()
-	# Ensure workspaces/charts are materialized even when caller skips migrate.
-	run_site_hardening_after_app_changes()
 	result = {
 		"installed_now": installed_now,
 		"already_installed": skipped,
@@ -1795,6 +1863,12 @@ def sync_stack(run_migrate=1, skip_search_index=1):
 		site_name = frappe.local.site
 		SiteMigration(skip_search_index=bool(cint(skip_search_index))).run(site=site_name)
 		result["migrated"] = True
+
+	# Migrate before desk rebuild so Number Cards / charts / DocTypes from new apps exist.
+	run_site_hardening_after_app_changes()
+
+	if _auto_bench_build_after_core_bootstrap_enabled() and installed_now:
+		_maybe_run_bench_build_best_effort()
 
 	return result
 
