@@ -32,6 +32,28 @@ def _app_installed(app_name: str) -> bool:
 		return False
 
 
+def _workspace_sidebar_parent_token(workspace_name: str) -> str:
+	"""Sidebar nesting compares ``child.parent_page`` to the parent's **title**, not ``name``.
+
+	See ``frappe/public/js/frappe/views/workspace/workspace.js`` (``append_item``:
+	``pages.filter((page) => page.parent_page == item.title)``).
+	"""
+	if not workspace_name or not frappe.db.exists("Workspace", workspace_name):
+		return ""
+	doc = frappe.get_doc("Workspace", workspace_name)
+	return (getattr(doc, "title", None) or getattr(doc, "label", None) or doc.name or "").strip()
+
+
+def _resolve_workspace_parent_page_field(parent_ref: str) -> str:
+	"""If ``parent_ref`` is a Workspace ``name``, store that workspace's sidebar token (usually ``title``)."""
+	ref = (parent_ref or "").strip()
+	if not ref:
+		return ""
+	if frappe.db.exists("Workspace", ref):
+		return _workspace_sidebar_parent_token(ref)
+	return ref
+
+
 # Registry key = app_name in hooks (e.g. omnexa_finance_engine)
 _APP_SPECS: dict[str, dict[str, Any]] = {
 	"omnexa_finance_engine": {
@@ -1234,6 +1256,7 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"module": "Omnexa Fixed Assets",
 		"icon": "shield",
 		"headline": "Asset Insurance",
+		# Semantic parent workspace **name**; sync resolves to ``parent.title`` for Desk sidebar nesting.
 		"parent_page": "Fixed Assets",
 		"is_hidden": 0,
 		"tagline": "Warranty, risk register, inspection compliance — satellite desk linked from Fixed Assets.",
@@ -2477,9 +2500,7 @@ def _ensure_asset_insurance_workspace() -> None:
 	"""Ensure public ``Asset Insurance`` exists and nests under **Fixed Assets** (not Finance Group)."""
 	if not _app_installed("omnexa_fixed_assets"):
 		return
-	if not get_desk_sections_for_workspace("Asset Insurance"):
-		return
-	parent = "Fixed Assets" if frappe.db.exists("Workspace", "Fixed Assets") else ""
+	parent = _workspace_sidebar_parent_token("Fixed Assets")
 	if frappe.db.exists("Workspace", "Asset Insurance"):
 		ws = frappe.get_doc("Workspace", "Asset Insurance")
 		changed = False
@@ -2491,6 +2512,9 @@ def _ensure_asset_insurance_workspace() -> None:
 			changed = True
 		if changed:
 			ws.save(ignore_permissions=True)
+		return
+
+	if not get_desk_sections_for_workspace("Asset Insurance"):
 		return
 
 	ws = frappe.new_doc("Workspace")
@@ -2610,7 +2634,13 @@ def sync_workspace_for_app(app_name: str) -> None:
 		ws.module = module
 		ws.icon = spec.get("icon", "folder-normal")
 		ws.public = 1
-		ws.parent_page = "Finance Group"
+		pp_new = (spec.get("parent_page") or "").strip()
+		if pp_new and frappe.db.exists("Workspace", pp_new):
+			ws.parent_page = _workspace_sidebar_parent_token(pp_new)
+		elif pp_new:
+			ws.parent_page = pp_new
+		else:
+			ws.parent_page = "Finance Group"
 		ws.sequence_id = 15.0
 		ws.insert(ignore_permissions=True)
 	else:
@@ -2622,7 +2652,7 @@ def sync_workspace_for_app(app_name: str) -> None:
 	if "parent_page" in spec:
 		pp = spec.get("parent_page")
 		if isinstance(pp, str) and pp.strip():
-			ws.parent_page = pp.strip()
+			ws.parent_page = _resolve_workspace_parent_page_field(pp.strip())
 	elif not ws.parent_page:
 		ws.parent_page = "Finance Group"
 	if "is_hidden" in spec:
