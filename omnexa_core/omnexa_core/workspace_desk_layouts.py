@@ -1429,7 +1429,9 @@ AGRICULTURE_DESK: list[DeskSection] = [
 	),
 ]
 
-# RIBA Plan of Work 2020 (stages 0–7) + ISO-style programme & information delivery; procurement bridge to construction.
+# RIBA Plan of Work 2020 — keep in lockstep with
+# ``omnexa_engineering_consulting/.../workspace/engineering_consulting/engineering_consulting.json`` ``links``.
+# Control-tower sync replaces Workspace.links from this list; a short desk truncates the live workspace.
 ENGINEERING_CONSULTING_DESK: list[DeskSection] = [
 	(
 		"Policy & access",
@@ -1439,53 +1441,94 @@ ENGINEERING_CONSULTING_DESK: list[DeskSection] = [
 		],
 	),
 	(
-		"Portfolio, programme & PM",
+		"Projects & PM",
 		[
 			("Project Contract", "DocType", "Project Contract", None),
-			("Engineering Consultant Engagement", "DocType", "Engineering Consultant Engagement", None),
 			("PM Milestone", "DocType", "PM Milestone", None),
 			("PM WBS Task", "DocType", "PM WBS Task", None),
+			("Client Communication Log", "DocType", "Client Communication Log", None),
+			("RIBA Sequence Policy", "DocType", "Engineering Project RIBA Sequence Policy", None),
 		],
 	),
 	(
-		"RIBA PoW 0–4 · Design & technical information",
+		"Design (RIBA 0–4)",
 		[
 			("Engineering Stage", "DocType", "Engineering Stage", None),
 			("Engineering Submittal", "DocType", "Engineering Submittal", None),
 			("Engineering Document Register", "DocType", "Engineering Document Register", None),
-			("Client Communication Log", "DocType", "Client Communication Log", None),
+			("Engineering Document Transmittal", "DocType", "Engineering Document Transmittal", None),
+			("Built Environment Code", "DocType", "Engineering Built Environment Code", None),
+			("Document Issue Bundle", "DocType", "Engineering Document Issue Bundle", None),
+			("Document Issue Template", "DocType", "Engineering Document Issue Template", None),
+			("Document Edition Group", "DocType", "Engineering Document Edition Group", None),
+			("PID Record (19650)", "DocType", "Engineering PID Record", None),
+			("OIR Record", "DocType", "Engineering OIR Record", None),
+			("AIR Record", "DocType", "Engineering AIR Record", None),
+			("PIR Record", "DocType", "Engineering PIR Record", None),
+			("Engineering Risk", "DocType", "Engineering Risk", None),
+			("Engineering Change Request", "DocType", "Engineering Change Request", None),
+			("Earned Value Entry", "DocType", "Engineering Earned Value Entry", None),
 		],
 	),
 	(
-		"Governance & assurance",
+		"RIBA register & quality",
 		[
-			("Engineering Escalation Policy", "DocType", "Engineering Escalation Policy", None),
+			("RIBA Stage Register", "Report", "RIBA Stage Register", "Engineering Stage"),
+			("RIBA Project Coverage", "Report", "RIBA Project Coverage", "Engineering Stage"),
+			("Design Delay Report", "Report", "Design Delay Report", "Engineering Stage"),
+			("Consultant Workload Summary", "Report", "Consultant Workload Summary", "Engineering Stage"),
+			("Engineering Review Workload", "Report", "Engineering Review Workload", "Engineering Stage"),
+			("Engineering Risk Summary", "Report", "Engineering Risk Summary", "Engineering Risk"),
+			("Engineering Change Request Summary", "Report", "Engineering Change Request Summary", "Engineering Change Request"),
+			("Engineering Submittal SLA Watchlist", "Report", "Engineering Submittal SLA Watchlist", "Engineering Submittal"),
+			("Escalation Policy", "DocType", "Engineering Escalation Policy", None),
 		],
 	),
 	(
-		"RIBA PoW 5–7 · Site & handover",
+		"Standards & compliance toolkit",
+		[
+			("Engineering Standard Mapping", "DocType", "Engineering Standard Mapping", None),
+			("Engineering Standard Crosswalk", "DocType", "Engineering Standard Crosswalk", None),
+			("Engineering Compliance Rule", "DocType", "Engineering Compliance Rule", None),
+			("Engineering Compliance Overview", "Report", "Engineering Compliance Overview", "Engineering Standard Mapping"),
+			("Engineering Project Compliance Snapshot", "Report", "Engineering Project Compliance Snapshot", "Engineering Project Compliance Profile"),
+			("Engineering Site Observation Dashboard", "Report", "Engineering Site Observation Dashboard", "Engineering Site Observation"),
+			("Engineering Regulatory Profile", "DocType", "Engineering Regulatory Profile", None),
+			("Engineering Project Compliance Profile", "DocType", "Engineering Project Compliance Profile", None),
+			("Engineering Consulting Settings", "DocType", "Engineering Consulting Settings", None),
+			("Engineering Portal Membership", "DocType", "Engineering Portal Membership", None),
+		],
+	),
+	(
+		"Site & handover (RIBA 5–7)",
 		[
 			("Engineering Site Record", "DocType", "Engineering Site Record", None),
+			("Engineering Site Observation", "DocType", "Engineering Site Observation", None),
+			("Engineering Site Incident", "DocType", "Engineering Site Incident", None),
+			("Engineering Handover Certificate", "DocType", "Engineering Handover Certificate", None),
+			("Engineering Supervision Register", "Report", "Engineering Supervision Register", "Engineering Site Record"),
+			("CDM Site Risk Register", "DocType", "Engineering CDM Site Risk Register", None),
+			("Statutory Payment Certificate", "DocType", "Engineering Statutory Payment Certificate", None),
+			("Contract Workflow Binding", "DocType", "Engineering Contract Workflow Binding", None),
+			("CDE Provider", "DocType", "Engineering CDE Provider", None),
+			("Legal Signature Event", "DocType", "Engineering Legal Signature Event", None),
+			("Site communication", "DocType", "Client Communication Log", None),
 		],
 	),
 	(
-		"Procurement & construction interface",
+		"External & integration",
 		[
+			("Consultant Engagement", "DocType", "Engineering Consultant Engagement", None),
+			("CDE Webhook Log", "DocType", "Engineering CDE Webhook Log", None),
 			("Purchase Order", "DocType", "Purchase Order", None),
 			("Supplier", "DocType", "Supplier", None),
-			("BOQ Item", "DocType", "BOQ Item", None),
-			("IPC Certificate", "DocType", "IPC Certificate", None),
 		],
 	),
 	(
-		"Reports · RIBA & performance",
+		"Construction",
 		[
-			("RIBA stage register", "Report", "RIBA Stage Register", "Engineering Stage"),
-			("RIBA project coverage", "Report", "RIBA Project Coverage", "Engineering Stage"),
-			("Design delay", "Report", "Design Delay Report", "Engineering Stage"),
-			("Consultant workload", "Report", "Consultant Workload Summary", "Engineering Stage"),
-			("Submittal summary", "Report", "Engineering Submittal Summary", "Engineering Submittal"),
-			("Client communication summary", "Report", "Client Communication Log Summary", "Client Communication Log"),
+			("BOQ Item", "DocType", "BOQ Item", None),
+			("IPC Certificate", "DocType", "IPC Certificate", None),
 		],
 	),
 ]
