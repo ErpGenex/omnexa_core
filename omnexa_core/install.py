@@ -209,12 +209,23 @@ def _auto_bench_build_after_core_bootstrap_enabled() -> bool:
 	)
 
 
+def _reinit_frappe_site_after_site_migration(site: str) -> None:
+	"""``SiteMigration.run`` ends with ``frappe.destroy()``; reconnect before further ``frappe.db`` use."""
+	site = (site or "").strip()
+	if not site:
+		return
+	frappe.init(site=site)
+	frappe.connect()
+
+
 def _maybe_run_full_site_migration_for_stack(*, skip_search_index: int = 1) -> None:
 	from frappe.migrate import SiteMigration
 
+	site = frappe.local.site
 	frappe.db.commit()
 	frappe.clear_cache()
-	SiteMigration(skip_search_index=bool(cint(skip_search_index))).run(site=frappe.local.site)
+	SiteMigration(skip_search_index=bool(cint(skip_search_index))).run(site=site)
+	_reinit_frappe_site_after_site_migration(site)
 
 
 def _maybe_run_bench_build_best_effort() -> None:
@@ -1863,6 +1874,7 @@ def sync_stack(run_migrate=1, skip_search_index=1):
 		site_name = frappe.local.site
 		SiteMigration(skip_search_index=bool(cint(skip_search_index))).run(site=site_name)
 		result["migrated"] = True
+		_reinit_frappe_site_after_site_migration(site_name)
 
 	# Migrate before desk rebuild so Number Cards / charts / DocTypes from new apps exist.
 	run_site_hardening_after_app_changes()
