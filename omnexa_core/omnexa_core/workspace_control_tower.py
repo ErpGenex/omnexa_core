@@ -45,14 +45,26 @@ def _workspace_sidebar_parent_token(workspace_name: str) -> str:
 	return (getattr(doc, "title", None) or getattr(doc, "label", None) or doc.name or "").strip()
 
 
+def _workspace_doc_names_for_parent_ref(parent_ref: str) -> tuple[str, ...]:
+	"""``Workspace.name`` follows ``label`` (autoname); sites may use *Fixed Assets* or *Fixed assets*."""
+	ref = (parent_ref or "").strip()
+	if not ref:
+		return ()
+	if ref == "Fixed Assets":
+		# Omnexa fixture uses ``label`` "Fixed assets" → ``name`` is often ``Fixed assets``.
+		return ("Fixed Assets", "Fixed assets")
+	return (ref,)
+
+
 def _resolve_workspace_parent_page_field(parent_ref: str) -> str:
 	"""If ``parent_ref`` is a Workspace ``name``, store that workspace's sidebar token (usually ``title``)."""
 	ref = (parent_ref or "").strip()
 	if not ref:
 		return ""
-	if frappe.db.exists("Workspace", ref):
-		return _workspace_sidebar_parent_token(ref)
-	return ref
+	for nm in _workspace_doc_names_for_parent_ref(ref):
+		if frappe.db.exists("Workspace", nm):
+			return _workspace_sidebar_parent_token(nm)
+	return ""
 
 
 # Registry key = app_name in hooks (e.g. omnexa_finance_engine)
@@ -2785,7 +2797,7 @@ def _ensure_asset_insurance_workspace() -> None:
 	"""Ensure public ``Asset Insurance`` exists and nests under **Fixed Assets** (not Finance Group)."""
 	if not _app_installed("omnexa_fixed_assets"):
 		return
-	parent = _workspace_sidebar_parent_token("Fixed Assets")
+	parent = _resolve_workspace_parent_page_field("Fixed Assets")
 	if frappe.db.exists("Workspace", "Asset Insurance"):
 		ws = frappe.get_doc("Workspace", "Asset Insurance")
 		changed = False
@@ -2920,11 +2932,8 @@ def sync_workspace_for_app(app_name: str) -> None:
 		ws.icon = spec.get("icon", "folder-normal")
 		ws.public = 1
 		pp_new = (spec.get("parent_page") or "").strip()
-		if pp_new and frappe.db.exists("Workspace", pp_new):
-			ws.parent_page = _workspace_sidebar_parent_token(pp_new)
-		elif pp_new:
-			ws.parent_page = pp_new
-		else:
+		ws.parent_page = _resolve_workspace_parent_page_field(pp_new) if pp_new else ""
+		if not ws.parent_page and not pp_new:
 			ws.parent_page = "Finance Group"
 		ws.sequence_id = 15.0
 		ws.insert(ignore_permissions=True)
