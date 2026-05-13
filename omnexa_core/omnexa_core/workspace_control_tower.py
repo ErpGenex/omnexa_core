@@ -1265,6 +1265,8 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"module": "Omnexa Fixed Assets",
 		"icon": "shield",
 		"headline": "Asset Insurance",
+		# Match Engineering Consulting desk body: Ops / Reports / KPIs / Charts + ``card`` link columns.
+		"packaged_workspace_style": "engineering_v1",
 		# Semantic parent workspace **name**; sync resolves to ``parent.title`` for Desk sidebar nesting.
 		"parent_page": "Fixed Assets",
 		"is_hidden": 0,
@@ -2429,6 +2431,80 @@ def _apply_packaged_workspace_editor_payload(ws, pdata: dict[str, Any]) -> bool:
 	return True
 
 
+def _build_engineering_v1_workspace_bundle(
+	spec: dict[str, Any],
+	desk: list | None,
+	chart_names: list[str],
+	number_card_ids: list[str],
+	number_card_labels: list[str],
+	shortcut_rows: list[dict[str, Any]],
+) -> tuple[str, list[tuple[str, str]], list[tuple[str, str]]] | None:
+	"""EditorJS layout like the shipped Engineering Consulting fixture: Ops → Reports → KPIs → Charts → link cards."""
+	if not chart_names:
+		return None
+	slug = _slug(str(spec.get("workspace") or "ws"))
+	headline = (spec.get("headline") or spec.get("workspace") or "Workspace").strip()
+	onb = (spec.get("onboarding_name") or "").strip()
+	blocks: list[dict[str, Any]] = []
+	if onb:
+		blocks.append(
+			{"id": f"{slug}-onb", "type": "onboarding", "data": {"onboarding_name": onb, "col": 12}},
+		)
+	blocks.append(
+		{
+			"id": f"{slug}-h",
+			"type": "header",
+			"data": {"text": f"<span class=\"h4\"><b>{headline}</b></span>", "col": 12},
+		},
+	)
+	blocks.append({"id": f"{slug}-oph", "type": "header", "data": {"text": "<b>📌 Operations</b>", "col": 12}})
+	op_i = 0
+	for row in shortcut_rows:
+		if (row.get("type") or "") == "Report":
+			continue
+		nm = (row.get("label") or "").strip()
+		if not nm:
+			continue
+		blocks.append({"id": f"{slug}-op{op_i}", "type": "shortcut", "data": {"shortcut_name": nm, "col": 4}})
+		op_i += 1
+		if op_i >= 6:
+			break
+	blocks.append({"id": f"{slug}-rph", "type": "header", "data": {"text": "<b>📊 Reports</b>", "col": 12}})
+	rp_i = 0
+	for row in shortcut_rows:
+		if (row.get("type") or "") != "Report":
+			continue
+		nm = (row.get("label") or "").strip()
+		if not nm:
+			continue
+		blocks.append({"id": f"{slug}-rp{rp_i}", "type": "shortcut", "data": {"shortcut_name": nm, "col": 4}})
+		rp_i += 1
+		if rp_i >= 5:
+			break
+	blocks.append({"id": f"{slug}-kph", "type": "header", "data": {"text": "<b>📊 KPIs</b>", "col": 12}})
+	for i, lbl in enumerate(number_card_labels[:4]):
+		blocks.append({"id": f"{slug}-nc{i}", "type": "number_card", "data": {"number_card_name": lbl, "col": 4}})
+	blocks.append({"id": f"{slug}-chh", "type": "header", "data": {"text": "<b>📈 Charts</b>", "col": 12}})
+	for i, ch in enumerate(chart_names[:3]):
+		blocks.append({"id": f"{slug}-ch{i}", "type": "chart", "data": {"chart_name": ch, "col": 4}})
+	blocks.append(
+		{
+			"id": f"{slug}-moreh",
+			"type": "header",
+			"data": {"text": "<span class=\"h5 text-muted\"><b>All modules & links</b></span>", "col": 12},
+		},
+	)
+	if desk:
+		for ci, (card_title, _rows) in enumerate(desk):
+			ttl = (card_title or "").strip()
+			if not ttl:
+				continue
+			blocks.append({"id": f"{slug}-c{ci}", "type": "card", "data": {"card_name": ttl, "col": 4}})
+	charts_out = [(c, c) for c in chart_names[:3]]
+	nc_out = list(zip(number_card_ids[:4], number_card_labels[:4]))
+	return json.dumps(blocks, separators=(",", ":")), charts_out, nc_out
+
+
 def _bind_workspace_onboarding_name(ws, spec: dict[str, Any]) -> None:
 	"""Wire Guided setup to the Module Onboarding row for this workspace (same id as workspace_onboarding_sync)."""
 	if (spec.get("onboarding_name") or "").strip():
@@ -2469,14 +2545,6 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 		if nm:
 			number_card_ids.append(nm)
 			number_card_labels.append(label)
-
-	ws.charts = []
-	for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
-		ws.append("charts", {"chart_name": ch, "label": row_label})
-
-	ws.number_cards = []
-	for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
-		ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
 
 	shortcut_seed: list[Any] = list(spec.get("shortcuts") or [])
 	if desk:
@@ -2548,7 +2616,41 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 		ws.append("shortcuts", row)
 
 	pdata = _read_packaged_workspace_export(spec)
-	if not (pdata and _apply_packaged_workspace_editor_payload(ws, pdata)):
+	if pdata and _apply_packaged_workspace_editor_payload(ws, pdata):
+		pass
+	elif (spec.get("packaged_workspace_style") or "").strip() == "engineering_v1":
+		bundle = _build_engineering_v1_workspace_bundle(
+			spec, desk, chart_names, number_card_ids, number_card_labels, shortcut_rows
+		)
+		if bundle:
+			content_json, chart_pairs, nc_pairs = bundle
+			ws.charts = []
+			for chn, lbl in chart_pairs:
+				ws.append("charts", {"chart_name": chn, "label": lbl})
+			ws.number_cards = []
+			for nmid, lb in nc_pairs:
+				ws.append("number_cards", {"number_card_name": nmid, "label": lb})
+			ws.content = content_json
+		else:
+			ws.charts = []
+			for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
+				ws.append("charts", {"chart_name": ch, "label": row_label})
+			ws.number_cards = []
+			for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
+				ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
+			ws.content = _build_content(
+				spec,
+				chart_names[:9],
+				number_card_labels[:9],
+				shortcut_rows[:72],
+			)
+	else:
+		ws.charts = []
+		for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
+			ws.append("charts", {"chart_name": ch, "label": row_label})
+		ws.number_cards = []
+		for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
+			ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
 		ws.content = _build_content(
 			spec,
 			chart_names[:9],

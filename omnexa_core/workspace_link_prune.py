@@ -41,7 +41,26 @@ def prune_workspace_stale_links(ws) -> None:
 		for b in blocks:
 			if (b or {}).get("type") == "chart":
 				cn = (((b or {}).get("data") or {}).get("chart_name") or "").strip()
-				if cn and not frappe.db.exists("Dashboard Chart", cn):
+				if cn and not _workspace_chart_block_is_valid(ws, cn):
 					continue
 			filtered.append(b)
 		ws.content = json.dumps(filtered)
+
+
+def _workspace_chart_block_is_valid(ws, block_token: str) -> bool:
+	"""EditorJS chart blocks often store the **display label**; ``Dashboard Chart`` name is longer.
+
+	Shipped workspace exports use ``chart_name`` in JSON that matches ``Workspace Chart.label`` while the
+	child row's ``chart_name`` field holds the real ``Dashboard Chart`` document name.
+	"""
+	t = (block_token or "").strip()
+	if not t:
+		return False
+	if frappe.db.exists("Dashboard Chart", t):
+		return True
+	for row in ws.get("charts") or []:
+		chn = (getattr(row, "chart_name", None) or (row or {}).get("chart_name") or "").strip()
+		lbl = (getattr(row, "label", None) or (row or {}).get("label") or "").strip()
+		if t in (chn, lbl) and chn and frappe.db.exists("Dashboard Chart", chn):
+			return True
+	return False

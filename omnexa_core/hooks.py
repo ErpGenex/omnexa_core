@@ -44,6 +44,7 @@ app_include_css = [
 app_include_js = [
 	"/assets/omnexa_core/js/frappe_ready_shim.js",
 	"/assets/omnexa_core/js/workspace_shortcut_icons.js",
+	"/assets/omnexa_core/js/workspace_desk_get_data_charts.js",
 	"/assets/omnexa_core/js/form_layout_optimizer.js",
 	"/assets/omnexa_core/js/erpgenex_brand_desk.js",
 	"/assets/omnexa_core/js/desk_license_guard.js",
