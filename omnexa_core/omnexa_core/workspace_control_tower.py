@@ -2500,15 +2500,18 @@ def _build_engineering_v1_workspace_bundle(
 	number_card_ids: list[str],
 	number_card_labels: list[str],
 	shortcut_rows: list[dict[str, Any]],
-) -> tuple[str, list[tuple[str, str]], list[tuple[str, str]]] | None:
-	"""EditorJS layout like the shipped Engineering Consulting fixture: Ops → Reports → KPIs → Charts → link cards."""
-	if not chart_names:
-		return None
+) -> tuple[str, list[tuple[str, str]], list[tuple[str, str]]]:
+	"""EditorJS layout like the shipped Engineering Consulting fixture: Ops → Reports → KPIs → Charts → link cards.
+
+	Always returns a body (even when ``chart_names`` is empty) so satellite desks like **Asset Insurance**
+	do not fall back to a blank ``_build_content`` on fresh sites where no trend rows exist yet.
+	Missing ``Module Onboarding`` rows would otherwise break the whole EditorJS page — skip that block.
+	"""
 	slug = _slug(str(spec.get("workspace") or "ws"))
 	headline = (spec.get("headline") or spec.get("workspace") or "Workspace").strip()
 	onb = (spec.get("onboarding_name") or "").strip()
 	blocks: list[dict[str, Any]] = []
-	if onb:
+	if onb and frappe.db.exists("Module Onboarding", onb):
 		blocks.append(
 			{"id": f"{slug}-onb", "type": "onboarding", "data": {"onboarding_name": onb, "col": 12}},
 		)
@@ -2546,9 +2549,10 @@ def _build_engineering_v1_workspace_bundle(
 	blocks.append({"id": f"{slug}-kph", "type": "header", "data": {"text": "<b>📊 KPIs</b>", "col": 12}})
 	for i, lbl in enumerate(number_card_labels[:4]):
 		blocks.append({"id": f"{slug}-nc{i}", "type": "number_card", "data": {"number_card_name": lbl, "col": 4}})
-	blocks.append({"id": f"{slug}-chh", "type": "header", "data": {"text": "<b>📈 Charts</b>", "col": 12}})
-	for i, ch in enumerate(chart_names[:3]):
-		blocks.append({"id": f"{slug}-ch{i}", "type": "chart", "data": {"chart_name": ch, "col": 4}})
+	if chart_names:
+		blocks.append({"id": f"{slug}-chh", "type": "header", "data": {"text": "<b>📈 Charts</b>", "col": 12}})
+		for i, ch in enumerate(chart_names[:3]):
+			blocks.append({"id": f"{slug}-ch{i}", "type": "chart", "data": {"chart_name": ch, "col": 4}})
 	blocks.append(
 		{
 			"id": f"{slug}-moreh",
@@ -2681,31 +2685,16 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 	if pdata and _apply_packaged_workspace_editor_payload(ws, pdata):
 		pass
 	elif (spec.get("packaged_workspace_style") or "").strip() == "engineering_v1":
-		bundle = _build_engineering_v1_workspace_bundle(
+		content_json, chart_pairs, nc_pairs = _build_engineering_v1_workspace_bundle(
 			spec, desk, chart_names, number_card_ids, number_card_labels, shortcut_rows
 		)
-		if bundle:
-			content_json, chart_pairs, nc_pairs = bundle
-			ws.charts = []
-			for chn, lbl in chart_pairs:
-				ws.append("charts", {"chart_name": chn, "label": lbl})
-			ws.number_cards = []
-			for nmid, lb in nc_pairs:
-				ws.append("number_cards", {"number_card_name": nmid, "label": lb})
-			ws.content = content_json
-		else:
-			ws.charts = []
-			for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
-				ws.append("charts", {"chart_name": ch, "label": row_label})
-			ws.number_cards = []
-			for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
-				ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
-			ws.content = _build_content(
-				spec,
-				chart_names[:9],
-				number_card_labels[:9],
-				shortcut_rows[:72],
-			)
+		ws.charts = []
+		for chn, lbl in chart_pairs:
+			ws.append("charts", {"chart_name": chn, "label": lbl})
+		ws.number_cards = []
+		for nmid, lb in nc_pairs:
+			ws.append("number_cards", {"number_card_name": nmid, "label": lb})
+		ws.content = content_json
 	else:
 		ws.charts = []
 		for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
