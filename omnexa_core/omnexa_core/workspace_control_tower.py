@@ -2494,7 +2494,49 @@ def _apply_packaged_workspace_editor_payload(ws, pdata: dict[str, Any]) -> bool:
 			"number_cards",
 			{"number_card_name": nm, "label": (nc.get("label") or nm).strip()},
 		)
+	# Shipped JSON may list Report/URL shortcuts that ``shortcut_seed`` skipped (missing role/report on
+	# first sync). Merge so EditorJS ``shortcut`` blocks always resolve for Asset Insurance.
+	if pn == "Asset Insurance":
+		_merge_packaged_workspace_shortcuts(ws, pdata)
 	return True
+
+
+def _merge_packaged_workspace_shortcuts(ws, pdata: dict[str, Any]) -> None:
+	"""Append ``pdata["shortcuts"]`` rows not already present (by nav target)."""
+	keys = _shortcut_nav_keys(ws)
+	for raw in pdata.get("shortcuts") or []:
+		if not isinstance(raw, dict):
+			continue
+		row = dict(raw)
+		st = (row.get("type") or "").strip()
+		if st == "URL":
+			url = (row.get("url") or row.get("link_to") or "").strip()
+			if not url:
+				continue
+			row["url"] = url
+			key = ("URL", url)
+		else:
+			lto = (row.get("link_to") or "").strip()
+			if not (st and lto):
+				continue
+			key = (st, lto)
+		if key in keys:
+			continue
+		if st == "Report" and frappe.db.exists("Report", lto):
+			rt = frappe.db.get_value("Report", lto, "report_type")
+			if rt in ("Query Report", "Script Report", "Custom Report"):
+				row["is_query_report"] = 1
+			ref = frappe.db.get_value("Report", lto, "ref_doctype")
+			if ref:
+				row["report_ref_doctype"] = ref
+		if not (row.get("icon") or "").strip():
+			row["icon"] = _workspace_shortcut_es_icon(st, row.get("link_to"))
+		if not (row.get("color") or "").strip():
+			row["color"] = "Grey"
+		if st == "DocType" and not (row.get("doc_view") or "").strip():
+			row["doc_view"] = "List"
+		ws.append("shortcuts", row)
+		keys.add(key)
 
 
 def _build_engineering_v1_workspace_bundle(
