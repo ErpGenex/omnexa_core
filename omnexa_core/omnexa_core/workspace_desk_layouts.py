@@ -564,31 +564,31 @@ FIXED_ASSETS_DESK: list[DeskSection] = [
 	),
 ]
 
-# Satellite desk: warranties, risk, compliance — appears in sidebar as its own workspace.
+# Asset insurance (policies, claims, renewals) — satellite desk under Fixed Assets.
 ASSET_INSURANCE_DESK: list[DeskSection] = [
 	(
-		"Register & coverage",
+		"Master data",
 		[
-			_DESK_ERP_SETTINGS_URL,
-			("Fixed Asset", "DocType", "Fixed Asset", None),
-			("Warranty expiring", "Report", "Warranty Expiring Assets", "Fixed Asset"),
-			("Asset risk register", "Report", "Asset Risk Register", "Fixed Asset"),
-			("Replacement forecast", "Report", "Replacement Forecast Report", "Fixed Asset"),
+			("Insurance Company", "DocType", "Insurance Company", None),
+			("Insurance Coverage Type", "DocType", "Insurance Coverage Type", None),
 		],
 	),
 	(
-		"Assurance & inspections",
+		"Operations",
 		[
-			("Inspection compliance", "Report", "Inspection Compliance Report", "Fixed Asset Inspection"),
-			("Asset health", "Report", "Asset Health Report", "Fixed Asset"),
-			("Reliability report", "Report", "Reliability Report", "Asset Reliability Trend"),
-			("Failure analysis", "Report", "Failure Analysis Report", "Asset Failure Event"),
+			("Insurance Policy", "DocType", "Insurance Policy", None),
+			("Insurance Renewal", "DocType", "Insurance Renewal", None),
+			("Insurance Incident", "DocType", "Insurance Incident", None),
+			("Insurance Claim", "DocType", "Insurance Claim", None),
 		],
 	),
 	(
-		"Full fixed assets",
+		"Analytics",
 		[
-			("Open Fixed Assets workspace", "Workspace", "Fixed Assets", None),
+			("Asset Insurance Register", "Report", "Asset Insurance Register", "Insurance Policy"),
+			("Expiring Policies Report", "Report", "Expiring Policies Report", "Insurance Policy"),
+			("Uninsured Assets Report", "Report", "Uninsured Assets Report", "Fixed Asset"),
+			("Claims Register", "Report", "Claims Register", "Insurance Claim"),
 		],
 	),
 ]

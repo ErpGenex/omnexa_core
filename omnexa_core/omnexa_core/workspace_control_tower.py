@@ -1265,33 +1265,29 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"module": "Omnexa Fixed Assets",
 		"icon": "shield",
 		"headline": "Asset Insurance",
-		# Match Engineering Consulting desk body: Ops / Reports / KPIs / Charts + ``card`` link columns.
-		"packaged_workspace_style": "engineering_v1",
+		# Shipped ``workspace/asset_insurance/asset_insurance.json`` (EditorJS + KPIs + charts).
+		"packaged_workspace_content": (
+			"omnexa_fixed_assets",
+			"omnexa_fixed_assets",
+			"workspace",
+			"asset_insurance",
+			"asset_insurance.json",
+		),
 		# Semantic parent workspace **name**; sync resolves to ``parent.title`` for Desk sidebar nesting.
 		"parent_page": "Fixed Assets",
 		"is_hidden": 0,
-		"tagline": "Warranty, risk register, inspection compliance — satellite desk linked from Fixed Assets.",
-		"trend_doctypes": ["Fixed Asset", "Fixed Asset Maintenance", "Fixed Asset Inspection"],
-		"status_doctypes": ["Fixed Asset"],
-		"kpis": [
-			("Assets in register", "Fixed Asset", []),
-			("Assets in use", "Fixed Asset", [["status", "=", "in_use"]]),
-			("Under maintenance", "Fixed Asset", [["status", "=", "under_maintenance"]]),
-			("Disposed", "Fixed Asset", [["status", "=", "disposed"]]),
-			("Maintenance records", "Fixed Asset Maintenance", []),
-			("Inspections", "Fixed Asset Inspection", []),
-		],
+		"tagline": "Insurance policies, renewals, incidents, and claims for fixed assets.",
+		"trend_doctypes": ["Insurance Policy", "Insurance Claim", "Insurance Incident"],
+		"status_doctypes": ["Insurance Policy", "Insurance Claim"],
+		# Packaged workspace supplies Number Cards; avoid duplicate auto-provision here.
+		"kpis": [],
 		"shortcuts": [
-			("Fixed Asset", "DocType", "Fixed Asset"),
-			("Warranty expiring", "Report", "Warranty Expiring Assets"),
-			("Asset risk register", "Report", "Asset Risk Register"),
-			("Inspection compliance", "Report", "Inspection Compliance Report"),
-			("Open Fixed Assets", "Workspace", "Fixed Assets"),
+			("New Insurance Policy", "DocType", "Insurance Policy"),
+			("Insurance Claims", "DocType", "Insurance Claim"),
+			("Fixed Assets", "URL", "/app/fixed-assets"),
+			("Asset Insurance Register", "Report", "Asset Insurance Register"),
 		],
-		"kpi_trends": [
-			{"type": "Pie", "doctype": "Fixed Asset", "group_by": "status", "label": "Asset status"},
-			{"type": "Bar", "doctype": "Fixed Asset Maintenance", "group_by": "maintenance_type", "label": "Maintenance mix"},
-		],
+		"kpi_trends": [],
 		"extra_sections": [],
 	},
 	"omnexa_core_governance": {
@@ -2468,8 +2464,16 @@ def _apply_packaged_workspace_editor_payload(ws, pdata: dict[str, Any]) -> bool:
 			return False
 	except Exception:
 		return False
-	if (pdata.get("name") or "").strip() == "engineering-consulting":
+	pn = (pdata.get("name") or "").strip()
+	if pn == "engineering-consulting":
 		_ensure_engineering_consulting_packaged_number_card_docs()
+	elif pn == "Asset Insurance":
+		try:
+			from omnexa_fixed_assets.asset_insurance_workspace import ensure_asset_insurance_desk_artifacts
+
+			ensure_asset_insurance_desk_artifacts()
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_asset_insurance_desk_artifacts")
 	ws.content = cont
 	ws.charts = []
 	for ch in pdata.get("charts") or []:
@@ -2618,6 +2622,10 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 		for _card_title, rows in desk:
 			for lbl, ltype, lto, _ref_doc in rows:
 				shortcut_seed.append((lbl, ltype, lto))
+		# Also surface ``spec["shortcuts"]`` (e.g. branded tiles) alongside desk-derived links.
+		for sc in spec.get("shortcuts") or []:
+			if sc and len(sc) >= 3:
+				shortcut_seed.append(sc)
 
 	# ``Workspace``-type shortcuts never appear in ``get_desktop_page`` for non-Administrator users
 	# (``is_item_allowed`` returns False). Convert to ``/app/<slug>`` so EditorJS blocks resolve.
