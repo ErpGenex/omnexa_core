@@ -11,6 +11,7 @@ and **Guided setup** (Module Onboarding) matched per workspace module / title wh
 from __future__ import annotations
 
 import json
+import os
 from typing import Any
 
 import frappe
@@ -1185,6 +1186,14 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 	"omnexa_engineering_consulting": {
 		"_requires_app": "omnexa_engineering_consulting",
 		"workspace": "engineering-consulting",
+		# Shipped ``workspace/.../engineering_consulting.json`` body (EditorJS cards + section headers).
+		"packaged_workspace_content": (
+			"omnexa_engineering_consulting",
+			"omnexa_engineering_consulting",
+			"workspace",
+			"engineering_consulting",
+			"engineering_consulting.json",
+		),
 		"module": "Omnexa Engineering Consulting",
 		"icon": "quality",
 		"headline": "Engineering Consulting",
@@ -2369,6 +2378,57 @@ def infer_workspace_spec(ws) -> dict[str, Any]:
 	}
 
 
+def _read_packaged_workspace_export(spec: dict[str, Any]) -> dict[str, Any] | None:
+	"""Load a bundled ``Workspace`` export JSON (same shape as module ``workspace/**/*.json``)."""
+	prefix = spec.get("packaged_workspace_content")
+	if not prefix or not isinstance(prefix, (list, tuple)) or len(prefix) < 2:
+		return None
+	app, *parts = prefix
+	if not _app_installed(app) or not parts:
+		return None
+	fp = os.path.join(frappe.get_app_path(app), *parts)
+	if not os.path.isfile(fp):
+		return None
+	try:
+		with open(fp, encoding="utf-8") as handle:
+			return json.load(handle)
+	except Exception:
+		return None
+
+
+def _apply_packaged_workspace_editor_payload(ws, pdata: dict[str, Any]) -> bool:
+	"""Apply ``content`` / charts / number_cards from export so Desk matches shipped fixture layout."""
+	cont = pdata.get("content")
+	if not isinstance(cont, str) or not cont.strip():
+		return False
+	try:
+		if not isinstance(json.loads(cont), list):
+			return False
+	except Exception:
+		return False
+	ws.content = cont
+	ws.charts = []
+	for ch in pdata.get("charts") or []:
+		if not isinstance(ch, dict):
+			continue
+		cn = (ch.get("chart_name") or "").strip()
+		if not cn:
+			continue
+		ws.append("charts", {"chart_name": cn, "label": (ch.get("label") or cn).strip()})
+	ws.number_cards = []
+	for nc in pdata.get("number_cards") or []:
+		if not isinstance(nc, dict):
+			continue
+		nm = (nc.get("number_card_name") or "").strip()
+		if not nm:
+			continue
+		ws.append(
+			"number_cards",
+			{"number_card_name": nm, "label": (nc.get("label") or nm).strip()},
+		)
+	return True
+
+
 def _bind_workspace_onboarding_name(ws, spec: dict[str, Any]) -> None:
 	"""Wire Guided setup to the Module Onboarding row for this workspace (same id as workspace_onboarding_sync)."""
 	if (spec.get("onboarding_name") or "").strip():
@@ -2487,12 +2547,14 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 	for row in shortcut_rows:
 		ws.append("shortcuts", row)
 
-	ws.content = _build_content(
-		spec,
-		chart_names[:9],
-		number_card_labels[:9],
-		shortcut_rows[:72],
-	)
+	pdata = _read_packaged_workspace_export(spec)
+	if not (pdata and _apply_packaged_workspace_editor_payload(ws, pdata)):
+		ws.content = _build_content(
+			spec,
+			chart_names[:9],
+			number_card_labels[:9],
+			shortcut_rows[:72],
+		)
 
 	_merge_link_sections(ws, spec.get("extra_sections", []))
 	_dedupe_workspace_shortcut_rows(ws)
