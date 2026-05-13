@@ -2398,6 +2398,66 @@ def _read_packaged_workspace_export(spec: dict[str, Any]) -> dict[str, Any] | No
 		return None
 
 
+# ``engineering_consulting.json`` Number Card **document names** must exist or ``prune_workspace_stale_links``
+# strips Workspace child rows and KPI tiles disappear. ``_ensure_number_card`` often creates a hash ``name``;
+# we rename those docs to the fixture names so ``number_card_name`` links resolve.
+_ENGINEERING_CONSULTING_PACKAGED_NUMBER_CARDS: tuple[tuple[str, str, list], ...] = (
+	(
+		"Active risks (Open / Mitigating)",
+		"Engineering Risk",
+		[["status", "in", ["Open", "Mitigating"]]],
+	),
+	(
+		"Change requests (Submitted / Under Review)",
+		"Engineering Change Request",
+		[["status", "in", ["Submitted", "Under Review"]]],
+	),
+	(
+		"Submittals in review gates",
+		"Engineering Submittal",
+		[
+			[
+				"workflow_state",
+				"in",
+				["Internal Review", "Technical Review", "Client Review"],
+			]
+		],
+	),
+	(
+		"Published document register entries",
+		"Engineering Document Register",
+		[["publishing_state", "=", "Published"]],
+	),
+)
+
+
+def _ensure_engineering_consulting_packaged_number_card_docs() -> None:
+	"""Create / rename ``Number Card`` rows so packaged ``engineering-consulting`` workspace KPI links resolve."""
+	module = "Omnexa Engineering Consulting"
+	for target_name, dt, filt in _ENGINEERING_CONSULTING_PACKAGED_NUMBER_CARDS:
+		if not _aggregatable_doctype(dt):
+			continue
+		if frappe.db.exists("Number Card", target_name):
+			continue
+		nm = _ensure_number_card(target_name, dt, module, filt)
+		if not nm or nm == target_name:
+			continue
+		try:
+			frappe.rename_doc(
+				"Number Card",
+				nm,
+				target_name,
+				force=True,
+				ignore_permissions=True,
+				show_alert=False,
+			)
+		except Exception:
+			frappe.log_error(
+				frappe.get_traceback(),
+				f"Omnexa: rename Number Card `{nm}` → `{target_name}` (Engineering Consulting desk)",
+			)
+
+
 def _apply_packaged_workspace_editor_payload(ws, pdata: dict[str, Any]) -> bool:
 	"""Apply ``content`` / charts / number_cards from export so Desk matches shipped fixture layout."""
 	cont = pdata.get("content")
@@ -2408,6 +2468,8 @@ def _apply_packaged_workspace_editor_payload(ws, pdata: dict[str, Any]) -> bool:
 			return False
 	except Exception:
 		return False
+	if (pdata.get("name") or "").strip() == "engineering-consulting":
+		_ensure_engineering_consulting_packaged_number_card_docs()
 	ws.content = cont
 	ws.charts = []
 	for ch in pdata.get("charts") or []:
