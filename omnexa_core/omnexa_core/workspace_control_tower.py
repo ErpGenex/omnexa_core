@@ -1330,7 +1330,15 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			{"type": "Donut", "doctype": "Rental Contract", "group_by": "status", "label": "Lease status"},
 			{"type": "Bar", "doctype": "Rent Billing Run", "group_by": "status", "label": "Billing status"},
 		],
-		"extra_sections": [],
+		"extra_sections": [
+			(
+				"Operating scenarios (RICS)",
+				[
+					("Realty Operating Scenarios", "Page", "erpgenex-realty-scenarios", "organization"),
+					("PMC Leasing Mandate", "DocType", "PMC Leasing Mandate", "sell"),
+				],
+			),
+		],
 	},
 	"erpgenex_realestate_dev": {
 		"_requires_app": "erpgenex_realestate_dev",
