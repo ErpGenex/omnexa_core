@@ -886,8 +886,8 @@ def revoke_app_license(app_slug: str, remove_key: int = 1, clear_trial: int = 0)
 	"""
 	frappe.only_for("System Manager")
 	_assert_marketplace_app_slug(app_slug)
-	if not app_slug.startswith("omnexa_"):
-		frappe.throw(frappe._("Only Omnexa apps (omnexa_*) support this action."))
+	if not (app_slug.startswith("omnexa_") or app_slug.startswith("erpgenex_")):
+		frappe.throw(frappe._("Only ErpGenEx marketplace apps support this action."))
 
 	remove_key = bool(int(remove_key or 0))
 	clear_trial = bool(int(clear_trial or 0))
@@ -924,8 +924,14 @@ def get_checkout_url(app_slug: str, months: int = 12):
 @frappe.whitelist()
 def activate_app_license(app_slug: str, activation_key: str):
 	"""Save customer key (or developer code) only when verification accepts it."""
-	if not app_slug or not app_slug.startswith("omnexa_"):
-		frappe.throw(frappe._("License activation is only supported for Omnexa apps (omnexa_*)."))
+	if is_free_app(app_slug):
+		frappe.throw(frappe._("This app is free: license activation is not applicable."), title=frappe._("License"))
+	if not app_slug or not (app_slug.startswith("omnexa_") or app_slug.startswith("erpgenex_")):
+		frappe.throw(
+			frappe._("License activation is only supported for ErpGenEx marketplace apps."),
+			title=frappe._("License"),
+		)
+	_assert_marketplace_app_slug(app_slug)
 	previous = get_stored_license_key(app_slug)
 	set_license_key(app_slug=app_slug, license_value=activation_key)
 	status = verify_app_license(app_slug)

@@ -18,6 +18,7 @@ from omnexa_core.omnexa_core.omnexa_license import (
 	assert_app_licensed_or_raise,
 	is_free_app,
 	is_license_status_ok,
+	record_online_license_check,
 	requires_storefront_jwt_license,
 	set_manual_revoke,
 	verify_app_license,
@@ -52,6 +53,24 @@ class TestOmnexaLicense(FrappeTestCase):
 			frappe.local.conf["omnexa_license_auto_trial"] = self._old_auto_trial
 		super().tearDown()
 
+	def test_erpgenex_commercial_blocked_outside_erpgenex_platform_when_binding_on(self):
+		old_platform = frappe.local.conf.get("omnexa_platform")
+		old_req = frappe.local.conf.get("omnexa_license_require_platform")
+		try:
+			frappe.local.conf["omnexa_license_require_platform"] = True
+			frappe.local.conf["omnexa_platform"] = "erpnext"
+			r = verify_app_license("erpgenex_maintenance_core")
+			self.assertEqual(r.status, "invalid_platform")
+		finally:
+			if old_platform is None:
+				frappe.local.conf.pop("omnexa_platform", None)
+			else:
+				frappe.local.conf["omnexa_platform"] = old_platform
+			if old_req is None:
+				frappe.local.conf.pop("omnexa_license_require_platform", None)
+			else:
+				frappe.local.conf["omnexa_license_require_platform"] = old_req
+
 	def test_omnexa_apps_blocked_outside_erpgenex_platform(self):
 		old_platform = frappe.local.conf.get("omnexa_platform")
 		old_req = frappe.local.conf.get("omnexa_license_require_platform")
@@ -81,6 +100,28 @@ class TestOmnexaLicense(FrappeTestCase):
 		self.assertFalse(is_free_app("omnexa_nursery"))
 		self.assertIn("omnexa_nursery", COMMERCIAL_JWT_LICENSE_APPS)
 		self.assertTrue(requires_storefront_jwt_license("omnexa_nursery"))
+
+	def test_erpgenex_maintenance_core_is_paid_marketplace_tier(self):
+		self.assertNotIn("erpgenex_maintenance_core", FREE_APPS)
+		self.assertFalse(is_free_app("erpgenex_maintenance_core"))
+		self.assertIn("erpgenex_maintenance_core", COMMERCIAL_JWT_LICENSE_APPS)
+		self.assertTrue(requires_storefront_jwt_license("erpgenex_maintenance_core"))
+
+	def test_erpgenex_real_estate_apps_are_paid_jwt_tier(self):
+		for app in (
+			"erpgenex_realestate_dev",
+			"erpgenex_realestate_sales",
+			"erpgenex_property_mgmt",
+		):
+			with self.subTest(app=app):
+				self.assertNotIn(app, FREE_APPS)
+				self.assertFalse(is_free_app(app))
+				self.assertIn(app, COMMERCIAL_JWT_LICENSE_APPS)
+				self.assertTrue(requires_storefront_jwt_license(app))
+
+	def test_erpgenex_theme_remains_free(self):
+		self.assertIn("erpgenex_theme_0426", FREE_APPS)
+		self.assertFalse(requires_storefront_jwt_license("erpgenex_theme_0426"))
 
 	def test_omnexa_education_same_paid_jwt_tier_as_nursery(self):
 		"""Education vertical: same storefront JWT / paid rules as other commercial omnexa_* apps."""
@@ -131,6 +172,7 @@ class TestOmnexaLicense(FrappeTestCase):
 		try:
 			frappe.local.conf["omnexa_licenses"] = {app: token}
 			frappe.local.conf["omnexa_license_public_key_pem"] = pub_pem
+			record_online_license_check(app)
 			r = verify_app_license(app)
 			self.assertIn(r.status, ("licensed", "licensed_grace"))
 			self.assertTrue(is_license_status_ok(r.status))

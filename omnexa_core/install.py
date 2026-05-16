@@ -614,6 +614,12 @@ def run_workspace_desk_sync():
 		sync_all_workspace_kpi_layout()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: sync_all_workspace_kpi_layout")
+	try:
+		from omnexa_core.workspace_erpgenex_realty import ensure_erpgenex_realty_workspace_experience
+
+		ensure_erpgenex_realty_workspace_experience()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure Erpgenex realty workspaces")
 
 
 def after_any_app_install(app_name: str):
@@ -1351,6 +1357,10 @@ def ensure_default_sidebar_workspace_order():
 			{"dashboard"},
 			{"accounting"},
 			{"fixed assets", "asset insurance"},
+			{"property management"},
+			{"re development"},
+			{"re marketing"},
+			{"maintenance core"},
 			{"sell", "sales"},
 			{"buy", "purchase", "purchasing"},
 			{"stock", "inventory", "warehouse"},

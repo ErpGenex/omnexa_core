@@ -6,3 +6,8 @@
 # Patches added in this section will be executed after doctypes are migrated
 omnexa_core.patches.seed_erpgenex_workspace_onboarding
 omnexa_core.patches.ensure_settings_company_branch_links
+omnexa_core.patches.fix_eg_workspace_routes
+omnexa_core.patches.finalize_erpgenex_workspace_names
+omnexa_core.patches.realign_erpgenex_workspace_onboarding
+omnexa_core.patches.fix_property_management_workspace_icon
+omnexa_core.patches.fix_asset_insurance_sidebar_parent

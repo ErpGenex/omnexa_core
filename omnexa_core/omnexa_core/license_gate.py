@@ -111,7 +111,7 @@ def _app_from_api_method(method: str) -> str | None:
 	if not m or "." not in m:
 		return None
 	head = m.split(".", 1)[0]
-	if head.startswith("omnexa_"):
+	if head.startswith("omnexa_") or head.startswith("erpgenex_"):
 		return head
 	return None
 
@@ -126,7 +126,7 @@ def _app_from_doctype(doctype: str | None) -> str | None:
 		if not module:
 			return None
 		app = (frappe.local.module_app or {}).get(frappe.scrub(module))
-		if isinstance(app, str) and app.startswith("omnexa_"):
+		if isinstance(app, str) and (app.startswith("omnexa_") or app.startswith("erpgenex_")):
 			return app
 	except Exception:
 		return None
@@ -242,10 +242,11 @@ def _enforce_for_app(app: str) -> None:
 def before_request():
 	"""
 	When ``omnexa_license_enforce`` is set, block API calls whose method namespace is ``omnexa_*``
+	or ``erpgenex_*`` (commercial apps)
 	if that app's license is not OK.
 
 	Also blocks common ``frappe.desk.*`` / ``frappe.client.*`` data calls when the target DocType
-	belongs to an unlicensed paid Omnexa app (list/form/reportview reads, not just writes).
+	belongs to an unlicensed paid Omnexa / ErpGenEx commercial app (list/form/reportview reads, not just writes).
 
 	Desk HTML routes under ``/app/`` still load; unlicensed-module navigation is reinforced by
 	``desk_license_guard.js``.

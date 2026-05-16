@@ -1,5 +1,5 @@
 // Copyright (c) 2026, Omnexa and contributors
-// License: MIT. Desk navigation guard when an omnexa_* app license is not OK.
+// License: MIT. Desk navigation guard when an omnexa_* / erpgenex_* commercial app license is not OK.
 (function () {
 	"use strict";
 
@@ -13,7 +13,9 @@
 		}
 		const scrub = frappe.scrub(moduleName);
 		const app = frappe.boot.module_app[scrub];
-		return app && String(app).startsWith("omnexa_") ? app : null;
+		return app && (String(app).startsWith("omnexa_") || String(app).startsWith("erpgenex_"))
+			? app
+			: null;
 	}
 
 	function isAppOk(app) {

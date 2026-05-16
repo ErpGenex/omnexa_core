@@ -217,7 +217,10 @@ omnexa_core_event_handlers = [
 scheduler_events = {
 	"hourly": [
 		"omnexa_core.omnexa_core.event_dispatcher.monitor_event_pipeline",
-	]
+	],
+	"daily": [
+		"omnexa_core.erpgenex_scheduler.run_erpgenex_daily_jobs",
+	],
 }
 
 # Testing

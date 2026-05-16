@@ -1616,7 +1616,165 @@ CONSTRUCTION_DESK: list[DeskSection] = [
 	),
 ]
 
+# --- ERPGENEX REAL ESTATE & MAINTENANCE (IPMS / RICS / CRM funnel / ISO 55000 CMMS) ---
+PROPERTY_MANAGEMENT_DESK: list[DeskSection] = [
+	(
+		"Portfolio & asset registry",
+		[
+			("PMC Property", "DocType", "PMC Property", None),
+			("PMC Property Unit", "DocType", "PMC Property Unit", None),
+			("PMC Management Agreement", "DocType", "PMC Management Agreement", None),
+		],
+	),
+	(
+		"Leasing & occupancy (IFRS 16 / IPSAS rent)",
+		[
+			("Rental Contract", "DocType", "Rental Contract", None),
+			("Rental contract register", "Report", "PMC Rental Contract Register", "Rental Contract"),
+		],
+	),
+	(
+		"CAM & recoveries",
+		[
+			("CAM Budget", "DocType", "CAM Budget", None),
+		],
+	),
+	(
+		"Billing & collections",
+		[
+			("Rent Billing Run", "DocType", "Rent Billing Run", None),
+			("Rent billing register", "Report", "PMC Rent Billing Register", "Rent Billing Run"),
+		],
+	),
+	(
+		"Owner reporting & trust accounting",
+		[
+			("PMC Owner Statement", "DocType", "PMC Owner Statement", None),
+		],
+	),
+	(
+		"Cross-module operations",
+		[
+			("Maintenance — service requests", "DocType", "Core Service Request", None),
+			("RE unit inventory (sales)", "DocType", "RE Unit Inventory", None),
+		],
+	),
+]
+
+RE_DEVELOPMENT_DESK: list[DeskSection] = [
+	(
+		"Land & project charter",
+		[
+			("Land Parcel", "DocType", "Land Parcel", None),
+			("Development Project", "DocType", "Development Project", None),
+			("Development project register", "Report", "Development Project Register", "Development Project"),
+		],
+	),
+	(
+		"Design & quantities (BOQ)",
+		[
+			("RE BOQ", "DocType", "RE BOQ", None),
+		],
+	),
+	(
+		"Budget & cost control",
+		[
+			("Development Budget", "DocType", "Development Budget", None),
+		],
+	),
+	(
+		"Unit inventory & sales readiness",
+		[
+			("RE Unit Inventory", "DocType", "RE Unit Inventory", None),
+			("Unit inventory overview", "Report", "RE Unit Inventory Overview", "RE Unit Inventory"),
+		],
+	),
+	(
+		"Handover & defects (snagging)",
+		[
+			("RE Handover Package", "DocType", "RE Handover Package", None),
+		],
+	),
+]
+
+RE_MARKETING_DESK: list[DeskSection] = [
+	(
+		"Lead acquisition & qualification",
+		[
+			("Property Sales Lead", "DocType", "Property Sales Lead", None),
+		],
+	),
+	(
+		"Reservations & unit holds",
+		[
+			("Unit Reservation", "DocType", "Unit Reservation", None),
+			("Reservation register", "Report", "Unit Reservation Register", "Unit Reservation"),
+		],
+	),
+	(
+		"Bookings & registration",
+		[
+			("Sales Booking", "DocType", "Sales Booking", None),
+			("Sales booking register", "Report", "Property Sales Booking Register", "Sales Booking"),
+		],
+	),
+	(
+		"Inventory & development context",
+		[
+			("RE Unit Inventory", "DocType", "RE Unit Inventory", None),
+			("Development Project", "DocType", "Development Project", None),
+		],
+	),
+]
+
+MAINTENANCE_CORE_DESK: list[DeskSection] = [
+	(
+		"Service requests & intake",
+		[
+			("Core Service Request", "DocType", "Core Service Request", None),
+		],
+	),
+	(
+		"SLA & prioritization",
+		[
+			("Core SLA Profile", "DocType", "Core SLA Profile", None),
+		],
+	),
+	(
+		"Work execution",
+		[
+			("Core Work Order", "DocType", "Core Work Order", None),
+		],
+	),
+	(
+		"Preventive maintenance",
+		[
+			("Core PM Schedule", "DocType", "Core PM Schedule", None),
+		],
+	),
+	(
+		"Asset taxonomy (ISO 14224)",
+		[
+			("Core Classification Code", "DocType", "Core Classification Code", None),
+		],
+	),
+	(
+		"Reports · Reliability & KPIs",
+		[
+			("Work order reliability KPIs", "Report", "Core Work Order Reliability KPIs", "Core Work Order"),
+		],
+	),
+]
+
 _BY_WORKSPACE: dict[str, list[DeskSection]] = {
+	"Property Management": PROPERTY_MANAGEMENT_DESK,
+	"property management": PROPERTY_MANAGEMENT_DESK,
+	"RE Development": RE_DEVELOPMENT_DESK,
+	"re development": RE_DEVELOPMENT_DESK,
+	"RE Marketing": RE_MARKETING_DESK,
+	"re marketing": RE_MARKETING_DESK,
+	"Maintenance Core": MAINTENANCE_CORE_DESK,
+	"maintenance core": MAINTENANCE_CORE_DESK,
 	"Sell": SELL_DESK,
 	"Buy": BUY_DESK,
 	"Stock": STOCK_DESK,

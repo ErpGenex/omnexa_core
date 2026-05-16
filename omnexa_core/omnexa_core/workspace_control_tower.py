@@ -67,6 +67,11 @@ def _resolve_workspace_parent_page_field(parent_ref: str) -> str:
 	return ""
 
 
+def _parent_page_sidebar_token_matches(stored: str, canonical: str) -> bool:
+	"""Desk nests children when ``child.parent_page == parent.title`` (case-sensitive)."""
+	return (stored or "").strip() == (canonical or "").strip()
+
+
 # Registry key = app_name in hooks (e.g. omnexa_finance_engine)
 _APP_SPECS: dict[str, dict[str, Any]] = {
 	"omnexa_finance_engine": {
@@ -1300,6 +1305,106 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Asset Insurance Register", "Report", "Asset Insurance Register"),
 		],
 		"kpi_trends": [],
+		"extra_sections": [],
+	},
+	"erpgenex_property_mgmt": {
+		"_requires_app": "erpgenex_property_mgmt",
+		"workspace": "Property Management",
+		"module": "Erpgenex Property Mgmt",
+		"icon": "organization",
+		"headline": "Property Management",
+		"tagline": "IPMS-style PMC — portfolio, leasing, CAM, billing, owner statements (IFRS 16 / IPSAS rent).",
+		"parent_page": "",
+		"is_hidden": 0,
+		"packaged_workspace_style": "engineering_v1",
+		"trend_doctypes": ["Rental Contract", "Rent Billing Run"],
+		"status_doctypes": ["Rental Contract", "Rent Billing Run", "PMC Owner Statement"],
+		"kpis": [
+			("Properties", "PMC Property", []),
+			("Units", "PMC Property Unit", []),
+			("Active leases", "Rental Contract", [["status", "=", "Active"]]),
+			("Draft billing runs", "Rent Billing Run", [["status", "=", "Draft"]]),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Donut", "doctype": "Rental Contract", "group_by": "status", "label": "Lease status"},
+			{"type": "Bar", "doctype": "Rent Billing Run", "group_by": "status", "label": "Billing status"},
+		],
+		"extra_sections": [],
+	},
+	"erpgenex_realestate_dev": {
+		"_requires_app": "erpgenex_realestate_dev",
+		"workspace": "RE Development",
+		"module": "Erpgenex Realestate Dev",
+		"icon": "project",
+		"headline": "RE Development",
+		"tagline": "RICS lifecycle — land, BOQ, budget, inventory, handover & defect closure.",
+		"parent_page": "",
+		"is_hidden": 0,
+		"packaged_workspace_style": "engineering_v1",
+		"trend_doctypes": ["Development Project", "RE Unit Inventory"],
+		"status_doctypes": ["Development Project", "RE Unit Inventory", "RE Handover Package"],
+		"kpis": [
+			("Development projects", "Development Project", []),
+			("Land parcels", "Land Parcel", []),
+			("Active projects", "Development Project", [["status", "=", "Active"]]),
+			("Available units", "RE Unit Inventory", [["status", "=", "Available"]]),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Donut", "doctype": "Development Project", "group_by": "status", "label": "Project status"},
+			{"type": "Bar", "doctype": "RE Unit Inventory", "group_by": "status", "label": "Inventory status"},
+		],
+		"extra_sections": [],
+	},
+	"erpgenex_realestate_sales": {
+		"_requires_app": "erpgenex_realestate_sales",
+		"workspace": "RE Marketing",
+		"module": "Erpgenex Realestate Sales",
+		"icon": "sell",
+		"headline": "RE Marketing",
+		"tagline": "CRM funnel — leads, reservations, bookings; inventory sync (RICS / NAR pipeline).",
+		"parent_page": "",
+		"is_hidden": 0,
+		"packaged_workspace_style": "engineering_v1",
+		"trend_doctypes": ["Property Sales Lead", "Unit Reservation", "Sales Booking"],
+		"status_doctypes": ["Property Sales Lead", "Unit Reservation", "Sales Booking"],
+		"kpis": [
+			("Open leads", "Property Sales Lead", [["status", "in", ["New", "Qualified", "Negotiation"]]]),
+			("Active reservations", "Unit Reservation", [["status", "=", "Active"]]),
+			("Approved bookings", "Sales Booking", [["status", "=", "Approved"]]),
+			("Registered sales", "Sales Booking", [["status", "=", "Registered"]]),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Donut", "doctype": "Property Sales Lead", "group_by": "status", "label": "Lead funnel"},
+			{"type": "Bar", "doctype": "Sales Booking", "group_by": "status", "label": "Booking status"},
+		],
+		"extra_sections": [],
+	},
+	"erpgenex_maintenance_core": {
+		"_requires_app": "erpgenex_maintenance_core",
+		"workspace": "Maintenance Core",
+		"module": "ERPGenEx Maintenance Core",
+		"icon": "tool",
+		"headline": "Maintenance Core",
+		"tagline": "ISO 55000 CMMS — requests, SLA, work orders, PM schedules, reliability analytics.",
+		"parent_page": "",
+		"is_hidden": 0,
+		"packaged_workspace_style": "engineering_v1",
+		"trend_doctypes": ["Core Service Request", "Core Work Order"],
+		"status_doctypes": ["Core Service Request", "Core Work Order", "Core PM Schedule"],
+		"kpis": [
+			("Open service requests", "Core Service Request", [["status", "in", ["Open", "Triaged", "In Progress"]]]),
+			("Work orders", "Core Work Order", []),
+			("PM schedules", "Core PM Schedule", []),
+			("SLA profiles", "Core SLA Profile", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Donut", "doctype": "Core Service Request", "group_by": "status", "label": "Request status"},
+			{"type": "Bar", "doctype": "Core Work Order", "group_by": "status", "label": "Work order status"},
+		],
 		"extra_sections": [],
 	},
 	"omnexa_core_governance": {
@@ -2801,7 +2906,7 @@ def _ensure_asset_insurance_workspace() -> None:
 	if frappe.db.exists("Workspace", "Asset Insurance"):
 		ws = frappe.get_doc("Workspace", "Asset Insurance")
 		changed = False
-		if parent and (ws.parent_page or "").strip() != parent:
+		if parent and not _parent_page_sidebar_token_matches(ws.parent_page, parent):
 			ws.parent_page = parent
 			changed = True
 		if not ws.public:
@@ -2946,13 +3051,25 @@ def sync_workspace_for_app(app_name: str) -> None:
 	if "parent_page" in spec:
 		pp = spec.get("parent_page")
 		if isinstance(pp, str) and pp.strip():
-			ws.parent_page = _resolve_workspace_parent_page_field(pp.strip())
+			resolved_parent = _resolve_workspace_parent_page_field(pp.strip())
+			if resolved_parent:
+				ws.parent_page = resolved_parent
+			elif pp.strip():
+				ws.parent_page = pp.strip()
 	elif not ws.parent_page:
 		ws.parent_page = "Finance Group"
 	if "is_hidden" in spec:
 		ws.is_hidden = int(spec["is_hidden"])
 
 	_save_workspace_with_control_tower(ws, spec, prefix)
+
+	# Packaged JSON / migrate may reset ``parent_page`` casing (e.g. *Fixed assets* vs *Fixed Assets*).
+	if ws_label == "Asset Insurance":
+		parent_token = _resolve_workspace_parent_page_field("Fixed Assets")
+		if parent_token and not _parent_page_sidebar_token_matches(
+			frappe.db.get_value("Workspace", ws_label, "parent_page"), parent_token
+		):
+			frappe.db.set_value("Workspace", ws_label, "parent_page", parent_token, update_modified=False)
 
 
 def _save_workspace_with_control_tower(ws, spec: dict[str, Any], prefix: str) -> None:

@@ -17,6 +17,9 @@ Trial: if no JWT for the app, first use records `omnexa_trial_started_<app>` via
 Built-in free apps (no license / no trial gate): see ``FREE_APPS`` (includes ``erpgenex_*`` theme slugs).
 Optional extra slugs: ``omnexa_marketplace_free_apps`` in site_config.
 
+Commercial apps use JWT/trial/marketplace rules when they are ``omnexa_*`` or ``erpgenex_*`` slugs
+and **not** in ``FREE_APPS`` (see ``_is_commercial_license_slug``).
+
 Commercial verticals (e.g. ``omnexa_nursery``) must stay **out** of ``FREE_APPS`` and out of
 ``omnexa_marketplace_free_apps`` so the ErpGenEx Marketplace shows ``price_type: paid`` and
 licensing/trial rules apply like other paid Omnexa apps. Bundle SKUs on the storefront should
@@ -81,24 +84,32 @@ COMMERCIAL_JWT_LICENSE_APPS = frozenset(
 	{
 		"omnexa_education",
 		"omnexa_nursery",
+		"erpgenex_maintenance_core",
+		"erpgenex_realestate_dev",
+		"erpgenex_realestate_sales",
+		"erpgenex_property_mgmt",
 	}
 )
 
 
-def requires_storefront_jwt_license(app_slug: str) -> bool:
-	"""
-	True when the app is not on the perpetual free tier: licensing is via signed JWT (with
-	``exp``), auto-trial if enabled, or ``missing_license`` when no key and trial off.
-
-	``COMMERCIAL_JWT_LICENSE_APPS`` is the explicit checklist for bundle / QA; any other
-	``omnexa_*`` app with ``not is_free_app`` follows the same ``verify_app_license`` path.
-	"""
+def _is_commercial_license_slug(app_slug: str) -> bool:
+	"""Paid marketplace tier: omnexa_* or erpgenex_* excluding ``FREE_APPS`` / site free list."""
 	if not app_slug or not isinstance(app_slug, str):
 		return False
-	slug = app_slug.strip()
-	if not slug.startswith("omnexa_"):
+	s = app_slug.strip()
+	if is_free_app(s):
 		return False
-	return not is_free_app(slug)
+	return s.startswith("omnexa_") or s.startswith("erpgenex_")
+
+
+def requires_storefront_jwt_license(app_slug: str) -> bool:
+	"""
+	True when the app uses JWT keys / trial / marketplace paid rules.
+
+	``COMMERCIAL_JWT_LICENSE_APPS`` lists storefront JWT SKUs used in bundle QA; any other
+	commercial slug (``_is_commercial_license_slug``) follows the same ``verify_app_license`` path.
+	"""
+	return _is_commercial_license_slug(app_slug)
 
 
 def is_free_app(app_slug: str) -> bool:
@@ -121,10 +132,10 @@ def is_license_status_ok(status: str) -> bool:
 
 
 def get_omnexa_license_snapshot() -> dict[str, dict[str, Any]]:
-	"""Per installed omnexa_* app: current verify_app_license status (for Desk boot / refresh)."""
+	"""Per installed commercial app (paid omnexa_* / erpgenex_*): current verify_app_license status."""
 	out: dict[str, dict[str, Any]] = {}
 	for app in frappe.get_installed_apps() or []:
-		if not isinstance(app, str) or not app.startswith("omnexa_"):
+		if not isinstance(app, str) or not _is_commercial_license_slug(app):
 			continue
 		r = verify_app_license(app)
 		out[app] = {
@@ -167,7 +178,7 @@ def _utc_now_ts() -> int:
 
 def record_online_license_check(app_slug: str, now_ts: int | None = None) -> None:
 	"""Record a successful online activation / renewal / validation moment."""
-	if not app_slug or not isinstance(app_slug, str) or not app_slug.startswith("omnexa_"):
+	if not app_slug or not isinstance(app_slug, str) or not _is_commercial_license_slug(app_slug):
 		return
 	ts = int(now_ts or _utc_now_ts())
 	frappe.db.set_default(_offline_last_online_key(app_slug), str(ts))
@@ -179,7 +190,7 @@ def record_online_license_check(app_slug: str, now_ts: int | None = None) -> Non
 
 def set_manual_revoke(app_slug: str, revoked: bool) -> None:
 	"""Manual hard lock switch set by Marketplace revoke action."""
-	if not app_slug or not isinstance(app_slug, str) or not app_slug.startswith("omnexa_"):
+	if not app_slug or not isinstance(app_slug, str) or not _is_commercial_license_slug(app_slug):
 		return
 	frappe.db.set_default(_manual_revoke_key(app_slug), "1" if revoked else None)
 	frappe.db.commit()
@@ -221,9 +232,7 @@ def _apply_time_policies(app_slug: str, base: "LicenseCheckResult") -> "LicenseC
 	- Warning + grace window (default 7 days).
 	- After grace, lock the app (status becomes *_locked).
 	"""
-	if not app_slug or not isinstance(app_slug, str) or not app_slug.startswith("omnexa_"):
-		return base
-	if is_free_app(app_slug):
+	if not app_slug or not isinstance(app_slug, str) or not _is_commercial_license_slug(app_slug):
 		return base
 	# Online/offline policies apply to paid licenses only (JWT present). Trials remain local-only.
 	if base.status != "licensed":
@@ -318,8 +327,8 @@ def set_license_key(app_slug: str, license_value: str) -> None:
 	"""Persist app license key to site defaults for runtime usage."""
 	if not app_slug or not isinstance(app_slug, str):
 		frappe.throw(frappe._("App slug is required."))
-	if not app_slug.startswith("omnexa_"):
-		frappe.throw(frappe._("Only Omnexa apps are supported."))
+	if not _is_commercial_license_slug(app_slug):
+		frappe.throw(frappe._("Only licensed ErpGenEx marketplace apps support activation keys."))
 	if not license_value or not isinstance(license_value, str):
 		frappe.throw(frappe._("License key is required."))
 
@@ -338,7 +347,7 @@ def set_license_key(app_slug: str, license_value: str) -> None:
 
 def clear_license_key(app_slug: str) -> None:
 	"""Remove one app entry from ``omnexa_licenses_json`` (used when activation fails)."""
-	if not app_slug or not isinstance(app_slug, str) or not app_slug.startswith("omnexa_"):
+	if not app_slug or not isinstance(app_slug, str) or not _is_commercial_license_slug(app_slug):
 		return
 	raw_json = frappe.db.get_default("omnexa_licenses_json")
 	try:
@@ -354,7 +363,7 @@ def clear_license_key(app_slug: str) -> None:
 
 def clear_trial_for_app(app_slug: str) -> None:
 	"""Clear stored trial start timestamp so the next check starts a fresh trial window."""
-	if not app_slug or not isinstance(app_slug, str) or not app_slug.startswith("omnexa_"):
+	if not app_slug or not isinstance(app_slug, str) or not _is_commercial_license_slug(app_slug):
 		return
 	frappe.db.set_default(_trial_key(app_slug), None)
 	frappe.db.commit()
@@ -633,7 +642,7 @@ def verify_app_license(app_slug: str) -> LicenseCheckResult:
 		return LicenseCheckResult(status="licensed_free", reason="free_app")
 	if is_manual_revoke(app_slug):
 		return LicenseCheckResult(status="revoked_manual", reason="manual_revoke")
-	if _require_platform_binding() and app_slug.startswith("omnexa_") and not _is_erpgenex_platform():
+	if _require_platform_binding() and _is_commercial_license_slug(app_slug) and not _is_erpgenex_platform():
 		return LicenseCheckResult(
 			status="invalid_platform",
 			reason="omnexa_platform must be set to 'erpgenex'",
@@ -688,7 +697,7 @@ def assert_app_licensed_or_raise(app_slug: str) -> None:
 			# When app-level gates call this helper, do not block requests that target
 			# another app namespace (e.g. omnexa_agriculture gate should not block
 			# /api/method/omnexa_intelligence_core.* calls).
-			if method.startswith("omnexa_"):
+			if method.startswith("omnexa_") or method.startswith("erpgenex_"):
 				head = method.split(".", 1)[0]
 				if head and head != app_slug:
 					return

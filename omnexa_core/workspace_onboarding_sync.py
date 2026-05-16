@@ -183,8 +183,9 @@ def _upsert_module_onboarding(ws, specs: list[dict[str, Any]]) -> str:
 		mo.name = mo_name
 
 	mo.module = ws.module
-	mo.title = f"ERPGENEX · {ws.label}"
-	mo.subtitle = "Guided setup for this workspace."
+	# Sidebar already shows branding; onboarding title mirrors the workspace (no EG / duplicate prefix).
+	mo.title = ws.label or ws.title or ws.name
+	mo.subtitle = frappe._("Guided setup for this workspace.")
 	mo.success_message = f"You are ready to work in {ws.label}."
 	mo.documentation_url = DOCS_URL
 	mo.is_complete = 0
@@ -200,8 +201,8 @@ def _upsert_module_onboarding(ws, specs: list[dict[str, Any]]) -> str:
 	return mo_name
 
 
-def ensure_module_onboarding_doc(ws_name: str) -> str | None:
-	ws = frappe.get_doc("Workspace", ws_name)
+def ensure_workspace_module_onboarding(ws) -> str | None:
+	"""Create/update Module Onboarding for an in-memory or saved Workspace doc (uses current shortcuts/links)."""
 	if not ws.module or not _is_public_workspace(ws) or cint(getattr(ws, "is_hidden", 0)):
 		return None
 
@@ -214,6 +215,11 @@ def ensure_module_onboarding_doc(ws_name: str) -> str | None:
 		return None
 
 	return _upsert_module_onboarding(ws, specs)
+
+
+def ensure_module_onboarding_doc(ws_name: str) -> str | None:
+	ws = frappe.get_doc("Workspace", ws_name)
+	return ensure_workspace_module_onboarding(ws)
 
 
 def prepend_onboarding_block(content_json: str | None, mo_name: str) -> str:

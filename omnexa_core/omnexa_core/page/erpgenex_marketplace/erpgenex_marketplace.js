@@ -110,6 +110,11 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	let sortDir = "asc";
 	let catalogAutoRefreshTimer = null;
 
+	/** Paid marketplace row (server: not in FREE_APPS — includes erpgenex_* verticals). */
+	function isPaidCatalogItem(item) {
+		return Boolean(item && !item.is_free);
+	}
+
 	/** License or developer bypass accepted — hide Buy / Activate; allow Install from public repo. */
 	function is_license_gate_passed(status) {
 		return [
@@ -256,11 +261,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			? frappe.utils.escape_html(__("Forever"))
 			: frappe.utils.escape_html(formatDate(item.license_expires_on));
 		const expiresSrc = frappe.utils.escape_html(item.license_expiry_source || "");
-		const type = item.is_free
-			? __("Free")
-			: String(item.app_slug || "").startsWith("omnexa_")
-				? __("Paid")
-				: __("Repo");
+		const type = item.is_free ? __("Free") : isPaidCatalogItem(item) ? __("Paid") : __("Repo");
 		const iconUrl = frappe.utils.escape_html(item.icon_url || "/assets/frappe/images/frappe-framework-logo.svg");
 		const installState = item.is_installed ? __("Installed") : __("Not Installed");
 		const installBadge = item.is_installed
@@ -292,12 +293,12 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				`<button class="btn btn-sm btn-outline-danger me-2" data-action="uninstall" data-app="${appSlug}">${__("Uninstall")}</button>`
 			);
 		}
-		if (!item.is_free && !gate && String(item.app_slug || "").startsWith("omnexa_")) {
+		if (isPaidCatalogItem(item) && !gate) {
 			actions.push(
 				`<button class="btn btn-sm btn-primary me-2" data-action="buy" data-app="${appSlug}">${__("Buy")}</button>`
 			);
 		}
-		if (!gate && String(item.app_slug || "").startsWith("omnexa_")) {
+		if (isPaidCatalogItem(item) && !gate) {
 			actions.push(
 				`<button class="btn btn-sm btn-secondary" data-action="activate" data-app="${appSlug}">${__("Activate Key")}</button>`
 			);
@@ -348,7 +349,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		if (item.is_free) {
 			return 0;
 		}
-		if (String(item.app_slug || "").startsWith("omnexa_")) {
+		if (isPaidCatalogItem(item)) {
 			return 1;
 		}
 		return 2;
