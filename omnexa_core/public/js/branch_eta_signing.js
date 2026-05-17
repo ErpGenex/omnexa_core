@@ -75,8 +75,29 @@ frappe.ui.form.on("Branch", {
 					const localAgent = /127\.0\.0\.1|localhost/i.test(
 						frm.doc.eta_signing_agent_url || ""
 					);
-					if (d.browser_sign_required && onWindows && localAgent && omnexa.einvoice?.testBranchUsbSigning) {
-						await omnexa.einvoice.testBranchUsbSigning(frm.doc.name);
+					if (d.browser_sign_required && onWindows && localAgent) {
+						const testPrep = await frappe.call({
+							method:
+								"omnexa_einvoice.omnexa_einvoice.doctype.e_invoice_submission.e_invoice_submission.create_usb_sign_session_for_branch_test",
+							args: { branch: frm.doc.name },
+						});
+						const tm = testPrep.message || {};
+						const base = (tm.agent_url || "http://127.0.0.1:5002").replace(/\/$/, "");
+						const body = tm.agent_body || {};
+						const hres = await fetch(`${base}/health`);
+						if (!hres.ok) {
+							frappe.throw(__("Agent not reachable at {0}", [base]));
+						}
+						const sres = await fetch(`${base}/sign`, {
+							method: "POST",
+							headers: { "Content-Type": "application/json" },
+							body: JSON.stringify(body),
+						});
+						const sb = await sres.json();
+						if (!sres.ok || !sb.success) {
+							frappe.throw(sb.message || __("USB signing test failed"));
+						}
+						frappe.show_alert({ message: __("USB signing test OK"), indicator: "green" });
 					} else if (d.browser_sign_required) {
 						frappe.show_alert({
 							message: __(
