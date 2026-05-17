@@ -17,72 +17,28 @@ class TestOmnexaCompany(FrappeTestCase):
 				{"doctype": "Country", "country_name": "Egypt", "code": "EG"}
 			).insert(ignore_permissions=True)
 
-	def test_rin_required_when_eta_enabled(self):
-		doc = frappe.new_doc("Company")
-		doc.company_name = "Test Pilot Co"
-		doc.abbr = "TPCO"
-		doc.default_currency = "EGP"
-		doc.country = "Egypt"
-		doc.status = "Draft"
-		doc.eta_einvoice_enabled = 1
-		doc.rin = ""
-		with self.assertRaises(frappe.ValidationError):
-			doc.insert(ignore_permissions=True)
-
-	def test_company_inserts_when_eta_is_disabled(self):
+	def test_company_inserts_and_creates_head_office_branch(self):
 		doc = frappe.new_doc("Company")
 		doc.company_name = "Test Pilot Co 2"
-		doc.abbr = "TPC2"
+		doc.abbr = frappe.generate_hash(length=4).upper()
 		doc.default_currency = "EGP"
 		doc.country = "Egypt"
 		doc.status = "Draft"
-		doc.eta_einvoice_enabled = 0
 		doc.insert(ignore_permissions=True)
 		self.assertTrue(frappe.db.exists("Company", doc.name))
 		self.assertTrue(frappe.db.exists("Branch", {"company": doc.name, "is_head_office": 1}))
+		doc.delete(ignore_permissions=True)
 
-	def test_company_eta_requires_profiles(self):
+	def test_company_save_with_rin_and_tax_id(self):
 		doc = frappe.new_doc("Company")
-		doc.company_name = "Test Pilot Co 4"
-		doc.abbr = "TPC4"
+		doc.company_name = "Test Pilot Co RIN"
+		doc.abbr = frappe.generate_hash(length=4).upper()
 		doc.default_currency = "EGP"
 		doc.country = "Egypt"
 		doc.status = "Draft"
-		doc.eta_einvoice_enabled = 1
-		doc.rin = "123456789"
-		with self.assertRaises(frappe.ValidationError):
-			doc.insert(ignore_permissions=True)
-
-	def test_company_eta_accepts_company_profiles(self):
-		doc = frappe.new_doc("Company")
-		doc.company_name = "Test Pilot Co 3"
-		doc.abbr = "TPC3"
-		doc.default_currency = "EGP"
-		doc.country = "Egypt"
-		doc.status = "Draft"
-		doc.rin = "987654321"
+		doc.tax_id = "258797215"
+		doc.rin = "258797215"
 		doc.insert(ignore_permissions=True)
-
-		tax = frappe.get_doc(
-			{
-				"doctype": "Tax Authority Profile",
-				"company": doc.name,
-				"country_code": "EG",
-				"adapter_id": "EGY_ETA",
-				"api_base_url": "https://eta.example/tpc3",
-			}
-		).insert(ignore_permissions=True)
-		sign = frappe.get_doc(
-			{
-				"doctype": "Signing Profile",
-				"company": doc.name,
-				"profile_name": "TPC3 Sign",
-				"certificate_vault_ref": "vault://tpc3/sign",
-			}
-		).insert(ignore_permissions=True)
-
-		doc.eta_einvoice_enabled = 1
-		doc.company_tax_authority_profile = tax.name
-		doc.company_signing_profile = sign.name
 		doc.save(ignore_permissions=True)
-		self.assertTrue(frappe.db.exists("Company", doc.name))
+		self.assertEqual(frappe.db.get_value("Company", doc.name, "rin"), "258797215")
+		doc.delete(ignore_permissions=True)

@@ -18,9 +18,52 @@
 		"tab_break_1",
 		"tax_section",
 		"default_vat_rate",
+		"tab_break_eta",
+		"eta_setup_help",
+		"eta_ereceipt_enabled",
+		"eta_receipt_connection_section",
+		"eta_receipt_environment",
+		"eta_receipt_base_url",
+		"eta_receipt_client_id",
+		"eta_receipt_client_secret",
+		"column_break_eta_receipt_conn",
+		"eta_receipt_rin",
+		"eta_activity_code",
+		"eta_ereceipt_section",
+		"eta_pos_device_serial",
+		"eta_company_trade_name",
+		"eta_pos_os_version",
+		"eta_pos_model_framework",
+		"eta_pos_preshared_key",
+		"column_break_eta_rcpt",
+		"eta_branch_code",
+		"eta_address_section",
+		"eta_address_country",
+		"eta_address_governate",
+		"eta_address_city",
+		"column_break_eta_addr",
+		"eta_address_street",
+		"eta_address_building_number",
+		"eta_address_postal_code",
+		"eta_address_floor",
+		"eta_address_room",
+		"eta_address_landmark",
+		"eta_address_additional",
 		"eta_einvoice_enabled",
-		"tax_authority_profile",
-		"signing_profile",
+		"eta_invoice_connection_section",
+		"eta_invoice_environment",
+		"eta_invoice_base_url",
+		"eta_invoice_client_id",
+		"eta_invoice_client_secret",
+		"column_break_eta_invoice_conn",
+		"eta_invoice_rin",
+		"eta_einvoice_sign_section",
+		"eta_signer_mode",
+		"eta_signing_secret",
+		"eta_windows_signer_command",
+		"eta_certificate_reference",
+		"eta_policy_section",
+		"eta_require_einvoice_before_si_submit",
 		"tab_break_2",
 		"branch_financial_defaults_section",
 		"inherit_company_financial_defaults",
@@ -36,16 +79,6 @@
 			"fieldname": "tab_break_overview",
 			"fieldtype": "Tab Break",
 			"label": "Overview"
-		},
-		{
-			"fieldname": "tab_break_1",
-			"fieldtype": "Tab Break",
-			"label": "Details"
-		},
-		{
-			"fieldname": "tab_break_2",
-			"fieldtype": "Tab Break",
-			"label": "Further"
 		},
 		{
 			"fieldname": "branch_section",
@@ -100,42 +133,319 @@
 			"label": "Is Head Office"
 		},
 		{
+			"fieldname": "tab_break_1",
+			"fieldtype": "Tab Break",
+			"label": "Details"
+		},
+		{
 			"collapsible": 1,
 			"fieldname": "tax_section",
 			"fieldtype": "Section Break",
-			"label": "Tax & e-Invoice (Branch)"
+			"label": "Tax (local)"
 		},
 		{
 			"default": "0",
-			"description": "Branch default VAT rate (percentage). Used by setup intelligence and document defaults when applicable.",
+			"description": "Branch default VAT rate (percentage).",
 			"fieldname": "default_vat_rate",
 			"fieldtype": "Float",
 			"label": "Default VAT Rate (%)"
 		},
 		{
+			"fieldname": "tab_break_eta",
+			"fieldtype": "Tab Break",
+			"label": "Egypt ETA"
+		},
+		{
+			"fieldname": "eta_setup_help",
+			"fieldtype": "HTML",
+			"label": "Guide",
+			"options": "<div class=\"text-muted small\"><p>Enable <b>E-Receipt</b> and/or <b>E-Invoice</b>, then fill each channel Client ID / Secret.</p></div>"
+		},
+		{
+			"fieldname": "eta_ereceipt_enabled",
+			"fieldtype": "Check",
+			"label": "Enable E-Receipt (POS)",
+			"default": "0"
+		},
+		{
+			"fieldname": "eta_receipt_connection_section",
+			"fieldtype": "Section Break",
+			"label": "1. E-Receipt — ETA connection",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"fieldname": "eta_receipt_environment",
+			"fieldtype": "Select",
+			"label": "E-Receipt Environment",
+			"options": "preprod\nprod",
+			"default": "prod",
+			"description": "prod = live ETA (id.eta.gov.eg). Use production POS Client ID/Secret from invoicing.eta.gov.eg only.",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"fieldname": "eta_receipt_base_url",
+			"fieldtype": "Data",
+			"label": "E-Receipt API Base URL",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"fieldname": "eta_receipt_client_id",
+			"fieldtype": "Data",
+			"label": "E-Receipt Client ID",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"fieldname": "eta_receipt_client_secret",
+			"fieldtype": "Password",
+			"label": "E-Receipt Client Secret",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"fieldname": "column_break_eta_receipt_conn",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "eta_receipt_rin",
+			"fieldtype": "Data",
+			"label": "E-Receipt Taxpayer RIN",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_activity_code",
+			"fieldtype": "Data",
+			"label": "E-Receipt Activity Code"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_ereceipt_section",
+			"fieldtype": "Section Break",
+			"label": "2. E-Receipt — POS & seller"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"description": "Sent as posserial to ETA.",
+			"fieldname": "eta_pos_device_serial",
+			"fieldtype": "Data",
+			"label": "POS Device Serial"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_company_trade_name",
+			"fieldtype": "Data",
+			"label": "Company Trade Name"
+		},
+		{
+			"default": "windows",
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_pos_os_version",
+			"fieldtype": "Select",
+			"label": "POS OS Version Header",
+			"options": "os\nwindows",
+			"description": "Production (prod): use windows. Preprod: use os."
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"description": "ETA header posmodelframework (usually 1).",
+			"fieldname": "eta_pos_model_framework",
+			"fieldtype": "Data",
+			"label": "POS Model Framework"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"description": "From ETA portal when POS device is registered (if provided). Sent as presharedkey header.",
+			"fieldname": "eta_pos_preshared_key",
+			"fieldtype": "Password",
+			"label": "POS Pre-Shared Key"
+		},
+		{
+			"fieldname": "column_break_eta_rcpt",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"description": "ETA branch code in receipt JSON (defaults to Branch Code).",
+			"fieldname": "eta_branch_code",
+			"fieldtype": "Data",
+			"label": "ETA Branch Code"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_section",
+			"fieldtype": "Section Break",
+			"label": "Seller address (e-Receipt)"
+		},
+		{
+			"default": "EG",
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_country",
+			"fieldtype": "Data",
+			"label": "Country"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_governate",
+			"fieldtype": "Data",
+			"label": "Governate"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_city",
+			"fieldtype": "Data",
+			"label": "City"
+		},
+		{
+			"fieldname": "column_break_eta_addr",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_street",
+			"fieldtype": "Data",
+			"label": "Street"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_building_number",
+			"fieldtype": "Data",
+			"label": "Building No."
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_postal_code",
+			"fieldtype": "Data",
+			"label": "Postal Code"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_floor",
+			"fieldtype": "Data",
+			"label": "Floor"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_room",
+			"fieldtype": "Data",
+			"label": "Room"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_landmark",
+			"fieldtype": "Data",
+			"label": "Landmark"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_additional",
+			"fieldtype": "Data",
+			"label": "Additional Info"
+		},
+		{
 			"default": "0",
 			"fieldname": "eta_einvoice_enabled",
 			"fieldtype": "Check",
-			"label": "ETA e-Invoice Enabled"
+			"label": "Enable E-Invoice"
 		},
 		{
 			"depends_on": "eval:doc.eta_einvoice_enabled",
-			"fieldname": "tax_authority_profile",
-			"fieldtype": "Link",
-			"label": "Tax Authority Profile",
-			"options": "Tax Authority Profile"
+			"fieldname": "eta_invoice_connection_section",
+			"fieldtype": "Section Break",
+			"label": "3. E-Invoice — ETA connection"
+		},
+		{
+			"default": "preprod",
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_invoice_environment",
+			"fieldtype": "Select",
+			"label": "E-Invoice Environment",
+			"options": "preprod\nprod"
 		},
 		{
 			"depends_on": "eval:doc.eta_einvoice_enabled",
-			"fieldname": "signing_profile",
-			"fieldtype": "Link",
-			"label": "Signing Profile",
-			"options": "Signing Profile"
+			"fieldname": "eta_invoice_base_url",
+			"fieldtype": "Data",
+			"label": "E-Invoice API Base URL"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_invoice_client_id",
+			"fieldtype": "Data",
+			"label": "E-Invoice Client ID"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_invoice_client_secret",
+			"fieldtype": "Password",
+			"label": "E-Invoice Client Secret"
+		},
+		{
+			"fieldname": "column_break_eta_invoice_conn",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_invoice_rin",
+			"fieldtype": "Data",
+			"label": "E-Invoice Taxpayer RIN"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_einvoice_sign_section",
+			"fieldtype": "Section Break",
+			"label": "4. E-Invoice — signing (USB)"
+		},
+		{
+			"default": "remote",
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"description": "remote = test HMAC · windows_app = USB token via external signer",
+			"fieldname": "eta_signer_mode",
+			"fieldtype": "Select",
+			"label": "Signer Mode",
+			"options": "remote\nwindows_app"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"remote\"",
+			"fieldname": "eta_signing_secret",
+			"fieldtype": "Password",
+			"label": "Signing Secret (test)"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"windows_app\"",
+			"fieldname": "eta_windows_signer_command",
+			"fieldtype": "Data",
+			"label": "Windows Signer Command"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"windows_app\"",
+			"fieldname": "eta_certificate_reference",
+			"fieldtype": "Data",
+			"label": "Certificate / USB Token Reference"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_policy_section",
+			"fieldtype": "Section Break",
+			"label": "5. Policy"
+		},
+		{
+			"default": "0",
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"description": "Block Sales Invoice submit until e-Invoice is sent for this branch.",
+			"fieldname": "eta_require_einvoice_before_si_submit",
+			"fieldtype": "Check",
+			"label": "Require e-Invoice before Sales Invoice Submit"
+		},
+		{
+			"fieldname": "tab_break_2",
+			"fieldtype": "Tab Break",
+			"label": "Financial"
 		},
 		{
 			"collapsible": 1,
 			"depends_on": "eval:!doc.__islocal",
-			"description": "Branch-level financial context: optional operating GL overrides (e.g. local cash desk) and IFRS 8-style reporting unit code. When “Inherit company defaults” is enabled, postings fall back to Company default GL accounts.",
 			"fieldname": "branch_financial_defaults_section",
 			"fieldtype": "Section Break",
 			"label": "Financial defaults (branch)"
@@ -149,7 +459,6 @@
 		},
 		{
 			"depends_on": "eval:!doc.__islocal",
-			"description": "Optional identifier for management reporting / CGU tagging (IFRS 8 operating segments).",
 			"fieldname": "branch_fiscal_reporting_unit_code",
 			"fieldtype": "Data",
 			"label": "Fiscal reporting unit code"
@@ -160,7 +469,6 @@
 		},
 		{
 			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
-			"description": "Optional override; CoA 1101",
 			"fieldname": "branch_default_petty_cash_gl",
 			"fieldtype": "Link",
 			"label": "Branch petty cash GL",
@@ -168,7 +476,6 @@
 		},
 		{
 			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
-			"description": "Optional override; CoA 1102",
 			"fieldname": "branch_default_bank_gl",
 			"fieldtype": "Link",
 			"label": "Branch bank (operating) GL",
@@ -176,7 +483,6 @@
 		},
 		{
 			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
-			"description": "Optional override; CoA 1103",
 			"fieldname": "branch_default_receivable_gl",
 			"fieldtype": "Link",
 			"label": "Branch trade receivable GL",
@@ -184,17 +490,26 @@
 		},
 		{
 			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
-			"description": "Optional override; CoA 2101",
 			"fieldname": "branch_default_trade_payable_gl",
 			"fieldtype": "Link",
 			"label": "Branch trade payables GL",
 			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_connection_section",
+			"fieldtype": "Section Break",
+			"label": "1. ETA connection (shared)"
+		},
+		{
+			"fieldname": "column_break_eta_conn",
+			"fieldtype": "Column Break"
 		}
 	],
 	"grid_page_length": 50,
 	"index_web_pages_for_search": 1,
 	"links": [],
-	"modified": "2026-05-07 12:00:00",
+	"modified": "2026-05-16 18:00:00",
 	"modified_by": "Administrator",
 	"module": "Omnexa Core",
 	"name": "Branch",

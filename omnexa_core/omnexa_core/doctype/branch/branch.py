@@ -13,7 +13,6 @@ class Branch(Document):
 		self._validate_default_vat_rate()
 		self._validate_unique_code_per_company()
 		self._validate_parent_branch_company()
-		self._validate_einvoice_profiles()
 		self._validate_single_head_office()
 
 	def _validate_default_vat_rate(self):
@@ -53,22 +52,6 @@ class Branch(Document):
 				_("Parent Branch must belong to the same company."),
 				title=_("Validation"),
 			)
-
-	def _validate_einvoice_profiles(self):
-		if not self.eta_einvoice_enabled:
-			return
-		if not self.tax_authority_profile or not self.signing_profile:
-			frappe.throw(
-				_("Tax Authority Profile and Signing Profile are required when branch ETA e-Invoice is enabled."),
-				title=_("Validation"),
-			)
-
-		tax_company = frappe.db.get_value("Tax Authority Profile", self.tax_authority_profile, "company")
-		sign_company = frappe.db.get_value("Signing Profile", self.signing_profile, "company")
-		if tax_company and tax_company != self.company:
-			frappe.throw(_("Tax Authority Profile must belong to the same company."), title=_("Validation"))
-		if sign_company and sign_company != self.company:
-			frappe.throw(_("Signing Profile must belong to the same company."), title=_("Validation"))
 
 	def _validate_single_head_office(self):
 		if not self.is_head_office:

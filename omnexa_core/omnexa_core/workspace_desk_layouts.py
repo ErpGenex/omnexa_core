@@ -80,6 +80,8 @@ SELL_DESK: list[DeskSection] = [
 	(
 		"E-Invoicing & e-receipt",
 		[
+			("ETA E-Receipt Console", "Page", "eta-ereceipt-console", None),
+			("E Invoice Submission", "DocType", "E Invoice Submission", None),
 			("E-Document Submission", "DocType", "E-Document Submission", None),
 			("Tax Authority Profile", "DocType", "Tax Authority Profile", None),
 			("Signing Profile", "DocType", "Signing Profile", None),

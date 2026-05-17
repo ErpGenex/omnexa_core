@@ -49,6 +49,23 @@ def apply_company_branch_defaults(doc, method=None):
 				if branches:
 					doc.branch = branches[0]
 
+	_apply_company_currency_default(doc)
+
+
+def _apply_company_currency_default(doc) -> None:
+	"""Set transaction currency from company before compliance / validate (field name: currency)."""
+	try:
+		if not doc.meta.has_field("currency") or (doc.get("currency") or "").strip():
+			return
+	except Exception:
+		return
+	company = doc.get("company") if doc.meta.has_field("company") else None
+	if not company:
+		return
+	comp_curr = frappe.db.get_value("Company", company, "default_currency")
+	if comp_curr:
+		doc.currency = comp_curr
+
 
 def get_allowed_branches_for_current_doc(doc) -> list[str] | None:
 	company = getattr(doc, "company", None)

@@ -25,7 +25,22 @@ _SKIP_DOCTYPES = {
 	"Error Log",
 	"File",
 	"Module Def",
+	"Event Audit Log",
 }
+
+# Master data uses default_currency on Company, not transaction currency.
+_CURRENCY_EXEMPT_DOCTYPES = frozenset(
+	{
+		"Company",
+		"Branch",
+		"Customer",
+		"Supplier",
+		"Item",
+		"Warehouse",
+		"GL Account",
+		"Cost Center",
+	}
+)
 
 
 def _is_runtime_safe() -> bool:
@@ -141,7 +156,10 @@ def _compliance_fail(doc, rule_code: str, message: str):
 		"message": message,
 	}
 	try:
-		frappe.log_error(json.dumps(payload, ensure_ascii=False), "Global Compliance Guard")
+		frappe.log_error(
+			message=json.dumps(payload, ensure_ascii=False),
+			title=f"Compliance: {rule_code}",
+		)
 	except Exception:
 		pass
 	frappe.throw(_(message), title=_("Compliance"))
@@ -167,14 +185,18 @@ def enforce_global_submit_compliance(doc, method=None):
 					"IFRS 15 control transfer check failed: stock sales invoice must reference Delivery Note, or be POS/update_stock flow.",
 				)
 
-	# VAT governance: invoice must have tax rule at header or line-level (unless explicitly exempt process).
+	# VAT governance: invoice must have tax rule at header or line-level (or explicit manual tax rate).
 	if doc.doctype in {"Sales Invoice", "Purchase Invoice"} and (doc.get("items") or []):
 		header_tax = doc.get("default_tax_rule") if doc.meta.has_field("default_tax_rule") else None
-		if not header_tax and not _has_any_line_tax_rule(doc):
+		manual_rate = (
+			doc.meta.has_field("tax_rate") and flt(doc.get("tax_rate")) > 0
+		)
+		if not header_tax and not _has_any_line_tax_rule(doc) and not manual_rate:
 			_compliance_fail(
 				doc,
 				"TAX_RULE_REQUIRED",
-				"Tax Rule is required at header or item row for invoice compliance.",
+				"Tax Rule is required at header or item row for invoice compliance. "
+				"Create a Tax Rule for this company (Accounting → Tax Rule) or set Default Tax Rule on the invoice.",
 			)
 
 	# IFRS 9 / credit governance: credit invoices should have due date and coherent schedule.
@@ -349,7 +371,11 @@ def enforce_global_enterprise_compliance(doc, method=None):
 	if has_field("branch") and not doc.get("branch"):
 		frappe.throw(_("Branch is mandatory for compliance."), title=_("Compliance"))
 
-	if has_field("currency"):
+	if has_field("currency") and doc.doctype not in _CURRENCY_EXEMPT_DOCTYPES:
+		if not (doc.get("currency") or "").strip() and doc.get("company") and has_field("company"):
+			comp_curr = frappe.db.get_value("Company", doc.get("company"), "default_currency")
+			if comp_curr:
+				doc.currency = comp_curr
 		currency = (doc.get("currency") or "").strip()
 		if not currency:
 			frappe.throw(_("Currency is mandatory for compliance."), title=_("Compliance"))

@@ -8,9 +8,6 @@ from frappe.model.document import Document
 
 class Company(Document):
 	def validate(self):
-		if self.eta_einvoice_enabled and not (self.rin or "").strip():
-			frappe.throw(_("RIN is required when ETA e-Invoice is enabled."), title=_("Validation"))
-		self._validate_einvoice_profiles()
 		self._validate_production_demo_branch()
 		self._validate_fiscal_year_start_month()
 
@@ -54,24 +51,6 @@ class Company(Document):
 			frappe.throw(_("Branch does not exist."), title=_("Validation"))
 		if b_company != self.name:
 			frappe.throw(_("Demo / reset branch must belong to this company."), title=_("Validation"))
-
-	def _validate_einvoice_profiles(self):
-		if not self.eta_einvoice_enabled:
-			return
-		if not self.company_tax_authority_profile or not self.company_signing_profile:
-			frappe.throw(
-				_("Tax Authority Profile and Signing Profile are required when ETA e-Invoice is enabled."),
-				title=_("Validation"),
-			)
-
-		tax_company = frappe.db.get_value(
-			"Tax Authority Profile", self.company_tax_authority_profile, "company"
-		)
-		sign_company = frappe.db.get_value("Signing Profile", self.company_signing_profile, "company")
-		if tax_company and tax_company != self.name:
-			frappe.throw(_("Tax Authority Profile must belong to the same company."), title=_("Validation"))
-		if sign_company and sign_company != self.name:
-			frappe.throw(_("Signing Profile must belong to the same company."), title=_("Validation"))
 
 	def _ensure_head_office_branch(self):
 		if not self.enable_branches:
