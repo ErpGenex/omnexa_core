@@ -60,6 +60,9 @@
 		"eta_einvoice_sign_section",
 		"eta_signer_mode",
 		"eta_signing_secret",
+		"eta_signing_agent_url",
+		"eta_usb_token_type",
+		"eta_usb_signing_pin",
 		"eta_windows_signer_command",
 		"eta_certificate_reference",
 		"eta_policy_section",
@@ -400,17 +403,42 @@
 		{
 			"default": "remote",
 			"depends_on": "eval:doc.eta_einvoice_enabled",
-			"description": "remote = test HMAC · windows_app = USB token via external signer",
+			"description": "remote = test HMAC · signing_agent = HTTP agent on PC with USB token · windows_app = CLI signer",
 			"fieldname": "eta_signer_mode",
 			"fieldtype": "Select",
 			"label": "Signer Mode",
-			"options": "remote\nwindows_app"
+			"options": "remote\nsigning_agent\nwindows_app"
 		},
 		{
 			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"remote\"",
 			"fieldname": "eta_signing_secret",
 			"fieldtype": "Password",
 			"label": "Signing Secret (test)"
+		},
+		{
+			"default": "http://127.0.0.1:5002",
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"signing_agent\"",
+			"description": "Temp-ETR default http://127.0.0.1:5002 — called from your browser on the PC with the USB token (not from the Linux server). Start epass2003_agent on that PC.",
+			"fieldname": "eta_signing_agent_url",
+			"fieldtype": "Data",
+			"label": "Signing Agent URL"
+		},
+		{
+			"default": "epass2003",
+			"depends_on": "eval:doc.eta_einvoice_enabled && (doc.eta_signer_mode==\"signing_agent\" || doc.eta_signer_mode==\"windows_app\")",
+			"description": "USB token driver type (Temp-ETR usb_token_type).",
+			"fieldname": "eta_usb_token_type",
+			"fieldtype": "Select",
+			"label": "USB Token Type",
+			"options": "epass2003\nwd_proxkey\nfeitian\nsafenet\naladdin"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled && (doc.eta_signer_mode==\"signing_agent\" || doc.eta_signer_mode==\"windows_app\")",
+			"description": "Set once here only — never asked when you Sign or Send invoices. Stored encrypted (Temp-ETR USB PIN). Re-enter and Save after changing.",
+			"fieldname": "eta_usb_signing_pin",
+			"fieldtype": "Password",
+			"label": "USB Token PIN",
+			"reqd": 1
 		},
 		{
 			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"windows_app\"",
@@ -422,7 +450,7 @@
 			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"windows_app\"",
 			"fieldname": "eta_certificate_reference",
 			"fieldtype": "Data",
-			"label": "Certificate / USB Token Reference"
+			"label": "Certificate / Token Reference"
 		},
 		{
 			"depends_on": "eval:doc.eta_einvoice_enabled",
