@@ -65,6 +65,10 @@
 		"eta_usb_signing_pin",
 		"eta_windows_signer_command",
 		"eta_certificate_reference",
+		"eta_einvoice_submission_section",
+		"eta_einvoice_submission_mode",
+		"eta_einvoice_batch_size",
+		"eta_einvoice_send_delay_hours",
 		"eta_policy_section",
 		"eta_require_einvoice_before_si_submit",
 		"tab_break_2",
@@ -451,6 +455,36 @@
 			"fieldname": "eta_certificate_reference",
 			"fieldtype": "Data",
 			"label": "Certificate / Token Reference"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_einvoice_submission_section",
+			"fieldtype": "Section Break",
+			"label": "4b. E-Invoice — submission to ETA"
+		},
+		{
+			"default": "Manual",
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"description": "Manual = user clicks Send · Live = send right after sign · Batch = hourly job sends Signed submissions (remote/HMAC only; USB agent still uses Live in browser)",
+			"fieldname": "eta_einvoice_submission_mode",
+			"fieldtype": "Select",
+			"label": "Submission Mode",
+			"options": "Manual\nLive\nBatch"
+		},
+		{
+			"default": "10",
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_einvoice_submission_mode==\"Batch\"",
+			"fieldname": "eta_einvoice_batch_size",
+			"fieldtype": "Int",
+			"label": "Batch Size"
+		},
+		{
+			"default": "0",
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_einvoice_submission_mode==\"Batch\"",
+			"description": "Wait this many hours after sign before batch send (0 = immediately).",
+			"fieldname": "eta_einvoice_send_delay_hours",
+			"fieldtype": "Float",
+			"label": "Delay After Sign (hours)"
 		},
 		{
 			"depends_on": "eval:doc.eta_einvoice_enabled",
