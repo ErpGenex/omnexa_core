@@ -63,6 +63,7 @@
 		"eta_signing_agent_url",
 		"eta_usb_token_type",
 		"eta_usb_signing_pin",
+		"eta_chilkat_unlock_code",
 		"eta_windows_signer_command",
 		"eta_certificate_reference",
 		"eta_einvoice_submission_section",
@@ -443,6 +444,13 @@
 			"fieldtype": "Password",
 			"label": "USB Token PIN",
 			"reqd": 1
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"signing_agent\"",
+			"description": "Chilkat UnlockBundle key for v10 (e.g. HALA4A.CBX082025_…). Sent once to the Windows agent via sign_session (like PIN). Optional if you set CHILKAT_UNLOCK_CODE or chilkat_config.json on the PC.",
+			"fieldname": "eta_chilkat_unlock_code",
+			"fieldtype": "Password",
+			"label": "Chilkat Unlock Code"
 		},
 		{
 			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"windows_app\"",
