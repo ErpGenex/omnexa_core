@@ -1,6 +1,9 @@
 // Copyright (c) 2026, Omnexa and contributors
 // License: MIT. See license.txt
 
+const EINV_SIGNING_DEPLOY_INFO =
+	"omnexa_einvoice.omnexa_einvoice.doctype.e_invoice_submission.e_invoice_submission.get_signing_deploy_info";
+
 frappe.ui.form.on("Branch", {
 	refresh(frm) {
 		if (!frm.doc.eta_einvoice_enabled) {
@@ -28,6 +31,31 @@ frappe.ui.form.on("Branch", {
 						}
 					},
 				});
+				frappe.call({
+					method: EINV_SIGNING_DEPLOY_INFO,
+					callback(r) {
+						const d = r.message || {};
+						const jsVer =
+							(typeof omnexa !== "undefined" &&
+								omnexa.einvoice &&
+								omnexa.einvoice.AGENT_JS_VERSION) ||
+							"—";
+						if (jsVer === d.min_agent_js && d.release === d.min_agent_js) {
+							frm.dashboard.add_indicator(
+								__("Signing bridge {0} (server+browser OK)", [d.release]),
+								"green"
+							);
+						} else {
+							frm.dashboard.add_indicator(
+								__("Signing update required — server {0}, browser {1}", [
+									d.release || "?",
+									jsVer,
+								]),
+								"red"
+							);
+						}
+					},
+				});
 			}
 		}
 		if (frm.doc.eta_signer_mode !== "signing_agent") {
@@ -40,14 +68,31 @@ frappe.ui.form.on("Branch", {
 			__("Test cloud ↔ PC signing"),
 			async () => {
 				try {
-					if (omnexa.einvoice && omnexa.einvoice.showCloudSigningBridgeTest) {
-						await omnexa.einvoice.showCloudSigningBridgeTest({
-							branch: frm.doc.name,
-							agentUrl: frm.doc.eta_signing_agent_url,
+					if (!omnexa.einvoice || !omnexa.einvoice.showCloudSigningBridgeTest) {
+						const dep = await frappe.call({ method: EINV_SIGNING_DEPLOY_INFO });
+						const d = dep.message || {};
+						frappe.msgprint({
+							title: __("Signing not loaded"),
+							indicator: "red",
+							message: [
+								`<p>${__(
+									"Browser JS is missing cloud signing. On the server run:"
+								)}</p>`,
+								`<pre class="small">bench build --apps omnexa_einvoice,omnexa_core\nbench --site SITE clear-cache\nbench restart</pre>`,
+								`<p>${__("Then Ctrl+Shift+R on the Windows PC.")}</p>`,
+								`<p class="small">${__("Server release")}: <b>${frappe.utils.escape_html(
+									d.release || "?"
+								)}</b> · ${__("Your browser")}: <b>${frappe.utils.escape_html(
+									(omnexa.einvoice && omnexa.einvoice.AGENT_JS_VERSION) || "—"
+								)}</b></p>`,
+							].join(""),
 						});
 						return;
 					}
-					frappe.throw(__("Reload ERP (Ctrl+Shift+R) after omnexa_einvoice update."));
+					await omnexa.einvoice.showCloudSigningBridgeTest({
+						branch: frm.doc.name,
+						agentUrl: frm.doc.eta_signing_agent_url,
+					});
 				} catch (e) {
 					frappe.msgprint({
 						title: __("Cloud ↔ PC signing test"),
@@ -58,50 +103,5 @@ frappe.ui.form.on("Branch", {
 			},
 			__("Egypt ETA")
 		).addClass("btn-primary");
-		frm.add_custom_button(
-			__("ERP config only (no local agent)"),
-			async () => {
-				try {
-					const r = await frappe.call({
-						method:
-							"omnexa_einvoice.eta_signing_agent.run_branch_usb_signing_test_on_server",
-						args: { branch: frm.doc.name },
-						freeze: true,
-						freeze_message: __("Checking ERP / branch settings…"),
-					});
-					const d = r.message || {};
-					const needsPc = !!d.browser_sign_required;
-					const extraParts = [frappe.utils.escape_html(d.summary || "")];
-					if (needsPc) {
-						extraParts.push(
-							`<p class="small mt-2 mb-0"><b>${__(
-								"Linux/cloud server cannot reach 127.0.0.1"
-							)}</b> — ${__(
-								'Use the primary button <b>Test cloud ↔ PC signing</b> in Chrome on the Windows PC where the USB token and signing agent are running. "Failed to fetch" here is expected if you are not on that PC.'
-							)}</p>`
-						);
-					}
-					if (omnexa.einvoice && omnexa.einvoice.showSigningTestResult) {
-						omnexa.einvoice.showSigningTestResult({
-							title: needsPc
-								? __("USB Signing — ERP config OK (test on Windows PC)")
-								: d.ok
-									? __("USB Signing Test — server OK")
-									: __("USB Signing Test — failed"),
-							indicator: d.ok ? (needsPc ? "orange" : "green") : "red",
-							checks: d.checks,
-							extra: extraParts.join(""),
-						});
-					}
-				} catch (e) {
-					frappe.msgprint({
-						title: __("USB Signing Test"),
-						indicator: "red",
-						message: frappe.utils.escape_html(e.message || String(e)),
-					});
-				}
-			},
-			__("Egypt ETA")
-		);
 	},
 });
