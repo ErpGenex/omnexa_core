@@ -57,9 +57,9 @@ frappe.ui.form.on("Branch", {
 				}
 			},
 			__("Egypt ETA")
-		);
+		).addClass("btn-primary");
 		frm.add_custom_button(
-			__("Test USB Signing (server only)"),
+			__("ERP config only (no local agent)"),
 			async () => {
 				try {
 					const r = await frappe.call({
@@ -67,24 +67,37 @@ frappe.ui.form.on("Branch", {
 							"omnexa_einvoice.eta_signing_agent.run_branch_usb_signing_test_on_server",
 						args: { branch: frm.doc.name },
 						freeze: true,
-						freeze_message: __("Running signing tests on ERP server…"),
+						freeze_message: __("Checking ERP / branch settings…"),
 					});
 					const d = r.message || {};
+					const needsPc = !!d.browser_sign_required;
+					const extraParts = [frappe.utils.escape_html(d.summary || "")];
+					if (needsPc) {
+						extraParts.push(
+							`<p class="small mt-2 mb-0"><b>${__(
+								"Linux/cloud server cannot reach 127.0.0.1"
+							)}</b> — ${__(
+								'Use the primary button <b>Test cloud ↔ PC signing</b> in Chrome on the Windows PC where the USB token and signing agent are running. "Failed to fetch" here is expected if you are not on that PC.'
+							)}</p>`
+						);
+					}
 					if (omnexa.einvoice && omnexa.einvoice.showSigningTestResult) {
 						omnexa.einvoice.showSigningTestResult({
-							title: d.ok
-								? __("USB Signing Test — server OK")
-								: __("USB Signing Test — failed"),
-							indicator: d.ok ? "green" : "red",
+							title: needsPc
+								? __("USB Signing — ERP config OK (test on Windows PC)")
+								: d.ok
+									? __("USB Signing Test — server OK")
+									: __("USB Signing Test — failed"),
+							indicator: d.ok ? (needsPc ? "orange" : "green") : "red",
 							checks: d.checks,
-							extra: frappe.utils.escape_html(d.summary || ""),
+							extra: extraParts.join(""),
 						});
 					}
 				} catch (e) {
 					frappe.msgprint({
 						title: __("USB Signing Test"),
 						indicator: "red",
-						message: e.message || String(e),
+						message: frappe.utils.escape_html(e.message || String(e)),
 					});
 				}
 			},
