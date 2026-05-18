@@ -29,6 +29,8 @@
 		"tab_break_3",
 		"global_erp_section",
 		"global_erp_strict_workflow",
+		"global_erp_require_sales_order_on_sales_invoice",
+		"global_erp_require_delivery_note_on_stock_invoice",
 		"tab_break_4",
 		"ifrs_reporting_section",
 		"reporting_framework",
@@ -206,10 +208,26 @@
 		},
 		{
 			"default": "0",
-			"description": "When enabled: quotation requires opportunity link; sales invoice lines with stock items require delivery note; purchase invoice lines with stock items require goods receipt reference.",
+			"description": "Master switch for optional sales/purchase chain checks below. Turn off to allow Sales Invoice without Delivery Note or Sales Order.",
 			"fieldname": "global_erp_strict_workflow",
 			"fieldtype": "Check",
 			"label": "Strict Global ERP chain validations"
+		},
+		{
+			"default": "0",
+			"depends_on": "eval:doc.global_erp_strict_workflow",
+			"description": "When Strict mode is on: block saving Sales Invoice if Sales Order is empty.",
+			"fieldname": "global_erp_require_sales_order_on_sales_invoice",
+			"fieldtype": "Check",
+			"label": "Require Sales Order on Sales Invoice"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:doc.global_erp_strict_workflow",
+			"description": "When Strict mode is on: block saving Sales Invoice with stock items if Delivery Note is empty. Uncheck to invoice stock without a delivery note.",
+			"fieldname": "global_erp_require_delivery_note_on_stock_invoice",
+			"fieldtype": "Check",
+			"label": "Require Delivery Note for stock items (Sales Invoice)"
 		},
 		{
 			"collapsible": 1,
