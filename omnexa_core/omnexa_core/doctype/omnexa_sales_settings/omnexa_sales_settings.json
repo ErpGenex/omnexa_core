@@ -12,7 +12,9 @@
     "enforce_credit_limit_on_submit",
     "require_delivery_note_for_stock_invoice",
     "sales_tax_section",
-    "default_sales_tax_rule"
+    "default_sales_tax_category",
+    "default_sales_tax_rule",
+    "default_sales_invoice_due_days"
   ],
   "fields": [
     {
@@ -48,11 +50,25 @@
       "label": "Taxes"
     },
     {
+      "description": "Applied on new Sales Invoices when Tax Category is empty (before default tax rule resolution).",
+      "fieldname": "default_sales_tax_category",
+      "fieldtype": "Link",
+      "label": "Default Sales Tax Category",
+      "options": "Tax Category"
+    },
+    {
       "description": "Optional default Tax Rule for sales documents (company-specific policies may override).",
       "fieldname": "default_sales_tax_rule",
       "fieldtype": "Link",
       "label": "Default Sales Tax Rule",
       "options": "Tax Rule"
+    },
+    {
+      "default": "7",
+      "description": "Due Date on new Sales Invoices when the customer has no credit days / payment terms (posting date + N days).",
+      "fieldname": "default_sales_invoice_due_days",
+      "fieldtype": "Int",
+      "label": "Default Sales Invoice Due Days"
     }
   ],
   "grid_page_length": 50,

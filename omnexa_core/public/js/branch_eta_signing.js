@@ -37,7 +37,29 @@ frappe.ui.form.on("Branch", {
 			return;
 		}
 		frm.add_custom_button(
-			__("Test USB Signing"),
+			__("Test cloud ↔ PC signing"),
+			async () => {
+				try {
+					if (omnexa.einvoice && omnexa.einvoice.showCloudSigningBridgeTest) {
+						await omnexa.einvoice.showCloudSigningBridgeTest({
+							branch: frm.doc.name,
+							agentUrl: frm.doc.eta_signing_agent_url,
+						});
+						return;
+					}
+					frappe.throw(__("Reload ERP (Ctrl+Shift+R) after omnexa_einvoice update."));
+				} catch (e) {
+					frappe.msgprint({
+						title: __("Cloud ↔ PC signing test"),
+						indicator: "red",
+						message: e.omnexa_html ? e.message : frappe.utils.escape_html(e.message || String(e)),
+					});
+				}
+			},
+			__("Egypt ETA")
+		);
+		frm.add_custom_button(
+			__("Test USB Signing (server only)"),
 			async () => {
 				try {
 					const r = await frappe.call({
@@ -48,62 +70,14 @@ frappe.ui.form.on("Branch", {
 						freeze_message: __("Running signing tests on ERP server…"),
 					});
 					const d = r.message || {};
-					await frappe.require("/assets/omnexa_einvoice/js/einvoice_usb_agent.js");
-					const show = omnexa.einvoice?.showSigningTestResult;
-					if (show) {
-						show({
+					if (omnexa.einvoice && omnexa.einvoice.showSigningTestResult) {
+						omnexa.einvoice.showSigningTestResult({
 							title: d.ok
 								? __("USB Signing Test — server OK")
 								: __("USB Signing Test — failed"),
 							indicator: d.ok ? "green" : "red",
 							checks: d.checks,
 							extra: frappe.utils.escape_html(d.summary || ""),
-						});
-					} else {
-						frappe.msgprint({
-							title: __("USB Signing Test"),
-							indicator: d.ok ? "green" : "red",
-							message: (d.summary || "") + "<br>" + JSON.stringify(d.checks || []),
-						});
-					}
-					if (!d.ok) {
-						return;
-					}
-					const onWindows =
-						(navigator.platform || "").toLowerCase().includes("win") ||
-						(navigator.userAgent || "").toLowerCase().includes("windows");
-					const localAgent = /127\.0\.0\.1|localhost/i.test(
-						frm.doc.eta_signing_agent_url || ""
-					);
-					if (d.browser_sign_required && onWindows && localAgent) {
-						const testPrep = await frappe.call({
-							method:
-								"omnexa_einvoice.omnexa_einvoice.doctype.e_invoice_submission.e_invoice_submission.create_usb_sign_session_for_branch_test",
-							args: { branch: frm.doc.name },
-						});
-						const tm = testPrep.message || {};
-						const base = (tm.agent_url || "http://127.0.0.1:5002").replace(/\/$/, "");
-						const body = tm.agent_body || {};
-						const hres = await fetch(`${base}/health`);
-						if (!hres.ok) {
-							frappe.throw(__("Agent not reachable at {0}", [base]));
-						}
-						const sres = await fetch(`${base}/sign`, {
-							method: "POST",
-							headers: { "Content-Type": "application/json" },
-							body: JSON.stringify(body),
-						});
-						const sb = await sres.json();
-						if (!sres.ok || !sb.success) {
-							frappe.throw(sb.message || __("USB signing test failed"));
-						}
-						frappe.show_alert({ message: __("USB signing test OK"), indicator: "green" });
-					} else if (d.browser_sign_required) {
-						frappe.show_alert({
-							message: __(
-								"Server checks OK. Open ERP on the Windows PC with the USB token to test signing with the agent."
-							),
-							indicator: "blue",
 						});
 					}
 				} catch (e) {
