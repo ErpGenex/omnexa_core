@@ -64,6 +64,18 @@ frappe.ui.form.on("Branch", {
 		if (frm.is_new()) {
 			return;
 		}
+		// Block legacy combined test (old JS called fetch → "Failed to fetch" on cloud).
+		if (frm.custom_buttons) {
+			Object.keys(frm.custom_buttons).forEach((group) => {
+				(frm.custom_buttons[group] || []).forEach((btn) => {
+					const label = (btn && btn.label) || "";
+					if (/test usb signing/i.test(label) && !/cloud|config only/i.test(label)) {
+						btn.remove();
+					}
+				});
+			});
+		}
+
 		frm.add_custom_button(
 			__("Test cloud ↔ PC signing"),
 			async () => {
