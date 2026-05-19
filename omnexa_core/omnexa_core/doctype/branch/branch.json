@@ -18,6 +18,9 @@
 		"tab_break_1",
 		"tax_section",
 		"default_vat_rate",
+		"tax_country_section",
+		"country_code",
+		"tax_provider",
 		"tab_break_eta",
 		"eta_setup_help",
 		"eta_ereceipt_enabled",
@@ -159,6 +162,30 @@
 			"label": "Default VAT Rate (%)"
 		},
 		{
+			"fieldname": "tax_country_section",
+			"fieldtype": "Section Break",
+			"label": "Tax authority (country)"
+		},
+		{
+			"default": "EG",
+			"description": "Routes e-invoicing to the correct national provider. Egypt branches use ETA; Saudi branches use ZATCA.",
+			"fieldname": "country_code",
+			"fieldtype": "Select",
+			"in_list_view": 1,
+			"label": "Country Code",
+			"options": "EG\nSA",
+			"reqd": 1
+		},
+		{
+			"default": "einvoice_eta",
+			"description": "Resolved from Country Code (read-only).",
+			"fieldname": "tax_provider",
+			"fieldtype": "Data",
+			"label": "Tax Provider",
+			"read_only": 1
+		},
+		{
+			"depends_on": "eval:doc.country_code=='EG'",
 			"fieldname": "tab_break_eta",
 			"fieldtype": "Tab Break",
 			"label": "Egypt ETA"
