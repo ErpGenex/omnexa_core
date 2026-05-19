@@ -173,7 +173,7 @@
 			"fieldtype": "Select",
 			"in_list_view": 1,
 			"label": "Country Code",
-			"options": "EG\nSA",
+			"options": "AE\nBH\nBR\nEG\nJO\nKW\nMX\nOM\nQA\nSA",
 			"reqd": 1
 		},
 		{
