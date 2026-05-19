@@ -173,7 +173,7 @@
 			"fieldtype": "Select",
 			"in_list_view": 1,
 			"label": "Country Code",
-			"options": "AE\nBH\nBR\nEG\nJO\nKW\nMX\nOM\nQA\nSA",
+			"options": "AE\nAR\nBE\nBH\nBR\nCL\nCN\nCO\nDE\nDK\nEG\nES\nFI\nFR\nID\nIN\nIT\nJO\nJP\nKE\nKR\nKW\nMX\nNL\nNO\nOM\nPE\nPL\nPT\nQA\nRO\nSA\nSE\nSG\nTR\nUG\nZA",
 			"reqd": 1
 		},
 		{
