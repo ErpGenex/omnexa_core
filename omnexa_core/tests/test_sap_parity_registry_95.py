@@ -7,7 +7,7 @@ from omnexa_core.omnexa_core.sap_parity_registry import APP_REGISTRY, get_app_pa
 
 
 class TestSapParityRegistry95(FrappeTestCase):
-	def test_all_bench_apps_registered_at_95(self):
+	def test_all_bench_apps_registered_at_100(self):
 		bench = Path(__file__).resolve().parents[4]
 		apps = [
 			a.strip()
@@ -21,7 +21,7 @@ class TestSapParityRegistry95(FrappeTestCase):
 				missing.append(app)
 				continue
 			status = get_app_parity_status(app)
-			if not status.get("at_95"):
+			if not status.get("at_100"):
 				below.append(f"{app}:{status.get('product_pct')}%")
 		self.assertFalse(missing, f"Apps not in registry: {missing}")
-		self.assertFalse(below, f"Apps below 95% checklist: {below}")
+		self.assertFalse(below, f"Apps below 100% checklist: {below}")

@@ -1,5 +1,5 @@
 # Copyright (c) 2026, ErpGenEx
-"""Registry of SAP parity families and checklist scoring (≥95% target)."""
+"""Registry of SAP parity families and checklist scoring (100% target)."""
 
 from __future__ import annotations
 
@@ -73,7 +73,7 @@ def parse_checklist_score(md_text: str) -> dict[str, Any]:
 	)
 	partial = sum(1 for s in applicable if "partial" in s.lower())
 	score = round(100 * (implemented + 0.5 * partial) / len(applicable), 1) if applicable else 0
-	product = min(95, score)
+	product = min(100, score)
 	return {
 		"score_pct": score,
 		"product_pct": product,
@@ -81,7 +81,8 @@ def parse_checklist_score(md_text: str) -> dict[str, Any]:
 		"partial": partial,
 		"planned": sum(1 for s in applicable if "planned" in s.lower()),
 		"applicable": len(applicable),
-		"at_95": product >= 95,
+		"at_100": product >= 100,
+		"at_95": product >= 95,  # legacy alias
 	}
 
 
@@ -94,6 +95,6 @@ def get_app_parity_status(app: str) -> dict[str, Any]:
 	meta = APP_REGISTRY.get(app, {"family": "sector", "vertical": app.replace("omnexa_", "")})
 	path = checklist_path(app)
 	if not path:
-		return {"app": app, "error": "no_checklist", "at_95": False, **meta}
+		return {"app": app, "error": "no_checklist", "at_100": False, "at_95": False, **meta}
 	parsed = parse_checklist_score(path.read_text(encoding="utf-8"))
 	return {"app": app, **meta, **parsed}
