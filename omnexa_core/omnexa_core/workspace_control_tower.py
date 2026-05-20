@@ -1266,6 +1266,7 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Fixed Asset Acquisition", "DocType", "Fixed Asset Acquisition"),
 			("Fixed Asset Depreciation Entry", "DocType", "Fixed Asset Depreciation Entry"),
 			("Fixed Asset Disposal", "DocType", "Fixed Asset Disposal"),
+			("Asset Insurance", "URL", "/app/asset-insurance"),
 			("Asset Register Report", "Report", "Asset Register Report"),
 			("Asset Depreciation Schedule", "Report", "Asset Depreciation Schedule"),
 			("Asset Movement Report", "Report", "Asset Movement Report"),
