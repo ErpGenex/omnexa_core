@@ -18,9 +18,76 @@
 		"tab_break_1",
 		"tax_section",
 		"default_vat_rate",
-		"tax_country_section",
 		"country_code",
+		"country_iso",
+		"column_break_tax_country",
+		"country_name",
 		"tax_provider",
+		"tab_break_zatca",
+		"zatca_setup_help",
+		"zatca_enabled",
+		"zatca_phase",
+		"zatca_environment",
+		"zatca_section_org",
+		"zatca_vat_registration_number",
+		"zatca_organization_name",
+		"zatca_organization_name_ar",
+		"zatca_column_org",
+		"zatca_street",
+		"zatca_building_number",
+		"zatca_city",
+		"zatca_district",
+		"zatca_postal_code",
+		"zatca_section_csr",
+		"zatca_csr_invoice_type",
+		"zatca_egs_serial_number",
+		"zatca_organization_unit_name",
+		"zatca_csr_common_name",
+		"zatca_industry_business_category",
+		"zatca_location_address",
+		"zatca_csr_pem",
+		"zatca_section_compliance",
+		"zatca_standard_invoice_validated",
+		"zatca_simplified_invoice_validated",
+		"zatca_compliance_validated",
+		"zatca_section_credentials",
+		"zatca_private_key",
+		"zatca_certificate_pem",
+		"zatca_public_key_pem",
+		"zatca_compliance_security_token",
+		"zatca_compliance_secret",
+		"zatca_compliance_request_id",
+		"zatca_production_security_token",
+		"zatca_production_secret",
+		"zatca_section_chain",
+		"zatca_icv_counter",
+		"zatca_last_invoice_hash",
+		"tab_break_country_tax",
+		"intl_tax_setup_help",
+		"intl_tax_enabled",
+		"intl_tax_live_production",
+		"intl_tax_auto_submit_on_si_submit",
+		"intl_tax_section_production",
+		"intl_tax_signing_mode",
+		"intl_tax_section_api",
+		"intl_tax_api_environment",
+		"intl_tax_api_base_url",
+		"intl_tax_registration_number",
+		"intl_tax_authority_name",
+		"intl_tax_section_uae",
+		"intl_uae_seller_tin",
+		"intl_uae_peppol_sender_id",
+		"intl_uae_peppol_receiver_id",
+		"intl_uae_legal_name_ar",
+		"intl_uae_invoice_type_code",
+		"intl_uae_asp_submit_path",
+		"intl_tax_section_credentials",
+		"intl_tax_client_id",
+		"intl_tax_client_secret",
+		"intl_tax_asp_api_key",
+		"intl_tax_section_config",
+		"intl_tax_configuration_json",
+		"intl_tax_remarks",
 		"tab_break_eta",
 		"eta_setup_help",
 		"eta_ereceipt_enabled",
@@ -152,7 +219,7 @@
 			"collapsible": 1,
 			"fieldname": "tax_section",
 			"fieldtype": "Section Break",
-			"label": "Tax (local)"
+			"label": "Tax & e-invoicing"
 		},
 		{
 			"default": "0",
@@ -162,19 +229,32 @@
 			"label": "Default VAT Rate (%)"
 		},
 		{
-			"fieldname": "tax_country_section",
-			"fieldtype": "Section Break",
-			"label": "Tax authority (country)"
-		},
-		{
 			"default": "EG",
-			"description": "Routes e-invoicing to the correct national provider. Egypt branches use ETA; Saudi branches use ZATCA.",
+			"description": "Routes e-invoicing to the national authority (ETA, ZATCA, DIAN, etc.).",
 			"fieldname": "country_code",
 			"fieldtype": "Select",
 			"in_list_view": 1,
-			"label": "Country Code",
-			"options": "AE\nAR\nBE\nBH\nBR\nCL\nCN\nCO\nDE\nDK\nEG\nES\nFI\nFR\nID\nIN\nIT\nJO\nJP\nKE\nKR\nKW\nMX\nNL\nNO\nOM\nPE\nPL\nPT\nQA\nRO\nSA\nSE\nSG\nTR\nUG\nZA",
+			"label": "Country",
+			"options": "EG — Egypt\nSA — Saudi Arabia\nAE — United Arab Emirates\nDE — Germany\nFR — France",
 			"reqd": 1
+		},
+		{
+			"fieldname": "country_iso",
+			"fieldtype": "Data",
+			"hidden": 1,
+			"label": "Country ISO",
+			"read_only": 1
+		},
+		{
+			"fieldname": "column_break_tax_country",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "country_name",
+			"fieldtype": "Data",
+			"in_list_view": 1,
+			"label": "Country Name",
+			"read_only": 1
 		},
 		{
 			"default": "einvoice_eta",
@@ -185,7 +265,19 @@
 			"read_only": 1
 		},
 		{
-			"depends_on": "eval:doc.country_code=='EG'",
+			"depends_on": "eval:doc.country_iso=='SA'",
+			"fieldname": "tab_break_zatca",
+			"fieldtype": "Tab Break",
+			"label": "Saudi ZATCA"
+		},
+		{
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso)",
+			"fieldname": "tab_break_country_tax",
+			"fieldtype": "Tab Break",
+			"label": "Country Tax"
+		},
+		{
+			"depends_on": "eval:doc.country_iso=='EG'",
 			"fieldname": "tab_break_eta",
 			"fieldtype": "Tab Break",
 			"label": "Egypt ETA"
@@ -601,6 +693,411 @@
 		{
 			"fieldname": "column_break_eta_conn",
 			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "zatca_setup_help",
+			"fieldtype": "HTML",
+			"label": "Guide",
+			"depends_on": "eval:doc.country_iso=='SA'",
+			"options": "<div class=\"text-muted small\"><p>Configure ZATCA for this <b>branch</b> (like Egypt ETA). Each SA branch can have its own EGS unit and credentials.</p></div>"
+		},
+		{
+			"fieldname": "zatca_enabled",
+			"fieldtype": "Check",
+			"label": "Enable ZATCA E-Invoicing",
+			"default": "0",
+			"depends_on": "eval:doc.country_iso=='SA'"
+		},
+		{
+			"fieldname": "zatca_phase",
+			"fieldtype": "Select",
+			"label": "ZATCA Phase",
+			"options": "Phase 1\nPhase 2",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled",
+			"default": "Phase 1"
+		},
+		{
+			"fieldname": "zatca_environment",
+			"fieldtype": "Select",
+			"label": "ZATCA Environment",
+			"options": "sandbox\nsimulation\nproduction",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled",
+			"default": "sandbox"
+		},
+		{
+			"fieldname": "zatca_section_org",
+			"fieldtype": "Section Break",
+			"label": "Organization",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_vat_registration_number",
+			"fieldtype": "Data",
+			"label": "VAT Registration Number",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled",
+			"reqd": 0
+		},
+		{
+			"fieldname": "zatca_organization_name",
+			"fieldtype": "Data",
+			"label": "Organization Name (EN)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_organization_name_ar",
+			"fieldtype": "Data",
+			"label": "Organization Name (AR)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_column_org",
+			"fieldtype": "Column Break",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_street",
+			"fieldtype": "Data",
+			"label": "Street",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_building_number",
+			"fieldtype": "Data",
+			"label": "Building Number",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_city",
+			"fieldtype": "Data",
+			"label": "City",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_district",
+			"fieldtype": "Data",
+			"label": "District",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_postal_code",
+			"fieldtype": "Data",
+			"label": "Postal Code",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_section_csr",
+			"fieldtype": "Section Break",
+			"label": "CSR / Invoice profile",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_csr_invoice_type",
+			"fieldtype": "Select",
+			"label": "CSR Invoice Type",
+			"options": "1100\n1000\n0100",
+			"default": "1100",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_egs_serial_number",
+			"fieldtype": "Data",
+			"label": "EGS Serial Number",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_organization_unit_name",
+			"fieldtype": "Data",
+			"label": "Organization Unit (EGS branch)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_csr_common_name",
+			"fieldtype": "Data",
+			"label": "CSR Common Name",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_industry_business_category",
+			"fieldtype": "Data",
+			"label": "Industry / Business Category",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_location_address",
+			"fieldtype": "Small Text",
+			"label": "CSR Location Address",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_csr_pem",
+			"fieldtype": "Long Text",
+			"label": "CSR (PEM)",
+			"read_only": 1,
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_section_compliance",
+			"fieldtype": "Section Break",
+			"label": "Compliance validation",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_standard_invoice_validated",
+			"fieldtype": "Check",
+			"label": "Standard invoice validated",
+			"read_only": 1,
+			"default": "0",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_simplified_invoice_validated",
+			"fieldtype": "Check",
+			"label": "Simplified invoice validated",
+			"read_only": 1,
+			"default": "0",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_compliance_validated",
+			"fieldtype": "Check",
+			"label": "Compliance checks complete",
+			"read_only": 1,
+			"default": "0",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_section_credentials",
+			"fieldtype": "Section Break",
+			"label": "Certificates (encrypted)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_private_key",
+			"fieldtype": "Password",
+			"label": "EC Private Key (PEM)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_certificate_pem",
+			"fieldtype": "Long Text",
+			"label": "Certificate (PEM)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_public_key_pem",
+			"fieldtype": "Long Text",
+			"label": "Public Key (base64)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_compliance_security_token",
+			"fieldtype": "Password",
+			"label": "Compliance CSID Token",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_compliance_secret",
+			"fieldtype": "Password",
+			"label": "Compliance CSID Secret",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_production_security_token",
+			"fieldtype": "Password",
+			"label": "Production CSID Token",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_production_secret",
+			"fieldtype": "Password",
+			"label": "Production CSID Secret",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_compliance_request_id",
+			"fieldtype": "Data",
+			"label": "Compliance Request ID",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_section_chain",
+			"fieldtype": "Section Break",
+			"label": "Invoice chain (PIH / ICV)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_icv_counter",
+			"fieldtype": "Int",
+			"label": "ICV Counter",
+			"default": "0",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_last_invoice_hash",
+			"fieldtype": "Small Text",
+			"label": "Previous Invoice Hash (PIH)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "intl_tax_setup_help",
+			"fieldtype": "HTML",
+			"label": "Guide",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso)",
+			"options": "<div class=\"text-muted small\"><p>International e-invoice settings for this <b>branch</b> (same idea as Egypt ETA on Branch).</p></div>"
+		},
+		{
+			"fieldname": "intl_tax_enabled",
+			"fieldtype": "Check",
+			"label": "Enable E-Invoice",
+			"default": "0",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso)"
+		},
+		{
+			"fieldname": "intl_tax_live_production",
+			"fieldtype": "Check",
+			"label": "Live Production",
+			"default": "0",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_auto_submit_on_si_submit",
+			"fieldtype": "Check",
+			"label": "Auto-submit on Sales Invoice Submit",
+			"default": "0",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_section_production",
+			"fieldtype": "Section Break",
+			"label": "Production",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_signing_mode",
+			"fieldtype": "Select",
+			"label": "Signing Mode",
+			"options": "scaffold\ncertificate",
+			"default": "scaffold",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_section_api",
+			"fieldtype": "Section Break",
+			"label": "API",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_api_environment",
+			"fieldtype": "Select",
+			"label": "Environment",
+			"options": "sandbox\nsimulation\nproduction",
+			"default": "sandbox",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_api_base_url",
+			"fieldtype": "Data",
+			"label": "API Base URL",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_registration_number",
+			"fieldtype": "Data",
+			"label": "Tax Registration Number (TRN)",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_authority_name",
+			"fieldtype": "Data",
+			"label": "Tax Authority Name",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_section_uae",
+			"fieldtype": "Section Break",
+			"label": "UAE (PINT AE)",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_seller_tin",
+			"fieldtype": "Data",
+			"label": "Seller TRN (15 digits)",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_peppol_sender_id",
+			"fieldtype": "Data",
+			"label": "Peppol Sender Participant ID",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_peppol_receiver_id",
+			"fieldtype": "Data",
+			"label": "Default Peppol Receiver ID",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_legal_name_ar",
+			"fieldtype": "Data",
+			"label": "Seller Legal Name (Arabic)",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_invoice_type_code",
+			"fieldtype": "Select",
+			"label": "Invoice Type Code",
+			"options": "380\n381\n480",
+			"default": "380",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_asp_submit_path",
+			"fieldtype": "Data",
+			"label": "ASP Submit Path",
+			"default": "/einvoice/v1/submit",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_section_credentials",
+			"fieldtype": "Section Break",
+			"label": "Credentials",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_client_id",
+			"fieldtype": "Data",
+			"label": "Client ID",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_client_secret",
+			"fieldtype": "Password",
+			"label": "Client Secret",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_asp_api_key",
+			"fieldtype": "Password",
+			"label": "ASP API Key (Bearer)",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_section_config",
+			"fieldtype": "Section Break",
+			"label": "Configuration",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_configuration_json",
+			"fieldtype": "Long Text",
+			"label": "Configuration JSON",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_remarks",
+			"fieldtype": "Small Text",
+			"label": "Remarks",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
 		}
 	],
 	"grid_page_length": 50,

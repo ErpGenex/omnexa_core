@@ -4,8 +4,34 @@
 const EINV_SIGNING_DEPLOY_INFO =
 	"omnexa_einvoice.omnexa_einvoice.doctype.e_invoice_submission.e_invoice_submission.get_signing_deploy_info";
 
+function branch_country_iso(frm) {
+	if (typeof omnexa !== "undefined" && omnexa.einvoice && omnexa.einvoice.getBranchCountryIso) {
+		return omnexa.einvoice.getBranchCountryIso(frm);
+	}
+	return (frm.doc.country_iso || frm.doc.country_code || "EG")
+		.split(" — ")[0]
+		.trim()
+		.toUpperCase();
+}
+
 frappe.ui.form.on("Branch", {
 	refresh(frm) {
+		const country = branch_country_iso(frm);
+		if (
+			typeof omnexa !== "undefined" &&
+			omnexa.einvoice &&
+			omnexa.einvoice.purgeForeignTaxToolbarGroups
+		) {
+			omnexa.einvoice.purgeForeignTaxToolbarGroups(frm);
+		} else if (country !== "EG" && frm.page) {
+			const $group = frm.page.get_inner_group_button(__("Egypt ETA"));
+			if ($group && $group.length) {
+				$group.remove();
+			}
+		}
+		if (country !== "EG") {
+			return;
+		}
 		if (!frm.doc.eta_einvoice_enabled) {
 			return;
 		}
