@@ -93,6 +93,89 @@ _TOLERANCE = {
 }
 _LIMIT = {"fieldname": "limit", "fieldtype": "Int", "label": "Limit", "default": "200", "width": "80px"}
 
+# Infer filters from Script Report Python (W4 sector wave)
+FILTER_FIELD_ORDER = (
+	"company",
+	"companies",
+	"branch",
+	"from_date",
+	"to_date",
+	"as_of_date",
+	"as_at",
+	"as_of",
+	"fiscal_year",
+	"budget",
+	"cost_center",
+	"account",
+	"party",
+	"bank_account",
+	"statement_date",
+	"period_days",
+	"tolerance_days",
+	"limit",
+	"hours",
+	"days_ahead",
+	"consolidation_view",
+	"apply_eliminations",
+	"show_consolidated_total",
+)
+
+INFERRED_FILTER_TEMPLATES: dict[str, dict] = {
+	"company": _COMPANY,
+	"companies": _COMPANIES,
+	"branch": _BRANCH,
+	"from_date": _FROM,
+	"to_date": _TO,
+	"as_of_date": _AS_OF,
+	"as_at": {"fieldname": "as_at", "fieldtype": "Date", "label": "As At", "width": "120px"},
+	"as_of": _AS_OF,
+	"fiscal_year": {
+		"fieldname": "fiscal_year",
+		"fieldtype": "Link",
+		"label": "Fiscal Year",
+		"options": "Fiscal Year",
+		"width": "140px",
+	},
+	"budget": _BUDGET,
+	"cost_center": _COST_CENTER,
+	"account": _ACCOUNT,
+	"party": {"fieldname": "party", "fieldtype": "Data", "label": "Party", "width": "180px"},
+	"bank_account": _BANK,
+	"statement_date": _STMT_DATE,
+	"period_days": _PERIOD_DAYS,
+	"tolerance_days": _TOLERANCE,
+	"limit": _LIMIT,
+	"hours": {"fieldname": "hours", "fieldtype": "Int", "label": "Hours", "default": "24", "width": "100px"},
+	"days_ahead": {
+		"fieldname": "days_ahead",
+		"fieldtype": "Int",
+		"label": "Days Ahead",
+		"default": "90",
+		"width": "100px",
+	},
+	"consolidation_view": {
+		"fieldname": "consolidation_view",
+		"fieldtype": "Check",
+		"label": "Consolidation View",
+		"default": "0",
+		"width": "80px",
+	},
+	"apply_eliminations": {
+		"fieldname": "apply_eliminations",
+		"fieldtype": "Check",
+		"label": "Apply Intercompany Eliminations",
+		"default": "1",
+		"width": "80px",
+	},
+	"show_consolidated_total": {
+		"fieldname": "show_consolidated_total",
+		"fieldtype": "Check",
+		"label": "Show Consolidated Totals",
+		"default": "1",
+		"width": "80px",
+	},
+}
+
 # Report name → filters list (omnexa_accounting W1 top 20)
 ACCOUNTING_REPORT_FILTERS: dict[str, list[dict]] = {
 	"Trial Balance": [_COMPANY, _FROM, _TO, _BRANCH],
