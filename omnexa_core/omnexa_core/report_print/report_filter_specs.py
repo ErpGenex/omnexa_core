@@ -114,4 +114,11 @@ ACCOUNTING_REPORT_FILTERS: dict[str, list[dict]] = {
 	"Budget vs Actual": [_BUDGET, _BRANCH, _COST_CENTER],
 	"Inventory Valuation GL": [_COMPANY, {**_AS_OF, "reqd": 1}],
 	"Bank Reconciliation Suggestions": [_COMPANY, _BANK, _STMT_DATE, _TOLERANCE, _LIMIT],
+	"Consolidated Financial Statements": [
+		_COMPANIES,
+		_FROM,
+		_TO,
+		{"fieldname": "apply_eliminations", "fieldtype": "Check", "label": "Apply Intercompany Eliminations", "default": "1", "width": "80px"},
+		{"fieldname": "show_consolidated_total", "fieldtype": "Check", "label": "Show Consolidated Totals", "default": "1", "width": "80px"},
+	],
 }
