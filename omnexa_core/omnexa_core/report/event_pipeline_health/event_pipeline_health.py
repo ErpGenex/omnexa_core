@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import frappe
+from frappe import _
 
 from omnexa_core.omnexa_core.event_dispatcher import get_event_pipeline_health
 
@@ -13,14 +14,14 @@ def execute(filters=None):
 	health = get_event_pipeline_health(hours=hours)
 	counts = health.get("status_counts") or {}
 	columns = [
-		{"fieldname": "window_hours", "label": "Window (Hours)", "fieldtype": "Int", "width": 130},
-		{"fieldname": "provider", "label": "Provider", "fieldtype": "Data", "width": 160},
-		{"fieldname": "received", "label": "Received", "fieldtype": "Int", "width": 110},
-		{"fieldname": "processed", "label": "Processed", "fieldtype": "Int", "width": 110},
-		{"fieldname": "error", "label": "Error", "fieldtype": "Int", "width": 90},
-		{"fieldname": "rejected", "label": "Rejected", "fieldtype": "Int", "width": 100},
-		{"fieldname": "duplicate", "label": "Duplicate", "fieldtype": "Int", "width": 100},
-		{"fieldname": "dead_letter_count", "label": "Dead Letter", "fieldtype": "Int", "width": 120},
+		{"fieldname": "window_hours", "label": _("Window (Hours)"), "fieldtype": "Int", "width": 130},
+		{"fieldname": "provider", "label": _("Provider"), "fieldtype": "Data", "width": 160},
+		{"fieldname": "received", "label": _("Received"), "fieldtype": "Int", "width": 110},
+		{"fieldname": "processed", "label": _("Processed"), "fieldtype": "Int", "width": 110},
+		{"fieldname": "error", "label": _("Error"), "fieldtype": "Int", "width": 90},
+		{"fieldname": "rejected", "label": _("Rejected"), "fieldtype": "Int", "width": 100},
+		{"fieldname": "duplicate", "label": _("Duplicate"), "fieldtype": "Int", "width": 100},
+		{"fieldname": "dead_letter_count", "label": _("Dead Letter"), "fieldtype": "Int", "width": 120},
 	]
 	data = [
 		{
@@ -52,11 +53,11 @@ def execute(filters=None):
 		"type": "bar",
 	}
 	report_summary = [
-		{"value": data[0]["processed"], "label": "Processed", "indicator": "Green"},
-		{"value": data[0]["error"], "label": "Errors", "indicator": "Red" if data[0]["error"] else "Green"},
+		{"value": data[0]["processed"], "label": _("Processed"), "indicator": "Green"},
+		{"value": data[0]["error"], "label": _("Errors"), "indicator": "Red" if data[0]["error"] else "Green"},
 		{
 			"value": data[0]["dead_letter_count"],
-			"label": "Dead Letter",
+			"label": _("Dead Letter"),
 			"indicator": "Red" if data[0]["dead_letter_count"] else "Green",
 		},
 	]

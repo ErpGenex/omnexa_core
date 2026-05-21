@@ -15,13 +15,13 @@ from omnexa_core.omnexa_core.report_print.report_query_filters import (
 
 def execute(filters=None):
 	columns = [
-		{"fieldname": "timestamp", "label": "Timestamp", "fieldtype": "Datetime", "width": 160},
-		{"fieldname": "rule_code", "label": "Rule", "fieldtype": "Data", "width": 220},
-		{"fieldname": "reference_doctype", "label": "DocType", "fieldtype": "Data", "width": 170},
-		{"fieldname": "reference_name", "label": "Document", "fieldtype": "Dynamic Link", "options": "reference_doctype", "width": 180},
-		{"fieldname": "company", "label": "Company", "fieldtype": "Link", "options": "Company", "width": 180},
-		{"fieldname": "branch", "label": "Branch", "fieldtype": "Link", "options": "Branch", "width": 160},
-		{"fieldname": "message", "label": "Message", "fieldtype": "Small Text", "width": 420},
+		{"fieldname": "timestamp", "label": _("Timestamp"), "fieldtype": "Datetime", "width": 160},
+		{"fieldname": "rule_code", "label": _("Rule"), "fieldtype": "Data", "width": 220},
+		{"fieldname": "reference_doctype", "label": _("DocType"), "fieldtype": "Data", "width": 170},
+		{"fieldname": "reference_name", "label": _("Document"), "fieldtype": "Dynamic Link", "options": "reference_doctype", "width": 180},
+		{"fieldname": "company", "label": _("Company"), "fieldtype": "Link", "options": "Company", "width": 180},
+		{"fieldname": "branch", "label": _("Branch"), "fieldtype": "Link", "options": "Branch", "width": 160},
+		{"fieldname": "message", "label": _("Message"), "fieldtype": "Small Text", "width": 420},
 	]
 	filters = prepare_filters(filters)
 	conditions, params = sql_conditions(filters, "Error Log", date_field="creation", company=True, branch=True)

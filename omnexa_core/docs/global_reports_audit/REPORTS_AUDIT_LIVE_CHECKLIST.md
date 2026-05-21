@@ -34,12 +34,17 @@ bench --site SITE execute omnexa_core.omnexa_core.report_print.infer_report_filt
 python3 scripts/ops/audit_reports_print_checklist.py --merge
 ```
 
-## ملاحظات (لا تكسر ETA)
+## تحسينات 2026-05-21 (مكتملة)
 
-- **omnexa_einvoice** — لم يُعاد كتابة Python (مجمد).
-- **IFRS 10** — إزالة intercompany مبسطة في Consolidated FS (ليست مصفوفة كاملة).
-- **عمود عربي GL** — على التقارير المالية الرئيسية فقط.
+- **ثنائية `_()`** — +99 تقريراً بعناوين أعمدة قابلة للترجمة.
+- **IFRS 10** — مصفوفة إزالة intercompany (`show_elimination_detail`) في Consolidated Financial Statements.
+- **تنظيف مسارات** — إزالة شجرات `report/` المكررة في ALM و Leasing Finance.
+- **omnexa_einvoice** — تسميات `_()` فقط؛ منطق ETA دون تغيير.
+
+## ملاحظات
+
 - **10 تطبيقات** بدون تقارير — موثقة في `apps_waived_no_reports`.
+- **عمود `account_name_ar`** — التقارير المالية GL الرئيسية + Consolidated FS.
 
 ## الملفات المرجعية
 

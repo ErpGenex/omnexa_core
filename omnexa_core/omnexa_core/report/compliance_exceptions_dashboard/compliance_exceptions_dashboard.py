@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 
 import frappe
+from frappe import _
 from frappe.utils import cint
 
 
@@ -83,13 +84,13 @@ def execute(filters=None):
 	top_doctypes = sorted(doctype_counts.items(), key=lambda x: x[1], reverse=True)[:6]
 
 	columns = [
-		{"fieldname": "timestamp", "label": "Timestamp", "fieldtype": "Datetime", "width": 160},
-		{"fieldname": "rule_code", "label": "Rule", "fieldtype": "Data", "width": 220},
-		{"fieldname": "reference_doctype", "label": "DocType", "fieldtype": "Data", "width": 170},
-		{"fieldname": "reference_name", "label": "Document", "fieldtype": "Dynamic Link", "options": "reference_doctype", "width": 180},
-		{"fieldname": "company", "label": "Company", "fieldtype": "Link", "options": "Company", "width": 180},
-		{"fieldname": "branch", "label": "Branch", "fieldtype": "Link", "options": "Branch", "width": 160},
-		{"fieldname": "message", "label": "Message", "fieldtype": "Small Text", "width": 420},
+		{"fieldname": "timestamp", "label": _("Timestamp"), "fieldtype": "Datetime", "width": 160},
+		{"fieldname": "rule_code", "label": _("Rule"), "fieldtype": "Data", "width": 220},
+		{"fieldname": "reference_doctype", "label": _("DocType"), "fieldtype": "Data", "width": 170},
+		{"fieldname": "reference_name", "label": _("Document"), "fieldtype": "Dynamic Link", "options": "reference_doctype", "width": 180},
+		{"fieldname": "company", "label": _("Company"), "fieldtype": "Link", "options": "Company", "width": 180},
+		{"fieldname": "branch", "label": _("Branch"), "fieldtype": "Link", "options": "Branch", "width": 160},
+		{"fieldname": "message", "label": _("Message"), "fieldtype": "Small Text", "width": 420},
 	]
 
 	chart = {
@@ -101,14 +102,14 @@ def execute(filters=None):
 	} if top_rules else None
 
 	report_summary = [
-		{"label": "Exceptions", "value": len(data), "indicator": "Red" if data else "Green"},
-		{"label": "Affected Rules", "value": len(rule_counts), "indicator": "Orange" if rule_counts else "Green"},
-		{"label": "Affected Doctypes", "value": len(doctype_counts), "indicator": "Blue" if doctype_counts else "Green"},
+		{"label": _("Exceptions"), "value": len(data), "indicator": "Red" if data else "Green"},
+		{"label": _("Affected Rules"), "value": len(rule_counts), "indicator": "Orange" if rule_counts else "Green"},
+		{"label": _("Affected Doctypes"), "value": len(doctype_counts), "indicator": "Blue" if doctype_counts else "Green"},
 	]
 	if top_doctypes:
 		report_summary.append(
 			{
-				"label": "Top DocType",
+				"label": _("Top DocType"),
 				"value": f"{top_doctypes[0][0]} ({top_doctypes[0][1]})",
 				"indicator": "Orange",
 			}
