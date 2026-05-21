@@ -52,12 +52,15 @@ if [[ "${SKIP_PULL:-0}" != "1" ]]; then
   bench update --apps "$APPS_LIST"
 fi
 
-echo "==> migrate..."
+echo "==> migrate (runs after_migrate: print, filters, workspaces)..."
 bench --site "$SITE" migrate
 
-echo "==> report print + filters (idempotent)..."
-bench --site "$SITE" execute omnexa_core.omnexa_core.report_print.link_reports.link_erpgenex_report_print_assets
-bench --site "$SITE" execute omnexa_core.omnexa_core.report_print.infer_report_filters.sync_all_erpgenex_report_json_filters
+# Optional belt-and-suspenders if omnexa_core hook failed (old build):
+if [[ "${FORCE_REPORT_EXECUTE:-0}" == "1" ]]; then
+  echo "==> FORCE_REPORT_EXECUTE: manual print + filters..."
+  bench --site "$SITE" execute omnexa_core.omnexa_core.report_print.link_reports.link_erpgenex_report_print_assets
+  bench --site "$SITE" execute omnexa_core.omnexa_core.report_print.infer_report_filters.sync_all_erpgenex_report_json_filters
+fi
 
 echo "==> clear-cache + restart..."
 bench --site "$SITE" clear-cache

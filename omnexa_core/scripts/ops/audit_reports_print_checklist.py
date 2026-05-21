@@ -29,7 +29,11 @@ def _find_bench_root() -> Path:
 
 BENCH_ROOT = _find_bench_root()
 APPS_FILE = BENCH_ROOT / "sites" / "apps.txt"
+_APP_DOCS = Path(__file__).resolve().parents[2] / "docs" / "global_reports_audit"
 OUT_DIR = BENCH_ROOT / "Docs" / "2026-05-20_GLOBAL_REPORTS_AUDIT"
+if not OUT_DIR.is_dir():
+	OUT_DIR = _APP_DOCS
+OUT_DIR.mkdir(parents=True, exist_ok=True)
 OUT_JSON = OUT_DIR / "REPORTS_PRINT_AUDIT_CHECKLIST.json"
 
 FINANCIAL_KEYWORDS = (
