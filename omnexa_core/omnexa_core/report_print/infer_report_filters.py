@@ -11,6 +11,7 @@ from pathlib import Path
 
 import frappe
 
+from omnexa_core.omnexa_core.report_print.heuristic_report_filters import infer_filters_heuristic
 from omnexa_core.omnexa_core.report_print.report_filter_specs import (
 	ACCOUNTING_REPORT_FILTERS,
 	FILTER_FIELD_ORDER,
@@ -32,6 +33,8 @@ _W123_APPS = frozenset(
 )
 
 _FILTER_GET_RE = re.compile(r"""filters\.get\(\s*["'](\w+)["']""")
+_FILTER_BRACKET_RE = re.compile(r"""filters\[\s*["'](\w+)["']\s*\]""")
+_FILTER_ATTR_RE = re.compile(r"""filters\.(\w+)\b""")
 _REQUIRED_RE_TEMPLATE = r"""if\s+not\s+filters\.get\(\s*["']{field}["']"""
 
 
@@ -48,6 +51,12 @@ def infer_filters_from_py(py_path: Path) -> list[dict]:
 		return []
 	text = py_path.read_text(encoding="utf-8", errors="replace")
 	mentioned = set(_FILTER_GET_RE.findall(text))
+	mentioned.update(_FILTER_BRACKET_RE.findall(text))
+	mentioned.update(
+		f
+		for f in _FILTER_ATTR_RE.findall(text)
+		if f not in ("get", "copy", "keys", "items", "update", "pop", "setdefault")
+	)
 	if not mentioned:
 		return []
 
@@ -134,6 +143,12 @@ def sync_w4_inferred_report_json_filters(
 				continue
 			py_path = json_path.with_suffix(".py")
 			inferred = infer_filters_from_py(py_path)
+			if not inferred:
+				inferred = infer_filters_heuristic(
+					doc.get("ref_doctype"),
+					report_name,
+					py_path,
+				)
 			if not inferred:
 				stats["skipped_no_infer"] += 1
 				continue
