@@ -18,20 +18,6 @@ from omnexa_core.omnexa_core.report_print.report_filter_specs import (
 	INFERRED_FILTER_TEMPLATES,
 )
 
-_W123_APPS = frozenset(
-	{
-		"omnexa_accounting",
-		"omnexa_statutory_audit",
-		"omnexa_reporting_compliance",
-		"omnexa_fixed_assets",
-		"erpgenex_property_mgmt",
-		"omnexa_alm",
-		"omnexa_hr",
-		"omnexa_einvoice",
-		"omnexa_trading",
-	}
-)
-
 _FILTER_GET_RE = re.compile(r"""filters\.get\(\s*["'](\w+)["']""")
 _FILTER_BRACKET_RE = re.compile(r"""filters\[\s*["'](\w+)["']\s*\]""")
 _FILTER_ATTR_RE = re.compile(r"""filters\.(\w+)\b""")
@@ -100,17 +86,17 @@ def _erpgenex_apps() -> list[str]:
 	]
 
 
-def sync_w4_inferred_report_json_filters(
+def sync_all_erpgenex_report_json_filters(
 	*,
 	dry_run: bool = False,
 	only_empty: bool = True,
 ) -> dict[str, int]:
-	"""Write inferred filters into sector (W4) report JSON files."""
+	"""Write inferred filters into all ErpGenEx Script Report JSON files."""
 	stats = {
 		"scanned": 0,
 		"updated_json": 0,
 		"skipped_has_filters": 0,
-		"skipped_w123_manual": 0,
+		"skipped_manual_spec": 0,
 		"skipped_no_infer": 0,
 		"imported": 0,
 	}
@@ -118,8 +104,6 @@ def sync_w4_inferred_report_json_filters(
 	changed_paths: list[Path] = []
 
 	for app in _erpgenex_apps():
-		if app in _W123_APPS:
-			continue
 		try:
 			base = Path(frappe.get_app_path(app))
 		except Exception:
@@ -135,8 +119,8 @@ def sync_w4_inferred_report_json_filters(
 				continue
 			stats["scanned"] += 1
 			report_name = doc.get("name") or json_path.stem
-			if report_name in manual_reports:
-				stats["skipped_w123_manual"] += 1
+			if report_name in manual_reports and (doc.get("filters") or []):
+				stats["skipped_manual_spec"] += 1
 				continue
 			if only_empty and (doc.get("filters") or []):
 				stats["skipped_has_filters"] += 1
@@ -177,5 +161,14 @@ def sync_w4_inferred_report_json_filters(
 	return stats
 
 
+def sync_w4_inferred_report_json_filters(**kwargs):
+	"""Backward-compatible alias."""
+	return sync_all_erpgenex_report_json_filters(**kwargs)
+
+
 def ensure_w4_inferred_report_json_filters():
-	return sync_w4_inferred_report_json_filters()
+	return sync_all_erpgenex_report_json_filters()
+
+
+def ensure_all_erpgenex_report_json_filters():
+	return sync_all_erpgenex_report_json_filters()

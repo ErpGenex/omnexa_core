@@ -62,6 +62,40 @@ def _write_print_html(folder: Path, report_name: str, audit: bool) -> bool:
 	return True
 
 
+def _link_html_in_repo(*, only_missing: bool = True) -> dict[str, int]:
+	"""Deploy print HTML beside every Report JSON in ErpGenEx apps (filesystem)."""
+	stats = {"json_seen": 0, "html_written": 0, "html_skipped": 0}
+	for app in _erpgenex_app_names():
+		try:
+			base = Path(frappe.get_app_path(app))
+		except Exception:
+			continue
+		for json_path in base.rglob("report/*/*.json"):
+			try:
+				doc = frappe.parse_json(json_path.read_text(encoding="utf-8"))
+			except Exception:
+				continue
+			if doc.get("doctype") != "Report":
+				continue
+			stats["json_seen"] += 1
+			report_name = doc.get("name") or json_path.stem
+			folder = json_path.parent
+			audit = _is_audit_report(report_name, doc.get("module"))
+			html_path = folder / f"{scrub(report_name)}.html"
+			if only_missing and html_path.exists():
+				try:
+					if _MARKER in html_path.read_text(encoding="utf-8"):
+						stats["html_skipped"] += 1
+						continue
+				except OSError:
+					pass
+			if _write_print_html(folder, report_name, audit):
+				stats["html_written"] += 1
+			else:
+				stats["html_skipped"] += 1
+	return stats
+
+
 def link_erpgenex_report_print_assets(*, only_missing_html: bool = False) -> dict[str, int]:
 	"""Assign global letter head + deploy print HTML for ErpGenEx reports."""
 	ensure_global_print_design_system()
@@ -70,12 +104,14 @@ def link_erpgenex_report_print_assets(*, only_missing_html: bool = False) -> dic
 		or frappe.db.get_value("Letter Head", {"is_default": 1}, "name")
 	)
 
+	repo_stats = _link_html_in_repo(only_missing=only_missing_html)
 	stats = {
 		"reports_seen": 0,
 		"letter_head_set": 0,
-		"html_written": 0,
-		"html_skipped": 0,
+		"html_written": repo_stats.get("html_written", 0),
+		"html_skipped": repo_stats.get("html_skipped", 0),
 		"folder_missing": 0,
+		"repo_json_seen": repo_stats.get("json_seen", 0),
 	}
 
 	reports = frappe.get_all(

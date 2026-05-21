@@ -15,3 +15,4 @@ omnexa_core.patches.migrate_branch_tax_country_defaults
 omnexa_core.patches.link_erpgenex_report_print_assets
 omnexa_core.patches.sync_w1_financial_report_json_filters
 omnexa_core.patches.sync_w4_sector_report_json_filters
+omnexa_core.patches.sync_all_erpgenex_report_json_filters

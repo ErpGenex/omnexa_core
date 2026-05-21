@@ -49,6 +49,14 @@ _REF_DOCTYPE_FIELDS: dict[str, list[str]] = {
 	"Menu Item": ["company"],
 	"Waste Log": ["company", "from_date", "to_date"],
 	"Service Ticket": ["company", "from_date", "to_date"],
+	"ALM Daily Run": ["company", "from_date", "to_date"],
+	"ALM Position Snapshot": ["company"],
+	"Compliance Control": ["company", "status", "risk_level"],
+	"Compliance Evidence": ["company", "from_date", "to_date"],
+	"Compliance Remediation": ["company", "status"],
+	"Compliance Test Result": ["company", "from_date", "to_date"],
+	"Compliance Control Test": ["company", "from_date", "to_date"],
+	"Error Log": ["hours"],
 }
 
 _EXTRA_FIELD_TEMPLATES: dict[str, dict] = {
@@ -64,6 +72,25 @@ _EXTRA_FIELD_TEMPLATES: dict[str, dict] = {
 		"label": "Project Contract",
 		"options": "Project Contract",
 		"width": "200px",
+	},
+	"status": {
+		"fieldname": "status",
+		"fieldtype": "Data",
+		"label": "Status",
+		"width": "140px",
+	},
+	"risk_level": {
+		"fieldname": "risk_level",
+		"fieldtype": "Data",
+		"label": "Risk Level",
+		"width": "140px",
+	},
+	"older_than_days": {
+		"fieldname": "older_than_days",
+		"fieldtype": "Int",
+		"label": "Older Than (days)",
+		"default": "30",
+		"width": "120px",
 	},
 }
 
@@ -93,6 +120,16 @@ def infer_filters_heuristic(
 
 	if "governance overview" in name or ref in _POLICY_VERSION_DOCTYPES:
 		return [dict(_POLICY_STATUS_FILTER)]
+
+	if "evidence aging" in name:
+		return [dict(_EXTRA_FIELD_TEMPLATES["older_than_days"])]
+
+	if ref == "Compliance Control":
+		return [
+			dict(INFERRED_FILTER_TEMPLATES["company"]),
+			dict(_EXTRA_FIELD_TEMPLATES["status"]),
+			dict(_EXTRA_FIELD_TEMPLATES["risk_level"]),
+		]
 
 	fieldnames = list(_REF_DOCTYPE_FIELDS.get(ref, []))
 	if not fieldnames and ref:

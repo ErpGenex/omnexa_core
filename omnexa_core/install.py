@@ -723,13 +723,13 @@ def ensure_accounting_report_json_filters():
 
 
 def ensure_w4_inferred_report_json_filters():
-	"""Infer Desk filters for sector (W4) Script Reports from Python."""
+	"""Infer Desk filters for all ErpGenEx Script Reports from Python."""
 	try:
-		from omnexa_core.omnexa_core.report_print.infer_report_filters import ensure_w4_inferred_report_json_filters as _ensure
+		from omnexa_core.omnexa_core.report_print.infer_report_filters import ensure_all_erpgenex_report_json_filters as _ensure
 
 		_ensure()
 	except Exception:
-		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_w4_inferred_report_json_filters")
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_all_erpgenex_report_json_filters")
 
 
 def ensure_link_title_policy_defaults():
