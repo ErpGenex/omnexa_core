@@ -2924,11 +2924,10 @@ def _ensure_asset_insurance_workspace() -> None:
 		if (ws.icon or "").strip() in ("", "shield"):
 			ws.icon = "es-line-shield"
 			changed = True
-		if float(ws.sequence_id or 0) > 4:
-			ws.sequence_id = 3.1
-			changed = True
 		if changed:
 			ws.save(ignore_permissions=True)
+		if float(frappe.db.get_value("Workspace", "Asset Insurance", "sequence_id") or 0) != 3.1:
+			frappe.db.set_value("Workspace", "Asset Insurance", "sequence_id", 3.1, update_modified=False)
 		return
 
 	if not get_desk_sections_for_workspace("Asset Insurance"):

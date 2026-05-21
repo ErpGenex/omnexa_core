@@ -684,6 +684,7 @@ def run_site_hardening_after_app_changes():
 	ensure_dashboard_finance_cards()
 	ensure_finance_workflow_templates()
 	ensure_global_print_design_system()
+	ensure_erpgenex_report_print_assets()
 	ensure_link_title_policy_defaults()
 	ensure_company_activity_select_options()
 	ensure_site_runtime_ready()
@@ -697,6 +698,16 @@ def ensure_global_print_design_system():
 		_ensure()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure global print design system")
+
+
+def ensure_erpgenex_report_print_assets():
+	"""Letter head + HTML print templates for ErpGenEx Script Reports."""
+	try:
+		from omnexa_core.omnexa_core.report_print.link_reports import ensure_erpgenex_report_print_assets as _ensure
+
+		_ensure()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_erpgenex_report_print_assets")
 
 
 def ensure_link_title_policy_defaults():
