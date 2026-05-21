@@ -1261,12 +1261,12 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Asset disposals", "Fixed Asset Disposal", []),
 		],
 		"shortcuts": [
+			("Asset Insurance", "URL", "/app/asset-insurance"),
 			("Fixed Asset", "DocType", "Fixed Asset"),
 			("Fixed Asset Category", "DocType", "Fixed Asset Category"),
 			("Fixed Asset Acquisition", "DocType", "Fixed Asset Acquisition"),
 			("Fixed Asset Depreciation Entry", "DocType", "Fixed Asset Depreciation Entry"),
 			("Fixed Asset Disposal", "DocType", "Fixed Asset Disposal"),
-			("Asset Insurance", "URL", "/app/asset-insurance"),
 			("Asset Register Report", "Report", "Asset Register Report"),
 			("Asset Depreciation Schedule", "Report", "Asset Depreciation Schedule"),
 			("Asset Movement Report", "Report", "Asset Movement Report"),
@@ -2921,6 +2921,12 @@ def _ensure_asset_insurance_workspace() -> None:
 		if not ws.public:
 			ws.public = 1
 			changed = True
+		if (ws.icon or "").strip() in ("", "shield"):
+			ws.icon = "es-line-shield"
+			changed = True
+		if float(ws.sequence_id or 0) > 4:
+			ws.sequence_id = 3.1
+			changed = True
 		if changed:
 			ws.save(ignore_permissions=True)
 		return
@@ -2932,12 +2938,12 @@ def _ensure_asset_insurance_workspace() -> None:
 	ws.module = "Omnexa Fixed Assets"
 	ws.label = "Asset Insurance"
 	ws.title = "Asset Insurance"
-	ws.icon = "shield"
+	ws.icon = "es-line-shield"
 	ws.public = 1
 	ws.is_hidden = 0
 	if parent:
 		ws.parent_page = parent
-	ws.sequence_id = 7.62
+	ws.sequence_id = 3.1
 	ws.insert(ignore_permissions=True)
 
 

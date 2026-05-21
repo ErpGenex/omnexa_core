@@ -559,10 +559,12 @@ FIXED_ASSETS_DESK: list[DeskSection] = [
 		],
 	),
 	(
-		"Asset warranty & insurance",
+		"Asset insurance",
 		[
 			("Insurance Policy", "DocType", "Insurance Policy", None),
 			("Insurance Claim", "DocType", "Insurance Claim", None),
+			("Insurance Company", "DocType", "Insurance Company", None),
+			("Insurance Renewal", "DocType", "Insurance Renewal", None),
 		],
 	),
 ]
