@@ -1541,14 +1541,21 @@ ENGINEERING_CONSULTING_DESK: list[DeskSection] = [
 # EPC / infrastructure: contract & BOQ → site → change/claims → IPC & WIP → procurement; IFRS 15 / IAS 11–style visibility.
 CONSTRUCTION_DESK: list[DeskSection] = [
 	(
-		"Policy & organisation",
+		"Policy & access",
 		[
 			_DESK_ERP_SETTINGS_URL,
 			("User Branch Access", "DocType", "User Branch Access", None),
 		],
 	),
 	(
-		"Contracts & scope",
+		"Commercial parties",
+		[
+			("Customer (project owners)", "DocType", "Customer", None),
+			("Supplier (subcontractors)", "DocType", "Supplier", None),
+		],
+	),
+	(
+		"Contracts & BOQ",
 		[
 			("Project Contract", "DocType", "Project Contract", None),
 			("BOQ Item", "DocType", "BOQ Item", None),
@@ -1561,50 +1568,54 @@ CONSTRUCTION_DESK: list[DeskSection] = [
 		],
 	),
 	(
-		"Site operations",
+		"Site execution",
 		[
 			("Site Daily Report", "DocType", "Site Daily Report", None),
 			("Subcontract Work Order", "DocType", "Subcontract Work Order", None),
 		],
 	),
 	(
-		"Change, time & claims",
+		"Client billing (IPC)",
 		[
+			("IPC Certificate", "DocType", "IPC Certificate", None),
+		],
+	),
+	(
+		"Subcontractor certificates",
+		[
+			("Subcontract Payment Certificate", "DocType", "Subcontract Payment Certificate", None),
+		],
+	),
+	(
+		"WIP, changes & claims",
+		[
+			("Project WIP Snapshot", "DocType", "Project WIP Snapshot", None),
 			("Construction Change Order", "DocType", "Construction Change Order", None),
 			("Extension of Time (EOT)", "DocType", "Construction Extension of Time", None),
 			("Construction Claim", "DocType", "Construction Claim", None),
 		],
 	),
 	(
-		"Billing & WIP",
-		[
-			("IPC Certificate", "DocType", "IPC Certificate", None),
-			("Subcontract Payment Certificate", "DocType", "Subcontract Payment Certificate", None),
-			("Project WIP Snapshot", "DocType", "Project WIP Snapshot", None),
-		],
-	),
-	(
 		"Procurement",
 		[
 			("Purchase Order", "DocType", "Purchase Order", None),
-			("Supplier", "DocType", "Supplier", None),
 		],
 	),
 	(
-		"Engineering (RIBA)",
+		"Finance & journals",
+		[
+			("Journal Entry", "DocType", "Journal Entry", None),
+		],
+	),
+	(
+		"Engineering (RIBA) — design phase",
 		[
 			("Engineering Stage", "DocType", "Engineering Stage", None),
 			("Engineering Submittal", "DocType", "Engineering Submittal", None),
 		],
 	),
 	(
-		"Finance",
-		[
-			("Journal Entry", "DocType", "Journal Entry", None),
-		],
-	),
-	(
-		"Reports · Contract & cost",
+		"Reports · Contract, cost & BOQ",
 		[
 			("BOQ progress", "Report", "BOQ Progress", "BOQ Item"),
 			("BOQ cost overrun", "Report", "BOQ Cost Overrun", "BOQ Item"),
@@ -1614,7 +1625,7 @@ CONSTRUCTION_DESK: list[DeskSection] = [
 		],
 	),
 	(
-		"Reports · Applications & billing",
+		"Reports · IPC & billing",
 		[
 			("IPC summary", "Report", "IPC Certificate Summary", "IPC Certificate"),
 		],
