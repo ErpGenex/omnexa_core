@@ -31,6 +31,13 @@ def boot_session(bootinfo):
 		if bootinfo.get(key):
 			bootinfo[key] = _rebrand(bootinfo[key])
 
+	try:
+		import frappe as _frappe
+
+		bootinfo.erpgenex_installed_apps = _frappe.get_installed_apps()
+	except Exception:
+		bootinfo.erpgenex_installed_apps = []
+
 	from omnexa_core.desk_license_boot import inject_omnexa_license_boot
 
 	inject_omnexa_license_boot(bootinfo)
