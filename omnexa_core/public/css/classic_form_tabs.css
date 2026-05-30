@@ -38,3 +38,39 @@ Scoped to form layout to avoid affecting other tab systems.
   border-bottom-color: var(--primary, #2563eb);
 }
 
+/* Company → Demo data tab: inline seed action buttons */
+.erpgenex-demo-action-panel {
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  background: var(--card-bg, #f8fafc);
+}
+
+.erpgenex-demo-group + .erpgenex-demo-group {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(15, 23, 42, 0.12);
+}
+
+.erpgenex-demo-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.erpgenex-demo-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.erpgenex-demo-btn {
+  white-space: normal;
+  text-align: start;
+  max-width: 100%;
+}
+
