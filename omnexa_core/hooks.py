@@ -76,6 +76,7 @@ app_logo_url = "/assets/omnexa_core/images/erpgenex-logo.svg"
 
 # include js in doctype views
 doctype_js = {
+	"Company": "public/js/company_demo_data_hub.js",
 	"Event Dead Letter": "public/js/event_dead_letter.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}

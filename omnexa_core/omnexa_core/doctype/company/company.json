@@ -112,7 +112,7 @@
 			"fieldname": "demo_data_help",
 			"fieldtype": "HTML",
 			"label": "Demo data actions",
-			"options": "<div class=\"text-muted small\">Use the buttons below to seed or reset demo data. Set <b>Demo activity</b> and optional <b>Demo / reset branch</b> first.</div><div id=\"erpgenex-demo-action-mount\" class=\"erpgenex-demo-action-panel\"></div>"
+			"options": "<div class=\"text-muted small\">Use the buttons below to seed or reset demo data. Set <b>Demo activity</b> and optional <b>Demo / reset branch</b> first.</div>"
 		},
 		{
 			"fieldname": "company_section",
