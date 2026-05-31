@@ -903,6 +903,9 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"status_doctypes": ["Project Contract", "Subcontract Work Order"],
 		"kpis": [
 			("Project contracts", "Project Contract", []),
+			("Active contracts", "Project Contract", [["status", "=", "Active"]]),
+			("Suspended contracts", "Project Contract", [["status", "=", "Suspended"]]),
+			("Closed contracts", "Project Contract", [["status", "=", "Closed"]]),
 			("BOQ lines", "BOQ Item", []),
 			("Site daily reports", "Site Daily Report", []),
 			("Subcontract work orders", "Subcontract Work Order", []),

@@ -40,6 +40,7 @@ app_include_css = [
 	"/assets/omnexa_core/css/omnexa_core.css",
 	"/assets/omnexa_core/css/workspace_help_panel.css",
 	"/assets/omnexa_core/css/classic_form_tabs.css",
+	"/assets/omnexa_core/css/desk_context_switcher.css",
 ]
 app_include_js = [
 	"/assets/omnexa_core/js/frappe_ready_shim.js",
@@ -55,6 +56,7 @@ app_include_js = [
 	"/assets/omnexa_core/js/query_report_date_range_defaults.js",
 	"/assets/omnexa_core/js/query_report_ux_enhancements.js",
 	"/assets/omnexa_core/js/branch_eta_signing.js",
+	"/assets/omnexa_core/js/desk_context_switcher.js",
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.
@@ -189,7 +191,12 @@ doc_events = {
 			"omnexa_core.omnexa_core.user_context.apply_company_branch_defaults",
 			"omnexa_core.omnexa_core.compliance_guard.enforce_global_enterprise_compliance",
 		],
+		"validate": "omnexa_core.omnexa_core.branch_access.enforce_branch_access",
 	}
+}
+
+permission_query_conditions = {
+	"*": "omnexa_core.omnexa_core.permissions.global_branch_permission_query_conditions",
 }
 
 _event_overlay_doctypes = [

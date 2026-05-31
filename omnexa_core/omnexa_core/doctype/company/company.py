@@ -8,7 +8,6 @@ from frappe.model.document import Document
 
 class Company(Document):
 	def validate(self):
-		self._validate_production_demo_branch()
 		self._validate_fiscal_year_start_month()
 
 	def before_insert(self):
@@ -19,6 +18,18 @@ class Company(Document):
 
 	def after_insert(self):
 		self._ensure_head_office_branch()
+
+	def on_trash(self):
+		from omnexa_core.omnexa_core.branch_access import user_can_wipe_company
+
+		if not user_can_wipe_company():
+			return
+		try:
+			from omnexa_accounting.utils.production_readiness import purge_company_for_deletion
+
+			purge_company_for_deletion(self.name)
+		except ImportError:
+			pass
 
 	def _prevent_circular_parent(self):
 		if not self.parent_company:
@@ -43,15 +54,6 @@ class Company(Document):
 		if m < 1 or m > 12:
 			frappe.throw(_("Fiscal year start month must be between 1 and 12."), title=_("Validation"))
 
-	def _validate_production_demo_branch(self):
-		if not getattr(self, "production_demo_branch", None):
-			return
-		b_company = frappe.db.get_value("Branch", self.production_demo_branch, "company")
-		if not b_company:
-			frappe.throw(_("Branch does not exist."), title=_("Validation"))
-		if b_company != self.name:
-			frappe.throw(_("Demo / reset branch must belong to this company."), title=_("Validation"))
-
 	def _ensure_head_office_branch(self):
 		if not self.enable_branches:
 			return
@@ -67,4 +69,67 @@ class Company(Document):
 				"is_head_office": 1,
 			}
 		)
-		branch.insert(ignore_permissions=True)
+		branch.insert(ignore_permissions=True, ignore_mandatory=True)
+
+	def _coa_activity(self) -> str:
+		return (self.get("production_demo_activity") or self.get("industry_sector") or "General").strip() or "General"
+
+	def _run_coa_action(self, action_key: str):
+		from omnexa_core.omnexa_core.company_demo_api import run_coa_action_for_company
+
+		result = run_coa_action_for_company(self.name, action_key, activity=self._coa_activity())
+		if isinstance(result, dict):
+			msg = result.get("message")
+			if msg:
+				frappe.msgprint(msg, title=_("Chart of accounts"), indicator="green")
+		return result
+
+	@frappe.whitelist()
+	def demo_action_coa_generate(self):
+		return self._run_coa_action("coa_generate")
+
+	@frappe.whitelist()
+	def demo_action_ifrs_fill_gl(self):
+		return self._run_coa_action("ifrs_fill_gl")
+
+	@frappe.whitelist()
+	def demo_action_coa_resync(self):
+		return self._run_coa_action("coa_resync_labels")
+
+	@frappe.whitelist()
+	def demo_action_reset_dry(self):
+		from omnexa_accounting.utils.production_readiness import reset_transactions
+
+		result = reset_transactions(company=self.name, branch=None, dry_run=1)
+		frappe.msgprint(
+			_("Dry run complete for all branches. See Production Seed Log."),
+			indicator="blue",
+		)
+		return result
+
+	@frappe.whitelist()
+	def demo_action_reset_execute(self):
+		from omnexa_accounting.utils.production_readiness import enqueue_reset_transactions
+
+		result = enqueue_reset_transactions(company=self.name, branch=None, limit=0, batch_size=200)
+		job_id = (result or {}).get("job_id") or "n/a"
+		frappe.msgprint(
+			_("Company-wide transaction reset queued. Job: {0}").format(job_id),
+			title=_("Reset company data"),
+			indicator="green",
+		)
+		return result
+
+	@frappe.whitelist()
+	def demo_action_wipe_all(self, confirm_text: str | None = None):
+		from omnexa_accounting.utils.production_readiness import enqueue_wipe_company_all_data
+
+		confirm = (confirm_text or self.get("demo_danger_confirm") or "").strip()
+		result = enqueue_wipe_company_all_data(company=self.name, branch=None, confirm_text=confirm)
+		job_id = (result or {}).get("job_id") or "n/a"
+		frappe.msgprint(
+			_("Company wipe queued. Job: {0}. Check Production Seed Log when complete.").format(job_id),
+			title=_("Wipe company data"),
+			indicator="green",
+		)
+		return result

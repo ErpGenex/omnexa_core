@@ -41,3 +41,10 @@ def boot_session(bootinfo):
 	from omnexa_core.desk_license_boot import inject_omnexa_license_boot
 
 	inject_omnexa_license_boot(bootinfo)
+
+	try:
+		from omnexa_core.omnexa_core.session_context import get_view_context
+
+		bootinfo.omnexa_view_context = get_view_context()
+	except Exception:
+		bootinfo.omnexa_view_context = {"can_switch": False}

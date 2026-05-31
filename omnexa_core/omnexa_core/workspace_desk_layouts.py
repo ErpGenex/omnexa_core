@@ -1596,8 +1596,23 @@ CONSTRUCTION_DESK: list[DeskSection] = [
 		],
 	),
 	(
+		"QA / QC & HSE",
+		[
+			("Inspection Request", "DocType", "Construction Inspection Request", None),
+			("NCR", "DocType", "Construction NCR", None),
+			("HSE Incident", "DocType", "Construction HSE Incident", None),
+		],
+	),
+	(
+		"Document control (ISO 19650 lite)",
+		[
+			("Document Transmittal", "DocType", "Construction Document Transmittal", None),
+		],
+	),
+	(
 		"Procurement",
 		[
+			("Purchase Request", "DocType", "Purchase Request", None),
 			("Purchase Order", "DocType", "Purchase Order", None),
 		],
 	),
@@ -1628,6 +1643,13 @@ CONSTRUCTION_DESK: list[DeskSection] = [
 		"Reports · IPC & billing",
 		[
 			("IPC summary", "Report", "IPC Certificate Summary", "IPC Certificate"),
+		],
+	),
+	(
+		"Reports · EVM & executive",
+		[
+			("Earned value (EVM)", "Report", "Construction Earned Value", "Project Contract"),
+			("Executive summary", "Report", "Construction Executive Summary", "Project Contract"),
 		],
 	),
 ]

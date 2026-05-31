@@ -36,18 +36,21 @@ def apply_company_branch_defaults(doc, method=None):
 
 	if has_branch and not doc.get("branch"):
 		company = doc.get("company")
-		if company:
-			doc.branch = get_default_branch(company)
-			if not doc.branch:
-				branches = frappe.get_all(
-					"Branch",
-					filters={"company": company},
-					pluck="name",
-					limit=1,
-					order_by="is_head_office desc, creation asc",
-				)
-				if branches:
-					doc.branch = branches[0]
+		if user_can_access_all_branches():
+			from omnexa_core.omnexa_core.session_context import get_view_context
+
+			ctx = get_view_context()
+			if ctx.get("branch") and not ctx.get("view_all_branches"):
+				doc.branch = ctx["branch"]
+			elif company:
+				doc.branch = get_default_branch(company)
+			elif ctx.get("company"):
+				doc.company = ctx["company"]
+				doc.branch = get_default_branch(ctx["company"])
+		elif company:
+			allowed = get_allowed_branches(company=company) or []
+			if allowed:
+				doc.branch = get_default_branch(company) or allowed[0]
 
 	_apply_company_currency_default(doc)
 
@@ -70,5 +73,8 @@ def _apply_company_currency_default(doc) -> None:
 def get_allowed_branches_for_current_doc(doc) -> list[str] | None:
 	company = getattr(doc, "company", None)
 	if user_can_access_all_branches():
-		return None
+		from omnexa_core.omnexa_core.session_context import get_effective_branch_list
+
+		allowed = get_effective_branch_list(company=company)
+		return allowed
 	return get_allowed_branches(company=company)

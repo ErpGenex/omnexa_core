@@ -16,4 +16,7 @@ def execute() -> None:
 	if not frappe.db.exists("DocField", {"parent": "Company", "fieldname": "tab_break_demo_data"}):
 		frappe.throw("Company Demo data tab missing after sync — check omnexa_core/company.json")
 
+	if not frappe.db.exists("DocField", {"parent": "Company", "fieldname": "demo_btn_wipe_all"}):
+		frappe.throw("Company wipe button missing after sync — check omnexa_core/company.json")
+
 	frappe.clear_cache(doctype="Company")

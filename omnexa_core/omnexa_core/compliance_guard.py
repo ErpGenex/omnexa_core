@@ -28,6 +28,9 @@ _SKIP_DOCTYPES = {
 	"Event Audit Log",
 }
 
+# Audit / system logs may omit branch (e.g. after company-wide wipe).
+_BRANCH_OPTIONAL_DOCTYPES = frozenset({"Production Seed Log", "COA Reset Audit Log"})
+
 # Master data uses default_currency on Company, not transaction currency.
 _CURRENCY_EXEMPT_DOCTYPES = frozenset(
 	{
@@ -368,7 +371,7 @@ def enforce_global_enterprise_compliance(doc, method=None):
 	if has_field("company") and not doc.get("company"):
 		frappe.throw(_("Company is mandatory for compliance."), title=_("Compliance"))
 
-	if has_field("branch") and not doc.get("branch"):
+	if has_field("branch") and not doc.get("branch") and doc.doctype not in _BRANCH_OPTIONAL_DOCTYPES:
 		frappe.throw(_("Branch is mandatory for compliance."), title=_("Compliance"))
 
 	if has_field("currency") and doc.doctype not in _CURRENCY_EXEMPT_DOCTYPES:

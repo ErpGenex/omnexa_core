@@ -150,7 +150,35 @@
 		"branch_default_petty_cash_gl",
 		"branch_default_bank_gl",
 		"branch_default_receivable_gl",
-		"branch_default_trade_payable_gl"
+		"branch_default_trade_payable_gl",
+		"tab_break_branch_demo_data",
+		"branch_demo_data_help",
+		"branch_demo_options_section",
+		"branch_demo_activity",
+		"branch_demo_include_workspace_seed",
+		"branch_demo_daily_purchase_invoices",
+		"branch_demo_daily_sales_invoices",
+		"branch_demo_employees",
+		"branch_demo_customers",
+		"branch_demo_suppliers",
+		"branch_demo_items",
+		"branch_demo_actions_column",
+		"branch_demo_group_masters_label",
+		"branch_demo_btn_seed_masters",
+		"branch_demo_btn_seed_with_tx",
+		"branch_demo_group_simulation_label",
+		"branch_demo_btn_seed_6m",
+		"branch_demo_btn_seed_12m",
+		"branch_demo_group_construction_label",
+		"branch_demo_btn_construction_portfolio",
+		"branch_demo_group_hotel_label",
+		"branch_demo_btn_hotel_assets",
+		"branch_demo_group_reset_label",
+		"branch_demo_btn_reset_dry",
+		"branch_demo_btn_reset_execute",
+		"branch_demo_group_danger_label",
+		"branch_demo_danger_confirm",
+		"branch_demo_btn_wipe_all"
 	],
 	"fields": [
 		{
@@ -683,6 +711,205 @@
 			"fieldtype": "Link",
 			"label": "Branch trade payables GL",
 			"options": "GL Account"
+		},
+		{
+			"fieldname": "tab_break_branch_demo_data",
+			"fieldtype": "Tab Break",
+			"label": "Demo data"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_data_help",
+			"fieldtype": "HTML",
+			"label": "Demo data actions",
+			"options": "<div class=\"text-muted small\">All demo data is scoped to <b>this branch</b>. Set options on the left, then use the buttons on the right. Company chart of accounts is on <b>Company → Chart of accounts</b>.</div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_options_section",
+			"fieldtype": "Section Break",
+			"label": "Demo options"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"description": "Used for branch demo seeding labels. If empty, the company Industry Sector is used.",
+			"fieldname": "branch_demo_activity",
+			"fieldtype": "Select",
+			"label": "Demo activity",
+			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nHotel Assets (إدارة أصول الفنادق)\nTrading\nServices\nFinancial Services\nStatutory Audit"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"description": "Creates aligned SO→DN→SI and PO→PR→PI chains plus stock and journal entries.",
+			"fieldname": "branch_demo_include_workspace_seed",
+			"fieldtype": "Check",
+			"label": "Include full document chains"
+		},
+		{
+			"default": "10",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_daily_purchase_invoices",
+			"fieldtype": "Int",
+			"label": "Daily purchase invoices"
+		},
+		{
+			"default": "10",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_daily_sales_invoices",
+			"fieldtype": "Int",
+			"label": "Daily sales invoices"
+		},
+		{
+			"default": "5",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_employees",
+			"fieldtype": "Int",
+			"label": "Employees"
+		},
+		{
+			"default": "5",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_customers",
+			"fieldtype": "Int",
+			"label": "Customers"
+		},
+		{
+			"default": "5",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_suppliers",
+			"fieldtype": "Int",
+			"label": "Suppliers"
+		},
+		{
+			"default": "10",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_items",
+			"fieldtype": "Int",
+			"label": "Items"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_actions_column",
+			"fieldtype": "Column Break",
+			"label": "Demo actions"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_group_masters_label",
+			"fieldtype": "HTML",
+			"label": "Masters demo",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>Branch masters demo</b></div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_btn_seed_masters",
+			"fieldtype": "Button",
+			"label": "Seed demo data (masters)",
+			"options": "branch_demo_action_seed_masters",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_btn_seed_with_tx",
+			"fieldtype": "Button",
+			"label": "Seed demo data + transactions",
+			"options": "branch_demo_action_seed_with_tx"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_group_simulation_label",
+			"fieldtype": "HTML",
+			"label": "Business simulation",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>Full business simulation</b></div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_btn_seed_6m",
+			"fieldtype": "Button",
+			"label": "Seed 6-Month Full Business Simulation",
+			"options": "branch_demo_action_seed_6m",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_btn_seed_12m",
+			"fieldtype": "Button",
+			"label": "Seed 12-Month Full Business Simulation",
+			"options": "branch_demo_action_seed_12m",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_group_construction_label",
+			"fieldtype": "HTML",
+			"label": "Construction demo",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>Construction demo</b></div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_btn_construction_portfolio",
+			"fieldtype": "Button",
+			"label": "Seed 20 projects (full construction portfolio demo)",
+			"options": "branch_demo_action_construction_portfolio",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && doc.branch_demo_activity=='Hotel Assets (إدارة أصول الفنادق)'",
+			"fieldname": "branch_demo_group_hotel_label",
+			"fieldtype": "HTML",
+			"label": "Hotel assets demo",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>أصول الفنادق — تجريبي</b></div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && doc.branch_demo_activity=='Hotel Assets (إدارة أصول الفنادق)'",
+			"fieldname": "branch_demo_btn_hotel_assets",
+			"fieldtype": "Button",
+			"label": "إنشاء 50 أصلًا (غرف + مناطق إدارية + حركات)",
+			"options": "branch_demo_action_hotel_assets",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_group_reset_label",
+			"fieldtype": "HTML",
+			"label": "Reset branch data",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>Reset branch data</b></div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_btn_reset_dry",
+			"fieldtype": "Button",
+			"label": "Reset branch transactions (dry run)",
+			"options": "branch_demo_action_reset_dry"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_btn_reset_execute",
+			"fieldtype": "Button",
+			"label": "Reset branch transactions (execute)",
+			"options": "branch_demo_action_reset_execute"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.session.user==='Administrator'",
+			"fieldname": "branch_demo_group_danger_label",
+			"fieldtype": "HTML",
+			"label": "Danger Zone",
+			"options": "<div class=\"erpgenex-demo-group-title text-danger small\"><b>Danger Zone</b></div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.session.user==='Administrator'",
+			"description": "Type DELETE BRANCH before using the wipe button below.",
+			"fieldname": "branch_demo_danger_confirm",
+			"fieldtype": "Data",
+			"label": "Confirm branch wipe"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.session.user==='Administrator'",
+			"fieldname": "branch_demo_btn_wipe_all",
+			"fieldtype": "Button",
+			"label": "Delete ALL branch data (DANGER)",
+			"options": "branch_demo_action_wipe_all"
 		},
 		{
 			"depends_on": "eval:doc.eta_ereceipt_enabled",

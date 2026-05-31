@@ -389,3 +389,29 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 #page-query-report .page-form .frappe-control[data-fieldtype="Link"] .link-btn {
 	opacity: 1;
 }
+
+/* -------- Company Demo data tab: action buttons in right column -------- */
+.frappe-control[data-fieldname^="demo_group_"] .erpgenex-demo-group-title {
+	margin-top: 0.75rem;
+	margin-bottom: 0.25rem;
+}
+
+.frappe-control[data-fieldname="demo_group_production_label"] .erpgenex-demo-group-title {
+	margin-top: 0;
+}
+
+.frappe-control[data-fieldname^="demo_btn_"] .btn {
+	display: block;
+	width: 100%;
+	margin-bottom: 0.35rem;
+	text-align: left;
+	white-space: normal;
+}
+
+.frappe-control[data-fieldname^="branch_demo_btn_"] .btn {
+	display: block;
+	width: 100%;
+	margin-bottom: 0.35rem;
+	text-align: left;
+	white-space: normal;
+}

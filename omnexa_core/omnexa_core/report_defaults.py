@@ -8,6 +8,7 @@ import json
 import frappe
 
 from omnexa_core.omnexa_core.branch_access import get_default_branch, get_default_company
+from omnexa_core.omnexa_core.session_context import get_effective_company, get_view_context
 
 
 def auto_apply_company_branch_report_filters():
@@ -38,14 +39,16 @@ def auto_apply_company_branch_report_filters():
 		filters = {}
 
 	if not filters.get("company"):
-		company = get_default_company()
+		company = get_effective_company() or get_default_company()
 		if company:
 			filters["company"] = company
 
 	if not filters.get("branch") and filters.get("company"):
-		branch = get_default_branch(filters["company"])
-		if branch:
-			filters["branch"] = branch
+		ctx = get_view_context()
+		if not ctx.get("view_all_branches"):
+			branch = get_default_branch(filters["company"])
+			if branch:
+				filters["branch"] = branch
 
 	# Align with desk defaults: bounded date window defaults to Today when unset.
 	td = frappe.utils.today()
