@@ -150,6 +150,8 @@ def get_default_branch(company: str, user: str | None = None) -> str | None:
 
 def enforce_branch_access(doc, user: str | None = None):
 	user = user or frappe.session.user
+	if getattr(getattr(doc, "flags", None), "wizard_save", False):
+		return
 	if getattr(doc, "doctype", None) in {
 		"User Branch Access",
 		"User",
