@@ -3040,9 +3040,13 @@ def sync_workspace_for_app(app_name: str) -> None:
 		return
 	spec = {**spec}
 	ws_label = spec["workspace"]
-	desk = get_desk_sections_for_workspace(ws_label)
-	if desk:
-		spec["desk_link_layout"] = desk
+	# Construction sidebar is owned by omnexa_construction (full v2 catalog); core only applies KPIs/content.
+	if app_name == "omnexa_construction":
+		spec["desk_link_layout"] = None
+	else:
+		desk = get_desk_sections_for_workspace(ws_label)
+		if desk:
+			spec["desk_link_layout"] = desk
 	module = spec["module"]
 	prefix = ws_label[:12].replace(" ", "")
 

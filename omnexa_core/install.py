@@ -614,6 +614,13 @@ def run_workspace_desk_sync():
 		sync_all_workspace_kpi_layout()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: sync_all_workspace_kpi_layout")
+	if "omnexa_construction" in frappe.get_installed_apps():
+		try:
+			from omnexa_construction.workspace.construction_workspace import sync_construction_workspace_menu
+
+			sync_construction_workspace_menu(save=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Construction workspace menu")
 	try:
 		from omnexa_core.workspace_erpgenex_realty import ensure_erpgenex_realty_workspace_experience
 

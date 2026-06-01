@@ -20,3 +20,4 @@ omnexa_core.patches.ensure_company_demo_data_tab
 omnexa_core.patches.ensure_branch_demo_data_tab
 omnexa_core.patches.install_company_demo_client_script
 omnexa_core.patches.sync_company_demo_client_script
+omnexa_core.patches.ensure_full_workspace_desk_sync
