@@ -2787,6 +2787,16 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 			number_card_ids.append(nm)
 			number_card_labels.append(label)
 
+	# Construction: omnexa_construction owns links, shortcuts, and EditorJS card layout.
+	if (ws.name or "") == "Construction" and _app_installed("omnexa_construction"):
+		ws.charts = []
+		for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
+			ws.append("charts", {"chart_name": ch, "label": row_label})
+		ws.number_cards = []
+		for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
+			ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
+		return
+
 	shortcut_seed: list[Any] = list(spec.get("shortcuts") or [])
 	if desk:
 		shortcut_seed = []
