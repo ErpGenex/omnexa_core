@@ -1,0 +1,15 @@
+{
+	"content": null,
+	"docstatus": 0,
+	"doctype": "Page",
+	"module": "Omnexa Core",
+	"name": "sell-credit-notes",
+	"page_name": "sell-credit-notes",
+	"roles": [
+		{"role": "System Manager"},
+		{"role": "Accounts Manager"},
+		{"role": "Accounts User"}
+	],
+	"standard": "Yes",
+	"title": "Credit Notes"
+}

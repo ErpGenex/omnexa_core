@@ -26,15 +26,14 @@ SELL_DESK: list[DeskSection] = [
 		[
 			# Single DocType — must live in desk seed; spec["shortcuts"] are dropped when desk_link_layout applies.
 			("Sales Settings", "DocType", "Omnexa Sales Settings", None),
+			("Item & pricing (master)", "DocType", "Item", None),
 			("Leads Management", "DocType", "Pipeline Lead", None),
 			("Opportunities", "DocType", "Pipeline Opportunity", None),
-			# Pipeline board / funnel context (same DocType as opportunities in Omnexa; listed twice per standard wording)
-			("Sales Pipeline", "DocType", "Pipeline Opportunity", None),
 			("Quotations", "DocType", "Sales Quotation", None),
 			("Sales Orders", "DocType", "Sales Order", None),
 			("Deliveries", "DocType", "Delivery Note", None),
 			("Invoices", "DocType", "Sales Invoice", None),
-			("Returns", "DocType", "Sales Invoice", None),
+			("Credit Notes", "Page", "sell-credit-notes", None),
 			("Customer Management", "DocType", "Customer", None),
 		],
 	),
@@ -74,6 +73,7 @@ SELL_DESK: list[DeskSection] = [
 		"Logistics & fulfillment",
 		[
 			("Warehouse", "DocType", "Warehouse", None),
+			("Stock transfer requests", "DocType", "Stock Transfer Request", None),
 			("Stock Entry", "DocType", "Stock Entry", None),
 		],
 	),
@@ -107,6 +107,7 @@ BUY_DESK: list[DeskSection] = [
 		"Operations",
 		[
 			("Purchase Settings", "DocType", "Omnexa Purchase Settings", None),
+			("Supplier quotations (RFQ)", "DocType", "Purchase Quotation", None),
 			("Purchase Requests", "DocType", "Purchase Request", None),
 			("Supplier Management", "DocType", "Supplier", None),
 			("Purchase Orders", "DocType", "Purchase Order", None),
@@ -123,6 +124,7 @@ BUY_DESK: list[DeskSection] = [
 			("Cost Analysis Report", "Report", "Purchase Cost Analysis", "Purchase Invoice"),
 			("Pending Orders Report", "Report", "Open Purchase Order Lines", "Purchase Order"),
 			("Delivery Delay Report", "Report", "Purchase Delivery Performance", "Purchase Order"),
+			("Quotation comparison", "Report", "Purchase Quotation Comparison", "Purchase Quotation"),
 		],
 	),
 	(
@@ -137,6 +139,7 @@ BUY_DESK: list[DeskSection] = [
 		[
 			("Purchase Approval Rule", "DocType", "Purchase Approval Rule", None),
 			("Landed Cost Voucher", "DocType", "Landed Cost Voucher", None),
+			("Internal stock requests", "DocType", "Stock Transfer Request", None),
 		],
 	),
 ]
@@ -149,10 +152,10 @@ STOCK_DESK: list[DeskSection] = [
 			("Stock Settings", "DocType", "Omnexa Stock Settings", None),
 			("Item Master", "DocType", "Item", None),
 			("Warehouses", "DocType", "Warehouse", None),
+			("Material / stock requests", "DocType", "Stock Transfer Request", None),
 			("Stock Movements", "DocType", "Stock Entry", None),
-			("Transfers", "DocType", "Stock Entry", None),
 			("Stock Adjustments", "DocType", "Stock Reconciliation", None),
-			("Batch / Serial Tracking", "DocType", "Item", None),
+			("Batch / serial (via Item)", "DocType", "Item", None),
 		],
 	),
 	(
@@ -178,6 +181,15 @@ STOCK_DESK: list[DeskSection] = [
 			("Inventory Valuation (GL)", "Report", "Inventory Valuation (GL)", "Item"),
 			("Stock Voucher Register", "Report", "Stock Voucher Register", "Stock Entry"),
 			("Item Stock Balance", "Report", "Item Stock Balance", "Item"),
+		],
+	),
+	(
+		"Analytics & aging",
+		[
+			("ABC analysis", "Report", "ABC Analysis Report", "Item"),
+			("Dead stock", "Report", "Dead Stock Report", "Item"),
+			("Stock aging", "Report", "Stock Aging Report", "Item"),
+			("Warehouse transfers", "Report", "Warehouse Transfer Report", "Stock Entry"),
 		],
 	),
 ]
@@ -208,6 +220,8 @@ ACCOUNTING_DESK: list[DeskSection] = [
 			("AP Aging Report", "Report", "Payables Aging", "Purchase Invoice"),
 			("Budget vs Actual Report", "Report", "Budget vs Actual", "Budget"),
 			("Financial Consolidation Report", "Report", "Consolidated Trial Balance", "GL Account"),
+			("Notes to financial statements", "Report", "Notes to Financial Statements", "GL Account"),
+			("Consolidated financial statements", "Report", "Consolidated Financial Statements", "GL Account"),
 		],
 	),
 	(
@@ -253,6 +267,7 @@ HR_DESK: list[DeskSection] = [
 		"Time & attendance",
 		[
 			("HR Attendance", "DocType", "HR Attendance", None),
+			("Expense claims", "DocType", "HR Expense Claim", None),
 		],
 	),
 	(
@@ -264,7 +279,6 @@ HR_DESK: list[DeskSection] = [
 	(
 		"Payroll & benefits",
 		[
-			("HR Payroll Company Settings", "DocType", "HR Payroll Company Settings", None),
 			("HR Salary Slip", "DocType", "HR Salary Slip", None),
 			("HR Payroll Run", "DocType", "HR Payroll Run", None),
 			("HR Salary Advance", "DocType", "HR Salary Advance", None),
@@ -278,6 +292,7 @@ HR_DESK: list[DeskSection] = [
 			("HR Recruitment Request", "DocType", "HR Recruitment Request", None),
 			("HR Interview", "DocType", "HR Interview", None),
 			("HR Training Record", "DocType", "HR Training Record", None),
+			("Employee appraisals", "DocType", "HR Employee Appraisal", None),
 		],
 	),
 	(
@@ -477,6 +492,7 @@ FIXED_ASSETS_DESK: list[DeskSection] = [
 		"Policy & master data",
 		[
 			_DESK_ERP_SETTINGS_URL,
+			("Asset Insurance desk", "URL", "/app/asset-insurance", None),
 			("Fixed Asset Category", "DocType", "Fixed Asset Category", None),
 			("Fixed Asset Depreciation Method", "DocType", "Fixed Asset Depreciation Method", None),
 			("Fixed Asset Location", "DocType", "Fixed Asset Location", None),
