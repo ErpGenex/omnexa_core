@@ -35,6 +35,19 @@ from omnexa_core.omnexa_core.omnexa_license import (
 )
 
 
+def _restore_frappe_session_user(previous_user: str | None) -> None:
+	"""Never call ``set_user`` with a falsy id — that raises *User None is disabled* and rolls back."""
+	user = (previous_user or "").strip()
+	if user and user not in ("Guest", "Administrator") and frappe.db.exists("User", user):
+		try:
+			frappe.set_user(user)
+			return
+		except Exception:
+			pass
+	if frappe.session.user != "Administrator":
+		frappe.set_user("Administrator")
+
+
 def _platform_base_url() -> str:
 	configured = str(frappe.conf.get("omnexa_marketplace_url") or "").strip().rstrip("/")
 	official = "https://erpgenex.com"
@@ -1154,20 +1167,22 @@ def uninstall_app_now(app_slug: str, confirm_uninstall: int = 0):
 
 	no_backup = _is_truthy(frappe.conf.get("omnexa_marketplace_uninstall_no_backup"))
 
-	previous_user = frappe.session.user
+	previous_user = getattr(frappe.session, "user", None)
 	try:
 		frappe.set_user("Administrator")
 		from frappe.installer import remove_app
 
 		remove_app(app_slug, dry_run=False, yes=True, no_backup=no_backup, force=False)
+		frappe.db.commit()
 	except Exception as exc:
+		frappe.db.rollback()
 		frappe.log_error(frappe.get_traceback(), "Marketplace Uninstall Failed")
 		frappe.throw(
 			frappe._("Uninstall failed: {0}. Check Error Log for details.").format(exc),
 			title=frappe._("Uninstall"),
 		)
 	finally:
-		frappe.set_user(previous_user)
+		_restore_frappe_session_user(previous_user)
 
 	if app_slug in (frappe.get_installed_apps() or []):
 		return {"uninstalled": False, "message": "still_installed"}

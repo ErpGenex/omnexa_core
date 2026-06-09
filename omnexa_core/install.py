@@ -660,6 +660,13 @@ def after_install():
 
 def after_migrate():
 	enforce_supported_frappe_version()
+	try:
+		from omnexa_core.omnexa_core.session_guard import apply_session_guard, purge_corrupt_sessions
+
+		apply_session_guard()
+		purge_corrupt_sessions()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa Core: session guard")
 	ensure_global_defaults_compat()
 	# Keep stack complete even after omnexa_core is already installed.
 	# `bench install-app omnexa_core` exits early with "already installed",
