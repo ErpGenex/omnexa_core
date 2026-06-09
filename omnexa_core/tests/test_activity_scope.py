@@ -4,6 +4,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from omnexa_core.omnexa_core.activity_scope import (
+	get_activity_scope_plan,
 	get_apps_to_keep_for_activity,
 	get_apps_to_uninstall_for_activity,
 	is_mandatory_site_app,
@@ -41,3 +42,13 @@ class TestActivityScope(FrappeTestCase):
 	def test_list_company_activities_not_empty(self):
 		self.assertIn("Healthcare", list_company_activities())
 		self.assertIn("General", list_company_activities())
+
+	def test_healthcare_scope_not_blocked_by_fixed_assets_dependency(self):
+		frappe.set_user("Administrator")
+		plan = get_activity_scope_plan("Healthcare")
+		self.assertFalse(plan["blocked"])
+		self.assertTrue(plan["can_apply"])
+		if "erpgenex_maintenance_core" in (frappe.get_installed_apps() or []):
+			self.assertNotIn("erpgenex_maintenance_core", plan["apps_to_remove"])
+			skipped = {s["app"] for s in plan.get("apps_skipped_dependency") or []}
+			self.assertIn("erpgenex_maintenance_core", skipped)

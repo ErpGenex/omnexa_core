@@ -567,23 +567,52 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		return lastScopePlan;
 	}
 
+	function scopePlanStatusMessage(plan) {
+		if (plan.already_scoped) {
+			return __("This site is already scoped to {0}. No apps need to be removed.", [
+				plan.company_activity || __("this activity"),
+			]);
+		}
+		if (plan.blocked && plan.blocked.length) {
+			return (
+				`${__("Uninstall blocked — resolve these dependencies first")}:<br>` +
+				`<pre class="small">${frappe.utils.escape_html(JSON.stringify(plan.blocked, null, 2))}</pre>`
+			);
+		}
+		return __("Nothing to apply for this activity. Use Preview to see details.");
+	}
+
 	async function onScopePreview() {
 		const activity = $container.find("[data-scope-activity]").val();
 		const plan = await fetchScopePlan(activity);
 		const keep = (plan.apps_to_keep || []).join(", ") || "—";
 		const remove = (plan.apps_to_remove || []).join(", ") || __("(none)");
+		const skipped = (plan.apps_skipped_dependency || [])
+			.map((s) => `${s.app} ← ${(s.kept_because_required_by || []).join(", ")}`)
+			.join("<br>");
 		frappe.msgprint({
 			title: __("Activity scope preview"),
-			indicator: plan.can_apply ? "blue" : "orange",
+			indicator: plan.can_apply ? "blue" : plan.already_scoped ? "green" : "orange",
 			message:
-				`<b>${__("Activity")}:</b> ${frappe.utils.escape_html(plan.company_activity || activity)}<br>` +
-				`<b>${__("Keep")} (${(plan.apps_to_keep || []).length}):</b><br>` +
+				`<b>${__("Activity")}:</b> ${frappe.utils.escape_html(plan.company_activity || activity)}` +
+				(plan.current_company_activity
+					? ` · ${__("Current")}: ${frappe.utils.escape_html(plan.current_company_activity)}`
+					: "") +
+				`<br><b>${__("Keep")} (${(plan.apps_to_keep || []).length}):</b><br>` +
 				`<span class="small font-monospace">${frappe.utils.escape_html(keep)}</span><br><br>` +
 				`<b>${__("Remove from site")} (${(plan.apps_to_remove || []).length}):</b><br>` +
 				`<span class="small font-monospace text-danger">${frappe.utils.escape_html(remove)}</span>` +
+				(skipped
+					? `<p class="text-warning small mt-2"><b>${__("Kept (required by platform app)")}:</b><br>${skipped}</p>`
+					: "") +
 				(plan.blocked && plan.blocked.length
 					? `<p class="text-danger mt-2">${__("Blocked by dependencies")}: ${frappe.utils.escape_html(
 							JSON.stringify(plan.blocked)
+					  )}</p>`
+					: "") +
+				(plan.already_scoped
+					? `<p class="text-success small mt-2">${frappe.utils.escape_html(
+							scopePlanStatusMessage(plan)
 					  )}</p>`
 					: "") +
 				`<p class="text-muted small mt-2">${frappe.utils.escape_html(plan.warning || "")}</p>`,
@@ -594,11 +623,11 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const activity = $container.find("[data-scope-activity]").val();
 		const plan = await fetchScopePlan(activity);
 		if (!plan.can_apply) {
-			frappe.msgprint(
-				__(
-					"Nothing to apply or uninstall is blocked by app dependencies. Use Preview to see details."
-				)
-			);
+			frappe.msgprint({
+				title: __("Cannot apply activity scope"),
+				indicator: plan.already_scoped ? "green" : "orange",
+				message: scopePlanStatusMessage(plan),
+			});
 			return;
 		}
 		const remove = plan.apps_to_remove || [];

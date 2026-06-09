@@ -66,17 +66,54 @@ def get_apps_to_keep_for_activity(company_activity: str | None) -> set[str]:
 	return keep
 
 
-def get_apps_to_uninstall_for_activity(company_activity: str | None) -> list[str]:
-	from omnexa_core.omnexa_core.marketplace import _installed_apps_that_require, _uninstall_protected_apps
+def _candidate_apps_to_remove(keep: set[str]) -> set[str]:
+	from omnexa_core.omnexa_core.marketplace import _uninstall_protected_apps
 
-	keep = get_apps_to_keep_for_activity(company_activity)
 	protected = _uninstall_protected_apps()
-	remove: list[str] = []
+	remove: set[str] = set()
 	for app in frappe.get_installed_apps() or []:
 		if app in keep or app in protected:
 			continue
-		remove.append(app)
-	return sorted(set(remove))
+		remove.add(app)
+	return remove
+
+
+def _resolve_remove_list(keep: set[str]) -> tuple[list[str], list[dict], list[dict]]:
+	"""
+	Build final uninstall list.
+
+	Apps required by a *kept* installed app (e.g. maintenance for Fixed Assets) are skipped,
+	not treated as a hard block for the whole operation.
+	"""
+	from omnexa_core.omnexa_core.marketplace import _installed_apps_that_require, _uninstall_protected_apps
+
+	protected = _uninstall_protected_apps()
+	remove = _candidate_apps_to_remove(keep)
+	skipped: list[dict] = []
+	blocked: list[dict] = []
+
+	changed = True
+	while changed:
+		changed = False
+		for app in list(remove):
+			dependents = _installed_apps_that_require(app)
+			kept_dependents = [d for d in dependents if d in keep]
+			if kept_dependents:
+				remove.discard(app)
+				skipped.append({"app": app, "kept_because_required_by": kept_dependents})
+				changed = True
+				continue
+			hard = [d for d in dependents if d not in keep and d not in remove and d not in protected]
+			if hard:
+				blocked.append({"app": app, "blocked_by_installed": hard})
+
+	return sorted(remove), skipped, blocked
+
+
+def get_apps_to_uninstall_for_activity(company_activity: str | None) -> list[str]:
+	keep = get_apps_to_keep_for_activity(company_activity)
+	remove, _skipped, _blocked = _resolve_remove_list(keep)
+	return remove
 
 
 def _uninstall_order(remove: set[str]) -> list[str]:
@@ -131,29 +168,26 @@ def get_activity_scope_plan(company_activity: str) -> dict:
 	if activity not in COMPANY_ACTIVITY_ALLOWED:
 		frappe.throw(frappe._("Unknown business activity: {0}").format(company_activity))
 
-	keep = sorted(get_apps_to_keep_for_activity(activity))
-	remove = get_apps_to_uninstall_for_activity(activity)
+	keep_set = get_apps_to_keep_for_activity(activity)
+	keep = sorted(keep_set)
+	remove, skipped, blocked = _resolve_remove_list(keep_set)
 	order = _uninstall_order(set(remove))
-	blocked: list[dict] = []
-	from omnexa_core.omnexa_core.marketplace import _installed_apps_that_require, _uninstall_protected_apps
-
-	protected = _uninstall_protected_apps()
-	for app in remove:
-		deps = _installed_apps_that_require(app)
-		outside = [d for d in deps if d not in remove and d not in protected]
-		if outside:
-			blocked.append({"app": app, "blocked_by_installed": outside})
+	current = get_user_company_activity()
+	activity_changed = activity != current
 
 	return {
 		"company_activity": activity,
-		"current_company_activity": get_user_company_activity(),
+		"current_company_activity": current,
+		"activity_changed": activity_changed,
 		"allowed_activity_labels": sorted(_allowed_labels_for_company(activity)),
 		"mandatory_apps": sorted(MANDATORY_INFRA_APPS | _PLATFORM_APP_SLUGS),
 		"apps_to_keep": keep,
 		"apps_to_remove": remove,
+		"apps_skipped_dependency": skipped,
 		"uninstall_order": order,
 		"blocked": blocked,
-		"can_apply": not blocked and bool(remove or activity != get_user_company_activity()),
+		"can_apply": not blocked and bool(remove or activity_changed),
+		"already_scoped": not blocked and not remove and not activity_changed,
 		"warning": frappe._(
 			"This uninstalls every app that does not match the selected business activity. "
 			"Platform apps (Accounting, HR, Core, Theme, Backup, etc.) stay installed. "
@@ -174,6 +208,12 @@ def apply_activity_scope(company_activity: str, confirm: int = 0) -> dict:
 			frappe._("Cannot apply scope — some apps have dependencies outside the removal list."),
 			title=frappe._("Activity scope blocked"),
 		)
+	if plan.get("already_scoped"):
+		return {
+			"applied": False,
+			"message": "already_scoped",
+			"company_activity": plan["company_activity"],
+		}
 
 	from omnexa_core.omnexa_core.marketplace import _is_truthy, _restore_frappe_session_user
 	from omnexa_core.omnexa_core.omnexa_license import clear_license_key, clear_trial_for_app, set_manual_revoke
