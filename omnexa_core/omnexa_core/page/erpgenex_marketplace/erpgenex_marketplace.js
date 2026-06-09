@@ -53,6 +53,28 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	const $container = $(`
 		<div class="erpgenex-marketplace">
 			<div class="mb-2" data-section="update-banner"></div>
+			<div class="card mb-3 d-none" data-section="activity-scope">
+				<div class="card-body py-2">
+					<div class="row g-2 align-items-end">
+						<div class="col-lg-5">
+							<label class="form-label small mb-1">${__("Site business activity")}</label>
+							<select class="form-select form-select-sm" data-scope-activity></select>
+							<div class="form-text">${__(
+								"Keeps platform apps (Core, Accounting, Theme, Backup, HR…) plus apps matching this activity. Removes other verticals from this site."
+							)}</div>
+						</div>
+						<div class="col-lg-4 d-flex flex-wrap gap-2">
+							<button type="button" class="btn btn-sm btn-outline-primary" data-action="scope-preview">${__(
+								"Preview changes"
+							)}</button>
+							<button type="button" class="btn btn-sm btn-danger" data-action="scope-apply">${__(
+								"Apply activity scope"
+							)}</button>
+						</div>
+						<div class="col-lg-3 small text-muted" data-scope-summary></div>
+					</div>
+				</div>
+			</div>
 			<div class="mb-3 text-muted" data-section="meta"></div>
 			<div class="row g-2 mb-2" data-section="filters">
 				<div class="col-md-5">
@@ -109,6 +131,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	let sortColumn = "title";
 	let sortDir = "asc";
 	let catalogAutoRefreshTimer = null;
+	let lastScopePlan = null;
 
 	/** Paid marketplace row (server: not in FREE_APPS — includes erpgenex_* verticals). */
 	function isPaidCatalogItem(item) {
@@ -507,6 +530,127 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		}
 	}
 
+	async function initActivityScopePanel(payload) {
+		const $panel = $container.find('[data-section="activity-scope"]');
+		if (!payload.activity_scope_enabled || !frappe.user.has_role("System Manager")) {
+			$panel.addClass("d-none");
+			return;
+		}
+		$panel.removeClass("d-none");
+		const optResp = await frappe.call({
+			method: "omnexa_core.omnexa_core.marketplace.get_activity_scope_options",
+		});
+		const opt = (optResp && optResp.message) || {};
+		const activities = opt.activities || [];
+		const current = opt.current_company_activity || payload.company_activity || "General";
+		const $sel = $panel.find("[data-scope-activity]");
+		$sel.empty();
+		activities.forEach((a) => {
+			$sel.append(
+				`<option value="${frappe.utils.escape_html(a)}">${frappe.utils.escape_html(a)}</option>`
+			);
+		});
+		if (activities.includes(current)) {
+			$sel.val(current);
+		}
+		$panel.find("[data-scope-summary]").text(
+			`${__("Company activity now")}: ${frappe.utils.escape_html(current)}`
+		);
+	}
+
+	async function fetchScopePlan(activity) {
+		const r = await frappe.call({
+			method: "omnexa_core.omnexa_core.marketplace.get_activity_scope_plan",
+			args: { company_activity: activity },
+		});
+		lastScopePlan = (r && r.message) || {};
+		return lastScopePlan;
+	}
+
+	async function onScopePreview() {
+		const activity = $container.find("[data-scope-activity]").val();
+		const plan = await fetchScopePlan(activity);
+		const keep = (plan.apps_to_keep || []).join(", ") || "—";
+		const remove = (plan.apps_to_remove || []).join(", ") || __("(none)");
+		frappe.msgprint({
+			title: __("Activity scope preview"),
+			indicator: plan.can_apply ? "blue" : "orange",
+			message:
+				`<b>${__("Activity")}:</b> ${frappe.utils.escape_html(plan.company_activity || activity)}<br>` +
+				`<b>${__("Keep")} (${(plan.apps_to_keep || []).length}):</b><br>` +
+				`<span class="small font-monospace">${frappe.utils.escape_html(keep)}</span><br><br>` +
+				`<b>${__("Remove from site")} (${(plan.apps_to_remove || []).length}):</b><br>` +
+				`<span class="small font-monospace text-danger">${frappe.utils.escape_html(remove)}</span>` +
+				(plan.blocked && plan.blocked.length
+					? `<p class="text-danger mt-2">${__("Blocked by dependencies")}: ${frappe.utils.escape_html(
+							JSON.stringify(plan.blocked)
+					  )}</p>`
+					: "") +
+				`<p class="text-muted small mt-2">${frappe.utils.escape_html(plan.warning || "")}</p>`,
+		});
+	}
+
+	async function onScopeApply() {
+		const activity = $container.find("[data-scope-activity]").val();
+		const plan = await fetchScopePlan(activity);
+		if (!plan.can_apply) {
+			frappe.msgprint(
+				__(
+					"Nothing to apply or uninstall is blocked by app dependencies. Use Preview to see details."
+				)
+			);
+			return;
+		}
+		const remove = plan.apps_to_remove || [];
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				`<b>${__("Apply site activity scope?")}</b><br><br>` +
+					`<b>${__("Activity")}:</b> ${frappe.utils.escape_html(activity)}<br>` +
+					`<b>${__("Apps to uninstall")}:</b> ${remove.length}<br>` +
+					`<span class="text-danger small">${frappe.utils.escape_html(plan.warning || "")}</span>`,
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) {
+			return;
+		}
+		const stopTick = startMarketplaceProgress(
+			__("Applying activity scope"),
+			__("Backup (if enabled), then uninstalling out-of-scope apps — may take several minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.apply_activity_site_scope",
+				args: { company_activity: activity, confirm: 1 },
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		await completeMarketplaceProgress(__("Applying activity scope"));
+		const result = (r && r.message) || {};
+		if (result.applied) {
+			const failed = result.failed || [];
+			frappe.show_alert({
+				message: __("Activity scope applied — removed {0} app(s)", [(result.uninstalled || []).length]),
+				indicator: failed.length ? "orange" : "green",
+			});
+			if (failed.length) {
+				frappe.msgprint({
+					title: __("Some uninstalls failed"),
+					indicator: "red",
+					message: `<pre class="small">${frappe.utils.escape_html(JSON.stringify(failed, null, 2))}</pre>`,
+				});
+			}
+			await loadCatalog();
+		}
+	}
+
 	async function loadCatalog() {
 		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_marketplace_catalog", {
 			with_git_meta: 0,
@@ -517,6 +661,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		lastTrialDays = Number(payload.trial_days) > 0 ? Number(payload.trial_days) : 7;
 		renderUpdateBanner(items);
 		scheduleCatalogAutoRefresh(payload.catalog_auto_refresh_ms);
+		await initActivityScopePanel(payload);
 		updateActivityFilterOptions(items);
 		const gh = frappe.utils.escape_html(payload.github_base || "https://github.com/ErpGenex");
 		const helpHtml = payload.license_help_html || "";
@@ -1003,6 +1148,12 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	});
 	$container.on("click", '[data-action="uninstall"]', async function () {
 		await onUninstall($(this).data("app"));
+	});
+	$container.on("click", '[data-action="scope-preview"]', async function () {
+		await onScopePreview();
+	});
+	$container.on("click", '[data-action="scope-apply"]', async function () {
+		await onScopeApply();
 	});
 	$container.on("click", '[data-action="hide-desk"]', async function () {
 		await onToggleDeskVisibility($(this).data("app"), true);

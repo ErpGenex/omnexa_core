@@ -796,6 +796,33 @@ def _install_app_if_needed(
 
 
 @frappe.whitelist()
+def get_activity_scope_options():
+	"""Business activities available for site scoping (System Manager)."""
+	frappe.only_for("System Manager")
+	from omnexa_core.omnexa_core.activity_scope import list_company_activities
+	from omnexa_core.omnexa_core.app_visibility import get_user_company_activity
+
+	return {
+		"activities": list_company_activities(),
+		"current_company_activity": get_user_company_activity(),
+	}
+
+
+@frappe.whitelist()
+def get_activity_scope_plan(company_activity: str):
+	from omnexa_core.omnexa_core.activity_scope import get_activity_scope_plan as _plan
+
+	return _plan(company_activity)
+
+
+@frappe.whitelist()
+def apply_activity_site_scope(company_activity: str, confirm: int = 0):
+	from omnexa_core.omnexa_core.activity_scope import apply_activity_scope
+
+	return apply_activity_scope(company_activity, confirm=int(confirm or 0))
+
+
+@frappe.whitelist()
 def get_marketplace_catalog(with_git_meta: int = 0):
 	"""Return catalog for desk marketplace page."""
 	items = []
@@ -859,6 +886,8 @@ def get_marketplace_catalog(with_git_meta: int = 0):
 		"catalog_auto_refresh_ms": refresh_ms,
 		"update_check_ttl_seconds": _marketplace_git_cache_ttl(),
 		"company_activity": company_activity,
+		"activity_scope_enabled": frappe.session.user == "Administrator"
+		or "System Manager" in frappe.get_roles(),
 		"items": items,
 	}
 
