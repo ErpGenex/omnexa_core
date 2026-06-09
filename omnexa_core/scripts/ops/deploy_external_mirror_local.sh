@@ -2,10 +2,12 @@
 # Mirror local ErpGenEx bench on an external server (pull all apps + migrate + post-hooks).
 #
 # Run ON THE EXTERNAL SERVER (any path — finds bench root automatically):
-#   SITE=erpgenex.local.tow bash apps/omnexa_core/omnexa_core/scripts/ops/deploy_external_mirror_local.sh
+#   SITE=erpgenex.local.kml bash apps/omnexa_core/omnexa_core/scripts/ops/deploy_external_mirror_local.sh
+#
+# Site names: local dev = erpgenex.local.site · external server = erpgenex.local.kml
 #
 # Or from bench root:
-#   SITE=erpgenex.local.tow bash scripts/ops/deploy_external_mirror_local.sh
+#   SITE=erpgenex.local.kml bash scripts/ops/deploy_external_mirror_local.sh
 #
 # Options:
 #   SKIP_PULL=1     — skip bench update (already pulled)
@@ -35,7 +37,7 @@ if [[ -z "$BENCH_ROOT" ]]; then
 fi
 cd "$BENCH_ROOT"
 
-SITE="${SITE:-erpgenex.local.tow}"
+SITE="${SITE:-erpgenex.local.kml}"
 
 if [[ ! -d "sites/$SITE" ]]; then
 	echo "ERROR: sites/$SITE not found. Available sites:"
@@ -79,7 +81,13 @@ if grep -qx 'omnexa_core' sites/apps.txt 2>/dev/null; then
 	bench --site "$SITE" execute omnexa_core.omnexa_core.workspace_site_sync.run_full_workspace_sync 2>/dev/null \
 		|| bench --site "$SITE" execute omnexa_core.install.run_workspace_desk_sync 2>/dev/null \
 		|| true
+	bench --site "$SITE" execute omnexa_core.omnexa_core.session_guard.purge_corrupt_sessions_now 2>/dev/null || true
 	bench build --app omnexa_core
+fi
+
+if grep -qx 'omnexa_healthcare' sites/apps.txt 2>/dev/null; then
+	bench --site "$SITE" execute omnexa_healthcare.workspace.healthcare_workspace.sync_healthcare_workspace_menu 2>/dev/null || true
+	bench build --app omnexa_healthcare
 fi
 
 if [[ "${FORCE_REPORT_EXECUTE:-0}" == "1" ]]; then
