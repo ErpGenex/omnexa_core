@@ -1,0 +1,73 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "creation": "2026-06-09 12:00:00",
+  "custom": 1,
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "visibility_section",
+    "filter_desk_by_company_activity",
+    "activity_filter_exempt_roles",
+    "desk_hidden_apps",
+    "visibility_help"
+  ],
+  "fields": [
+    {
+      "fieldname": "visibility_section",
+      "fieldtype": "Section Break",
+      "label": "App Visibility"
+    },
+    {
+      "default": "1",
+      "description": "When enabled, users only see vertical apps that match their default Company business activity (plus platform apps like Accounting).",
+      "fieldname": "filter_desk_by_company_activity",
+      "fieldtype": "Check",
+      "label": "Filter Desk Apps by Company Activity"
+    },
+    {
+      "default": "System Manager",
+      "description": "Comma-separated roles that always see all installed apps on Desk (for administration).",
+      "fieldname": "activity_filter_exempt_roles",
+      "fieldtype": "Small Text",
+      "label": "Activity Filter Exempt Roles"
+    },
+    {
+      "description": "JSON array of app slugs manually hidden from the Desk apps launcher. Managed from ErpGenEx Marketplace.",
+      "fieldname": "desk_hidden_apps",
+      "fieldtype": "Code",
+      "label": "Hidden Desk Apps (manual)",
+      "options": "JSON"
+    },
+    {
+      "fieldname": "visibility_help",
+      "fieldtype": "HTML",
+      "label": "Help",
+      "options": "<p class=\"text-muted\">Set <b>Business Activity</b> on each <b>Company</b>. Desk shows only matching vertical apps + platform apps (Accounting, e-Invoice, etc.). Use Marketplace to manually hide/show individual apps.</p>"
+    }
+  ],
+  "issingle": 1,
+  "links": [],
+  "modified": "2026-06-09 12:00:00",
+  "modified_by": "Administrator",
+  "module": "Omnexa Core",
+  "name": "Omnexa Marketplace Settings",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "track_changes": 1
+}

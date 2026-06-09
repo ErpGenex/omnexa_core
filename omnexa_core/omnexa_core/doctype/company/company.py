@@ -19,6 +19,22 @@ class Company(Document):
 	def after_insert(self):
 		self._ensure_head_office_branch()
 
+	def on_update(self):
+		self._clear_desk_visibility_cache_if_activity_changed()
+
+	def _clear_desk_visibility_cache_if_activity_changed(self):
+		prev = self.get_doc_before_save()
+		if not prev:
+			return
+		keys = ("business_activity", "industry_sector", "production_demo_activity")
+		if any((prev.get(k) or "") != (self.get(k) or "") for k in keys):
+			try:
+				from omnexa_core.omnexa_core.app_visibility import clear_desk_visibility_cache
+
+				clear_desk_visibility_cache()
+			except Exception:
+				pass
+
 	def on_trash(self):
 		from omnexa_core.omnexa_core.branch_access import user_can_wipe_company
 

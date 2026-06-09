@@ -15,6 +15,12 @@ import frappe
 from frappe.utils import get_app_version, get_bench_path
 from frappe.utils.backups import new_backup
 
+from omnexa_core.omnexa_core.app_activity import activity_for_app as _activity_for_app
+from omnexa_core.omnexa_core.app_visibility import (
+	app_matches_company_activity,
+	get_hidden_desk_apps,
+	get_user_company_activity,
+)
 from omnexa_core.omnexa_core.omnexa_license import (
 	TRIAL_DAYS,
 	clear_license_key,
@@ -168,56 +174,16 @@ def _catalog_seed() -> list[dict]:
 	for app_slug in _marketplace_catalog_slugs():
 		display_title, short_description = _app_display_meta(app_slug)
 		rows.append(
-		{
-			"app_slug": app_slug,
+			{
+				"app_slug": app_slug,
 				"title": display_title,
 				"short_description": short_description,
-			"price_type": "free" if is_free_app(app_slug) else "paid",
-			"icon_url": _guess_icon_path(app_slug),
-			"activity": _activity_for_app(app_slug),
-		}
+				"price_type": "free" if is_free_app(app_slug) else "paid",
+				"icon_url": _guess_icon_path(app_slug),
+				"activity": _activity_for_app(app_slug),
+			}
 		)
 	return rows
-
-
-def _activity_for_app(app_slug: str) -> str:
-	"""Resolve app activity/domain for marketplace filtering."""
-	custom = frappe.conf.get("omnexa_marketplace_activity_map") or {}
-	if isinstance(custom, dict):
-		val = custom.get(app_slug)
-		if isinstance(val, str) and val.strip():
-			return val.strip()
-
-	if app_slug.startswith("erpgenex_"):
-		return "ErpGenEx"
-	parts = [p for p in app_slug.replace("omnexa_", "").split("_") if p]
-	if not parts:
-		return "General"
-	if "finance" in parts:
-		return "Finance"
-	if "risk" in parts:
-		return "Risk"
-	if "rental" in parts or "vehicle" in parts:
-		return "Mobility"
-	if "healthcare" in parts:
-		return "Healthcare"
-	if "education" in parts:
-		return "Education"
-	if "nursery" in parts:
-		return "Education"
-	if "construction" in parts:
-		return "Construction"
-	if "agriculture" in parts:
-		return "Agriculture"
-	if "manufacturing" in parts:
-		return "Manufacturing"
-	if "trading" in parts:
-		return "Trading"
-	if "tourism" in parts:
-		return "Tourism"
-	if "restaurant" in parts:
-		return "Restaurant"
-	return parts[0].capitalize()
 
 
 def _app_updated_at(app_slug: str) -> str:
@@ -824,6 +790,8 @@ def get_marketplace_catalog(with_git_meta: int = 0):
 	use_real = _catalog_show_real_license_status()
 	_uninstall_blocked = _uninstall_protected_apps()
 	installed_set = set(frappe.get_installed_apps() or [])
+	desk_hidden = get_hidden_desk_apps()
+	company_activity = get_user_company_activity()
 	include_git_meta = _is_truthy(with_git_meta)
 	for row in _catalog_seed():
 		app = row["app_slug"]
@@ -844,6 +812,9 @@ def get_marketplace_catalog(with_git_meta: int = 0):
 				**row,
 				"is_free": is_free_app(app),
 				"is_installed": app in installed_set,
+				"desk_hidden": app in desk_hidden,
+				"matches_company_activity": app_matches_company_activity(app, company_activity),
+				"company_activity": company_activity,
 				"uninstall_allowed": app not in _uninstall_blocked,
 				"license_status": status,
 				"license_expires_on": expires_on,
@@ -874,6 +845,7 @@ def get_marketplace_catalog(with_git_meta: int = 0):
 		"license_help_html": _license_help_banner_html(bundle_mode, use_real),
 		"catalog_auto_refresh_ms": refresh_ms,
 		"update_check_ttl_seconds": _marketplace_git_cache_ttl(),
+		"company_activity": company_activity,
 		"items": items,
 	}
 
@@ -1182,16 +1154,20 @@ def uninstall_app_now(app_slug: str, confirm_uninstall: int = 0):
 
 	no_backup = _is_truthy(frappe.conf.get("omnexa_marketplace_uninstall_no_backup"))
 
+	previous_user = frappe.session.user
 	try:
+		frappe.set_user("Administrator")
 		from frappe.installer import remove_app
 
 		remove_app(app_slug, dry_run=False, yes=True, no_backup=no_backup, force=False)
-	except Exception:
+	except Exception as exc:
 		frappe.log_error(frappe.get_traceback(), "Marketplace Uninstall Failed")
 		frappe.throw(
-			frappe._("Uninstall failed. Check Error Log for details."),
+			frappe._("Uninstall failed: {0}. Check Error Log for details.").format(exc),
 			title=frappe._("Uninstall"),
 		)
+	finally:
+		frappe.set_user(previous_user)
 
 	if app_slug in (frappe.get_installed_apps() or []):
 		return {"uninstalled": False, "message": "still_installed"}

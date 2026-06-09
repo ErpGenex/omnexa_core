@@ -148,7 +148,7 @@ def get_default_branch(company: str, user: str | None = None) -> str | None:
 	return frappe.db.get_value("Branch", {"company": company}, "name")
 
 
-def enforce_branch_access(doc, user: str | None = None):
+def enforce_branch_access(doc, method=None, user: str | None = None):
 	user = user or frappe.session.user
 	if getattr(getattr(doc, "flags", None), "wizard_save", False):
 		return

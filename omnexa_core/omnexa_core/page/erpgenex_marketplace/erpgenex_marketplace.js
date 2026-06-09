@@ -264,8 +264,21 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const type = item.is_free ? __("Free") : isPaidCatalogItem(item) ? __("Paid") : __("Repo");
 		const iconUrl = frappe.utils.escape_html(item.icon_url || "/assets/frappe/images/frappe-framework-logo.svg");
 		const installState = item.is_installed ? __("Installed") : __("Not Installed");
+		const outOfScope = item.is_installed && item.matches_company_activity === false;
 		const installBadge = item.is_installed
-			? `<span class="badge bg-success-subtle text-success">${installState}</span>`
+			? `<span class="badge bg-success-subtle text-success">${installState}</span>${
+					item.desk_hidden
+						? ` <span class="badge bg-secondary-subtle text-secondary" title="${__("Hidden from Desk apps launcher")}">${__(
+								"Hidden"
+						  )}</span>`
+						: ""
+			  }${
+					outOfScope
+						? ` <span class="badge bg-warning-subtle text-warning" title="${__("Not shown on Desk — outside your company business activity")}">${__(
+								"Out of scope"
+						  )}</span>`
+						: ""
+			  }`
 			: `<span class="badge bg-warning-subtle text-warning">${installState}</span>`;
 		const gate = is_license_gate_passed(item.license_status);
 		const actions = [];
@@ -292,6 +305,17 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			actions.push(
 				`<button class="btn btn-sm btn-outline-danger me-2" data-action="uninstall" data-app="${appSlug}">${__("Uninstall")}</button>`
 			);
+		}
+		if (frappe.user.has_role("System Manager") && item.is_installed && !["frappe", "omnexa_core"].includes(item.app_slug)) {
+			if (item.desk_hidden) {
+				actions.push(
+					`<button class="btn btn-sm btn-outline-secondary me-2" data-action="show-desk" data-app="${appSlug}">${__("Show on Desk")}</button>`
+				);
+			} else {
+				actions.push(
+					`<button class="btn btn-sm btn-outline-secondary me-2" data-action="hide-desk" data-app="${appSlug}">${__("Hide from Desk")}</button>`
+				);
+			}
 		}
 		if (isPaidCatalogItem(item) && !gate) {
 			actions.push(
@@ -496,8 +520,16 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		updateActivityFilterOptions(items);
 		const gh = frappe.utils.escape_html(payload.github_base || "https://github.com/ErpGenex");
 		const helpHtml = payload.license_help_html || "";
+		const companyActivity = frappe.utils.escape_html(payload.company_activity || __("General"));
 		$container.find('[data-section="meta"]').html(
 			(helpHtml ? `<div class="mb-2">${helpHtml}</div>` : "") +
+				`<div class="alert alert-info py-2 px-3 mb-2 small">` +
+				`<b>${__("Desk apps scope")}:</b> ${__(
+					"Users see only apps for company activity"
+				)} <b>${companyActivity}</b> ${__(
+					"+ platform apps (Accounting, e-Invoice, …). Set activity on"
+				)} <a href="/app/company">${__("Company")}</a>. ` +
+				`${__("System Managers always see all apps on Desk.")}</div>` +
 				`<div class="mb-2">${__(
 					"Install and update use one GitHub organization base for every app (no GitHub login on this server)."
 				)} <code class="small">${gh}/&lt;app&gt;.git</code></div>` +
@@ -755,6 +787,28 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		await loadCatalog();
 	}
 
+	async function onToggleDeskVisibility(appSlug, hidden) {
+		const r = await frappe.call({
+			method: "omnexa_core.omnexa_core.app_visibility.set_app_desk_visibility",
+			args: { app_slug: appSlug, hidden: hidden ? 1 : 0 },
+		});
+		const result = (r && r.message) || {};
+		frappe.show_alert({
+			message: hidden
+				? __("App hidden from Desk: {0}", [appSlug])
+				: __("App shown on Desk: {0}", [appSlug]),
+			indicator: "green",
+		});
+		if (result.desk_hidden_apps) {
+			allItems.forEach((item) => {
+				item.desk_hidden = result.desk_hidden_apps.includes(item.app_slug);
+			});
+			applyFiltersAndRender();
+		} else {
+			await loadCatalog();
+		}
+	}
+
 	async function onUpdate(appSlug) {
 		const planResp = await frappe.call("omnexa_core.omnexa_core.marketplace.get_update_plan", {
 			app_slug: appSlug,
@@ -949,6 +1003,12 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	});
 	$container.on("click", '[data-action="uninstall"]', async function () {
 		await onUninstall($(this).data("app"));
+	});
+	$container.on("click", '[data-action="hide-desk"]', async function () {
+		await onToggleDeskVisibility($(this).data("app"), true);
+	});
+	$container.on("click", '[data-action="show-desk"]', async function () {
+		await onToggleDeskVisibility($(this).data("app"), false);
 	});
 	$container.on("click", '[data-action="activate"]', function () {
 		onActivate($(this).data("app"));

@@ -243,6 +243,7 @@ scheduler_events = {
 override_whitelisted_methods = {
 	"frappe.desk.query_report.run": "omnexa_core.omnexa_core.report_link_titles.query_report_run_with_link_titles",
 	"frappe.desk.search.get_link_title": "omnexa_core.omnexa_core.link_titles.get_link_title",
+	"frappe.apps.get_apps": "omnexa_core.omnexa_core.app_visibility.get_apps",
 	# Some deployments ship with `frappe.sessions.get` not registered as whitelisted.
 	# Desk relies on it for boot; we route it to an Omnexa-managed endpoint.
 	"frappe.sessions.get": "omnexa_core.session_boot.sessions_get",
