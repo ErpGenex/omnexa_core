@@ -135,6 +135,39 @@ class Branch(Document):
 		)
 		return result
 
+	def _healthcare_demo_kwargs(self) -> dict:
+		return {
+			"patients": cint(self.get("branch_demo_healthcare_patients")) or 20,
+			"include_financial": cint(self.get("branch_demo_healthcare_financial") or 1),
+			"force": cint(self.get("branch_demo_healthcare_force") or 0),
+		}
+
+	@frappe.whitelist()
+	def branch_demo_action_healthcare_hospital(self):
+		result = self._run_branch_demo("healthcare_hospital", **self._healthcare_demo_kwargs()) or {}
+		message = result.get("message")
+		if message == "already_seeded":
+			frappe.msgprint(
+				result.get("hint") or _("Healthcare demo already exists for this branch."),
+				title=_("Healthcare demo"),
+				indicator="blue",
+			)
+			return result
+
+		patients = result.get("patients") or 0
+		web_url = result.get("web_booking_url") or ""
+		published = result.get("published_services") or 0
+		web_bookings = result.get("web_bookings") or 0
+		msg = _("Healthcare hospital demo seeded: {0} patients, {1} web services, {2} online bookings.").format(
+			patients,
+			published,
+			web_bookings,
+		)
+		if web_url:
+			msg += "<br>" + _("Online booking: {0}").format(web_url)
+		frappe.msgprint(msg, title=_("Healthcare demo"), indicator="green")
+		return result
+
 	@frappe.whitelist()
 	def branch_demo_action_reset_dry(self):
 		result = self._run_branch_demo("reset_dry")

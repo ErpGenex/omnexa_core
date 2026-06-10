@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import frappe
 from frappe import _
+from frappe.utils import cint
 
 
 def _assert_system_manager() -> None:
@@ -54,6 +55,19 @@ def run_demo_action_for_branch(branch_doc, action_key: str, **kwargs) -> dict:
 			with_rfid=1,
 		)
 
+	if key == "healthcare_hospital":
+		from omnexa_healthcare.utils.branch_demo_seed import seed_healthcare_hospital_demo
+
+		return seed_healthcare_hospital_demo(
+			company=company,
+			branch=branch,
+			patients=kwargs.get("patients", cint(branch_doc.get("branch_demo_healthcare_patients")) or 20),
+			force=kwargs.get("force", cint(branch_doc.get("branch_demo_healthcare_force"))),
+			include_financial=kwargs.get(
+				"include_financial", cint(branch_doc.get("branch_demo_healthcare_financial") or 1)
+			),
+		)
+
 	if key == "reset_dry":
 		from omnexa_accounting.utils.production_readiness import reset_transactions
 
@@ -96,4 +110,17 @@ def wipe_branch_all_data(company: str, branch: str, confirm_text: str | None = N
 
 		construction = reset_construction_demo_for_branch(company=company, branch=branch, dry_run=0)
 
-	return {"ok": True, "company": company, "branch": branch, "transactions": tx, "construction": construction}
+	healthcare = None
+	if "omnexa_healthcare" in (frappe.get_installed_apps() or []):
+		from omnexa_healthcare.utils.branch_demo_seed import reset_healthcare_demo_for_branch
+
+		healthcare = reset_healthcare_demo_for_branch(company=company, branch=branch, dry_run=0)
+
+	return {
+		"ok": True,
+		"company": company,
+		"branch": branch,
+		"transactions": tx,
+		"construction": construction,
+		"healthcare": healthcare,
+	}
