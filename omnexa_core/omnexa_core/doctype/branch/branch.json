@@ -860,39 +860,39 @@
 			"primary": 1
 		},
 		{
-			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && doc.branch_demo_activity=='Healthcare'",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Healthcare' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_healthcare')>=0))",
 			"fieldname": "branch_demo_group_healthcare_label",
 			"fieldtype": "HTML",
 			"label": "Healthcare demo",
-			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>ديمو المستشفى — Healthcare</b></div>"
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>ديمو العيادات والمستشفى — Healthcare</b><br><span class=\"text-muted\">يظهر تلقائياً عند تثبيت تطبيق omnexa_healthcare</span></div>"
 		},
 		{
 			"default": "20",
-			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && doc.branch_demo_activity=='Healthcare'",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Healthcare' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_healthcare')>=0))",
 			"fieldname": "branch_demo_healthcare_patients",
 			"fieldtype": "Int",
 			"label": "Healthcare demo patients"
 		},
 		{
 			"default": "1",
-			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && doc.branch_demo_activity=='Healthcare'",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Healthcare' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_healthcare')>=0))",
 			"fieldname": "branch_demo_healthcare_financial",
 			"fieldtype": "Check",
 			"label": "Include pharmacy inventory and billing"
 		},
 		{
 			"default": "0",
-			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && doc.branch_demo_activity=='Healthcare'",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Healthcare' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_healthcare')>=0))",
 			"description": "Delete existing DEMO-HC data for this branch before seeding again.",
 			"fieldname": "branch_demo_healthcare_force",
 			"fieldtype": "Check",
 			"label": "Rebuild demo (force)"
 		},
 		{
-			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && doc.branch_demo_activity=='Healthcare'",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Healthcare' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_healthcare')>=0))",
 			"fieldname": "branch_demo_btn_healthcare_hospital",
 			"fieldtype": "Button",
-			"label": "Seed hospital demo (20 patients + web booking)",
+			"label": "ديمو العيادات المتعددة (20 مريض + حجز ويب)",
 			"options": "branch_demo_action_healthcare_hospital",
 			"primary": 1
 		},

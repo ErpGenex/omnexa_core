@@ -56,6 +56,11 @@ def run_demo_action_for_branch(branch_doc, action_key: str, **kwargs) -> dict:
 		)
 
 	if key == "healthcare_hospital":
+		if "omnexa_healthcare" not in (frappe.get_installed_apps() or []):
+			frappe.throw(
+				_("Install and migrate omnexa_healthcare on this site, then reload the Branch form."),
+				title=_("Healthcare demo"),
+			)
 		from omnexa_healthcare.utils.branch_demo_seed import seed_healthcare_hospital_demo
 
 		return seed_healthcare_hospital_demo(
