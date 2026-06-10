@@ -13,6 +13,11 @@ function omnexa_sync_company_modified(frm) {
 }
 
 frappe.ui.form.on("Company", {
+	setup(frm) {
+		frm.set_query("demo_activity_website_branch", () => ({
+			filters: { company: frm.doc.name || "" },
+		}));
+	},
 	refresh(frm) {
 		omnexa_sync_company_modified(frm);
 

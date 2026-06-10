@@ -137,6 +137,32 @@ class Company(Document):
 		return result
 
 	@frappe.whitelist()
+	def demo_action_seed_activity_website(self):
+		if "omnexa_experience" not in (frappe.get_installed_apps() or []):
+			frappe.throw(
+				_("Install and migrate omnexa_experience to seed activity website demos."),
+				title=_("Activity website demo"),
+			)
+		from omnexa_experience.omnexa_experience.activity_demo_seed import seed_company_activity_website
+
+		result = seed_company_activity_website(
+			company=self.name,
+			branch=self.get("demo_activity_website_branch"),
+			force=self.get("demo_activity_website_force"),
+			patients=self.get("demo_activity_website_patients") or 20,
+		)
+		site_url = result.get("site_url") or result.get("portal_url") or ""
+		frappe.msgprint(
+			_("Activity website demo ready for <b>{0}</b>.<br><a href=\"{1}\" target=\"_blank\">{1}</a>").format(
+				result.get("business_activity") or "",
+				site_url,
+			),
+			title=_("Activity website demo"),
+			indicator="green",
+		)
+		return result
+
+	@frappe.whitelist()
 	def demo_action_wipe_all(self, confirm_text: str | None = None):
 		from omnexa_accounting.utils.production_readiness import enqueue_wipe_company_all_data
 
