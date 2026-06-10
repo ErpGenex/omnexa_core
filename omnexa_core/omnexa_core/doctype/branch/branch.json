@@ -591,11 +591,10 @@
 		},
 		{
 			"depends_on": "eval:doc.eta_einvoice_enabled && (doc.eta_signer_mode==\"signing_agent\" || doc.eta_signer_mode==\"windows_app\")",
-			"description": "Set once here only — never asked when you Sign or Send invoices. Stored encrypted (Temp-ETR USB PIN). Re-enter and Save after changing.",
+			"description": "Set once here before your first Sign/Send. Stored encrypted (Temp-ETR USB PIN). Re-enter and Save after changing. Not required when saving Branch for other settings.",
 			"fieldname": "eta_usb_signing_pin",
 			"fieldtype": "Password",
-			"label": "USB Token PIN",
-			"reqd": 1
+			"label": "USB Token PIN"
 		},
 		{
 			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"signing_agent\"",

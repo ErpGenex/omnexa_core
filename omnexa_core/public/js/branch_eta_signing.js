@@ -40,7 +40,7 @@ frappe.ui.form.on("Branch", {
 				"eta_usb_signing_pin",
 				"description",
 				__(
-					"Required. Same as Temp-ETR USB PIN. Used for E-Invoice only (not E-Receipt). Re-enter and Save when changing."
+					"Required before Sign/Send (not when saving Branch for other changes). Same as Temp-ETR USB PIN. E-Invoice only. Re-enter and Save when changing."
 				)
 			);
 			if (!frm.is_new()) {
