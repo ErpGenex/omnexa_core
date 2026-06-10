@@ -14,27 +14,34 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				word-break: break-word;
 			}
 			.erpgenex-marketplace .table th:nth-child(1),
-			.erpgenex-marketplace .table td:nth-child(1) { width: 36px; }
+			.erpgenex-marketplace .table td:nth-child(1) { width: 28px; }
 			.erpgenex-marketplace .table th:nth-child(2),
-			.erpgenex-marketplace .table td:nth-child(2) { width: 170px; }
+			.erpgenex-marketplace .table td:nth-child(2) { width: 36px; }
 			.erpgenex-marketplace .table th:nth-child(3),
-			.erpgenex-marketplace .table td:nth-child(3) { width: 120px; }
+			.erpgenex-marketplace .table td:nth-child(3) { width: 170px; }
 			.erpgenex-marketplace .table th:nth-child(4),
-			.erpgenex-marketplace .table td:nth-child(4) { width: 96px; }
+			.erpgenex-marketplace .table td:nth-child(4) { width: 120px; }
 			.erpgenex-marketplace .table th:nth-child(5),
-			.erpgenex-marketplace .table td:nth-child(5) { width: 72px; }
+			.erpgenex-marketplace .table td:nth-child(5) { width: 96px; }
 			.erpgenex-marketplace .table th:nth-child(6),
-			.erpgenex-marketplace .table td:nth-child(6) { width: 86px; }
+			.erpgenex-marketplace .table td:nth-child(6) { width: 72px; }
 			.erpgenex-marketplace .table th:nth-child(7),
-			.erpgenex-marketplace .table td:nth-child(7) { width: 56px; }
+			.erpgenex-marketplace .table td:nth-child(7) { width: 86px; }
 			.erpgenex-marketplace .table th:nth-child(8),
-			.erpgenex-marketplace .table td:nth-child(8) { width: 68px; }
+			.erpgenex-marketplace .table td:nth-child(8) { width: 56px; }
 			.erpgenex-marketplace .table th:nth-child(9),
-			.erpgenex-marketplace .table td:nth-child(9) { width: 120px; }
+			.erpgenex-marketplace .table td:nth-child(9) { width: 68px; }
 			.erpgenex-marketplace .table th:nth-child(10),
-			.erpgenex-marketplace .table td:nth-child(10) { width: 62px; }
+			.erpgenex-marketplace .table td:nth-child(10) { width: 120px; }
 			.erpgenex-marketplace .table th:nth-child(11),
-			.erpgenex-marketplace .table td:nth-child(11) { width: 106px; }
+			.erpgenex-marketplace .table td:nth-child(11) { width: 62px; }
+			.erpgenex-marketplace .table th:nth-child(12),
+			.erpgenex-marketplace .table td:nth-child(12) { width: 106px; }
+			.erpgenex-marketplace [data-section="bulk-bar"] {
+				border: 1px solid var(--border-color, #dee2e6);
+				border-radius: 6px;
+				background: var(--fg-color, #fff);
+			}
 			.erpgenex-marketplace .btn.btn-sm {
 				padding: 0.12rem 0.35rem;
 				font-size: 11px;
@@ -92,6 +99,13 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 					<button class="btn btn-sm btn-light w-100" data-action="reset-filters">${__("Reset")}</button>
 				</div>
 			</div>
+			<div class="d-none mb-2 p-2 d-flex flex-wrap align-items-center gap-2" data-section="bulk-bar">
+				<span class="small fw-bold" data-bulk-count></span>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="bulk-select-visible">${__("Select visible uninstallable")}</button>
+				<button type="button" class="btn btn-sm btn-light" data-action="bulk-clear">${__("Clear selection")}</button>
+				<button type="button" class="btn btn-sm btn-outline-primary" data-action="bulk-preview">${__("Preview uninstall")}</button>
+				<button type="button" class="btn btn-sm btn-danger" data-action="bulk-uninstall">${__("Uninstall selected")}</button>
+			</div>
 			<div class="mb-2 small text-muted" data-section="sort-hint">${__("Sort: click a column title (toggle ascending / descending).")}</div>
 			<div class="row g-2 mb-3" data-section="filters-dates">
 				<div class="col-md-3">
@@ -105,6 +119,9 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				<table class="table table-sm table-hover">
 					<thead>
 						<tr>
+							<th class="text-center" title="${__("Select for bulk uninstall")}">
+								<input type="checkbox" class="form-check-input m-0" data-action="bulk-select-all" aria-label="${__("Select all visible")}">
+							</th>
 							<th>${__("Icon")}</th>
 							<th class="marketplace-sort-th user-select-none" data-sort-col="title" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("App")}<span class="sort-indicator text-primary"></span></th>
 							<th class="marketplace-sort-th user-select-none" data-sort-col="description" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Description")}<span class="sort-indicator text-primary"></span></th>
@@ -119,19 +136,25 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 						</tr>
 					</thead>
 					<tbody data-section="rows">
-						<tr><td colspan="11" class="text-muted">${__("Loading...")}</td></tr>
+						<tr><td colspan="12" class="text-muted">${__("Loading...")}</td></tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
 	`);
 	$(page.body).append($container);
+	if (!frappe.user.has_role("System Manager")) {
+		$container.find('[data-action="bulk-select-all"]').closest("th").addClass("d-none");
+		$container.find('[data-section="bulk-bar"]').remove();
+	}
 	let allItems = [];
 	let lastTrialDays = 7;
 	let sortColumn = "title";
 	let sortDir = "asc";
 	let catalogAutoRefreshTimer = null;
 	let lastScopePlan = null;
+	const selectedSlugs = new Set();
+	const bulkUninstallEnabled = frappe.user.has_role("System Manager");
 
 	/** Paid marketplace row (server: not in FREE_APPS — includes erpgenex_* verticals). */
 	function isPaidCatalogItem(item) {
@@ -267,10 +290,45 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		});
 	}
 
+	function canBulkSelect(item) {
+		return bulkUninstallEnabled && item.is_installed && item.uninstall_allowed !== false;
+	}
+
+	function updateBulkBar() {
+		const $bar = $container.find('[data-section="bulk-bar"]');
+		if (!bulkUninstallEnabled) {
+			$bar.addClass("d-none");
+			return;
+		}
+		const n = selectedSlugs.size;
+		if (!n) {
+			$bar.addClass("d-none");
+			$bar.find("[data-bulk-count]").text("");
+			return;
+		}
+		$bar.removeClass("d-none");
+		$bar.find("[data-bulk-count]").text(__("{0} app(s) selected", [String(n)]));
+	}
+
+	function syncBulkSelectAllCheckbox(visibleRows) {
+		const selectable = (visibleRows || []).filter(canBulkSelect);
+		const allSelected =
+			selectable.length > 0 && selectable.every((item) => selectedSlugs.has(String(item.app_slug || "")));
+		$container.find('[data-action="bulk-select-all"]').prop("checked", allSelected);
+	}
+
 	function renderRow(item) {
 		const status = frappe.utils.escape_html(item.license_status || "");
 		const title = frappe.utils.escape_html(item.title || item.app_slug);
 		const appSlug = frappe.utils.escape_html(item.app_slug);
+		const slugRaw = String(item.app_slug || "");
+		const bulkChecked = selectedSlugs.has(slugRaw) ? "checked" : "";
+		const bulkCell = canBulkSelect(item)
+			? `<input type="checkbox" class="form-check-input m-0" data-action="bulk-row-select" data-app="${appSlug}" ${bulkChecked} aria-label="${__(
+					"Select {0}",
+					[title]
+			  )}">`
+			: "";
 		const shortDesc = frappe.utils.escape_html(item.short_description || "");
 		const activity = frappe.utils.escape_html(item.activity || "General");
 		let versionHtml = frappe.utils.escape_html(item.current_version || "N/A");
@@ -352,6 +410,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		}
 		return `
 			<tr data-app="${appSlug}">
+				<td class="text-center">${bulkCell}</td>
 				<td><img src="${iconUrl}" style="width:24px;height:24px;object-fit:contain;" alt="${title}"/></td>
 				<td><strong>${title}</strong><div class="text-muted small font-monospace">${appSlug}</div></td>
 				<td class="small text-muted" style="max-width:22rem;">${shortDesc || "—"}</td>
@@ -497,12 +556,16 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const rows = sortFilteredRows(filtered);
 
 		if (!rows.length) {
-			$container.find('[data-section="rows"]').html(`<tr><td colspan="11" class="text-muted">${__("No apps match current filters.")}</td></tr>`);
+			$container.find('[data-section="rows"]').html(`<tr><td colspan="12" class="text-muted">${__("No apps match current filters.")}</td></tr>`);
 			updateSortColumnIndicators();
+			syncBulkSelectAllCheckbox([]);
+			updateBulkBar();
 			return;
 		}
 		$container.find('[data-section="rows"]').html(rows.map(renderRow).join(""));
 		updateSortColumnIndicators();
+		syncBulkSelectAllCheckbox(rows);
+		updateBulkBar();
 	}
 
 	function mergeItemsBySlug(baseItems, freshItems) {
@@ -712,7 +775,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				`${frappe.utils.escape_html(payload.support_email || "info@erpgenex.com")}</div>`
 		);
 		if (!items.length) {
-			$container.find('[data-section="rows"]').html(`<tr><td colspan="11" class="text-muted">${__("No apps found.")}</td></tr>`);
+			$container.find('[data-section="rows"]').html(`<tr><td colspan="12" class="text-muted">${__("No apps found.")}</td></tr>`);
 			updateSortColumnIndicators();
 			refreshUpdateStatusInBackground();
 			return;
@@ -886,6 +949,151 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			});
 		} else {
 			frappe.msgprint(__("Install status: {0}", [result.message || "unknown"]));
+		}
+		await loadCatalog();
+	}
+
+	function getFilteredRows() {
+		const q = String($container.find('[data-filter="search"]').val() || "").trim().toLowerCase();
+		const activity = String($container.find('[data-filter="activity"]').val() || "").trim();
+		const version = String($container.find('[data-filter="version"]').val() || "").trim().toLowerCase();
+		const from = String($container.find('[data-filter="updated_from"]').val() || "").trim();
+		const to = String($container.find('[data-filter="updated_to"]').val() || "").trim();
+		return (allItems || []).filter((item) => {
+			const haystack = `${item.title || ""} ${item.app_slug || ""} ${item.short_description || ""} ${item.current_version || ""}`.toLowerCase();
+			if (q && !haystack.includes(q)) return false;
+			if (activity && String(item.activity || "General").trim() !== activity) return false;
+			if (version && !String(item.current_version || "").toLowerCase().includes(version)) return false;
+			const day = item.updated_at ? String(item.updated_at).slice(0, 10) : "";
+			if (from && (!day || day < from)) return false;
+			if (to && (!day || day > to)) return false;
+			return true;
+		});
+	}
+
+	function getSelectedSlugsList() {
+		return Array.from(selectedSlugs);
+	}
+
+	async function fetchBulkUninstallPlan() {
+		const slugs = getSelectedSlugsList();
+		if (!slugs.length) {
+			frappe.msgprint(__("Select at least one installed app to uninstall."));
+			return null;
+		}
+		const r = await frappe.call({
+			method: "omnexa_core.omnexa_core.marketplace.get_bulk_uninstall_plan",
+			args: { app_slugs: JSON.stringify(slugs) },
+		});
+		return (r && r.message) || null;
+	}
+
+	function bulkPlanSummaryHtml(plan) {
+		const order = (plan.uninstall_order || []).join(", ") || "—";
+		const blocked = plan.blocked || [];
+		const protectedRows = plan.protected || [];
+		const notInstalled = plan.not_installed || [];
+		let extra = "";
+		if (protectedRows.length) {
+			extra += `<p class="text-muted small"><b>${__("Protected (skipped)")}:</b> ${frappe.utils.escape_html(
+				protectedRows.map((x) => x.app).join(", ")
+			)}</p>`;
+		}
+		if (notInstalled.length) {
+			extra += `<p class="text-muted small"><b>${__("Not installed (skipped)")}:</b> ${frappe.utils.escape_html(
+				notInstalled.join(", ")
+			)}</p>`;
+		}
+		if (blocked.length) {
+			extra += `<p class="text-warning small"><b>${__("Blocked by dependencies")}:</b><br><pre class="small mb-0">${frappe.utils.escape_html(
+				JSON.stringify(blocked, null, 2)
+			)}</pre></p>`;
+		}
+		return (
+			`<b>${__("Will uninstall")} (${(plan.uninstall_order || []).length}):</b><br>` +
+			`<span class="small font-monospace">${frappe.utils.escape_html(order)}</span>` +
+			extra +
+			`<p class="text-muted small mt-2">${frappe.utils.escape_html(plan.warning || "")}</p>`
+		);
+	}
+
+	async function onBulkPreview() {
+		const plan = await fetchBulkUninstallPlan();
+		if (!plan) return;
+		frappe.msgprint({
+			title: __("Bulk uninstall preview"),
+			indicator: plan.can_uninstall ? "blue" : "orange",
+			message: bulkPlanSummaryHtml(plan),
+		});
+	}
+
+	async function onBulkUninstall() {
+		const plan = await fetchBulkUninstallPlan();
+		if (!plan) return;
+		if (!plan.can_uninstall) {
+			frappe.msgprint({
+				title: __("Cannot uninstall selection"),
+				indicator: "orange",
+				message: bulkPlanSummaryHtml(plan),
+			});
+			return;
+		}
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				`<b>${__("Remove {0} app(s) from this site?", [(plan.uninstall_order || []).length])}</b><br><br>` +
+					bulkPlanSummaryHtml(plan) +
+					`<span class="text-danger">${__("This deletes DocTypes and data for each app on this site.")}</span>`,
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) return;
+		const stopTick = startMarketplaceProgress(
+			__("Bulk uninstall"),
+			__("Backup (if enabled), then removing apps one by one — may take several minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.bulk_uninstall_apps_now",
+				args: {
+					app_slugs: JSON.stringify(getSelectedSlugsList()),
+					confirm_uninstall: 1,
+				},
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		await completeMarketplaceProgress(__("Bulk uninstall"));
+		const result = (r && r.message) || {};
+		const done = result.apps_uninstalled || [];
+		const failed = result.failed || [];
+		selectedSlugs.clear();
+		updateBulkBar();
+		if (done.length) {
+			frappe.show_alert({
+				message: __("Uninstalled {0} app(s) from site", [done.length]),
+				indicator: failed.length ? "orange" : "green",
+			});
+		}
+		if (failed.length) {
+			frappe.msgprint({
+				title: __("Some uninstalls failed"),
+				indicator: "red",
+				message: `<pre class="small">${frappe.utils.escape_html(JSON.stringify(failed, null, 2))}</pre>`,
+			});
+		} else if (done.length) {
+			frappe.msgprint({
+				title: __("Bulk uninstall completed"),
+				indicator: "green",
+				message: `<span class="font-monospace small">${frappe.utils.escape_html(done.join(", "))}</span>`,
+			});
+		} else {
+			frappe.msgprint(__("Bulk uninstall status: {0}", [result.message || "unknown"]));
 		}
 		await loadCatalog();
 	}
@@ -1177,6 +1385,47 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	});
 	$container.on("click", '[data-action="uninstall"]', async function () {
 		await onUninstall($(this).data("app"));
+	});
+	$container.on("change", '[data-action="bulk-row-select"]', function () {
+		const slug = String($(this).data("app") || "");
+		if (!slug) return;
+		if (this.checked) {
+			selectedSlugs.add(slug);
+		} else {
+			selectedSlugs.delete(slug);
+		}
+		syncBulkSelectAllCheckbox(getFilteredRows());
+		updateBulkBar();
+	});
+	$container.on("change", '[data-action="bulk-select-all"]', function () {
+		const checked = this.checked;
+		getFilteredRows()
+			.filter(canBulkSelect)
+			.forEach((item) => {
+				const slug = String(item.app_slug || "");
+				if (checked) {
+					selectedSlugs.add(slug);
+				} else {
+					selectedSlugs.delete(slug);
+				}
+			});
+		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="bulk-select-visible"]', function () {
+		getFilteredRows()
+			.filter(canBulkSelect)
+			.forEach((item) => selectedSlugs.add(String(item.app_slug || "")));
+		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="bulk-clear"]', function () {
+		selectedSlugs.clear();
+		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="bulk-preview"]', async function () {
+		await onBulkPreview();
+	});
+	$container.on("click", '[data-action="bulk-uninstall"]', async function () {
+		await onBulkUninstall();
 	});
 	$container.on("click", '[data-action="scope-preview"]', async function () {
 		await onScopePreview();

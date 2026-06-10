@@ -2796,8 +2796,25 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 			number_card_ids.append(nm)
 			number_card_labels.append(label)
 
-	# Construction: omnexa_construction owns links, shortcuts, and EditorJS card layout.
-	if (ws.name or "") == "Construction" and _app_installed("omnexa_construction"):
+	# App-owned workspaces: vertical apps own sidebar links/shortcuts/content (core applies KPIs only).
+	_ws_name = (ws.name or "").strip()
+	if _ws_name == "Construction" and _app_installed("omnexa_construction"):
+		ws.charts = []
+		for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
+			ws.append("charts", {"chart_name": ch, "label": row_label})
+		ws.number_cards = []
+		for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
+			ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
+		return
+	if _ws_name == "Healthcare" and _app_installed("omnexa_healthcare"):
+		ws.charts = []
+		for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
+			ws.append("charts", {"chart_name": ch, "label": row_label})
+		ws.number_cards = []
+		for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
+			ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
+		return
+	if _ws_name == "Education" and _app_installed("omnexa_education"):
 		ws.charts = []
 		for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
 			ws.append("charts", {"chart_name": ch, "label": row_label})
@@ -3059,8 +3076,8 @@ def sync_workspace_for_app(app_name: str) -> None:
 		return
 	spec = {**spec}
 	ws_label = spec["workspace"]
-	# Construction sidebar is owned by omnexa_construction (full v2 catalog); core only applies KPIs/content.
-	if app_name == "omnexa_construction":
+	# Vertical apps own full sidebar catalogs; core only applies KPIs/charts.
+	if app_name in ("omnexa_construction", "omnexa_healthcare", "omnexa_education"):
 		spec["desk_link_layout"] = None
 	else:
 		desk = get_desk_sections_for_workspace(ws_label)

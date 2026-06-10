@@ -126,7 +126,7 @@ def _repair_empty_registered_workspaces() -> list[str]:
 		required = spec.get("_requires_app", app_key)
 		if not _app_installed(required):
 			continue
-		if app_key == "omnexa_construction":
+		if app_key in ("omnexa_construction", "omnexa_healthcare", "omnexa_education"):
 			continue
 		ws_name = spec.get("workspace")
 		if not ws_name or not frappe.db.exists("Workspace", ws_name):
@@ -145,22 +145,17 @@ def _repair_empty_registered_workspaces() -> list[str]:
 
 
 def run_full_workspace_sync() -> dict[str, Any]:
-	"""Sync all control-tower desks, then Construction full menu (wins over core desk)."""
-	from omnexa_core.install import run_workspace_desk_sync
+	"""Sync all control-tower desks, then app-owned vertical workspace menus."""
+	from omnexa_core.install import run_workspace_desk_sync, sync_vertical_app_workspace_menus
 
 	run_workspace_desk_sync()
-
-	construction_stats = {}
-	if _app_installed("omnexa_construction"):
-		from omnexa_construction.workspace.construction_workspace import sync_construction_workspace_menu
-
-		construction_stats = sync_construction_workspace_menu(save=True)
+	vertical_stats = sync_vertical_app_workspace_menus()
 
 	repaired = _repair_empty_registered_workspaces()
 	frappe.clear_cache(doctype="Workspace")
 	audit = audit_all_workspaces()
 	return {
-		"construction": construction_stats,
+		"vertical_workspaces": vertical_stats,
 		"repaired_empty": repaired,
 		"audit": audit["summary"],
 		"gaps": [w for w in audit["workspaces"] if w.get("status") != "ok"],

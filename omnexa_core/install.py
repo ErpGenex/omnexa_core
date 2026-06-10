@@ -588,6 +588,34 @@ def enforce_supported_frappe_version():
 		)
 
 
+def sync_vertical_app_workspace_menus() -> dict:
+	"""Rebuild app-owned workspace sidebars (Construction, Healthcare, Education full catalogs)."""
+	stats: dict = {}
+	installed = set(frappe.get_installed_apps() or [])
+	if "omnexa_construction" in installed:
+		try:
+			from omnexa_construction.workspace.construction_workspace import sync_construction_workspace_menu
+
+			stats["construction"] = sync_construction_workspace_menu(save=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Construction workspace menu")
+	if "omnexa_healthcare" in installed:
+		try:
+			from omnexa_healthcare.workspace.healthcare_workspace import sync_healthcare_workspace_menu
+
+			stats["healthcare"] = sync_healthcare_workspace_menu(save=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Healthcare workspace menu")
+	if "omnexa_education" in installed:
+		try:
+			from omnexa_education.workspace.education_workspace import sync_education_workspace_menu
+
+			stats["education"] = sync_education_workspace_menu(save=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Education workspace menu")
+	return stats
+
+
 def run_workspace_desk_sync():
 	"""Guided setup + control-tower desk (KPIs, charts, Operations) after all apps exist.
 
@@ -614,13 +642,7 @@ def run_workspace_desk_sync():
 		sync_all_workspace_kpi_layout()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: sync_all_workspace_kpi_layout")
-	if "omnexa_construction" in frappe.get_installed_apps():
-		try:
-			from omnexa_construction.workspace.construction_workspace import sync_construction_workspace_menu
-
-			sync_construction_workspace_menu(save=True)
-		except Exception:
-			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Construction workspace menu")
+	sync_vertical_app_workspace_menus()
 	try:
 		from omnexa_core.workspace_erpgenex_realty import ensure_erpgenex_realty_workspace_experience
 

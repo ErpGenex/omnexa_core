@@ -4,6 +4,7 @@ import glob
 import hashlib
 import hmac
 import importlib
+import json
 import os
 import re
 import subprocess
@@ -650,6 +651,91 @@ def _uninstall_protected_apps() -> frozenset[str]:
 	return frozenset(out)
 
 
+def _parse_app_slug_list(app_slugs) -> list[str]:
+	"""Normalize marketplace bulk args (JSON list or comma-separated string)."""
+	if app_slugs is None:
+		return []
+	if isinstance(app_slugs, (list, tuple, set)):
+		raw = list(app_slugs)
+	elif isinstance(app_slugs, str):
+		text = app_slugs.strip()
+		if not text:
+			return []
+		if text.startswith("["):
+			try:
+				raw = json.loads(text)
+			except json.JSONDecodeError:
+				raw = [s.strip() for s in text.split(",") if s.strip()]
+		else:
+			raw = [s.strip() for s in text.split(",") if s.strip()]
+	else:
+		return []
+	out: list[str] = []
+	seen: set[str] = set()
+	for item in raw:
+		slug = str(item or "").strip()
+		if not slug or slug in seen:
+			continue
+		seen.add(slug)
+		out.append(slug)
+	return out
+
+
+def _bulk_uninstall_warning() -> str:
+	return frappe._(
+		"This removes each selected app from this site and deletes its DocTypes and module data. "
+		"The marketplace catalog is unchanged. "
+		"A database backup runs once before the batch (unless disabled in site config). "
+		"App folders remain under bench; use `bench uninstall-app` on the server to remove code."
+	)
+
+
+def _bulk_uninstall_plan(app_slugs: list[str]) -> dict:
+	"""Plan bulk uninstall — eligibility, blockers, and safe order within the selection."""
+	frappe.only_for("System Manager")
+	protected = _uninstall_protected_apps()
+	installed = set(frappe.get_installed_apps() or [])
+	requested = _parse_app_slug_list(app_slugs)
+
+	eligible: list[str] = []
+	protected_rows: list[dict] = []
+	not_installed: list[str] = []
+	blocked: list[dict] = []
+
+	for slug in requested:
+		try:
+			_assert_marketplace_app_slug(slug)
+		except Exception:
+			blocked.append({"app": slug, "reason": "invalid_slug"})
+			continue
+		if slug not in installed:
+			not_installed.append(slug)
+			continue
+		if slug in protected:
+			protected_rows.append({"app": slug, "reason": "protected"})
+			continue
+		dependents = _installed_apps_that_require(slug)
+		outside = [d for d in dependents if d not in requested]
+		if outside:
+			blocked.append({"app": slug, "reason": "dependency", "blocked_by_installed": outside})
+			continue
+		eligible.append(slug)
+
+	from omnexa_core.omnexa_core.activity_scope import _uninstall_order
+
+	uninstall_order = _uninstall_order(set(eligible))
+	return {
+		"requested": requested,
+		"eligible": eligible,
+		"uninstall_order": uninstall_order,
+		"protected": protected_rows,
+		"not_installed": not_installed,
+		"blocked": blocked,
+		"can_uninstall": bool(uninstall_order),
+		"warning": _bulk_uninstall_warning(),
+	}
+
+
 def _installed_apps_that_require(app_slug: str) -> list[str]:
 	"""
 	Mirror ``frappe.installer.remove_app`` dependency rule: another installed app
@@ -1232,6 +1318,92 @@ def uninstall_app_now(app_slug: str, confirm_uninstall: int = 0):
 
 	frappe.clear_cache()
 	return {"uninstalled": True, "message": "uninstalled_now", "app_slug": app_slug}
+
+
+@frappe.whitelist()
+def get_bulk_uninstall_plan(app_slugs):
+	"""Bulk uninstall preview (System Manager)."""
+	return _bulk_uninstall_plan(app_slugs)
+
+
+@frappe.whitelist()
+def bulk_uninstall_apps_now(app_slugs, confirm_uninstall: int = 0):
+	"""Uninstall multiple apps from the current site in dependency-safe order."""
+	frappe.only_for("System Manager")
+	if not _is_truthy(confirm_uninstall):
+		return {"uninstalled": False, "message": "confirmation_required"}
+
+	plan = _bulk_uninstall_plan(app_slugs)
+	if not plan["uninstall_order"]:
+		return {
+			"uninstalled": False,
+			"message": "nothing_to_uninstall",
+			"plan": plan,
+		}
+
+	no_backup = _is_truthy(frappe.conf.get("omnexa_marketplace_uninstall_no_backup"))
+	backup_ok = True
+	if not no_backup:
+		try:
+			new_backup(ignore_files=False)
+		except Exception:
+			backup_ok = False
+			if not _is_truthy(frappe.conf.get("omnexa_marketplace_bulk_uninstall_allow_backup_failure")):
+				frappe.throw(frappe._("Backup failed before bulk uninstall."), title=frappe._("Backup"))
+
+	uninstalled: list[str] = []
+	failed: list[dict] = []
+	previous_user = getattr(frappe.session, "user", None)
+
+	for app_slug in plan["uninstall_order"]:
+		if app_slug not in (frappe.get_installed_apps() or []):
+			continue
+		try:
+			frappe.set_user("Administrator")
+			from frappe.installer import remove_app
+
+			remove_app(app_slug, dry_run=False, yes=True, no_backup=True, force=False)
+			frappe.db.commit()
+			for fn_name in ("clear_license_key", "clear_trial_for_app"):
+				try:
+					if fn_name == "clear_license_key":
+						clear_license_key(app_slug)
+					else:
+						clear_trial_for_app(app_slug)
+				except Exception:
+					pass
+			try:
+				set_manual_revoke(app_slug, False)
+			except Exception:
+				pass
+			uninstalled.append(app_slug)
+		except Exception as exc:
+			frappe.db.rollback()
+			failed.append({"app": app_slug, "error": str(exc)})
+			frappe.log_error(frappe.get_traceback(), f"Marketplace bulk uninstall failed: {app_slug}")
+		finally:
+			_restore_frappe_session_user(previous_user)
+
+	try:
+		from omnexa_core.install import run_workspace_desk_sync
+
+		run_workspace_desk_sync()
+	except Exception:
+		pass
+
+	frappe.clear_cache()
+	return {
+		"uninstalled": bool(uninstalled),
+		"message": "bulk_uninstall_done" if uninstalled else "bulk_uninstall_failed",
+		"apps_uninstalled": uninstalled,
+		"failed": failed,
+		"skipped": {
+			"protected": plan["protected"],
+			"not_installed": plan["not_installed"],
+			"blocked": plan["blocked"],
+		},
+		"backup_ok": backup_ok,
+	}
 
 
 def _compute_signature(secret: str, app_slug: str, activation_key: str, timestamp: str) -> str:
