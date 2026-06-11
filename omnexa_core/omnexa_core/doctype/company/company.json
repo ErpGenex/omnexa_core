@@ -163,20 +163,20 @@
 			"label": "Rebuild demo"
 		},
 		{
-			"depends_on": "eval:!doc.__islocal && (frappe.session.user==='Administrator' || frappe.user.has_role('System Manager'))",
+			"depends_on": "eval:!doc.__islocal && frappe.session.user==='Administrator'",
 			"fieldname": "demo_activity_website_column",
 			"fieldtype": "Column Break",
 			"label": "Actions"
 		},
 		{
-			"depends_on": "eval:!doc.__islocal && (frappe.session.user==='Administrator' || frappe.user.has_role('System Manager'))",
+			"depends_on": "eval:!doc.__islocal && frappe.session.user==='Administrator'",
 			"fieldname": "demo_activity_website_actions_label",
 			"fieldtype": "HTML",
 			"label": "Seed",
-			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>Public activity website</b></div>"
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>Public activity website</b> (Administrator only)</div>"
 		},
 		{
-			"depends_on": "eval:!doc.__islocal && (frappe.session.user==='Administrator' || frappe.user.has_role('System Manager'))",
+			"depends_on": "eval:!doc.__islocal && frappe.session.user==='Administrator'",
 			"fieldname": "demo_btn_seed_activity_website",
 			"fieldtype": "Button",
 			"label": "Seed activity website demo",

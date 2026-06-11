@@ -138,6 +138,8 @@ class Company(Document):
 
 	@frappe.whitelist()
 	def demo_action_seed_activity_website(self):
+		if frappe.session.user != "Administrator":
+			frappe.throw(_("Only Administrator can seed activity website demos."), frappe.PermissionError)
 		if "omnexa_experience" not in (frappe.get_installed_apps() or []):
 			frappe.throw(
 				_("Install and migrate omnexa_experience to seed activity website demos."),
