@@ -3090,6 +3090,12 @@ def sync_all_workspace_kpi_layout() -> None:
 			sync_workspace_for_app("omnexa_fixed_assets")
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), "Omnexa: sync omnexa_fixed_assets final")
+	try:
+		from omnexa_core.install import sync_vertical_app_workspace_menus
+
+		sync_vertical_app_workspace_menus()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: sync vertical workspace menus after KPI pass")
 
 
 def sync_workspace_for_app(app_name: str) -> None:
