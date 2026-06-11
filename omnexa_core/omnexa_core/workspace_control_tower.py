@@ -2774,7 +2774,52 @@ def _bind_workspace_onboarding_name(ws, spec: dict[str, Any]) -> None:
 		spec["onboarding_name"] = picked
 
 
+_VERTICAL_APP_OWNED_WORKSPACES: dict[str, str] = {
+	"Construction": "omnexa_construction",
+	"Healthcare": "omnexa_healthcare",
+	"Education": "omnexa_education",
+}
+
+
+def _vertical_app_owns_workspace(ws_name: str) -> str | None:
+	"""Return installed vertical app that owns sidebar/content for this workspace, if any."""
+	key = (ws_name or "").strip()
+	required = _VERTICAL_APP_OWNED_WORKSPACES.get(key)
+	if required and _app_installed(required):
+		return required
+	return None
+
+
+def _apply_vertical_workspace_kpis_only(ws, spec: dict[str, Any], prefix: str) -> None:
+	"""Charts + number cards only — never touch links/shortcuts/content (owned by vertical app)."""
+	module = spec.get("module") or ws.module or "Desk"
+	_bind_workspace_onboarding_name(ws, spec)
+	_enrich_spec_analytics_from_module(spec, ws)
+	chart_names = _collect_workspace_chart_names(spec, prefix, module)
+	chart_row_labels = list(chart_names)
+	number_card_ids: list[str] = []
+	number_card_labels: list[str] = []
+	for label, dt, filt in spec.get("kpis", []):
+		if not _aggregatable_doctype(dt):
+			continue
+		nm = _ensure_number_card(label, dt, module, filt)
+		if nm:
+			number_card_ids.append(nm)
+			number_card_labels.append(label)
+	ws.charts = []
+	for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
+		ws.append("charts", {"chart_name": ch, "label": row_label})
+	ws.number_cards = []
+	for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
+		ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
+
+
 def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
+	_ws_name = (ws.name or "").strip()
+	if _vertical_app_owns_workspace(_ws_name):
+		_apply_vertical_workspace_kpis_only(ws, spec, prefix)
+		return
+
 	desk = spec.get("desk_link_layout")
 	if desk:
 		_apply_desk_link_sections(ws, desk)
@@ -2795,33 +2840,6 @@ def _apply_kpi_to_workspace(ws, spec: dict[str, Any], prefix: str) -> None:
 		if nm:
 			number_card_ids.append(nm)
 			number_card_labels.append(label)
-
-	# App-owned workspaces: vertical apps own sidebar links/shortcuts/content (core applies KPIs only).
-	_ws_name = (ws.name or "").strip()
-	if _ws_name == "Construction" and _app_installed("omnexa_construction"):
-		ws.charts = []
-		for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
-			ws.append("charts", {"chart_name": ch, "label": row_label})
-		ws.number_cards = []
-		for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
-			ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
-		return
-	if _ws_name == "Healthcare" and _app_installed("omnexa_healthcare"):
-		ws.charts = []
-		for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
-			ws.append("charts", {"chart_name": ch, "label": row_label})
-		ws.number_cards = []
-		for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
-			ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
-		return
-	if _ws_name == "Education" and _app_installed("omnexa_education"):
-		ws.charts = []
-		for ch, row_label in zip(chart_names[:12], chart_row_labels[:12]):
-			ws.append("charts", {"chart_name": ch, "label": row_label})
-		ws.number_cards = []
-		for nm, row_lbl in zip(number_card_ids[:12], number_card_labels[:12]):
-			ws.append("number_cards", {"number_card_name": nm, "label": row_lbl})
-		return
 
 	shortcut_seed: list[Any] = list(spec.get("shortcuts") or [])
 	if desk:
@@ -2935,6 +2953,14 @@ def sync_workspace_kpi_generic(ws_name: str) -> None:
 		return
 	ws = frappe.get_doc("Workspace", ws_name)
 	if not ws.public or getattr(ws, "for_user", None):
+		return
+	if _vertical_app_owns_workspace(ws_name):
+		spec = infer_workspace_spec(ws)
+		prefix = _chart_prefix_for(ws)
+		_apply_vertical_workspace_kpis_only(ws, spec, prefix)
+		prune_workspace_stale_links(ws)
+		ws.flags.ignore_version = True
+		ws.save(ignore_permissions=True)
 		return
 	spec = infer_workspace_spec(ws)
 	canonical = resolve_desk_sections_for_workspace_doc(ws) or get_desk_sections_for_workspace(ws_name)

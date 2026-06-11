@@ -1927,8 +1927,28 @@ def _normalize_desk_workspace_key(name: str) -> str:
 	return " ".join((name or "").strip().lower().replace("_", " ").replace("-", " ").split())
 
 
+def _vertical_app_blocks_short_desk(workspace_name: str) -> bool:
+	"""When a vertical app is installed it owns the full workspace catalog — skip core short desk."""
+	try:
+		import frappe
+
+		installed = set(frappe.get_installed_apps() or [])
+	except Exception:
+		return False
+	guards = {
+		"healthcare": "omnexa_healthcare",
+		"construction": "omnexa_construction",
+		"education": "omnexa_education",
+	}
+	nk = _normalize_desk_workspace_key(workspace_name)
+	required = guards.get(nk)
+	return bool(required and required in installed)
+
+
 def get_desk_sections_for_workspace(workspace_name: str) -> list[DeskSection] | None:
 	if not workspace_name:
+		return None
+	if _vertical_app_blocks_short_desk(workspace_name):
 		return None
 	raw = workspace_name.strip()
 	if raw in _BY_WORKSPACE:

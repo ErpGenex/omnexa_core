@@ -88,6 +88,9 @@ fi
 if grep -qx 'omnexa_healthcare' sites/apps.txt 2>/dev/null; then
 	echo "==> Healthcare full workspace menu sync..."
 	bench --site "$SITE" execute omnexa_core.install.sync_vertical_app_workspace_menus
+	bench --site "$SITE" execute omnexa_healthcare.patches.v1_0.sync_healthcare_workspace_full.execute 2>/dev/null \
+		|| bench --site "$SITE" execute omnexa_core.patches.force_healthcare_full_workspace_menu.execute 2>/dev/null \
+		|| true
 	bench build --app omnexa_healthcare
 fi
 

@@ -23,3 +23,4 @@ omnexa_core.patches.install_company_demo_client_script
 omnexa_core.patches.sync_company_demo_client_script
 omnexa_core.patches.ensure_full_workspace_desk_sync
 omnexa_core.patches.ensure_vertical_workspace_full_menus
+omnexa_core.patches.force_healthcare_full_workspace_menu

@@ -603,14 +603,14 @@ def sync_vertical_app_workspace_menus() -> dict:
 		try:
 			from omnexa_healthcare.workspace.healthcare_workspace import sync_healthcare_workspace_menu
 
-			stats["healthcare"] = sync_healthcare_workspace_menu(save=True)
+			stats["healthcare"] = sync_healthcare_workspace_menu(save=True, rebuild=True)
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Healthcare workspace menu")
 	if "omnexa_education" in installed:
 		try:
 			from omnexa_education.workspace.education_workspace import sync_education_workspace_menu
 
-			stats["education"] = sync_education_workspace_menu(save=True)
+			stats["education"] = sync_education_workspace_menu(save=True, rebuild=True)
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Education workspace menu")
 	return stats
