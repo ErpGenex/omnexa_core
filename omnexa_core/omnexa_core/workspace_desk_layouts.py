@@ -1937,6 +1937,7 @@ def _vertical_app_blocks_short_desk(workspace_name: str) -> bool:
 		return False
 	guards = {
 		"healthcare": "omnexa_healthcare",
+		"car rental": "omnexa_car_rental",
 		"construction": "omnexa_construction",
 		"education": "omnexa_education",
 	}

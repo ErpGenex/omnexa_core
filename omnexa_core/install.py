@@ -613,6 +613,13 @@ def sync_vertical_app_workspace_menus() -> dict:
 			stats["education"] = sync_education_workspace_menu(save=True, rebuild=True)
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Education workspace menu")
+	if "omnexa_car_rental" in installed:
+		try:
+			from omnexa_car_rental.workspace.car_rental_workspace import sync_car_rental_workspace_menu
+
+			stats["car_rental"] = sync_car_rental_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Car Rental workspace menu")
 	return stats
 
 

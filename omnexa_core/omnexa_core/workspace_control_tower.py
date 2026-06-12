@@ -2778,6 +2778,7 @@ _VERTICAL_APP_OWNED_WORKSPACES: dict[str, str] = {
 	"Construction": "omnexa_construction",
 	"Healthcare": "omnexa_healthcare",
 	"Education": "omnexa_education",
+	"Car Rental": "omnexa_car_rental",
 }
 
 
@@ -3109,7 +3110,7 @@ def sync_workspace_for_app(app_name: str) -> None:
 	spec = {**spec}
 	ws_label = spec["workspace"]
 	# Vertical apps own full sidebar catalogs; core only applies KPIs/charts.
-	if app_name in ("omnexa_construction", "omnexa_healthcare", "omnexa_education"):
+	if app_name in ("omnexa_construction", "omnexa_healthcare", "omnexa_education", "omnexa_car_rental"):
 		spec["desk_link_layout"] = None
 	else:
 		desk = get_desk_sections_for_workspace(ws_label)

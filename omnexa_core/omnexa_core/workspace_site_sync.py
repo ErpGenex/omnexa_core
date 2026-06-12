@@ -126,7 +126,7 @@ def _repair_empty_registered_workspaces() -> list[str]:
 		required = spec.get("_requires_app", app_key)
 		if not _app_installed(required):
 			continue
-		if app_key in ("omnexa_construction", "omnexa_healthcare", "omnexa_education"):
+		if app_key in ("omnexa_construction", "omnexa_healthcare", "omnexa_education", "omnexa_car_rental"):
 			continue
 		ws_name = spec.get("workspace")
 		if not ws_name or not frappe.db.exists("Workspace", ws_name):
