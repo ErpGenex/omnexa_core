@@ -25,6 +25,16 @@ VERTICALS = frozenset(
 		"projects_pm",
 		"customer_core",
 		"experience",
+		"accounting",
+		"engineering_consulting",
+		"fixed_assets",
+		"statutory_audit",
+		"property_mgmt",
+		"realestate_dev",
+		"realestate_sales",
+		"maintenance_core",
+		"operational_risk",
+		"einvoice",
 	}
 )
 
@@ -200,6 +210,41 @@ def _experience(scenario: str, params: dict) -> dict:
 	return {"kpi": {"checkout_total": total, "item_count": len(items)}, "sap_module": "CX"}
 
 
+def _accounting(scenario: str, params: dict) -> dict:
+	debit = flt(params.get("debit_total") or 0)
+	credit = flt(params.get("credit_total") or 0)
+	balanced = abs(debit - credit) < 0.01
+	return {
+		"kpi": {"debit_total": debit, "credit_total": credit, "balanced": balanced},
+		"sap_module": "FI",
+	}
+
+
+def _engineering_consulting(scenario: str, params: dict) -> dict:
+	out = _projects_pm(scenario, params)
+	out["sap_module"] = "PS/ENG"
+	return out
+
+
+def _fixed_assets(scenario: str, params: dict) -> dict:
+	cost = flt(params.get("asset_cost") or 0)
+	nbv = flt(params.get("net_book_value") or cost)
+	dep = flt(params.get("annual_depreciation") or 0)
+	return {
+		"kpi": {"asset_cost": cost, "net_book_value": nbv, "annual_depreciation": dep},
+		"sap_module": "FI-AA",
+	}
+
+
+def _statutory_audit(scenario: str, params: dict) -> dict:
+	findings = int(params.get("open_findings") or 0)
+	evidence = int(params.get("evidence_count") or 0)
+	return {
+		"kpi": {"open_findings": findings, "evidence_count": evidence, "coverage_pct": 1.0 if evidence else 0},
+		"sap_module": "GRC/Audit",
+	}
+
+
 _HANDLERS = {
 	"hr": _hr,
 	"manufacturing": _manufacturing,
@@ -216,4 +261,8 @@ _HANDLERS = {
 	"projects_pm": _projects_pm,
 	"customer_core": _customer_core,
 	"experience": _experience,
+	"accounting": _accounting,
+	"engineering_consulting": _engineering_consulting,
+	"fixed_assets": _fixed_assets,
+	"statutory_audit": _statutory_audit,
 }

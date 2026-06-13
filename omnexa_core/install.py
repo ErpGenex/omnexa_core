@@ -620,6 +620,127 @@ def sync_vertical_app_workspace_menus() -> dict:
 			stats["car_rental"] = sync_car_rental_workspace_menu(save=True, rebuild=True)
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Car Rental workspace menu")
+	if "omnexa_projects_pm" in installed:
+		try:
+			from omnexa_projects_pm.workspace.projects_workspace import sync_projects_workspace_menu
+
+			stats["projects_pm"] = sync_projects_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Projects PM workspace menu")
+	if "omnexa_trading" in installed:
+		try:
+			from omnexa_trading.workspace.trading_workspace import sync_trading_workspace_menu
+
+			stats["trading"] = sync_trading_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Trading workspace menu")
+	if "omnexa_manufacturing" in installed:
+		try:
+			from omnexa_manufacturing.workspace.manufacturing_workspace import sync_manufacturing_workspace_menu
+
+			stats["manufacturing"] = sync_manufacturing_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Manufacturing workspace menu")
+	if "omnexa_tourism" in installed:
+		try:
+			from omnexa_tourism.workspace.tour_workspace import sync_tour_workspace_menu
+
+			stats["tourism"] = sync_tour_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Tourism workspace menu")
+	if "omnexa_engineering_consulting" in installed:
+		try:
+			from omnexa_engineering_consulting.workspace.eng_workspace import sync_eng_workspace_menu
+
+			stats["engineering_consulting"] = sync_eng_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Engineering workspace menu")
+	if "omnexa_restaurant" in installed:
+		try:
+			from omnexa_restaurant.workspace.rest_workspace import sync_rest_workspace_menu
+
+			stats["restaurant"] = sync_rest_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Restaurant workspace menu")
+	if "omnexa_services" in installed:
+		try:
+			from omnexa_services.workspace.svc_workspace import sync_svc_workspace_menu
+
+			stats["services"] = sync_svc_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Services workspace menu")
+	if "omnexa_agriculture" in installed:
+		try:
+			from omnexa_agriculture.workspace.agri_workspace import sync_agri_workspace_menu
+
+			stats["agriculture"] = sync_agri_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Agriculture workspace menu")
+	if "omnexa_hr" in installed:
+		try:
+			from omnexa_hr.workspace.hr_workspace import sync_hr_workspace_menu
+
+			stats["hr"] = sync_hr_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync HR workspace menu")
+	if "omnexa_accounting" in installed:
+		try:
+			from omnexa_accounting.workspace.acct_workspace import sync_acct_workspace_menu
+
+			stats["accounting"] = sync_acct_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Accounting workspace menu")
+	if "omnexa_nursery" in installed:
+		try:
+			from omnexa_nursery.workspace.nurs_workspace import sync_nurs_workspace_menu
+
+			stats["nursery"] = sync_nurs_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Nursery workspace menu")
+	if "omnexa_fixed_assets" in installed:
+		try:
+			from omnexa_fixed_assets.workspace.fa_workspace import sync_fa_workspace_menu
+
+			stats["fixed_assets"] = sync_fa_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync Fixed Assets workspace menu")
+	_finance_sync = (
+		("omnexa_finance_engine", "omnexa_finance_engine.workspace.fe_workspace", "sync_fe_workspace_menu", "finance_engine"),
+		("omnexa_credit_engine", "omnexa_credit_engine.workspace.ce_workspace", "sync_ce_workspace_menu", "credit_engine"),
+		("omnexa_credit_risk", "omnexa_credit_risk.workspace.rk_workspace", "sync_rk_workspace_menu", "credit_risk"),
+		("omnexa_alm", "omnexa_alm.workspace.al_workspace", "sync_al_workspace_menu", "alm"),
+		("omnexa_consumer_finance", "omnexa_consumer_finance.workspace.cf_workspace", "sync_cf_workspace_menu", "consumer_finance"),
+		("omnexa_vehicle_finance", "omnexa_vehicle_finance.workspace.vf_workspace", "sync_vf_workspace_menu", "vehicle_finance"),
+		("omnexa_mortgage_finance", "omnexa_mortgage_finance.workspace.mg_workspace", "sync_mg_workspace_menu", "mortgage_finance"),
+		("omnexa_factoring", "omnexa_factoring.workspace.fc_workspace", "sync_fc_workspace_menu", "factoring"),
+		("omnexa_sme_retail_finance", "omnexa_sme_retail_finance.workspace.sr_workspace", "sync_sr_workspace_menu", "sme_retail_finance"),
+		("omnexa_leasing_finance", "omnexa_leasing_finance.workspace.lf_workspace", "sync_lf_workspace_menu", "leasing_finance"),
+		("omnexa_statutory_audit", "omnexa_statutory_audit.workspace.sa_workspace", "sync_sa_workspace_menu", "statutory_audit"),
+	)
+	for app_name, mod_path, fn_name, stat_key in _finance_sync:
+		if app_name not in installed:
+			continue
+		try:
+			mod = __import__(mod_path, fromlist=[fn_name])
+			stats[stat_key] = getattr(mod, fn_name)(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), f"Omnexa: sync {stat_key} workspace menu")
+	_realty_sync = (
+		("erpgenex_property_mgmt", "erpgenex_property_mgmt.workspace.pm_workspace", "sync_pm_workspace_menu", "property_mgmt"),
+		("erpgenex_realestate_dev", "erpgenex_realestate_dev.workspace.rd_workspace", "sync_rd_workspace_menu", "realestate_dev"),
+		("erpgenex_realestate_sales", "erpgenex_realestate_sales.workspace.rs_workspace", "sync_rs_workspace_menu", "realestate_sales"),
+		("erpgenex_maintenance_core", "erpgenex_maintenance_core.workspace.mc_workspace", "sync_mc_workspace_menu", "maintenance_core"),
+		("omnexa_operational_risk", "omnexa_operational_risk.workspace.or_workspace", "sync_or_workspace_menu", "operational_risk"),
+		("omnexa_einvoice", "omnexa_einvoice.workspace.ei_workspace", "sync_ei_workspace_menu", "einvoice"),
+	)
+	for app_name, mod_path, fn_name, stat_key in _realty_sync:
+		if app_name not in installed:
+			continue
+		try:
+			mod = __import__(mod_path, fromlist=[fn_name])
+			stats[stat_key] = getattr(mod, fn_name)(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), f"Omnexa: sync {stat_key} workspace menu")
 	return stats
 
 
