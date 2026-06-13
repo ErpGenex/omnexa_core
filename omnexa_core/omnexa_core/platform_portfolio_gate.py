@@ -135,3 +135,59 @@ def get_platform_core_score() -> dict[str, Any]:
 		"workspace_audit": summary,
 		"standards": ["ISO/IEC 25010:2011", "ERPGenex Control Tower"],
 	}
+
+
+PLATFORM_BENCHMARK_APPS = [
+	"omnexa_backup",
+	"omnexa_customer_core",
+	"omnexa_experience",
+	"omnexa_setup_intelligence",
+	"omnexa_intelligence_core",
+	"omnexa_reporting_compliance",
+	"omnexa_theme_manager",
+	"omnexa_user_academy",
+	"omnexa_n8n_bridge",
+	"omnexa_eng_document_control",
+	"omnexa_eng_platform_integrations",
+	"omnexa_eng_workflow_engine",
+	"erpgenex_theme_0426",
+]
+
+
+@frappe.whitelist()
+def import_platform_benchmark_pages() -> dict[str, Any]:
+	"""Import Page JSON fixtures for platform global benchmark apps."""
+	import os
+
+	from frappe.modules.import_file import import_file_by_path
+	from frappe.utils import get_app_path
+
+	imported: list[str] = []
+	for app in PLATFORM_BENCHMARK_APPS:
+		page_root = os.path.join(get_app_path(app), app, "page")
+		if not os.path.isdir(page_root):
+			continue
+		for folder in sorted(os.listdir(page_root)):
+			json_path = os.path.join(page_root, folder, f"{folder}.json")
+			if not os.path.isfile(json_path):
+				continue
+			import_file_by_path(json_path, force=True)
+			imported.append(f"{app}:{folder}")
+	frappe.db.commit()
+	return {"imported": imported, "count": len(imported)}
+
+
+@frappe.whitelist()
+def verify_platform_apps_global_gate() -> dict[str, Any]:
+	"""Verify platform / infra apps with gap registers pass global leader gate."""
+	results = [_verify_vertical_app(app) for app in PLATFORM_BENCHMARK_APPS]
+	passed = [r for r in results if r.get("global_leader_gate")]
+	failed = [r for r in results if not r.get("global_leader_gate")]
+	return {
+		"apps_total": len(PLATFORM_BENCHMARK_APPS),
+		"apps_passed": len(passed),
+		"apps_failed": len(failed),
+		"platform_global_gate": len(failed) == 0 and len(passed) > 0,
+		"passed": passed,
+		"failed": failed,
+	}
