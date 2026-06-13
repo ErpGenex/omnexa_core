@@ -551,3 +551,32 @@ def get_retail_receipt_html(invoice_name: str):
 		"einvoice_uuid": einv.get("uuid") or "",
 	}
 	return frappe.render_template("omnexa_core/templates/retail_thermal_receipt.html", context, is_path=True)
+
+
+@frappe.whitelist()
+def sync_retail_pos_item_visibility(company: str | None = None):
+	"""Enable real items for Retail POS and hide demo/simulation rows for a company."""
+	if not _item_has_show_in_retail_pos_field():
+		frappe.throw(_("Item field Show in Retail POS is not installed. Run migrate on omnexa_core."))
+	company = company or resolve_retail_pos_company_branch()[0]
+	visible_types = _pos_visible_product_types() or set(CATEGORY_LABELS)
+	enabled = 0
+	disabled = 0
+	for row in frappe.get_all(
+		"Item",
+		filters={"company": company, "disabled": 0},
+		fields=["name", "item_code", "item_name", "product_type", "is_sales_item", "show_in_retail_pos"],
+	):
+		is_demo = _is_pos_demo_item(row)
+		should_show = (not is_demo) and (row.get("product_type") in visible_types)
+		if should_show and not cint(row.get("show_in_retail_pos")):
+			values = {"show_in_retail_pos": 1}
+			if not cint(row.get("is_sales_item")):
+				values["is_sales_item"] = 1
+			frappe.db.set_value("Item", row.name, values, update_modified=False)
+			enabled += 1
+		elif is_demo and cint(row.get("show_in_retail_pos")):
+			frappe.db.set_value("Item", row.name, "show_in_retail_pos", 0, update_modified=False)
+			disabled += 1
+	frappe.db.commit()
+	return {"company": company, "enabled": enabled, "disabled_demo": disabled}
