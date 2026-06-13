@@ -704,6 +704,7 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			("Pipeline opportunities", "Pipeline Opportunity", []),
 		],
 		"shortcuts": [
+			("Retail POS", "Page", "retail-pos"),
 			("Sell Settings", "DocType", "Omnexa Sales Settings"),
 			("Tax Rule", "DocType", "Tax Rule"),
 			("Currency Exchange Rate", "DocType", "Currency Exchange Rate"),

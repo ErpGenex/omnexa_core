@@ -1339,16 +1339,18 @@ def ensure_inventory_enterprise_fields():
 
 		if frappe.db.exists("DocType", "Item"):
 			meta = frappe.get_meta("Item")
-			anchor = _last_insert_anchor_fieldname("Item")
-			if anchor and not meta.has_field("item_name_ar"):
+			if not meta.has_field("item_name_ar"):
 				custom_fields_map.setdefault("Item", []).extend(
 					[
-						{"fieldname": "inventory_enterprise_section", "label": "Enterprise Inventory", "fieldtype": "Section Break", "insert_after": anchor},
-						{"fieldname": "item_name_ar", "label": "Item Name (Arabic)", "fieldtype": "Data", "insert_after": "inventory_enterprise_section"},
+						{"fieldname": "item_name_ar", "label": "Item Name (Arabic)", "fieldtype": "Data", "insert_after": "item_name"},
 						{"fieldname": "barcode", "label": "Barcode", "fieldtype": "Data", "insert_after": "item_name_ar"},
-						{"fieldname": "qr_code", "label": "QR Code", "fieldtype": "Data", "insert_after": "barcode"},
-						{"fieldname": "has_serial_no", "label": "Track Serial Numbers", "fieldtype": "Check", "default": "0", "insert_after": "qr_code"},
-						{"fieldname": "reorder_level", "label": "Reorder Level", "fieldtype": "Float", "default": "0", "insert_after": "has_serial_no"},
+						{"fieldname": "item_description", "label": "Description", "fieldtype": "Small Text", "insert_after": "barcode"},
+						{"fieldname": "standard_selling_rate", "label": "Standard Selling Rate", "fieldtype": "Currency", "insert_after": "is_sales_item"},
+						{"fieldname": "default_sales_account", "label": "Default Sales Account", "fieldtype": "Link", "options": "GL Account", "insert_after": "standard_selling_rate"},
+						{"fieldname": "standard_purchase_rate", "label": "Standard Purchase Rate", "fieldtype": "Currency", "insert_after": "is_purchase_item"},
+						{"fieldname": "default_purchase_account", "label": "Default Purchase Account", "fieldtype": "Link", "options": "GL Account", "insert_after": "standard_purchase_rate"},
+						{"fieldname": "default_warehouse", "label": "Default Warehouse", "fieldtype": "Link", "options": "Warehouse", "insert_after": "current_stock_qty"},
+						{"fieldname": "reorder_level", "label": "Reorder Level", "fieldtype": "Float", "default": "0", "insert_after": "default_warehouse"},
 						{"fieldname": "safety_stock", "label": "Safety Stock", "fieldtype": "Float", "default": "0", "insert_after": "reorder_level"},
 						{
 							"fieldname": "valuation_method",
@@ -1358,8 +1360,13 @@ def ensure_inventory_enterprise_fields():
 							"default": "FIFO",
 							"insert_after": "safety_stock",
 						},
-						{"fieldname": "default_purchase_account", "label": "Default Purchase Account", "fieldtype": "Link", "options": "GL Account", "insert_after": "valuation_method"},
-						{"fieldname": "default_sales_account", "label": "Default Sales Account", "fieldtype": "Link", "options": "GL Account", "insert_after": "default_purchase_account"},
+						{"fieldname": "has_serial_no", "label": "Track Serial Numbers", "fieldtype": "Check", "default": "0", "insert_after": "has_batch_no"},
+						{"fieldname": "tab_break_accounts", "label": "Accounts & Costing", "fieldtype": "Tab Break", "insert_after": "requires_dynamic_composition"},
+						{"fieldname": "default_expense_account", "label": "Default Expense Account", "fieldtype": "Link", "options": "GL Account", "insert_after": "tab_break_accounts"},
+						{"fieldname": "item_cost_center", "label": "Cost Center", "fieldtype": "Link", "options": "Cost Center", "insert_after": "default_expense_account"},
+						{"fieldname": "tab_break_attachments", "label": "Attachments", "fieldtype": "Tab Break", "insert_after": "item_cost_center"},
+						{"fieldname": "qr_code", "label": "QR Code", "fieldtype": "Data", "insert_after": "tab_break_attachments"},
+						{"fieldname": "supporting_attachment", "label": "Supporting Attachment", "fieldtype": "Attach", "insert_after": "qr_code"},
 					]
 				)
 

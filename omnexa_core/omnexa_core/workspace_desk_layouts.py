@@ -24,7 +24,7 @@ SELL_DESK: list[DeskSection] = [
 	(
 		"Operations",
 		[
-			# Single DocType — must live in desk seed; spec["shortcuts"] are dropped when desk_link_layout applies.
+			("Retail POS", "Page", "retail-pos", None),
 			("Sales Settings", "DocType", "Omnexa Sales Settings", None),
 			("Item & pricing (master)", "DocType", "Item", None),
 			("Leads Management", "DocType", "Pipeline Lead", None),

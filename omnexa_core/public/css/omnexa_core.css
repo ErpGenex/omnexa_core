@@ -415,3 +415,45 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	text-align: left;
 	white-space: normal;
 }
+
+/* Sell workspace — prominent Retail POS launch */
+.erpgenex-sell-pos-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin: 0 0 16px;
+	padding: 14px 18px;
+	border-radius: 12px;
+	background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+	border: 1px solid #a5d6a7;
+	box-shadow: 0 2px 8px rgba(46, 125, 50, 0.12);
+}
+
+.erpgenex-sell-pos-banner__text {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	color: #1b5e20;
+}
+
+.erpgenex-sell-pos-banner__text strong {
+	font-size: 15px;
+}
+
+.erpgenex-sell-pos-banner__text span {
+	font-size: 12px;
+	color: #388e3c;
+}
+
+.erpgenex-sell-pos-banner__btn,
+.erpgenex-sell-pos-btn {
+	background: #2e7d32 !important;
+	border-color: #2e7d32 !important;
+}
+
+.erpgenex-sell-pos-banner__btn:hover,
+.erpgenex-sell-pos-btn:hover {
+	background: #1b5e20 !important;
+	border-color: #1b5e20 !important;
+}
