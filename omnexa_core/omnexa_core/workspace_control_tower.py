@@ -17,6 +17,7 @@ from typing import Any
 import frappe
 
 from omnexa_core.workspace_link_prune import prune_workspace_stale_links
+from omnexa_core.omnexa_core.workspace_icon_enricher import enrich_card_break_label
 from omnexa_core.omnexa_core.workspace_desk_layouts import (
 	get_desk_sections_for_workspace,
 	resolve_desk_sections_for_workspace_doc,
@@ -2005,13 +2006,14 @@ def _merge_link_sections(ws, sections: list[tuple[str, list[tuple[str, str, str,
 	for break_label, links in sections:
 		if break_label in existing_breaks:
 			continue
+		enriched_label = enrich_card_break_label(break_label)
 		ws.append(
 			"links",
 			{
 				"type": "Card Break",
-				"label": break_label,
+				"label": enriched_label,
 				"hidden": 0,
-				"icon": _card_break_sidebar_es_icon(break_label),
+				"icon": _card_break_sidebar_es_icon(enriched_label),
 			},
 		)
 		for label, link_type, link_to, fourth in links:
@@ -2448,15 +2450,16 @@ def _apply_desk_link_sections(ws, sections: list[tuple[str, list[tuple[str, str,
 	"""Replace Workspace sidebar links from canonical desk layout (card breaks + links)."""
 	ws.links = []
 	for card_title, rows in sections:
+		enriched_title = enrich_card_break_label(card_title)
 		ws.append(
 			"links",
 			{
 				"type": "Card Break",
-				"label": card_title,
+				"label": enriched_title,
 				"hidden": 0,
 				"onboard": 0,
 				"link_count": 0,
-				"icon": _card_break_sidebar_es_icon(card_title),
+				"icon": _card_break_sidebar_es_icon(enriched_title),
 			},
 		)
 		for label, link_type, link_to, ref_doc in rows:

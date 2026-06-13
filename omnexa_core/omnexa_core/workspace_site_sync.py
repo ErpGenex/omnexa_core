@@ -178,22 +178,6 @@ def _content_card_labels(ws_name: str) -> set[str]:
 			if label:
 				labels.add(label)
 	return labels
-	if not frappe.db.exists("Workspace", ws_name):
-		return set()
-	content = frappe.db.get_value("Workspace", ws_name, "content") or "[]"
-	try:
-		blocks = json.loads(content)
-	except json.JSONDecodeError:
-		return set()
-	labels: set[str] = set()
-	for block in blocks:
-		if not isinstance(block, dict):
-			continue
-		if block.get("type") == "shortcut":
-			label = (block.get("data") or {}).get("shortcut_name")
-			if label:
-				labels.add(label)
-	return labels
 
 
 def _shortcut_labels(ws_name: str) -> set[str]:
@@ -353,11 +337,15 @@ def run_full_workspace_sync() -> dict[str, Any]:
 	vertical_stats = sync_vertical_app_workspace_menus()
 
 	repaired = _repair_empty_registered_workspaces()
+	from omnexa_core.omnexa_core.workspace_icon_enricher import enrich_all_workspace_visual_icons
+
+	icon_stats = enrich_all_workspace_visual_icons(save=True)
 	frappe.clear_cache(doctype="Workspace")
 	audit = audit_all_workspaces()
 	return {
 		"vertical_workspaces": vertical_stats,
 		"repaired_empty": repaired,
+		"icon_enrichment": icon_stats,
 		"audit": audit["summary"],
 		"gaps": [w for w in audit["workspaces"] if w.get("status") != "ok"],
 	}
