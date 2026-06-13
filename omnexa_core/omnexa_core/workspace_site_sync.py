@@ -274,11 +274,15 @@ def audit_all_workspaces(*, verbose: bool = False) -> dict[str, Any]:
 		content_labels = _content_shortcut_labels(ws_name)
 		content_cards = _content_card_labels(ws_name)
 		shortcut_labels = _shortcut_labels(ws_name)
+		is_vertical_owned = bool(_vertical_app_owns_workspace(ws_name))
 		if ws_name in _CARD_CONTENT_WORKSPACES:
 			missing_content = sorted(set(section_labels) - content_cards)
-		else:
+		elif is_vertical_owned:
 			missing_content = sorted(set(link_labels) - content_labels)
-		missing_shortcuts = sorted(set(link_labels) - shortcut_labels)
+		else:
+			# Control-tower desks (Sell, Theme Manager, Asset Insurance, …) use card blocks + partial shortcuts.
+			missing_content = []
+		missing_shortcuts = sorted(set(link_labels) - shortcut_labels) if is_vertical_owned else []
 		below_min = bool(catalog_stats and not catalog_stats.get("meets_global_min") and len(actual) < GLOBAL_MIN_LINKS)
 
 		entry = {

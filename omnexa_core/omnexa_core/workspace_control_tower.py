@@ -2754,7 +2754,7 @@ def _build_engineering_v1_workspace_bundle(
 			continue
 		blocks.append({"id": f"{slug}-op{op_i}", "type": "shortcut", "data": {"shortcut_name": nm, "col": 4}})
 		op_i += 1
-		if op_i >= 6:
+		if op_i >= 24:
 			break
 	blocks.append({"id": f"{slug}-rph", "type": "header", "data": {"text": "<b>📊 Reports</b>", "col": 12}})
 	rp_i = 0
@@ -2766,7 +2766,7 @@ def _build_engineering_v1_workspace_bundle(
 			continue
 		blocks.append({"id": f"{slug}-rp{rp_i}", "type": "shortcut", "data": {"shortcut_name": nm, "col": 4}})
 		rp_i += 1
-		if rp_i >= 5:
+		if rp_i >= 12:
 			break
 	blocks.append({"id": f"{slug}-kph", "type": "header", "data": {"text": "<b>📊 KPIs</b>", "col": 12}})
 	for i, lbl in enumerate(number_card_labels[:4]):
