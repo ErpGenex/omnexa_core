@@ -160,3 +160,20 @@ def build_content_from_link_rows(
 			)
 
 	return json.dumps(content, separators=(",", ":"))
+
+
+def drop_missing_workspace_dashboard_links(ws) -> None:
+	"""Drop workspace dashboard rows pointing at missing Number Cards / Charts."""
+	if ws.number_cards:
+		ws.number_cards = [
+			row
+			for row in ws.number_cards
+			if row.number_card_name
+			and frappe.db.exists("Number Card", row.number_card_name)
+		]
+	if ws.charts:
+		ws.charts = [
+			row
+			for row in ws.charts
+			if row.chart_name and frappe.db.exists("Dashboard Chart", row.chart_name)
+		]
