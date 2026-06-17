@@ -48,3 +48,10 @@ def boot_session(bootinfo):
 		bootinfo.omnexa_view_context = get_view_context()
 	except Exception:
 		bootinfo.omnexa_view_context = {"can_switch": False}
+
+	try:
+		from omnexa_core.omnexa_core.app_visibility import inject_desk_visibility_boot
+
+		inject_desk_visibility_boot(bootinfo)
+	except Exception:
+		pass

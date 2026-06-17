@@ -293,3 +293,37 @@ def get_apps():
 	if not hidden:
 		return apps
 	return [app for app in apps if app.get("name") not in hidden]
+
+
+def _module_app_name(module: str | None) -> str | None:
+	if not module:
+		return None
+	if not hasattr(frappe.local, "module_app") or not frappe.local.module_app:
+		frappe.setup_module_map()
+	return frappe.local.module_app.get(module)
+
+
+def _workspace_owned_by_hidden_app(page: dict, hidden: set[str]) -> bool:
+	module = page.get("module") or page.get("module_name") or ""
+	app = _module_app_name(module)
+	return bool(app and app in hidden)
+
+
+def inject_desk_visibility_boot(bootinfo) -> None:
+	"""Apply manual + activity app hiding to boot apps list and workspace sidebar."""
+	hidden = get_desk_hidden_for_user()
+	if not hidden:
+		return
+
+	apps_data = bootinfo.get("apps_data") or {}
+	apps_list = apps_data.get("apps") or []
+	if apps_list:
+		filtered = [a for a in apps_list if a.get("name") not in hidden]
+		apps_data["apps"] = filtered
+		bootinfo["apps_data"] = apps_data
+		if filtered:
+			bootinfo.setdefault("apps_data", {})["default_path"] = filtered[0].get("route") or "/app"
+
+	pages = bootinfo.get("allowed_workspaces") or []
+	if pages:
+		bootinfo["allowed_workspaces"] = [p for p in pages if not _workspace_owned_by_hidden_app(p, hidden)]
