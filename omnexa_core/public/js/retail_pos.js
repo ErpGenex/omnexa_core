@@ -3,14 +3,20 @@ frappe.provide("omnexa_core.retail_pos");
 omnexa_core.retail_pos = {
 	API: "omnexa_core.omnexa_core.retail_pos_api",
 
-	init(wrapper) {
+	init(wrapper, options) {
 		this.wrapper = wrapper;
-		this.page = frappe.ui.make_app_page({
-			parent: wrapper,
-			title: __("Retail POS"),
-			single_column: true,
-		});
-		$(this.page.page_container).addClass("retail-pos-page");
+		this.options = options || {};
+		if (this.options.embedded) {
+			this.page = { page_container: wrapper, body: wrapper };
+			$(wrapper).addClass("retail-pos-page retail-pos-embedded");
+		} else {
+			this.page = frappe.ui.make_app_page({
+				parent: wrapper,
+				title: __("Retail POS"),
+				single_column: true,
+			});
+			$(this.page.page_container).addClass("retail-pos-page");
+		}
 		this.state = {
 			catalog: { categories: [], items: [], items_by_category: {} },
 			activeCategory: "الكل",
@@ -28,14 +34,16 @@ omnexa_core.retail_pos = {
 		this.bind_shortcuts();
 		omnexa_core.retail_product_manager.init(this);
 		this.bootstrap();
+		return this;
 	},
 
 	render_shell() {
 		const cashier = frappe.session.user_fullname || frappe.session.user;
 		const initial = (cashier || "أ").trim()[0] || "أ";
 		const company = frappe.defaults.get_user_default("Company") || __("Store");
+		const hideSidebar = !!this.options.hideSidebar;
 		const $root = $(`
-			<div class="retail-pos" dir="rtl">
+			<div class="retail-pos${hideSidebar ? " retail-pos--no-sidebar" : ""}" dir="rtl">
 				<aside class="retail-pos__sidebar">
 					<div class="retail-pos__brand">
 						<div class="retail-pos__brand-icon">🛒</div>
@@ -121,7 +129,8 @@ omnexa_core.retail_pos = {
 				</div>
 			</div>
 		`);
-		$(this.page.body).empty().append($root);
+		const $mount = this.options.embedded ? $(this.page.page_container) : $(this.page.body);
+		$mount.empty().append($root);
 		this.$root = $root;
 		this.tick_clock();
 	},
