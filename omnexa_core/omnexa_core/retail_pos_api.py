@@ -37,11 +37,19 @@ ITEM_GRADIENTS = (
 )
 
 _DEMO_ITEM_PREFIXES = ("SIM-", "DEMO-", "OMNEXA-DEMO", "TEST-")
+_HEALTHCARE_POS_PREFIX = "DEMO-HC-"
+
+
+def _is_healthcare_pharmacy_item(row: dict[str, Any]) -> bool:
+	code = (row.get("item_code") or row.get("name") or "").strip().upper()
+	return code.startswith(_HEALTHCARE_POS_PREFIX)
 
 
 def _is_pos_demo_item(row: dict[str, Any]) -> bool:
 	code = (row.get("item_code") or row.get("name") or "").strip().upper()
 	name = (row.get("item_name") or "").strip().upper()
+	if _is_healthcare_pharmacy_item(row):
+		return False
 	if any(code.startswith(prefix) for prefix in _DEMO_ITEM_PREFIXES):
 		return True
 	if "SIMULATION" in name or name.startswith("DEMO "):
@@ -568,7 +576,8 @@ def sync_retail_pos_item_visibility(company: str | None = None):
 		fields=["name", "item_code", "item_name", "product_type", "is_sales_item", "show_in_retail_pos"],
 	):
 		is_demo = _is_pos_demo_item(row)
-		should_show = (not is_demo) and (row.get("product_type") in visible_types)
+		is_healthcare = _is_healthcare_pharmacy_item(row)
+		should_show = is_healthcare or ((not is_demo) and (row.get("product_type") in visible_types))
 		if should_show and not cint(row.get("show_in_retail_pos")):
 			values = {"show_in_retail_pos": 1}
 			if not cint(row.get("is_sales_item")):

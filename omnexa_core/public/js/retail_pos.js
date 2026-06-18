@@ -200,7 +200,16 @@ omnexa_core.retail_pos = {
 			if (!nav) return;
 			self.$root.find(".retail-pos__nav-item").removeClass("is-active");
 			$(this).addClass("is-active");
-			if (nav === "pos") return;
+			if (nav === "pos") {
+				if (self.options.embedded && typeof self.options.onNavigate === "function") {
+					self.options.onNavigate(nav);
+				}
+				return;
+			}
+			if (self.options.embedded && typeof self.options.onNavigate === "function") {
+				self.options.onNavigate(nav);
+				return;
+			}
 			if (nav === "products") {
 				omnexa_core.retail_product_manager.open();
 				return;
@@ -682,46 +691,56 @@ omnexa_core.retail_pos = {
 	complete_sale() {
 		if (!this.state.invoiceName) return;
 		const self = this;
-		frappe.call({
-			method: `${this.API}.complete_retail_pos_sale`,
-			args: { invoice_name: this.state.invoiceName },
-			freeze: true,
-			callback: (r) => {
-				const msg = r.message || {};
-				const invoiceName = msg.invoice || "";
-				const openReceipt = (html) => {
-					self._lastReceiptHtml = html || "";
-					self._lastInvoice = invoiceName;
-					self.print_receipt(self._lastReceiptHtml);
-					frappe.show_alert({
-						message: `${__("Sale completed")}${invoiceName ? ` · ${invoiceName}` : ""}`,
-						indicator: "green",
+		const finish = () => {
+			frappe.call({
+				method: `${self.API}.complete_retail_pos_sale`,
+				args: { invoice_name: self.state.invoiceName },
+				freeze: true,
+				callback: (r) => {
+					const msg = r.message || {};
+					const invoiceName = msg.invoice || "";
+					const openReceipt = (html) => {
+						self._lastReceiptHtml = html || "";
+						self._lastInvoice = invoiceName;
+						self.print_receipt(self._lastReceiptHtml);
+						frappe.show_alert({
+							message: `${__("Sale completed")}${invoiceName ? ` · ${invoiceName}` : ""}`,
+							indicator: "green",
+						});
+						if (typeof self.options.onSaleComplete === "function") {
+							self.options.onSaleComplete(invoiceName);
+						}
+						self.state.invoiceName = null;
+						self.state.invoiceDetail = null;
+						self.state.customer = null;
+						self.create_invoice();
+					};
+					if (msg.receipt_html) {
+						openReceipt(msg.receipt_html);
+						return;
+					}
+					if (!invoiceName) {
+						self.show_api_error(__("Could not complete sale."), r);
+						return;
+					}
+					frappe.call({
+						method: `${self.API}.get_retail_receipt_html`,
+						args: { invoice_name: invoiceName },
+						callback: (receipt) => openReceipt(receipt.message || ""),
+						error: (err) => {
+							openReceipt("");
+							self.show_api_error(__("Sale completed but receipt could not be loaded."), err);
+						},
 					});
-					self.state.invoiceName = null;
-					self.state.invoiceDetail = null;
-					self.state.customer = null;
-					self.create_invoice();
-				};
-				if (msg.receipt_html) {
-					openReceipt(msg.receipt_html);
-					return;
-				}
-				if (!invoiceName) {
-					self.show_api_error(__("Could not complete sale."), r);
-					return;
-				}
-				frappe.call({
-					method: `${self.API}.get_retail_receipt_html`,
-					args: { invoice_name: invoiceName },
-					callback: (receipt) => openReceipt(receipt.message || ""),
-					error: (err) => {
-						openReceipt("");
-						self.show_api_error(__("Sale completed but receipt could not be loaded."), err);
-					},
-				});
-			},
-			error: (r) => self.show_api_error(__("Could not complete sale."), r),
-		});
+				},
+				error: (r) => self.show_api_error(__("Could not complete sale."), r),
+			});
+		};
+		if (typeof this.options.onBeforeCompleteSale === "function") {
+			this.options.onBeforeCompleteSale(this.state, finish);
+			return;
+		}
+		finish();
 	},
 
 	open_tax_invoice() {

@@ -27,6 +27,14 @@
 	overflow: hidden;
 }
 
+.retail-pos--no-sidebar .retail-pos__sidebar {
+	display: none;
+}
+
+.retail-pos-embedded.retail-pos-page {
+	min-height: 520px;
+}
+
 .retail-pos__sidebar {
 	width: 210px;
 	background: #fff;
