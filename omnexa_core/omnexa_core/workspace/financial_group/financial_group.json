@@ -18,14 +18,6 @@
   },
   {
    "hidden": 0,
-   "icon": "accounting",
-   "label": "Finance Engine",
-   "link_to": "Finance Engine",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
    "icon": "setting",
    "label": "Finance Control Center",
    "link_to": "finance-control-center",
@@ -62,100 +54,6 @@
    "label": "Bank Statement Import",
    "link_to": "Bank Statement Import",
    "link_type": "DocType",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "workflow",
-   "label": "Credit Engine",
-   "link_to": "Credit Engine",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "quality",
-   "label": "Credit Risk",
-   "link_to": "Credit Risk",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "restriction",
-   "label": "Operational Risk",
-   "link_to": "Operational Risk",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "chart",
-   "label": "ALM",
-   "link_to": "ALM",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "project",
-   "label": "Vertical Finance Apps",
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "icon": "assets",
-   "label": "Fixed Assets",
-   "link_to": "Fixed Assets",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "customer",
-   "label": "Consumer Finance",
-   "link_to": "Consumer Finance",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "assets",
-   "label": "Vehicle Finance",
-   "link_to": "Vehicle Finance",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "loan",
-   "label": "Mortgage Finance",
-   "link_to": "Mortgage Finance",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "equity",
-   "label": "Factoring",
-   "link_to": "Factoring",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "users",
-   "label": "SME Retail Finance",
-   "link_to": "SME Retail Finance",
-   "link_type": "Workspace",
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "icon": "project",
-   "label": "Leasing Finance",
-   "link_to": "Leasing Finance",
-   "link_type": "Workspace",
    "type": "Link"
   }
  ],

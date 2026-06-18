@@ -101,6 +101,12 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			</div>
 			<div class="d-none mb-2 p-2 d-flex flex-wrap align-items-center gap-2" data-section="bulk-bar">
 				<span class="small fw-bold" data-bulk-count></span>
+				<select class="form-select form-select-sm" data-action="group-select" style="width:auto;min-width:11rem;max-width:14rem" title="${__("App group")}">
+					<option value="">${__("App group…")}</option>
+				</select>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="bulk-select-group" title="${__("Select all installed apps in the chosen group")}">${__("Select group")}</button>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="group-hide-desk" title="${__("Hide installed group apps from Desk sidebar")}">${__("Hide group")}</button>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="group-show-desk" title="${__("Show group apps on Desk again")}">${__("Show group")}</button>
 				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="bulk-select-visible">${__("Select visible uninstallable")}</button>
 				<button type="button" class="btn btn-sm btn-light" data-action="bulk-clear">${__("Clear selection")}</button>
 				<button type="button" class="btn btn-sm btn-outline-primary" data-action="bulk-preview">${__("Preview uninstall")}</button>
@@ -155,6 +161,140 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	let lastScopePlan = null;
 	const selectedSlugs = new Set();
 	const bulkUninstallEnabled = frappe.user.has_role("System Manager");
+	let uninstallGroups = [];
+
+	function ensureMarketplaceSession() {
+		if (!frappe.session || frappe.session.user === "Guest") {
+			frappe.msgprint({
+				title: __("Session refreshed"),
+				indicator: "blue",
+				message: __("Reloading Desk to restore your session after app changes."),
+			});
+			window.location.reload();
+			return false;
+		}
+		return true;
+	}
+
+	function getSelectedGroupKey() {
+		return String($container.find('[data-action="group-select"]').val() || "").trim();
+	}
+
+	function renderUninstallGroupSelect() {
+		const $sel = $container.find('[data-action="group-select"]');
+		if (!$sel.length) return;
+		const current = getSelectedGroupKey();
+		const options = [`<option value="">${frappe.utils.escape_html(__("App group…"))}</option>`];
+		(uninstallGroups || []).forEach((g) => {
+			const label = frappe.utils.escape_html(g.label || g.key);
+			const count = Number(g.installed_count) || 0;
+			const suffix = count ? ` (${count})` : "";
+			options.push(
+				`<option value="${frappe.utils.escape_html(g.key)}">${label}${frappe.utils.escape_html(suffix)}</option>`
+			);
+		});
+		$sel.html(options.join(""));
+		if (current && uninstallGroups.some((g) => g.key === current)) {
+			$sel.val(current);
+		}
+	}
+
+	async function loadUninstallGroups() {
+		if (!bulkUninstallEnabled) return;
+		try {
+			const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_uninstall_groups");
+			uninstallGroups = ((r && r.message) || {}).groups || [];
+			renderUninstallGroupSelect();
+		} catch (e) {
+			uninstallGroups = [];
+		}
+	}
+
+	function selectGroupApps(groupKey, { uninstallableOnly = true } = {}) {
+		const group = (uninstallGroups || []).find((g) => g.key === groupKey);
+		if (!group) {
+			frappe.msgprint(__("Choose an app group first."));
+			return 0;
+		}
+		const slugs = uninstallableOnly ? group.uninstallable || [] : group.installed || [];
+		if (!slugs.length) {
+			frappe.msgprint(__("No installed apps in this group to select."));
+			return 0;
+		}
+		slugs.forEach((slug) => selectedSlugs.add(String(slug)));
+		applyFiltersAndRender();
+		return slugs.length;
+	}
+
+	async function onBulkSelectGroup() {
+		const key = getSelectedGroupKey();
+		if (!key) {
+			frappe.msgprint(__("Choose an app group from the list first."));
+			return;
+		}
+		const n = selectGroupApps(key, { uninstallableOnly: true });
+		if (n) {
+			frappe.show_alert({ message: __("Selected {0} app(s) from group", [String(n)]), indicator: "green" });
+		}
+	}
+
+	async function onGroupDeskVisibility(hidden) {
+		const key = getSelectedGroupKey();
+		if (!key) {
+			frappe.msgprint(__("Choose an app group from the list first."));
+			return;
+		}
+		const group = (uninstallGroups || []).find((g) => g.key === key);
+		const label = (group && group.label) || key;
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				hidden
+					? __("<b>Hide {0} from Desk sidebar?</b><br>Apps stay installed; only the launcher and workspaces are hidden.", [
+							frappe.utils.escape_html(label),
+					  ])
+					: __("<b>Show {0} on Desk again?</b>", [frappe.utils.escape_html(label)]),
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) return;
+		const r = await frappe.call({
+			method: "omnexa_core.omnexa_core.app_visibility.set_group_desk_visibility",
+			args: { group_key: key, hidden: hidden ? 1 : 0 },
+		});
+		const result = (r && r.message) || {};
+		frappe.show_alert({
+			message: hidden
+				? __("Group hidden from Desk: {0}", [label])
+				: __("Group shown on Desk: {0}", [label]),
+			indicator: "green",
+		});
+		if (result.desk_hidden_apps) {
+			allItems.forEach((item) => {
+				item.desk_hidden = result.desk_hidden_apps.includes(item.app_slug);
+			});
+			applyFiltersAndRender();
+		} else {
+			await loadCatalog();
+		}
+	}
+
+	async function onGroupUninstallPreview() {
+		const key = getSelectedGroupKey();
+		if (!key) {
+			frappe.msgprint(__("Choose an app group from the list first."));
+			return;
+		}
+		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_group_uninstall_plan", {
+			group_key: key,
+		});
+		const plan = (r && r.message) || {};
+		frappe.msgprint({
+			title: __("Group uninstall preview"),
+			indicator: plan.can_uninstall ? "blue" : "orange",
+			message: bulkPlanSummaryHtml(plan),
+		});
+	}
 
 	/** Paid marketplace row (server: not in FREE_APPS — includes erpgenex_* verticals). */
 	function isPaidCatalogItem(item) {
@@ -754,6 +894,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		renderUpdateBanner(items);
 		scheduleCatalogAutoRefresh(payload.catalog_auto_refresh_ms);
 		await initActivityScopePanel(payload);
+		await loadUninstallGroups();
 		updateActivityFilterOptions(items);
 		const gh = frappe.utils.escape_html(payload.github_base || "https://github.com/ErpGenex");
 		const helpHtml = payload.license_help_html || "";
@@ -1069,6 +1210,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			stopTick();
 		}
 		await completeMarketplaceProgress(__("Bulk uninstall"));
+		if (!ensureMarketplaceSession()) return;
 		const result = (r && r.message) || {};
 		const done = result.apps_uninstalled || [];
 		const failed = result.failed || [];
@@ -1155,6 +1297,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			return;
 		}
 		await completeMarketplaceProgress(__("Uninstalling app"));
+		if (!ensureMarketplaceSession()) return;
 		const result = (r && r.message) || {};
 		if (result.uninstalled) {
 			frappe.show_alert({ message: __("App uninstalled from site: {0}", [appSlug]), indicator: "green" });
@@ -1410,6 +1553,15 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				}
 			});
 		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="bulk-select-group"]', async function () {
+		await onBulkSelectGroup();
+	});
+	$container.on("click", '[data-action="group-hide-desk"]', async function () {
+		await onGroupDeskVisibility(true);
+	});
+	$container.on("click", '[data-action="group-show-desk"]', async function () {
+		await onGroupDeskVisibility(false);
 	});
 	$container.on("click", '[data-action="bulk-select-visible"]', function () {
 		getFilteredRows()

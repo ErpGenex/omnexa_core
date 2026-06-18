@@ -259,6 +259,37 @@ def set_desk_app_hidden(app_slug: str, hidden: bool = True) -> list[str]:
 	return sorted(current)
 
 
+def set_apps_desk_hidden(app_slugs, hidden: bool = True) -> list[str]:
+	"""Hide or show multiple apps on Desk in one action."""
+	frappe.only_for("System Manager")
+	if isinstance(app_slugs, str):
+		text = app_slugs.strip()
+		if text.startswith("["):
+			try:
+				app_slugs = json.loads(text)
+			except Exception:
+				app_slugs = [s.strip() for s in text.split(",") if s.strip()]
+		else:
+			app_slugs = [s.strip() for s in text.split(",") if s.strip()]
+
+	_ensure_settings_doc()
+	current = get_hidden_desk_apps()
+	for raw in app_slugs or []:
+		slug = str(raw or "").strip()
+		if not slug or slug in {"frappe", "omnexa_core"}:
+			continue
+		if hidden:
+			current.add(slug)
+		else:
+			current.discard(slug)
+
+	payload = json.dumps(sorted(current))
+	frappe.db.set_single_value(SETTINGS_DOCTYPE, "desk_hidden_apps", payload)
+	clear_desk_visibility_cache()
+	frappe.clear_cache()
+	return sorted(current)
+
+
 @frappe.whitelist()
 def get_app_visibility_state() -> dict:
 	frappe.only_for("System Manager")
@@ -281,6 +312,40 @@ def set_app_desk_visibility(app_slug: str, hidden: int = 1) -> dict:
 	hidden_apps = set_desk_app_hidden(app_slug, hidden=bool(int(hidden)))
 	clear_desk_visibility_cache()
 	return {"app_slug": app_slug, "hidden": bool(int(hidden)), "desk_hidden_apps": hidden_apps}
+
+
+@frappe.whitelist()
+def set_apps_desk_visibility(app_slugs, hidden: int = 1) -> dict:
+	hidden_apps = set_apps_desk_hidden(app_slugs, hidden=bool(int(hidden)))
+	processed = []
+	if isinstance(app_slugs, str):
+		text = app_slugs.strip()
+		if text.startswith("["):
+			try:
+				processed = json.loads(text)
+			except Exception:
+				processed = [s.strip() for s in text.split(",") if s.strip()]
+		else:
+			processed = [s.strip() for s in text.split(",") if s.strip()]
+	else:
+		processed = list(app_slugs or [])
+	return {"hidden": bool(int(hidden)), "desk_hidden_apps": hidden_apps, "count": len(processed)}
+
+
+@frappe.whitelist()
+def set_group_desk_visibility(group_key: str, hidden: int = 1) -> dict:
+	from omnexa_core.omnexa_core.app_uninstall_groups import get_group_apps
+
+	installed = set(frappe.get_installed_apps() or [])
+	slugs = [a for a in get_group_apps(group_key) if a in installed and a not in {"frappe", "omnexa_core"}]
+	hidden_apps = set_apps_desk_hidden(slugs, hidden=bool(int(hidden)))
+	return {
+		"group_key": group_key,
+		"hidden": bool(int(hidden)),
+		"apps": slugs,
+		"count": len(slugs),
+		"desk_hidden_apps": hidden_apps,
+	}
 
 
 @frappe.whitelist()

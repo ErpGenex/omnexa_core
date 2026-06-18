@@ -2474,7 +2474,9 @@ def _apply_desk_link_sections(ws, sections: list[tuple[str, list[tuple[str, str,
 				continue
 			if link_type == "Page" and not frappe.db.exists("Page", link_to):
 				continue
-			if link_type == "Workspace" and not frappe.db.exists("Workspace", link_to):
+			if link_type == "Workspace":
+				# Desk Workspace Link child table only allows DocType / Page / Report.
+				# Nest finance apps via ``parent_page`` on the target Workspace instead.
 				continue
 			row: dict[str, Any] = {
 				"type": "Link",
@@ -3083,6 +3085,20 @@ def _ensure_asset_insurance_workspace() -> None:
 	ws.insert(ignore_permissions=True)
 
 
+def _strip_finance_group_invalid_workspace_links() -> None:
+	"""Remove Workspace Link rows with link_type Workspace (invalid in Frappe)."""
+	if not frappe.db.exists("Workspace", "Finance Group"):
+		return
+	fg = frappe.get_doc("Workspace", "Finance Group")
+	removed = False
+	for row in list(fg.links or []):
+		if row.get("type") == "Link" and (row.get("link_type") or "").strip() == "Workspace":
+			fg.remove(row)
+			removed = True
+	if removed:
+		fg.save(ignore_permissions=True)
+
+
 def _strip_finance_group_asset_insurance_link() -> None:
 	"""Remove legacy Finance Group → Asset Insurance sidebar row (belongs under Fixed Assets)."""
 	if not frappe.db.exists("Workspace", "Finance Group"):
@@ -3102,30 +3118,16 @@ def _strip_finance_group_asset_insurance_link() -> None:
 
 
 def _append_finance_group_workspace_nav_link(*, label: str, icon: str, link_to: str) -> None:
-	"""Append a Finance Group → Workspace link when the target exists (fixtures may omit it)."""
+	"""Nest a finance app workspace under Finance Group (sidebar), not as an invalid Link row."""
 	if not frappe.db.exists("Workspace", "Finance Group"):
 		return
 	if not frappe.db.exists("Workspace", link_to):
 		return
-	fg = frappe.get_doc("Workspace", "Finance Group")
-	key = ("Workspace", link_to)
-	for row in fg.links or []:
-		if row.get("type") == "Link" and (row.get("link_type"), row.get("link_to")) == key:
-			return
-	fg.append(
-		"links",
-		{
-			"type": "Link",
-			"hidden": 0,
-			"onboard": 0,
-			"label": label,
-			"link_type": "Workspace",
-			"link_to": link_to,
-			"link_count": 0,
-			"icon": icon,
-		},
-	)
-	fg.save(ignore_permissions=True)
+	parent = frappe.db.get_value("Workspace", "Finance Group", "title") or "Finance Group"
+	if not _parent_page_sidebar_token_matches(
+		frappe.db.get_value("Workspace", link_to, "parent_page"), parent
+	):
+		frappe.db.set_value("Workspace", link_to, "parent_page", parent, update_modified=False)
 
 
 def sync_all_workspace_kpi_layout() -> None:
@@ -3151,6 +3153,7 @@ def sync_all_workspace_kpi_layout() -> None:
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), f"Omnexa: final desk pass failed for `{app_key}`")
 	_strip_finance_group_asset_insurance_link()
+	_strip_finance_group_invalid_workspace_links()
 	# Reparent + desk: after full pass so Finance Group fixture / hooks do not leave stale links.
 	_ensure_asset_insurance_workspace()
 	if _app_installed("omnexa_fixed_assets") and frappe.db.exists("Workspace", "Asset Insurance"):

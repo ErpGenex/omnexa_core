@@ -761,6 +761,12 @@ def run_workspace_desk_sync():
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: workspace onboarding sync")
 	try:
+		from omnexa_core.workspace_link_prune import prune_all_workspaces_stale_references
+
+		prune_all_workspaces_stale_references()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: prune_all_workspaces_stale_references")
+	try:
 		from omnexa_core.omnexa_core.workspace_control_tower import (
 			prune_invalid_workspace_kpi_artifacts,
 			sync_all_workspace_kpi_layout,

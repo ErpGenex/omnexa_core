@@ -36,17 +36,94 @@ from omnexa_core.omnexa_core.omnexa_license import (
 )
 
 
-def _restore_frappe_session_user(previous_user: str | None) -> None:
-	"""Never call ``set_user`` with a falsy id — that raises *User None is disabled* and rolls back."""
-	user = (previous_user or "").strip()
-	if user and user not in ("Guest", "Administrator") and frappe.db.exists("User", user):
+def _capture_frappe_session() -> dict:
+	"""Snapshot session before privileged uninstall — ``frappe.set_user`` corrupts ``sid``."""
+	session = getattr(frappe.local, "session", None)
+	if not session:
+		return {"user": None, "sid": None, "data": None}
+	raw_data = getattr(session, "data", None)
+	if raw_data is None:
+		data_copy = None
+	elif isinstance(raw_data, dict):
+		data_copy = dict(raw_data)
+	elif hasattr(raw_data, "copy"):
 		try:
-			frappe.set_user(user)
-			return
+			data_copy = raw_data.copy()
 		except Exception:
-			pass
-	if frappe.session.user != "Administrator":
-		frappe.set_user("Administrator")
+			data_copy = dict(raw_data)
+	else:
+		data_copy = {}
+	return {
+		"user": getattr(session, "user", None),
+		"sid": getattr(session, "sid", None),
+		"data": data_copy,
+	}
+
+
+def _restore_frappe_session_snapshot(snapshot: dict | None) -> None:
+	"""Restore HTTP session without ``frappe.set_user`` (that sets sid = username and wipes data)."""
+	from omnexa_core.omnexa_core.session_guard import is_invalid_session_user
+
+	if not snapshot:
+		return
+
+	user = (snapshot.get("user") or "").strip()
+	if is_invalid_session_user(user) or user == "Guest":
+		user = "Guest"
+	elif not frappe.db.exists("User", user):
+		user = "Administrator" if frappe.db.exists("User", "Administrator") else "Guest"
+
+	session = frappe.local.session
+	session.user = user
+	sid = snapshot.get("sid")
+	if sid and not is_invalid_session_user(sid) and sid not in (user, "Administrator", "Guest"):
+		session.sid = sid
+
+	saved_data = snapshot.get("data")
+	if saved_data is not None:
+		restored = frappe._dict(saved_data) if isinstance(saved_data, dict) else saved_data
+		if isinstance(restored, dict):
+			restored["user"] = user
+		session.data = restored
+	elif isinstance(getattr(session, "data", None), dict):
+		session.data["user"] = user
+
+	frappe.local.cache = {}
+	frappe.local.role_permissions = {}
+	frappe.local.user_perms = None
+
+
+def _elevate_to_administrator_for_uninstall() -> dict:
+	"""Privilege escalation for uninstall that preserves the real browser session id."""
+	snap = _capture_frappe_session()
+	session = frappe.local.session
+	session.user = "Administrator"
+	if session.data is None:
+		session.data = frappe._dict()
+	if isinstance(session.data, dict):
+		session.data["user"] = "Administrator"
+	frappe.local.cache = {}
+	frappe.local.role_permissions = {}
+	frappe.local.user_perms = None
+	return snap
+
+
+def _restore_frappe_session_user(previous_user: str | None) -> None:
+	"""Backward-compatible restore — never calls ``frappe.set_user``."""
+	snap = _capture_frappe_session()
+	if previous_user:
+		snap["user"] = previous_user
+	_restore_frappe_session_snapshot(snap)
+
+
+def _finalize_uninstall_session() -> None:
+	"""Best-effort cleanup after app removal."""
+	try:
+		from omnexa_core.omnexa_core.session_guard import purge_corrupt_sessions
+
+		purge_corrupt_sessions()
+	except Exception:
+		pass
 
 
 def _platform_base_url() -> str:
@@ -1282,9 +1359,8 @@ def uninstall_app_now(app_slug: str, confirm_uninstall: int = 0):
 
 	no_backup = _is_truthy(frappe.conf.get("omnexa_marketplace_uninstall_no_backup"))
 
-	previous_user = getattr(frappe.session, "user", None)
+	session_snap = _elevate_to_administrator_for_uninstall()
 	try:
-		frappe.set_user("Administrator")
 		from frappe.installer import remove_app
 
 		remove_app(app_slug, dry_run=False, yes=True, no_backup=no_backup, force=False)
@@ -1297,7 +1373,7 @@ def uninstall_app_now(app_slug: str, confirm_uninstall: int = 0):
 			title=frappe._("Uninstall"),
 		)
 	finally:
-		_restore_frappe_session_user(previous_user)
+		_restore_frappe_session_snapshot(session_snap)
 
 	if app_slug in (frappe.get_installed_apps() or []):
 		return {"uninstalled": False, "message": "still_installed"}
@@ -1317,6 +1393,7 @@ def uninstall_app_now(app_slug: str, confirm_uninstall: int = 0):
 		pass
 
 	frappe.clear_cache()
+	_finalize_uninstall_session()
 	return {"uninstalled": True, "message": "uninstalled_now", "app_slug": app_slug}
 
 
@@ -1324,6 +1401,29 @@ def uninstall_app_now(app_slug: str, confirm_uninstall: int = 0):
 def get_bulk_uninstall_plan(app_slugs):
 	"""Bulk uninstall preview (System Manager)."""
 	return _bulk_uninstall_plan(app_slugs)
+
+
+@frappe.whitelist()
+def get_uninstall_groups():
+	"""App bundles for smart bulk uninstall / desk hide (System Manager)."""
+	frappe.only_for("System Manager")
+	from omnexa_core.omnexa_core.app_uninstall_groups import get_uninstall_groups_summary
+
+	return {"groups": get_uninstall_groups_summary()}
+
+
+@frappe.whitelist()
+def get_group_uninstall_plan(group_key: str):
+	"""Uninstall plan for a predefined app group."""
+	frappe.only_for("System Manager")
+	from omnexa_core.omnexa_core.app_uninstall_groups import get_group_apps, get_group_spec
+
+	spec = get_group_spec(group_key)
+	installed = set(frappe.get_installed_apps() or [])
+	slugs = [a for a in get_group_apps(group_key) if a in installed]
+	plan = _bulk_uninstall_plan(slugs)
+	plan["group"] = spec
+	return plan
 
 
 @frappe.whitelist()
@@ -1353,36 +1453,35 @@ def bulk_uninstall_apps_now(app_slugs, confirm_uninstall: int = 0):
 
 	uninstalled: list[str] = []
 	failed: list[dict] = []
-	previous_user = getattr(frappe.session, "user", None)
+	session_snap = _elevate_to_administrator_for_uninstall()
+	try:
+		for app_slug in plan["uninstall_order"]:
+			if app_slug not in (frappe.get_installed_apps() or []):
+				continue
+			try:
+				from frappe.installer import remove_app
 
-	for app_slug in plan["uninstall_order"]:
-		if app_slug not in (frappe.get_installed_apps() or []):
-			continue
-		try:
-			frappe.set_user("Administrator")
-			from frappe.installer import remove_app
-
-			remove_app(app_slug, dry_run=False, yes=True, no_backup=True, force=False)
-			frappe.db.commit()
-			for fn_name in ("clear_license_key", "clear_trial_for_app"):
+				remove_app(app_slug, dry_run=False, yes=True, no_backup=True, force=False)
+				frappe.db.commit()
+				for fn_name in ("clear_license_key", "clear_trial_for_app"):
+					try:
+						if fn_name == "clear_license_key":
+							clear_license_key(app_slug)
+						else:
+							clear_trial_for_app(app_slug)
+					except Exception:
+						pass
 				try:
-					if fn_name == "clear_license_key":
-						clear_license_key(app_slug)
-					else:
-						clear_trial_for_app(app_slug)
+					set_manual_revoke(app_slug, False)
 				except Exception:
 					pass
-			try:
-				set_manual_revoke(app_slug, False)
-			except Exception:
-				pass
-			uninstalled.append(app_slug)
-		except Exception as exc:
-			frappe.db.rollback()
-			failed.append({"app": app_slug, "error": str(exc)})
-			frappe.log_error(frappe.get_traceback(), f"Marketplace bulk uninstall failed: {app_slug}")
-		finally:
-			_restore_frappe_session_user(previous_user)
+				uninstalled.append(app_slug)
+			except Exception as exc:
+				frappe.db.rollback()
+				failed.append({"app": app_slug, "error": str(exc)})
+				frappe.log_error(frappe.get_traceback(), f"Marketplace bulk uninstall failed: {app_slug}")
+	finally:
+		_restore_frappe_session_snapshot(session_snap)
 
 	try:
 		from omnexa_core.install import run_workspace_desk_sync
@@ -1392,6 +1491,7 @@ def bulk_uninstall_apps_now(app_slugs, confirm_uninstall: int = 0):
 		pass
 
 	frappe.clear_cache()
+	_finalize_uninstall_session()
 	return {
 		"uninstalled": bool(uninstalled),
 		"message": "bulk_uninstall_done" if uninstalled else "bulk_uninstall_failed",

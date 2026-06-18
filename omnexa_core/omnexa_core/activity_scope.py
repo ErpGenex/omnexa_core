@@ -215,7 +215,12 @@ def apply_activity_scope(company_activity: str, confirm: int = 0) -> dict:
 			"company_activity": plan["company_activity"],
 		}
 
-	from omnexa_core.omnexa_core.marketplace import _is_truthy, _restore_frappe_session_user
+	from omnexa_core.omnexa_core.marketplace import (
+		_elevate_to_administrator_for_uninstall,
+		_finalize_uninstall_session,
+		_is_truthy,
+		_restore_frappe_session_snapshot,
+	)
 	from omnexa_core.omnexa_core.omnexa_license import clear_license_key, clear_trial_for_app, set_manual_revoke
 	from frappe.utils.backups import new_backup
 
@@ -233,33 +238,32 @@ def apply_activity_scope(company_activity: str, confirm: int = 0) -> dict:
 	activity = plan["company_activity"]
 	uninstalled: list[str] = []
 	failed: list[dict] = []
-	previous_user = getattr(frappe.session, "user", None)
+	session_snap = _elevate_to_administrator_for_uninstall()
+	try:
+		for app_slug in plan["uninstall_order"]:
+			if app_slug not in (frappe.get_installed_apps() or []):
+				continue
+			try:
+				from frappe.installer import remove_app
 
-	for app_slug in plan["uninstall_order"]:
-		if app_slug not in (frappe.get_installed_apps() or []):
-			continue
-		try:
-			frappe.set_user("Administrator")
-			from frappe.installer import remove_app
-
-			remove_app(app_slug, dry_run=False, yes=True, no_backup=True, force=False)
-			frappe.db.commit()
-			for fn in (clear_license_key, clear_trial_for_app):
+				remove_app(app_slug, dry_run=False, yes=True, no_backup=True, force=False)
+				frappe.db.commit()
+				for fn in (clear_license_key, clear_trial_for_app):
+					try:
+						fn(app_slug)
+					except Exception:
+						pass
 				try:
-					fn(app_slug)
+					set_manual_revoke(app_slug, False)
 				except Exception:
 					pass
-			try:
-				set_manual_revoke(app_slug, False)
-			except Exception:
-				pass
-			uninstalled.append(app_slug)
-		except Exception as exc:
-			frappe.db.rollback()
-			failed.append({"app": app_slug, "error": str(exc)})
-			frappe.log_error(frappe.get_traceback(), f"Activity scope uninstall failed: {app_slug}")
-		finally:
-			_restore_frappe_session_user(previous_user)
+				uninstalled.append(app_slug)
+			except Exception as exc:
+				frappe.db.rollback()
+				failed.append({"app": app_slug, "error": str(exc)})
+				frappe.log_error(frappe.get_traceback(), f"Activity scope uninstall failed: {app_slug}")
+	finally:
+		_restore_frappe_session_snapshot(session_snap)
 
 	_prune_desk_hidden(set(uninstalled))
 	_set_default_company_activity(activity)
@@ -274,6 +278,7 @@ def apply_activity_scope(company_activity: str, confirm: int = 0) -> dict:
 		pass
 
 	frappe.clear_cache()
+	_finalize_uninstall_session()
 	return {
 		"applied": True,
 		"company_activity": activity,
