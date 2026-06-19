@@ -20,11 +20,14 @@ frappe.pages["finance-demo-hub"].on_page_load = function (wrapper) {
 	function renderPortalCard(p) {
 		const disabled = p.exists === false ? " opacity-50" : "";
 		const route = p.route || "#";
+		const logo = p.logo_url
+			? `<img src="${esc(p.logo_url)}" alt="" style="width:48px;height:48px;object-fit:contain" />`
+			: `<div style="font-size:1.6rem">${esc(p.icon || "🏦")}</div>`;
 		return `<div class="col-md-3 mb-3">
-			<div class="card finance-demo-portal${disabled}" data-route="${esc(route)}" style="cursor:pointer;min-height:120px">
+			<div class="card finance-demo-portal${disabled}" data-route="${esc(route)}" style="cursor:pointer;min-height:130px">
 				<div class="card-body">
-					<div style="font-size:1.6rem">${esc(p.icon || "🏦")}</div>
-					<strong>${esc(portalLabel(p))}</strong>
+					${logo}
+					<strong class="d-block mt-2">${esc(portalLabel(p))}</strong>
 					<div class="text-muted small">${esc(p.page)}</div>
 				</div>
 			</div>
@@ -32,22 +35,35 @@ frappe.pages["finance-demo-hub"].on_page_load = function (wrapper) {
 	}
 
 	async function render() {
-		const [creds, groups] = await Promise.all([
+		const [creds, groups, defaults] = await Promise.all([
 			frappe.call({
 				method: "omnexa_core.omnexa_core.finance_demo.finance_role_demo.get_finance_demo_credentials",
 			}).then((r) => r.message || {}),
 			frappe.call({
 				method: "omnexa_core.omnexa_core.finance_demo.finance_portal_catalog.get_grouped_portal_catalog",
 			}).then((r) => r.message || []),
+			frappe.call({
+				method: "omnexa_core.omnexa_core.finance_demo.finance_role_demo.get_finance_demo_defaults",
+			}).then((r) => r.message || {}),
 		]);
+
+		const companyOpts = (defaults.companies || [])
+			.map((c) => `<option value="${esc(c.name)}" ${c.name === defaults.default_company ? "selected" : ""}>${esc(c.name)}</option>`)
+			.join("");
+		const branchOpts = (defaults.branches || [])
+			.map(
+				(b) =>
+					`<option value="${esc(b.name)}" data-company="${esc(b.company)}" ${b.name === defaults.default_branch ? "selected" : ""}>${esc(b.name)}</option>`
+			)
+			.join("");
 
 		const $body = $(`<div class="finance-demo-hub p-3"></div>`);
 		$body.append(`
 			<div class="alert alert-info">
 				<h5>${t("مركز تجربة المجموعة المالية", "Finance Group Demo Hub")}</h5>
 				<p class="mb-0">${t(
-					"محاكاة العمل اليومي لأدوار المؤسسات المالية — بوابات · workspaces · حسابات ديمو",
-					"Simulate daily work across finance roles — portals · workspaces · demo accounts"
+					"محاكاة واقعية لأدوار المؤسسات المالية — بوابات · workspaces · حسابات ديمو",
+					"Realistic simulation across finance roles — portals · workspaces · demo accounts"
 				)}</p>
 			</div>
 		`);
@@ -57,6 +73,16 @@ frappe.pages["finance-demo-hub"].on_page_load = function (wrapper) {
 				<div class="card-body">
 					<h5>${t("حسابات الديمو", "Demo Accounts")}</h5>
 					<p>${t("كلمة المرور", "Password")}: <code>${esc(creds.password)}</code></p>
+					<div class="row mb-3">
+						<div class="col-md-4">
+							<label class="small text-muted">${t("الشركة", "Company")}</label>
+							<select class="form-control demo-company">${companyOpts}</select>
+						</div>
+						<div class="col-md-4">
+							<label class="small text-muted">${t("الفرع", "Branch")}</label>
+							<select class="form-control demo-branch">${branchOpts}</select>
+						</div>
+					</div>
 					<button type="button" class="btn btn-primary btn-seed-roles">${t("زرع أدوار الديمو", "Seed Role Demo")}</button>
 					<div class="table-responsive mt-3">
 						<table class="table table-bordered table-sm">
@@ -84,7 +110,7 @@ frappe.pages["finance-demo-hub"].on_page_load = function (wrapper) {
 
 		(groups || []).forEach((g) => {
 			const title = frappe.boot.lang === "ar" ? g.label_ar : g.label_en;
-			$body.append(`<h5 class="mt-4">${esc(title)}</h5><div class="row">`);
+			$body.append(`<h5 class="mt-4">${esc(title)}</h5>`);
 			const $row = $('<div class="row"></div>');
 			(g.portals || []).forEach((p) => $row.append(renderPortalCard(p)));
 			$body.append($row);
@@ -97,12 +123,26 @@ frappe.pages["finance-demo-hub"].on_page_load = function (wrapper) {
 			if (route && route !== "#") frappe.set_route(route.replace(/^\/app\//, ""));
 		});
 
+		$body.find(".demo-company").on("change", function () {
+			const company = $(this).val();
+			const $branch = $body.find(".demo-branch");
+			$branch.find("option").each(function () {
+				const match = !company || $(this).data("company") === company;
+				$(this).toggle(match);
+			});
+			const first = $branch.find("option:visible:first").val();
+			if (first) $branch.val(first);
+		});
+
 		$body.find(".btn-seed-roles").on("click", () => {
+			const company = $body.find(".demo-company").val();
+			const branch = $body.find(".demo-branch").val();
 			frappe.confirm(
 				t("سيتم إنشاء workspaces ومستخدمي الديمو. متابعة؟", "This will create demo workspaces and users. Continue?"),
 				() => {
 					frappe.call({
 						method: "omnexa_core.omnexa_core.finance_demo.finance_role_demo.seed_finance_role_demo",
+						args: { company, branch },
 						freeze: true,
 						callback(r) {
 							frappe.show_alert({ message: t("تم", "Done"), indicator: "green" });

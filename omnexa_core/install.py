@@ -853,6 +853,12 @@ def run_site_hardening_after_app_changes():
 	backfill_bank_statement_line_company()
 	ensure_dashboard_finance_cards()
 	ensure_finance_workflow_templates()
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_group_workspace import sync_finance_group_home
+
+		sync_finance_group_home()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: sync Finance Group home workspace")
 	ensure_global_print_design_system()
 	ensure_erpgenex_report_print_assets()
 	ensure_accounting_report_json_filters()

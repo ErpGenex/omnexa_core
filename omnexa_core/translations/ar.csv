@@ -551,7 +551,7 @@ ERPGENEX — Admin,ERPGENEX — الإدارة
 ERPGENEX — Audit,ERPGENEX — التدقيق
 ERPGENEX — Buy,ERPGENEX — المشتريات
 ERPGENEX — Dashboard,ERPGENEX — لوحة التحكم
-ERPGENEX — Finance Group,ERPGENEX — المالية Group
+ERPGENEX — Finance Group,ERPGENEX — المجموعة المالية البنكية
 ERPGENEX — Sell,ERPGENEX — المبيعات
 ERPGENEX — Settings,ERPGENEX — إعدادات
 ERPGENEX — Stock,ERPGENEX — المخازن
@@ -651,8 +651,13 @@ Finance Engine,المالية Engine
 Finance Engine Governance,المالية Engine الحوكمة
 Finance Engine Governance - Policies by Status,المالية Engine الحوكمة - السياسات حسب الحالة
 Finance Engine Governance - Snapshots (Last Month),المالية Engine الحوكمة - لقطات (Last Month)
-Finance Group,المالية Group
-Finance Group Use the sidebar to open each finance workspace. Governance desks are nested under their main app.,المالية Group Use the sidebar to open each المالية workspace. الحوكمة desks are nested under their main app.
+Finance Group,المجموعة المالية البنكية
+Finance Group Use the sidebar to open each finance workspace. Governance desks are nested under their main app.,استخدم الشريط الجانبي لفتح كل workspace مالي. مكاتب الحوكمة متداخلة تحت تطبيقها الرئيسي.
+Finance Demo Hub,مركز تجربة المجموعة المالية
+Seed Role Demo,زرع أدوار الديمو
+Finance role demo ready. Each user sees only their workspace.,الديمو المالي جاهز — كل مستخدم يرى workspace الخاص بدوره فقط.
+No Company found. Create a Company first, or set Global Defaults → default company.,لا توجد شركة. أنشئ شركة أولاً أو عيّن الشركة الافتراضية في الإعدادات العامة.
+No Branch found for {0}. Create a Branch or set your user Branch default.,لا يوجد فرع لـ {0}. أنشئ فرعاً أو عيّن الفرع الافتراضي للمستخدم.
 Finance Posting Rule,المالية Posting Rule
 Finance Product Mix,المالية Product (مزيج)
 Finance Products,المالية Products

@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Finance Group\", \"col\": 12}}, {\"id\": \"fg-header\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Finance Group</b></span><br><span class=\\\"text-muted\\\">Use the sidebar to open each finance workspace. Governance desks are nested under their main app.</span>\", \"col\": 12}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Finance Group\", \"col\": 12}}, {\"id\": \"fg-header\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Finance Group</b></span><br><span class=\\\"text-muted\\\">Use the sidebar to open each finance workspace. Start at <b>Finance Demo Hub</b> for role-based simulation.</span>\", \"col\": 12}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -12,9 +12,17 @@
  "links": [
   {
    "hidden": 0,
-   "icon": "tool",
-   "label": "Core Engines",
+   "icon": "star",
+   "label": "Demo & Portals",
    "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "icon": "star",
+   "label": "Finance Demo Hub",
+   "link_to": "finance-demo-hub",
+   "link_type": "Page",
+   "type": "Link"
   },
   {
    "hidden": 0,
@@ -23,6 +31,12 @@
    "link_to": "finance-control-center",
    "link_type": "Page",
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon": "bank",
+   "label": "Core Engines",
+   "type": "Card Break"
   },
   {
    "hidden": 0,
@@ -64,6 +78,13 @@
  "quick_lists": [],
  "roles": [],
  "sequence_id": 7.0,
- "shortcuts": [],
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "label": "Demo Hub",
+   "link_to": "finance-demo-hub",
+   "type": "Page"
+  }
+ ],
  "title": "Finance Group"
 }

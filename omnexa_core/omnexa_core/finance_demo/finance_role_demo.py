@@ -296,6 +296,51 @@ def _block_non_finance_modules(user_doc) -> None:
 	user_doc.set("block_modules", [{"module": m} for m in blocked[:40]])
 
 
+def _resolve_demo_company_branch(
+	company: str | None = None, branch: str | None = None
+) -> tuple[str, str]:
+	"""Resolve Company/Branch for demo seed — user defaults, then site defaults, then first records."""
+	company = (company or "").strip() or (frappe.defaults.get_user_default("Company") or "").strip()
+	branch = (branch or "").strip() or (frappe.defaults.get_user_default("Branch") or "").strip()
+	if not company:
+		company = (frappe.db.get_single_value("Global Defaults", "default_company") or "").strip()
+	if not company:
+		company = frappe.db.get_value("Company", {}, "name", order_by="creation asc") or ""
+	if company and not branch:
+		branch = frappe.db.get_value(
+			"Branch", {"company": company}, "name", order_by="creation asc"
+		) or ""
+	if not branch:
+		branch = frappe.db.get_value("Branch", {}, "name", order_by="creation asc") or ""
+	if not company:
+		frappe.throw(
+			_("No Company found. Create a Company first, or set Global Defaults → default company.")
+		)
+	if not branch:
+		frappe.throw(
+			_("No Branch found for {0}. Create a Branch or set your user Branch default.").format(company)
+		)
+	return company, branch
+
+
+@frappe.whitelist()
+def get_finance_demo_defaults() -> dict:
+	"""Companies and branches available for finance role demo seed."""
+	frappe.only_for("System Manager")
+	companies = frappe.get_all("Company", fields=["name"], order_by="name asc", limit=50)
+	branches = frappe.get_all("Branch", fields=["name", "company"], order_by="name asc", limit=200)
+	try:
+		company, branch = _resolve_demo_company_branch()
+	except Exception:
+		company, branch = "", ""
+	return {
+		"companies": companies,
+		"branches": branches,
+		"default_company": company,
+		"default_branch": branch,
+	}
+
+
 def _ensure_demo_user(spec: dict, company: str, branch: str) -> str:
 	email = spec["email"]
 	role = spec["role"]
@@ -330,10 +375,7 @@ def _ensure_demo_user(spec: dict, company: str, branch: str) -> str:
 def seed_finance_role_demo(company: str | None = None, branch: str | None = None) -> dict:
 	"""Create finance role workspaces + demo users (System Manager)."""
 	frappe.only_for("System Manager")
-	company = company or frappe.defaults.get_user_default("Company")
-	branch = branch or frappe.defaults.get_user_default("Branch")
-	if not company or not branch:
-		frappe.throw(_("Set Company and Branch defaults first."))
+	company, branch = _resolve_demo_company_branch(company, branch)
 
 	workspaces = []
 	users = []
@@ -341,10 +383,16 @@ def seed_finance_role_demo(company: str | None = None, branch: str | None = None
 		workspaces.append(sync_role_workspace(spec))
 		users.append(_ensure_demo_user(spec, company, branch))
 
+	from omnexa_core.omnexa_core.finance_demo.finance_group_workspace import sync_finance_group_home
+
+	sync_finance_group_home()
+
 	frappe.db.commit()
 	return {
 		"ok": True,
 		"password": DEMO_PASSWORD,
+		"company": company,
+		"branch": branch,
 		"workspaces": workspaces,
 		"users": get_finance_demo_credentials()["users"],
 		"message": _("Finance role demo ready. Each user sees only their workspace."),
