@@ -857,6 +857,9 @@ def run_site_hardening_after_app_changes():
 		from omnexa_core.omnexa_core.finance_demo.finance_group_workspace import sync_finance_group_home
 
 		sync_finance_group_home()
+		from omnexa_core.omnexa_core.finance_demo.finance_group_sidebar import sync_finance_group_sidebar
+
+		sync_finance_group_sidebar()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: sync Finance Group home workspace")
 	ensure_global_print_design_system()

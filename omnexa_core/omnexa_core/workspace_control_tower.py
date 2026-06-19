@@ -24,6 +24,10 @@ from omnexa_core.omnexa_core.workspace_desk_layouts import (
 )
 from omnexa_core.workspace_onboarding_sync import onboarding_name_for
 
+from omnexa_core.omnexa_core.app_uninstall_groups import get_group_apps
+
+_FINANCE_VERTICAL_APPS = frozenset(get_group_apps("finance"))
+
 _COLORS = ("Cyan", "Blue", "Purple", "Orange", "Green", "Red", "Teal", "Pink")
 
 
@@ -247,7 +251,8 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 	"omnexa_einvoice": {
 		"workspace": "E-Invoice",
 		"module": "Omnexa Einvoice",
-		"icon": "file-text",
+		"icon": "file",
+		"parent_page": "",
 		"headline": "E-Invoice",
 		"tagline": "ETA, ZATCA, international tax consoles, submissions, and compliance review queues.",
 		"trend_doctypes": ["E Invoice Submission", "Country Tax Submission Log"],
@@ -3271,7 +3276,7 @@ def sync_workspace_for_app(app_name: str) -> None:
 		ws.public = 1
 		pp_new = (spec.get("parent_page") or "").strip()
 		ws.parent_page = _resolve_workspace_parent_page_field(pp_new) if pp_new else ""
-		if not ws.parent_page and not pp_new:
+		if not ws.parent_page and not pp_new and app_name in _FINANCE_VERTICAL_APPS:
 			ws.parent_page = "Finance Group"
 		ws.sequence_id = 15.0
 		ws.insert(ignore_permissions=True)
@@ -3283,13 +3288,16 @@ def sync_workspace_for_app(app_name: str) -> None:
 	ws.public = 1
 	if "parent_page" in spec:
 		pp = spec.get("parent_page")
-		if isinstance(pp, str) and pp.strip():
-			resolved_parent = _resolve_workspace_parent_page_field(pp.strip())
-			if resolved_parent:
-				ws.parent_page = resolved_parent
-			elif pp.strip():
-				ws.parent_page = pp.strip()
-	elif not ws.parent_page:
+		if isinstance(pp, str):
+			if pp.strip():
+				resolved_parent = _resolve_workspace_parent_page_field(pp.strip())
+				if resolved_parent:
+					ws.parent_page = resolved_parent
+				else:
+					ws.parent_page = pp.strip()
+			else:
+				ws.parent_page = ""
+	elif app_name in _FINANCE_VERTICAL_APPS and not ws.parent_page:
 		ws.parent_page = "Finance Group"
 	if "is_hidden" in spec:
 		ws.is_hidden = int(spec["is_hidden"])

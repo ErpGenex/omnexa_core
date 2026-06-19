@@ -99,6 +99,9 @@ def run_finance_group_smoke_audit(*, repair_microfinance: int = 0) -> dict:
 		from omnexa_core.omnexa_core.finance_demo.finance_group_workspace import sync_finance_group_home
 
 		sync_finance_group_home()
+		from omnexa_core.omnexa_core.finance_demo.finance_group_sidebar import sync_finance_group_sidebar
+
+		sync_finance_group_sidebar()
 		frappe.db.commit()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "finance_group_smoke: fg home sync")

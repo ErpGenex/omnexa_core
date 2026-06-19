@@ -9,6 +9,7 @@ import frappe
 from frappe import _
 
 from omnexa_core.omnexa_core.finance_demo.finance_app_registry import FINANCE_APP_REGISTRY
+from omnexa_core.omnexa_core.finance_demo.finance_group_sidebar import sync_finance_group_sidebar
 from omnexa_core.omnexa_core.workspace_control_tower import _append_finance_group_workspace_nav_link
 
 WORKSPACE_NAME = "Finance Group"
@@ -61,6 +62,13 @@ def _build_links() -> list[dict]:
 		_append_finance_group_workspace_nav_link(label=ws, icon=spec.get("icon") or "folder-normal", link_to=ws)
 	rows.extend(
 		[
+			_card_break("📒 Core Platform", "accounting"),
+			_link_row(
+				label=_("FinTruth — Accounting (Core)"),
+				link_type="Page",
+				link_to="acct-executive-dashboard",
+				icon="accounting",
+			),
 			_card_break("📊 Reports & GL", "reports"),
 			_link_row(
 				label=_("General Ledger"),
@@ -170,6 +178,7 @@ def sync_finance_group_home(*, save: bool = True) -> dict:
 	if save:
 		ws.flags.ignore_permissions = True
 		ws.save()
+	sync_finance_group_sidebar(save=save)
 	return {"ok": True, "workspace": WORKSPACE_NAME, "links": len(links), "shortcuts": len(ws.shortcuts)}
 
 

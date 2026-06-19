@@ -57,6 +57,7 @@ app_include_js = [
 	"/assets/omnexa_core/js/query_report_ux_enhancements.js",
 	"/assets/omnexa_core/js/branch_eta_signing.js",
 	"/assets/omnexa_core/js/desk_context_switcher.js",
+	"/assets/omnexa_core/js/finance_sidebar_brand.js",
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.

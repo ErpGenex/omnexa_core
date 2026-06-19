@@ -5,7 +5,22 @@ from __future__ import annotations
 
 import frappe
 
-# Catalog tile # from Docs/Logos/Logos.png (banking row 11–23)
+# Catalog tile # from Docs/Logos/Logos.png (banking row 11–22; FinTruth is Core platform #23)
+BANKING_FINANCE_APPS: list[str] = [
+	"omnexa_finance_engine",
+	"omnexa_credit_engine",
+	"omnexa_credit_risk",
+	"omnexa_alm",
+	"omnexa_consumer_finance",
+	"omnexa_vehicle_finance",
+	"omnexa_mortgage_finance",
+	"omnexa_factoring",
+	"omnexa_sme_retail_finance",
+	"omnexa_sme_microfinance",
+	"omnexa_leasing_finance",
+	"omnexa_operational_risk",
+]
+
 FINANCE_APP_REGISTRY: list[dict] = [
 	{
 		"app": "omnexa_finance_engine",
@@ -125,19 +140,27 @@ FINANCE_APP_REGISTRY: list[dict] = [
 		"workspace": "Operational Risk",
 		"exec_page": "or-executive-dashboard",
 		"serv_page": "or-grc-portal",
-		"icon": "warning",
-	},
-	{
-		"app": "omnexa_accounting",
-		"tile": 23,
-		"marketing_en": "FinTruth",
-		"marketing_ar": "FinTruth",
-		"workspace": "Accounting",
-		"exec_page": "acct-executive-dashboard",
-		"serv_page": "accounting-close-dashboard",
-		"icon": "accounting",
+		"icon": "quality",
 	},
 ]
+
+# FinTruth — Core platform GL (NOT a child of Finance Group sidebar).
+CORE_ACCOUNTING_REGISTRY: dict = {
+	"app": "omnexa_accounting",
+	"tile": 23,
+	"marketing_en": "FinTruth",
+	"marketing_ar": "FinTruth",
+	"workspace": "Accounting",
+	"exec_page": "acct-executive-dashboard",
+	"serv_page": "accounting-close-dashboard",
+	"icon": "accounting",
+	"parent": "core",
+}
+
+
+def get_full_finance_catalog() -> list[dict]:
+	"""Banking verticals + platform accounting entry (for portals/marketing only)."""
+	return [*FINANCE_APP_REGISTRY, CORE_ACCOUNTING_REGISTRY]
 
 
 def get_registry_entry(app: str) -> dict | None:
