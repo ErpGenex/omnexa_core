@@ -554,6 +554,39 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 			),
 		],
 	},
+	"omnexa_sme_microfinance": {
+		"workspace": "SME Microfinance",
+		"module": "Omnexa SME Microfinance",
+		"icon": "heart",
+		"onboarding_name": "ERPGENEX — SME Microfinance",
+		"headline": "SME Microfinance",
+		"tagline": "Micro-SME group lending, field collections, solidarity cycles & portfolio analytics.",
+		"trend_doctypes": ["Microfinance Case"],
+		"status_doctypes": ["Microfinance Case"],
+		"kpis": [
+			("Micro Cases", "Microfinance Case", []),
+			("Active Groups", "Microfinance Case", [["lifecycle_stage", "=", "Disbursement"]]),
+		],
+		"shortcuts": [
+			("Micro Cases", "DocType", "Microfinance Case"),
+			("Executive Dashboard", "Page", "mf-executive-dashboard"),
+			("Field Portal", "Page", "mf-servicing-portal"),
+			("Governance Overview", "Report", "Governance Overview"),
+		],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Microfinance Case", "group_by": "lifecycle_stage", "label": "Lifecycle"},
+			{"type": "Pie", "doctype": "Microfinance Case", "group_by": "risk_band", "label": "Risk bands"},
+		],
+		"extra_sections": [
+			(
+				"Field Operations",
+				[
+					("Field Portal", "Page", "mf-servicing-portal", "users"),
+					("Executive Dashboard", "Page", "mf-executive-dashboard", "activity"),
+				],
+			),
+		],
+	},
 	"omnexa_leasing_finance": {
 		"workspace": "Leasing Finance",
 		"module": "Omnexa Leasing Finance",
@@ -2844,6 +2877,7 @@ _VERTICAL_APP_OWNED_WORKSPACES: dict[str, str] = {
 	"Mortgage Finance": "omnexa_mortgage_finance",
 	"Factoring": "omnexa_factoring",
 	"SME Retail Finance": "omnexa_sme_retail_finance",
+	"SME Microfinance": "omnexa_sme_microfinance",
 	"Leasing Finance": "omnexa_leasing_finance",
 	"Audit": "omnexa_statutory_audit",
 	"Property Management": "erpgenex_property_mgmt",
@@ -3210,6 +3244,7 @@ def sync_workspace_for_app(app_name: str) -> None:
 		"omnexa_mortgage_finance",
 		"omnexa_factoring",
 		"omnexa_sme_retail_finance",
+		"omnexa_sme_microfinance",
 		"omnexa_leasing_finance",
 		"omnexa_statutory_audit",
 		"erpgenex_property_mgmt",

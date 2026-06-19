@@ -20,6 +20,7 @@ APP_UNINSTALL_GROUPS: dict[str, dict] = {
 			"omnexa_mortgage_finance",
 			"omnexa_factoring",
 			"omnexa_sme_retail_finance",
+			"omnexa_sme_microfinance",
 			"omnexa_leasing_finance",
 			"omnexa_operational_risk",
 		],
