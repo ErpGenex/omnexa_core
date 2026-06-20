@@ -73,7 +73,17 @@
 		$root.find(".oj-sidebar-item[data-nav-route]").on("click", function (e) {
 			e.preventDefault();
 			const route = $(this).attr("data-nav-route");
-			if (route) window.location.href = route.startsWith("/") ? route : `/app/${route}`;
+			if (!route) return;
+			if (window.omnexa_finance && omnexa_finance.portal && omnexa_finance.portal._navigateRoute) {
+				omnexa_finance.portal._navigateRoute(route);
+				return;
+			}
+			if (route.startsWith("/app/")) window.location.href = route;
+			else if (route.startsWith("List/")) frappe.set_route("List", route.slice(5));
+			else if (route.startsWith("Form/")) {
+				const p = route.split("/");
+				frappe.set_route("Form", p[1], p[2] || "");
+			} else window.location.href = route.startsWith("/") ? route : `/app/${route}`;
 		});
 		return $root;
 	}
@@ -205,6 +215,149 @@
 		}));
 	}
 
+	function appSidebar(navItems, activeRoute, brandLogo) {
+		const route = activeRoute || "";
+		return (navItems || []).map((item) => ({
+			label: t(item.label_ar, item.label_en),
+			route: item.route,
+			icon: item.icon || "•",
+			logoUrl: item.logo_url || brandLogo || "",
+			active:
+				route &&
+				(item.route === route ||
+					item.route === `/app/${route.replace(/^\/app\//, "")}` ||
+					(item.route.startsWith("/app/") && route.includes(item.route.replace("/app/", "")))),
+		}));
+	}
+
+	function progressStepper(steps) {
+		let html = `<div class="oj-stepper oj-finance-stepper">`;
+		(steps || []).forEach((s, idx) => {
+			const st = (s.status || "").toLowerCase();
+			const cls =
+				st === "completed" || st === "done"
+					? "done"
+					: st === "in progress" || st === "active"
+						? "active"
+						: st === "rejected" || st === "returned"
+							? "rejected"
+							: "";
+			const ring =
+				cls === "done"
+					? "✓"
+					: cls === "rejected"
+						? "!"
+						: s.step || idx + 1;
+			html += `<div class="oj-step ${cls}" data-step-key="${esc(s.key || "")}"><div class="oj-step-ring">${ring}</div><div class="oj-step-label">${esc(t(s.label_ar, s.label_en))}</div></div>`;
+		});
+		html += `</div>`;
+		return html;
+	}
+
+	function timelinePanel(events) {
+		const $panel = $('<div class="oj-timeline"></div>');
+		if (!events || !events.length) {
+			$panel.append(`<p class="oj-muted">${t("لا سجل زمني", "No timeline yet")}</p>`);
+			return $panel;
+		}
+		events.forEach((ev) => {
+			const when = ev.date ? frappe.datetime.str_to_user(ev.date) : "";
+			$panel.append(`
+				<div class="oj-timeline-item">
+					<div class="oj-timeline-dot"></div>
+					<div class="oj-timeline-body">
+						<strong>${esc(ev.action || t("تحديث", "Update"))}</strong>
+						<span class="oj-muted"> — ${esc(ev.user || "")}</span>
+						<div class="oj-muted small">${esc(when)}</div>
+						${ev.comments ? `<div class="oj-timeline-comment">${esc(ev.comments)}</div>` : ""}
+					</div>
+				</div>`);
+		});
+		return $panel;
+	}
+
+	function workflowJourneyGrid(steps, onSelect) {
+		const $g = $('<div class="oj-workflow-grid"></div>');
+		(steps || []).forEach((s) => {
+			const $card = $(`
+				<div class="oj-workflow-card" data-step="${esc(s.key || "")}">
+					<div class="oj-workflow-icon">${esc(s.icon || "•")}</div>
+					<div class="oj-workflow-title">${esc(t(s.label_ar, s.label_en))}</div>
+					<div class="oj-workflow-role oj-muted">${esc(t(s.role_ar, s.role_en))}</div>
+				</div>`);
+			$card.on("click", () => onSelect && onSelect(s));
+			$g.append($card);
+		});
+		return $g;
+	}
+
+	function registrationWizard({ app, fields, onSuccess }) {
+		const $dlg = $(`
+			<div class="oj-wizard-panel">
+				<h4>${t("تسجيل طلب تمويل جديد", "New Finance Application")}</h4>
+				<p class="oj-muted">${t("معالج التسجيل — المرحلة 1 من 12", "Registration wizard — step 1 of 12")}</p>
+				<form class="oj-wizard-form"></form>
+				<div class="oj-wizard-actions mt-3">
+					<button type="button" class="btn btn-primary btn-submit-wizard">${t("تسجيل وإرسال", "Register & Submit")}</button>
+					<button type="button" class="btn btn-default btn-cancel-wizard ml-2">${t("إلغاء", "Cancel")}</button>
+				</div>
+			</div>`);
+		const $form = $dlg.find(".oj-wizard-form");
+		(fields || []).forEach((f) => {
+			$form.append(`
+				<div class="form-group">
+					<label class="small">${esc(t(f.label_ar, f.label_en))}${f.reqd ? " *" : ""}</label>
+					<input class="form-control" name="${esc(f.fieldname)}" type="${f.fieldtype === "Int" ? "number" : "text"}" ${f.reqd ? "required" : ""} />
+				</div>`);
+		});
+		$dlg.find(".btn-cancel-wizard").on("click", () => $dlg.remove());
+		$dlg.find(".btn-submit-wizard").on("click", async () => {
+			const data = {};
+			$form.find("input[name]").each(function () {
+				data[$(this).attr("name")] = $(this).val();
+			});
+			try {
+				const out = await call(
+					"omnexa_core.omnexa_core.finance_demo.finance_workflow_journey.create_case_from_wizard",
+					{ app, data: JSON.stringify(data) }
+				);
+				frappe.show_alert({ message: t("تم تسجيل الطلب", "Application registered"), indicator: "green" });
+				$dlg.remove();
+				if (onSuccess) onSuccess(out);
+				else if (out.route) frappe.set_route(...out.route.split("/"));
+			} catch (e) {
+				frappe.msgprint({ title: t("خطأ", "Error"), indicator: "red", message: e.message || String(e) });
+			}
+		});
+		return $dlg;
+	}
+
+	function caseTrackerPanel(doctype, name) {
+		const $wrap = $(`<div class="oj-case-tracker">${loading()}</div>`);
+		call("omnexa_core.omnexa_core.finance_demo.finance_workflow_journey.get_case_journey_detail", {
+			doctype,
+			name,
+		})
+			.then((tracker) => {
+				$wrap.empty();
+				$wrap.append(`<h4 class="oj-section-title">${t("تتبع الحالة", "Case Tracking")}: ${esc(name)}</h4>`);
+				$wrap.append(
+					`<div class="oj-case-meta oj-muted mb-2">${t("المرحلة", "Stage")}: <strong>${esc(tracker.current_stage || "")}</strong> · ${t("الحالة", "Status")}: ${esc(tracker.approval_status || "")}</div>`
+				);
+				$wrap.append(progressStepper(tracker.enterprise_steps || tracker.progress || []));
+				$wrap.append(`<h5 class="oj-section-title">${t("السجل الزمني", "Audit Timeline")}</h5>`);
+				$wrap.append(timelinePanel(tracker.timeline || []));
+				$wrap.append(
+					`<button type="button" class="btn btn-sm btn-default mt-2 btn-open-case">${t("فتح السجل", "Open Record")}</button>`
+				);
+				$wrap.find(".btn-open-case").on("click", () => frappe.set_route("Form", doctype, name));
+			})
+			.catch((e) => {
+				$wrap.html(`<p class="text-danger">${esc(e.message || String(e))}</p>`);
+			});
+		return $wrap;
+	}
+
 	function portalCategoryGrid(groups) {
 		const $root = $('<div class="oj-portal-catalog oj-finance-demo-portals"></div>');
 		(groups || []).forEach((g) => {
@@ -240,6 +393,12 @@
 		loading,
 		logoUrl,
 		defaultSidebar,
+		appSidebar,
+		progressStepper,
+		timelinePanel,
+		workflowJourneyGrid,
+		registrationWizard,
+		caseTrackerPanel,
 		portalCategoryGrid,
 	};
 })(window);

@@ -350,9 +350,9 @@ VERTICAL_META: dict[str, dict] = {
 		"kpis_serv": [],
 		"kpis_exec": [
 			("Microfinance Case", "حالات", "Cases"),
-			("Microfinance Case", "محفظة", "Portfolio"),
-			("Microfinance Case", "نشطة", "Active"),
-			("Microfinance Case", "مغلقة", "Closed"),
+			("Microfinance Case", "منشأة", "Origination", "Origination"),
+			("Microfinance Case", "تحصيل", "Collection", "Collection"),
+			("Microfinance Case", "مغلقة", "Closed", "Closed"),
 		],
 		"table": "Microfinance Case",
 		"table_fields": ["name", "group_name", "lifecycle_stage", "risk_band", "modified"],
@@ -364,9 +364,7 @@ VERTICAL_META: dict[str, dict] = {
 			("modified", "آخر تحديث", "Updated"),
 		],
 		"links": [
-			("Microfinance Case", "List/Microfinance Case"),
-			("Microfinance Case", "Form/Microfinance Case/new"),
-			("SME Microfinance Workspace", "Workspaces/SME Microfinance"),
+			("Portfolio Report", "Report/Microfinance Portfolio Overview"),
 		],
 	},
 	"omnexa_leasing_finance": {

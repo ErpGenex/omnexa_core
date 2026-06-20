@@ -245,14 +245,36 @@ def get_portal_dashboard(page: str, company: str | None = None, branch: str | No
 	elif kpi_key == "kpis_serv":
 		wk = _workflow_servicing_kpis(app, company, branch, vmeta)
 		kpis = wk if wk else _kpi_rows(vmeta, kpi_key, company, branch)
+	elif app == "omnexa_sme_microfinance" and kpi_key == "kpis_exec":
+		dt = "Microfinance Case"
+		base = _company_branch_filters(company, branch, dt)
+		kpis = [{"label_ar": "حالات", "label_en": "Cases", "value": _safe_count(dt, base)}]
+		for stage, ar, en in (
+			("Origination", "منشأة", "Origination"),
+			("Disbursement", "محفظة نشطة", "Active Portfolio"),
+			("Collection", "تحصيل", "Collection"),
+			("Closed", "مغلقة", "Closed"),
+		):
+			f = dict(base)
+			if frappe.get_meta(dt).get_field("lifecycle_stage"):
+				f["lifecycle_stage"] = stage
+			kpis.append({"label_ar": ar, "label_en": en, "value": _safe_count(dt, f)})
 	else:
 		kpis = _kpi_rows(vmeta, kpi_key, company, branch)
+	from omnexa_core.omnexa_core.finance_demo.finance_workflow_journey import get_portal_journey_context
+
+	journey = get_portal_journey_context(page)
 	out = {
 		"page": page,
 		"app": app,
 		"logo_url": get_logo_url(app),
 		"kpis": kpis,
-		"links": _links_payload(vmeta, app),
+		"links": [],
+		"workflow_steps": journey.get("workflow_steps") or [],
+		"sidebar_nav": journey.get("sidebar_nav") or [],
+		"case_doctype": journey.get("case_doctype"),
+		"wizard_fields": journey.get("wizard_fields") or [],
+		"brand": journey.get("brand"),
 	}
 	out.update(_table_payload(vmeta, company, branch))
 	if app == "omnexa_sme_microfinance":

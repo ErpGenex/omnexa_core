@@ -47,34 +47,34 @@ UNIVERSAL_STAGE_GATE_TRANSITIONS: list[tuple[str, str, str, str, int]] = [
 ]
 
 PROGRESS_TRACKER_STEPS: list[tuple[str, str, str]] = [
-	("registration", "Customer Registration", "تسجيل العميل"),
-	("kyc", "KYC", "اعرف عميلك"),
-	("aml", "AML", "مكافحة غسل الأموال"),
-	("scoring", "Scoring", "التسجيل الائتماني"),
-	("risk", "Risk Assessment", "تقييم المخاطر"),
-	("field", "Field Visit", "زيارة ميدانية"),
-	("committee", "Committee", "اللجنة"),
-	("approval", "Approval", "الاعتماد"),
-	("contract", "Contract", "العقد"),
-	("disbursement", "Disbursement", "الصرف"),
-	("collection", "Collection", "التحصيل"),
-	("closure", "Closure", "الإغلاق"),
+	("registration", "Application Registration", "تسجيل طلب التمويل"),
+	("doc_verification", "Document Verification", "فحص المستندات"),
+	("credit_bureau", "Credit Bureau Inquiry", "الاستعلام الائتماني"),
+	("field_visit", "Field Visit", "الزيارة الميدانية"),
+	("financial_analysis", "Financial Analysis", "التحليل المالي"),
+	("credit_recommendation", "Credit Recommendation", "توصية الائتمان"),
+	("credit_committee", "Credit Committee", "لجنة الائتمان"),
+	("final_approval", "Final Approval", "الموافقة النهائية"),
+	("contract_disbursement", "Contract & Disbursement", "التعاقد والصرف"),
+	("repayment_schedule", "Repayment Schedule", "جدول الأقساط"),
+	("collections", "Collections & Payment", "التحصيل والسداد"),
+	("reports", "Executive Reports", "التقارير التنفيذية"),
 ]
 
-# Map workflow_state → progress step index (approximate)
+# Map workflow_state → progress step index (12-step enterprise journey)
 STATE_TO_PROGRESS: dict[str, int] = {
 	"Draft": 0,
 	"Submitted": 1,
 	"Assigned": 2,
 	"In Progress": 3,
-	"Pending Review": 5,
-	"Pending Approval": 7,
-	"Approved": 8,
+	"Pending Review": 4,
+	"Pending Approval": 6,
+	"Approved": 7,
 	"Completed": 9,
-	"Closed": 11,
+	"Closed": 10,
 	"Returned": 3,
-	"Rejected": 7,
-	"Escalated": 7,
+	"Rejected": 6,
+	"Escalated": 6,
 	"Cancelled": 0,
 }
 

@@ -1599,6 +1599,115 @@
 	padding-inline-start: 4px;
 }
 
+.oj-step.rejected .oj-step-ring {
+	background: var(--oj-danger);
+	border-color: var(--oj-danger);
+	color: #fff;
+}
+
+/* Enterprise workflow journey grid (12 screens) */
+.oj-workflow-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.oj-workflow-card {
+	background: var(--oj-card);
+	border-radius: var(--oj-radius-sm);
+	padding: 14px 12px;
+	box-shadow: var(--oj-shadow-sm);
+	cursor: pointer;
+	transition: transform 0.15s, box-shadow 0.15s;
+	border: 2px solid transparent;
+	text-align: center;
+}
+
+.oj-workflow-card:hover,
+.oj-workflow-card.selected {
+	border-color: var(--oj-primary);
+	box-shadow: var(--oj-shadow);
+	transform: translateY(-2px);
+}
+
+.oj-workflow-icon {
+	font-size: 1.6rem;
+	margin-bottom: 6px;
+}
+
+.oj-workflow-title {
+	font-weight: 700;
+	font-size: calc(0.9rem * var(--oj-portal-font-scale));
+	line-height: 1.25;
+}
+
+.oj-workflow-role {
+	font-size: calc(0.75rem * var(--oj-portal-font-scale));
+	margin-top: 4px;
+}
+
+.oj-finance-stepper {
+	overflow-x: auto;
+	flex-wrap: nowrap;
+}
+
+.oj-finance-stepper .oj-step {
+	min-width: 100px;
+}
+
+/* Timeline / audit trail */
+.oj-timeline {
+	border-inline-start: 3px solid var(--oj-accent);
+	padding-inline-start: 16px;
+	margin: 12px 0;
+}
+
+.oj-timeline-item {
+	position: relative;
+	padding-bottom: 14px;
+}
+
+.oj-timeline-dot {
+	position: absolute;
+	inset-inline-start: -22px;
+	top: 4px;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: var(--oj-primary);
+}
+
+.oj-timeline-comment {
+	margin-top: 4px;
+	font-size: calc(0.85rem * var(--oj-portal-font-scale));
+}
+
+/* Registration wizard */
+.oj-wizard-panel {
+	background: var(--oj-card);
+	border-radius: var(--oj-radius);
+	padding: 20px;
+	box-shadow: var(--oj-shadow-sm);
+	margin-bottom: 16px;
+	border: 1px solid var(--oj-accent);
+}
+
+.oj-portal-actions .btn-new-application {
+	font-weight: 700;
+}
+
+.oj-case-tracker-slot .oj-case-tracker {
+	background: var(--oj-card);
+	border-radius: var(--oj-radius);
+	padding: 16px;
+	box-shadow: var(--oj-shadow-sm);
+}
+
+.oj-data-table tbody tr:hover {
+	background: var(--oj-accent);
+}
+
 .finance-demo-hub-journey .oj-clinic-card {
 	cursor: pointer;
 }

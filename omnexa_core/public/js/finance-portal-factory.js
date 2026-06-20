@@ -80,6 +80,26 @@ omnexa_finance.portal.mountPage = function (wrapper, pageName) {
 	});
 };
 
+omnexa_finance.portal._navigateRoute = function (route) {
+	if (!route) return;
+	if (route === "#wizard") {
+		$(document).trigger("finance-portal-open-wizard");
+		return;
+	}
+	if (route.startsWith("#step-")) {
+		const key = route.replace("#step-", "");
+		$(document).trigger("finance-portal-focus-step", [key]);
+		return;
+	}
+	if (route.startsWith("/app/")) window.location.href = route;
+	else if (route.startsWith("List/")) frappe.set_route("List", route.slice(5));
+	else if (route.startsWith("Form/")) {
+		const p = route.split("/");
+		frappe.set_route("Form", p[1], p[2] || "");
+	} else if (route.startsWith("Report/")) frappe.set_route("query-report", route.slice(7));
+	else frappe.set_route(route);
+};
+
 omnexa_finance.portal.mount = function (wrapper, config) {
 	const OJ = window.OmnexaFinanceJourney;
 	if (!OJ || typeof OJ.defaultSidebar !== "function") {
@@ -100,37 +120,95 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 			value: k.value ?? "—",
 			label: OJ.t(k.label_ar, k.label_en),
 		}));
-		const $body = $("<div></div>");
-		if (config.links || data.links) {
-			const links = (data.links || config.links || []).map((l) => ({
-				label: OJ.t(l.label_ar, l.label_en),
-				route: l.route,
-				logoUrl: l.logo_url || (l.app ? OJ.logoUrl(l.app) : ""),
-				icon: l.icon,
-			}));
-			$body.append(`<h4 class="oj-section-title">${OJ.t("سيناريوهات العمل", "Work scenarios")}</h4>`);
-			$body.append(OJ.linkGrid(links));
-		}
-		if (data.columns && data.rows) {
-			$body.append(`<h4 class="oj-section-title mt-4">${OJ.t(data.table_title_ar || "السجلات", data.table_title_en || "Records")}</h4>`);
-			$body.append(
-				OJ.dataTable(
-					data.columns.map((c) => ({ field: c.field, label: OJ.t(c.label_ar, c.label_en) })),
-					data.rows
-				)
+		const $body = $("<div class='oj-finance-portal-body'></div>");
+		const workflowSteps = data.workflow_steps || [];
+		const caseDoctype = data.case_doctype;
+		const isExec = (config.page || "").includes("executive");
+
+		if (!isExec && caseDoctype) {
+			const $actions = $(`<div class="oj-portal-actions mb-3"></div>`);
+			$actions.append(
+				`<button type="button" class="btn btn-primary btn-new-application">${OJ.t("➕ تسجيل طلب تمويل", "➕ New Application")}</button>`
 			);
+			$body.append($actions);
 		}
+
+		if (workflowSteps.length) {
+			$body.append(`<h4 class="oj-section-title">${OJ.t("مسار التمويل — 12 مرحلة", "Financing Journey — 12 Stages")}</h4>`);
+			const $journey = OJ.workflowJourneyGrid(workflowSteps, (step) => {
+				const $info = $body.find(".oj-step-info");
+				$info.html(`
+					<div class="oj-panel">
+						<h5>${OJ.esc(OJ.t(step.label_ar, step.label_en))}</h5>
+						<p class="oj-muted">${OJ.esc(OJ.t(step.role_ar, step.role_en))}</p>
+					</div>`);
+				$body.find(".oj-workflow-card").removeClass("selected");
+				$body.find(`.oj-workflow-card[data-step="${step.key}"]`).addClass("selected");
+			});
+			$body.append($journey);
+			$body.append(`<div class="oj-step-info mt-2"></div>`);
+		}
+
+		const $trackerSlot = $(`<div class="oj-case-tracker-slot mt-3"></div>`);
+		$body.append($trackerSlot);
+
+		if (data.columns && data.rows) {
+			$body.append(
+				`<h4 class="oj-section-title mt-4">${OJ.t(data.table_title_ar || "الحالات الأخيرة", data.table_title_en || "Recent Cases")}</h4>`
+			);
+			const $tableWrap = OJ.dataTable(
+				data.columns.map((c) => ({ field: c.field, label: OJ.t(c.label_ar, c.label_en) })),
+				data.rows
+			);
+			$body.append($tableWrap);
+			if (caseDoctype) {
+				$tableWrap.find("tbody tr").css("cursor", "pointer").on("click", function () {
+					const idx = $(this).index();
+					const row = (data.rows || [])[idx];
+					if (!row || !row.name) return;
+					$trackerSlot.empty().append(OJ.caseTrackerPanel(caseDoctype, row.name));
+					$("html, body").animate({ scrollTop: $trackerSlot.offset().top - 80 }, 300);
+				});
+			}
+		}
+
+		const sidebarNav =
+			(data.sidebar_nav || []).length > 0
+				? OJ.appSidebar(data.sidebar_nav, `/app/${config.page}`, data.logo_url)
+				: OJ.defaultSidebar(config.sidebarRole || "executive", `/app/${config.page}`);
+
 		const $shell = OJ.shell({
 			title: OJ.t(config.titleAr, config.titleEn),
-			subtitle: OJ.t(config.subtitleAr || "ErpGenEx — Finance Group", config.subtitleEn || "ErpGenEx — Finance Group"),
+			subtitle: OJ.t(config.subtitleAr || "ErpGenex — Finance Group", config.subtitleEn || "ErpGenex — Finance Group"),
 			role: OJ.t(config.roleAr, config.roleEn),
 			brandLogoUrl: config.app ? OJ.logoUrl(config.app) : "",
 			kpis,
-			sidebar: OJ.defaultSidebar(config.sidebarRole || "executive", `/app/${config.page}`),
+			sidebar: sidebarNav,
 			bodyEl: $body,
 		});
+
+		$shell.find(".oj-sidebar-item[data-nav-route]").off("click").on("click", function (e) {
+			e.preventDefault();
+			omnexa_finance.portal._navigateRoute($(this).attr("data-nav-route"));
+		});
+
 		$mount.empty().append($shell);
 		omnexa_finance.dismissOnboardingDialog();
+
+		$body.find(".btn-new-application").on("click", () => {
+			$body.find(".oj-wizard-panel").remove();
+			$body.prepend(
+				OJ.registrationWizard({
+					app: data.app,
+					fields: data.wizard_fields || [],
+					onSuccess: () => render(),
+				})
+			);
+		});
+
+		$(document).off("finance-portal-open-wizard").on("finance-portal-open-wizard", () => {
+			$body.find(".btn-new-application").trigger("click");
+		});
 	}
 
 	render().catch((e) => {
