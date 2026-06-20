@@ -9,6 +9,8 @@ const FINANCE_JOURNEY_JS = [
 	"/assets/omnexa_core/js/finance-portal-registry.js",
 ];
 
+omnexa_finance.PORTAL_UI_VERSION = "20260620-workflow-v2";
+
 omnexa_finance._hydrateRegistryFromBoot = function () {
 	if (omnexa_finance.PORTAL_REGISTRY) return;
 	if (frappe.boot && frappe.boot.finance_portal_registry) {
@@ -186,6 +188,10 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 			sidebar: sidebarNav,
 			bodyEl: $body,
 		});
+
+		$shell.find(".oj-topbar-meta").prepend(
+			`<span class="oj-pill oj-version-pill" title="Portal UI">${omnexa_finance.PORTAL_UI_VERSION || "v2"}</span>`
+		);
 
 		$shell.find(".oj-sidebar-item[data-nav-route]").off("click").on("click", function (e) {
 			e.preventDefault();
