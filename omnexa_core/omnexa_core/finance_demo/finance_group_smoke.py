@@ -144,3 +144,73 @@ def repair_finance_group_workspaces() -> dict:
 
 	frappe.db.commit()
 	return {"repaired": repaired, "errors": errors}
+
+
+PORTAL_DEMO_USERS: dict[str, str] = {
+	"omnexa_finance_engine": "executive@demo.finance",
+	"omnexa_credit_engine": "credit@demo.finance",
+	"omnexa_credit_risk": "risk@demo.finance",
+	"omnexa_alm": "treasury@demo.finance",
+	"omnexa_consumer_finance": "consumer@demo.finance",
+	"omnexa_vehicle_finance": "auto@demo.finance",
+	"omnexa_mortgage_finance": "mortgage@demo.finance",
+	"omnexa_factoring": "factoring@demo.finance",
+	"omnexa_sme_retail_finance": "sme@demo.finance",
+	"omnexa_sme_microfinance": "micro@demo.finance",
+	"omnexa_leasing_finance": "leasing@demo.finance",
+	"omnexa_operational_risk": "grc@demo.finance",
+	"omnexa_accounting": "accounting@demo.finance",
+}
+
+
+def run_finance_portal_access_audit() -> dict:
+	"""Verify each app portal is readable + dashboard API works for its demo user."""
+	from frappe.boot import get_allowed_pages
+
+	results: list[dict] = []
+	for app, (exec_page, serv_page) in FINANCE_PAGES.items():
+		email = PORTAL_DEMO_USERS.get(app)
+		if not email or not frappe.db.exists("User", email):
+			results.append({"app": app, "ok": False, "reason": "demo_user_missing"})
+			continue
+		frappe.set_user(email)
+		allowed = get_allowed_pages()
+		checks: dict[str, bool] = {}
+		for page in (exec_page, serv_page):
+			page_ok = page in allowed
+			api_ok = False
+			if page_ok:
+				try:
+					data = frappe.get_attr(
+						"omnexa_core.omnexa_core.finance_demo.finance_portal_desk.get_portal_dashboard"
+					)(page=page)
+					api_ok = bool(data)
+				except Exception:
+					api_ok = False
+			checks[page] = page_ok and api_ok
+		results.append(
+			{
+				"app": app,
+				"user": email,
+				"executive_page": exec_page,
+				"servicing_page": serv_page,
+				"checks": checks,
+				"ok": all(checks.values()),
+			}
+		)
+	frappe.set_user("Administrator")
+	failed = [r for r in results if not r["ok"]]
+	return {
+		"ok": len(failed) == 0,
+		"portals_total": len(results) * 2,
+		"apps_total": len(results),
+		"apps_passed": len(results) - len(failed),
+		"results": results,
+		"failed": failed,
+	}
+
+
+@frappe.whitelist()
+def run_finance_portal_access_audit_api() -> dict:
+	frappe.only_for("System Manager")
+	return run_finance_portal_access_audit()

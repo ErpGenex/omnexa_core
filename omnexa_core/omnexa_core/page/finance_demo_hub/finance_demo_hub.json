@@ -5,5 +5,8 @@
 	"page_name": "finance-demo-hub",
 	"title": "Finance Demo Hub",
 	"standard": "Yes",
-	"roles": [{"role": "System Manager"}]
+	"roles": [
+		{"role": "System Manager"},
+		{"role": "Finance Group Executive"}
+	]
 }

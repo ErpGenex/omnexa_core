@@ -269,7 +269,7 @@ def sync_role_workspace(spec: dict) -> str:
 				"label": ws_name,
 				"title": ws_name,
 				"module": "Omnexa Core",
-				"public": 0,
+				"public": 1,
 				"for_user": "",
 				"content": "[]",
 				"sequence_id": 2.0,
@@ -283,6 +283,8 @@ def sync_role_workspace(spec: dict) -> str:
 	for row in rows:
 		ws.append("links", row)
 	ws.set("roles", [{"role": role}])
+	ws.public = 1
+	ws.for_user = ""
 	ws.title = spec.get("title") or ws_name
 	ws.content = build_content_from_link_rows(rows, ws, title=ws.title, slug=frappe.scrub(ws_name))
 	ws.flags.ignore_permissions = True
@@ -371,6 +373,27 @@ def _ensure_demo_user(spec: dict, company: str, branch: str) -> str:
 	return email
 
 
+def _sync_demo_page_roles() -> None:
+	"""Ensure group hub pages are readable by finance demo roles."""
+	page_roles = {
+		"finance-demo-hub": ["Finance Group Executive"],
+		"finance-control-center": ["Finance Accounting Controller"],
+	}
+	for page_name, roles in page_roles.items():
+		if not frappe.db.exists("Page", page_name):
+			continue
+		page = frappe.get_doc("Page", page_name)
+		existing = {r.role for r in page.roles}
+		changed = False
+		for role in roles:
+			if role not in existing:
+				page.append("roles", {"role": role})
+				changed = True
+		if changed:
+			page.flags.ignore_permissions = True
+			page.save()
+
+
 @frappe.whitelist()
 def seed_finance_role_demo(company: str | None = None, branch: str | None = None) -> dict:
 	"""Create finance role workspaces + demo users (System Manager)."""
@@ -386,6 +409,7 @@ def seed_finance_role_demo(company: str | None = None, branch: str | None = None
 	from omnexa_core.omnexa_core.finance_demo.finance_group_workspace import sync_finance_group_home
 
 	sync_finance_group_home()
+	_sync_demo_page_roles()
 	try:
 		from omnexa_core.omnexa_core.finance_demo.finance_vertical_bpe import sync_all_finance_vertical_bpe
 

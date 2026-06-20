@@ -5,7 +5,11 @@ from __future__ import annotations
 
 import frappe
 
-from omnexa_core.omnexa_core.finance_demo.finance_group_smoke import FINANCE_PAGES, run_finance_group_smoke_audit
+from omnexa_core.omnexa_core.finance_demo.finance_group_smoke import (
+	FINANCE_PAGES,
+	run_finance_group_smoke_audit,
+	run_finance_portal_access_audit,
+)
 from omnexa_core.omnexa_core.finance_demo.finance_role_demo import DEMO_PASSWORD, ROLE_SPECS
 from omnexa_core.omnexa_core.finance_demo.finance_vertical_specs import VERTICAL_BPE_SPECS
 
@@ -105,6 +109,15 @@ def run_automated_uat() -> dict:
 			"id": "UAT-SMOKE",
 			"name": "Smoke audit 13/13",
 			"passed": bool(smoke.get("ok")),
+		}
+	)
+
+	portals = run_finance_portal_access_audit()
+	scenarios.append(
+		{
+			"id": "UAT-PORTAL-ACCESS",
+			"name": "Portal access 26/26",
+			"passed": bool(portals.get("ok")),
 		}
 	)
 

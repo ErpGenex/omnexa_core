@@ -8,7 +8,8 @@
  "roles": [
   {"role": "System Manager"},
   {"role": "Accounts Manager"},
-  {"role": "Accounts User"}
+  {"role": "Accounts User"},
+  {"role": "Finance Accounting Controller"}
  ]
 }
 
