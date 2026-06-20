@@ -9,7 +9,7 @@ const FINANCE_JOURNEY_JS = [
 	"/assets/omnexa_core/js/finance-portal-registry.js",
 ];
 
-omnexa_finance.PORTAL_UI_VERSION = "20260620-workflow-v2";
+omnexa_finance.PORTAL_UI_VERSION = "20260620-workflow-v3";
 
 omnexa_finance._hydrateRegistryFromBoot = function () {
 	if (omnexa_finance.PORTAL_REGISTRY) return;
@@ -158,18 +158,22 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 			$body.append(
 				`<h4 class="oj-section-title mt-4">${OJ.t(data.table_title_ar || "الحالات الأخيرة", data.table_title_en || "Recent Cases")}</h4>`
 			);
-			const $tableWrap = OJ.dataTable(
+			const tableResult = OJ.dataTable(
 				data.columns.map((c) => ({ field: c.field, label: OJ.t(c.label_ar, c.label_en) })),
 				data.rows
 			);
+			const $tableWrap =
+				tableResult && tableResult.jquery ? tableResult : $(typeof tableResult === "string" ? tableResult : "");
 			$body.append($tableWrap);
-			if (caseDoctype) {
-				$tableWrap.find("tbody tr").css("cursor", "pointer").on("click", function () {
+			if (caseDoctype && $tableWrap.length) {
+				$tableWrap.find("tbody tr").css("cursor", "pointer");
+				$tableWrap.on("click", "tbody tr", function () {
 					const idx = $(this).index();
 					const row = (data.rows || [])[idx];
 					if (!row || !row.name) return;
 					$trackerSlot.empty().append(OJ.caseTrackerPanel(caseDoctype, row.name));
-					$("html, body").animate({ scrollTop: $trackerSlot.offset().top - 80 }, 300);
+					const top = $trackerSlot.offset() && $trackerSlot.offset().top;
+					if (top) $("html, body").animate({ scrollTop: top - 80 }, 300);
 				});
 			}
 		}

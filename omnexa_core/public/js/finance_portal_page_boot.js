@@ -10,7 +10,7 @@ const FINANCE_PORTAL_ASSETS = [
 	"/assets/omnexa_core/js/finance-portal-factory.js",
 ];
 
-omnexa_finance.PORTAL_UI_VERSION = "20260620-workflow-v2";
+omnexa_finance.PORTAL_UI_VERSION = "20260620-workflow-v3";
 
 omnexa_finance._hydrateRegistryFromBoot = function () {
 	if (window.omnexa_finance && omnexa_finance.PORTAL_REGISTRY) return;

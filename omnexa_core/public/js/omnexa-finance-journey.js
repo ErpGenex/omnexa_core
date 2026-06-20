@@ -94,7 +94,8 @@
 		const body = (rows || [])
 			.map((row) => `<tr>${cols.map((c) => `<td>${esc(row[c.field] ?? "—")}</td>`).join("")}</tr>`)
 			.join("");
-		return `<div class="oj-table-wrap"><table class="oj-data-table"><thead><tr>${head}</tr></thead><tbody>${body || `<tr><td colspan="${cols.length || 1}" class="oj-muted">${t("لا بيانات", "No data")}</td></tr>`}</tbody></table></div>`;
+		const html = `<div class="oj-table-wrap"><table class="oj-data-table"><thead><tr>${head}</tr></thead><tbody>${body || `<tr><td colspan="${cols.length || 1}" class="oj-muted">${t("لا بيانات", "No data")}</td></tr>`}</tbody></table></div>`;
+		return $(html);
 	}
 
 	function linkGrid(links) {
