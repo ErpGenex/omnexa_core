@@ -1708,6 +1708,103 @@
 	background: var(--oj-accent);
 }
 
+/* Workflow stage screen panel */
+.oj-stage-screen-slot {
+	min-height: 120px;
+}
+
+.oj-stage-screen {
+	background: var(--oj-card);
+	border-radius: var(--oj-radius);
+	padding: 24px;
+	box-shadow: var(--oj-shadow-sm);
+	border: 1px solid var(--oj-accent);
+}
+
+.oj-stage-desc {
+	margin-bottom: 12px;
+	font-size: calc(1rem * var(--oj-portal-font-scale));
+}
+
+.oj-stage-role {
+	margin-bottom: 16px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid var(--oj-accent);
+}
+
+.oj-stage-case-badge {
+	background: var(--oj-accent);
+	border-radius: var(--oj-radius-sm);
+	padding: 10px 14px;
+	margin-bottom: 16px;
+	font-size: calc(0.95rem * var(--oj-portal-font-scale));
+}
+
+.oj-stage-metrics {
+	margin: 16px 0;
+}
+
+.oj-stage-checklist {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin: 16px 0;
+}
+
+.oj-check-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 14px;
+	background: var(--oj-bg);
+	border-radius: var(--oj-radius-sm);
+	cursor: pointer;
+	margin: 0;
+}
+
+.oj-check-item input {
+	margin: 0;
+}
+
+.oj-stage-form {
+	margin: 16px 0;
+}
+
+.oj-stage-decisions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin: 16px 0;
+}
+
+.oj-radio-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 16px;
+	background: var(--oj-bg);
+	border-radius: var(--oj-radius-sm);
+	cursor: pointer;
+	margin: 0;
+}
+
+.oj-stage-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding-top: 8px;
+	border-top: 1px solid var(--oj-accent);
+}
+
+.oj-alert-info {
+	background: #e6f4ff;
+	border: 1px solid #91caff;
+	border-radius: var(--oj-radius-sm);
+	padding: 12px 16px;
+	margin-bottom: 16px;
+	color: var(--oj-primary);
+}
+
 .finance-demo-hub-journey .oj-clinic-card {
 	cursor: pointer;
 }

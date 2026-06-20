@@ -138,6 +138,174 @@ WORKFLOW_STATE_TO_STEP: dict[str, int] = {
 	"Cancelled": 0,
 }
 
+# Interactive screen content per enterprise stage (AR/EN).
+WORKFLOW_STAGE_SCREENS: dict[str, dict] = {
+	"registration": {
+		"screen_type": "form",
+		"desc_ar": "إنشاء طلب تمويل جديد — بيانات العميل والمنتج والمبلغ.",
+		"desc_en": "Create a new finance application — customer, product and amount.",
+		"fields": [
+			{"fieldname": "product", "label_ar": "نوع التمويل", "label_en": "Finance Product", "fieldtype": "Select"},
+			{"fieldname": "customer", "label_ar": "اسم العميل", "label_en": "Customer Name", "fieldtype": "Data"},
+			{"fieldname": "amount", "label_ar": "المبلغ المطلوب", "label_en": "Requested Amount", "fieldtype": "Currency"},
+			{"fieldname": "term", "label_ar": "المدة (شهر)", "label_en": "Term (Months)", "fieldtype": "Int"},
+		],
+		"actions": [{"key": "wizard", "label_ar": "➕ تسجيل طلب", "label_en": "➕ New Application", "primary": 1}],
+	},
+	"doc_verification": {
+		"screen_type": "checklist",
+		"desc_ar": "فحص المستندات الإلزامية قبل الاستعلام الائتماني.",
+		"desc_en": "Verify mandatory documents before credit bureau inquiry.",
+		"checklist": [
+			{"id": "id", "label_ar": "الهوية الوطنية", "label_en": "National ID"},
+			{"id": "cr", "label_ar": "السجل التجاري", "label_en": "Commercial Registration"},
+			{"id": "income", "label_ar": "شهادة الدخل", "label_en": "Income Certificate"},
+			{"id": "bank", "label_ar": "كشف حساب", "label_en": "Bank Statement"},
+		],
+		"actions": [
+			{"key": "approve_step", "label_ar": "✓ اعتماد المستندات", "label_en": "✓ Verify Documents", "primary": 1},
+			{"key": "open_case", "label_ar": "فتح السجل", "label_en": "Open Record"},
+		],
+	},
+	"credit_bureau": {
+		"screen_type": "score",
+		"desc_ar": "استعلام مكتب ائتماني — النقاط والالتزامات.",
+		"desc_en": "Credit bureau inquiry — score and liabilities.",
+		"metrics": [
+			{"label_ar": "النقاط", "label_en": "Score", "value": "742"},
+			{"label_ar": "التصنيف", "label_en": "Grade", "value": "Good / جيد"},
+			{"label_ar": "الالتزامات الشهرية", "label_en": "Monthly Obligations", "value": "4,200"},
+		],
+		"decisions": [
+			{"value": "suitable", "label_ar": "مناسب", "label_en": "Suitable"},
+			{"value": "conditional", "label_ar": "مناسب بشروط", "label_en": "Conditional"},
+			{"value": "unsuitable", "label_ar": "غير مناسب", "label_en": "Unsuitable"},
+		],
+		"actions": [{"key": "next", "label_ar": "→ الزيارة الميدانية", "label_en": "→ Field Visit", "primary": 1}],
+	},
+	"field_visit": {
+		"screen_type": "field",
+		"desc_ar": "زيارة ميدانية — الموقع والصور والتوصية.",
+		"desc_en": "Field visit — location, photos and recommendation.",
+		"fields": [
+			{"fieldname": "visit_date", "label_ar": "تاريخ الزيارة", "label_en": "Visit Date", "fieldtype": "Date"},
+			{"fieldname": "location", "label_ar": "الموقع", "label_en": "Location", "fieldtype": "Data"},
+			{"fieldname": "activity", "label_ar": "النشاط", "label_en": "Activity", "fieldtype": "Data"},
+		],
+		"decisions": [
+			{"value": "recommended", "label_ar": "موصى به", "label_en": "Recommended"},
+			{"value": "conditional", "label_ar": "بشروط", "label_en": "Conditional"},
+			{"value": "not_recommended", "label_ar": "غير موصى", "label_en": "Not Recommended"},
+		],
+		"actions": [{"key": "next", "label_ar": "→ التحليل المالي", "label_en": "→ Financial Analysis", "primary": 1}],
+	},
+	"financial_analysis": {
+		"screen_type": "analysis",
+		"desc_ar": "تحليل الدخل ونسبة الدين والتدفق النقدي.",
+		"desc_en": "Income, debt ratio and cash flow analysis.",
+		"metrics": [
+			{"label_ar": "الدخل الشهري", "label_en": "Monthly Income", "value": "12,000"},
+			{"label_ar": "نسبة الدين", "label_en": "Debt Ratio", "value": "34.7%"},
+			{"label_ar": "مستوى المخاطر", "label_en": "Risk Level", "value": "Low / منخفض"},
+		],
+		"actions": [{"key": "next", "label_ar": "→ توصية الائتمان", "label_en": "→ Credit Recommendation", "primary": 1}],
+	},
+	"credit_recommendation": {
+		"screen_type": "decision",
+		"desc_ar": "توصية محلل الائتمان — اعتماد أو رفض أو شروط.",
+		"desc_en": "Credit analyst recommendation — approve, reject or conditions.",
+		"decisions": [
+			{"value": "approve", "label_ar": "اعتماد", "label_en": "Approve"},
+			{"value": "conditional", "label_ar": "اعتماد بشروط", "label_en": "Approve with Conditions"},
+			{"value": "reject", "label_ar": "رفض", "label_en": "Reject"},
+		],
+		"actions": [{"key": "next", "label_ar": "→ لجنة الائتمان", "label_en": "→ Credit Committee", "primary": 1}],
+	},
+	"credit_committee": {
+		"screen_type": "committee",
+		"desc_ar": "تصويت أعضاء اللجنة ومحضر القرار.",
+		"desc_en": "Committee votes and decision minutes.",
+		"table_cols": [
+			("member", "العضو", "Member"),
+			("role", "الدور", "Role"),
+			("vote", "التصويت", "Vote"),
+		],
+		"table_rows": [
+			{"member": "Member A", "role": "Chair", "vote": "Approve"},
+			{"member": "Member B", "role": "Risk", "vote": "Approve"},
+			{"member": "Member C", "role": "Credit", "vote": "Conditional"},
+		],
+		"actions": [{"key": "next", "label_ar": "→ الموافقة النهائية", "label_en": "→ Final Approval", "primary": 1}],
+	},
+	"final_approval": {
+		"screen_type": "approval",
+		"desc_ar": "الاعتماد النهائي وحدود المنحة المعتمدة.",
+		"desc_en": "Final approval and approved facility limits.",
+		"metrics": [
+			{"label_ar": "المبلغ المعتمد", "label_en": "Approved Amount", "value": "—"},
+			{"label_ar": "المدة", "label_en": "Term", "value": "—"},
+			{"label_ar": "القسط الشهري", "label_en": "Monthly Installment", "value": "—"},
+		],
+		"actions": [{"key": "next", "label_ar": "→ التعاقد والصرف", "label_en": "→ Contract & Disbursement", "primary": 1}],
+	},
+	"contract_disbursement": {
+		"screen_type": "checklist",
+		"desc_ar": "توقيع العقد وتنفيذ الصرف.",
+		"desc_en": "Contract signing and disbursement execution.",
+		"checklist": [
+			{"id": "contract", "label_ar": "عقد التمويل", "label_en": "Finance Contract"},
+			{"id": "schedule", "label_ar": "جدول الأقساط", "label_en": "Repayment Schedule"},
+			{"id": "promissory", "label_ar": "سند لأمر", "label_en": "Promissory Note"},
+		],
+		"fields": [
+			{"fieldname": "iban", "label_ar": "IBAN", "label_en": "IBAN", "fieldtype": "Data"},
+			{"fieldname": "amount", "label_ar": "مبلغ الصرف", "label_en": "Disbursement Amount", "fieldtype": "Currency"},
+		],
+		"actions": [{"key": "disburse", "label_ar": "💰 تنفيذ الصرف", "label_en": "💰 Execute Disbursement", "primary": 1}],
+	},
+	"repayment_schedule": {
+		"screen_type": "schedule",
+		"desc_ar": "جدول الأقساط — أصل + ربح + حالة السداد.",
+		"desc_en": "Repayment schedule — principal, profit and status.",
+		"table_cols": [
+			("inst", "#", "#"),
+			("due", "الاستحقاق", "Due"),
+			("total", "الإجمالي", "Total"),
+			("status", "الحالة", "Status"),
+		],
+		"table_rows": [
+			{"inst": "1", "due": "2027-01-01", "total": "1,200", "status": "Paid"},
+			{"inst": "2", "due": "2027-02-01", "total": "1,200", "status": "Due"},
+			{"inst": "3", "due": "2027-03-01", "total": "1,200", "status": "Future"},
+		],
+		"actions": [{"key": "next", "label_ar": "→ التحصيل", "label_en": "→ Collections", "primary": 1}],
+	},
+	"collections": {
+		"screen_type": "payment",
+		"desc_ar": "تحصيل الأقساط — طرق الدفع والسداد الجزئي.",
+		"desc_en": "Installment collection — payment methods and partial pay.",
+		"metrics": [
+			{"label_ar": "الرصيد المOutstanding", "label_en": "Outstanding", "value": "—"},
+			{"label_ar": "المستحق", "label_en": "Due Now", "value": "—"},
+		],
+		"fields": [
+			{"fieldname": "pay_amount", "label_ar": "مبلغ السداد", "label_en": "Payment Amount", "fieldtype": "Currency"},
+		],
+		"actions": [{"key": "collect", "label_ar": "💳 تأكيد السداد", "label_en": "💳 Confirm Payment", "primary": 1}],
+	},
+	"reports": {
+		"screen_type": "reports",
+		"desc_ar": "تقارير المحفظة والاعتماد والتحصيل.",
+		"desc_en": "Portfolio, approval and collection executive reports.",
+		"metrics": [
+			{"label_ar": "إجمالي الطلبات", "label_en": "Applications", "value": "—"},
+			{"label_ar": "نسبة الاعتماد", "label_en": "Approval Rate", "value": "—"},
+			{"label_ar": "حجم المحفظة", "label_en": "Portfolio", "value": "—"},
+		],
+		"actions": [{"key": "open_list", "label_ar": "📋 قائمة الحالات", "label_en": "📋 Case List", "primary": 1}],
+	},
+}
+
 
 def get_enterprise_workflow_steps() -> list[dict]:
 	return [dict(s) for s in ENTERPRISE_WORKFLOW_STEPS]
@@ -308,3 +476,57 @@ def get_case_journey_detail(doctype: str, name: str) -> dict:
 			step["status"] = "Waiting"
 	tracker["enterprise_steps"] = steps
 	return tracker
+
+
+def _case_summary(doctype: str | None, name: str | None) -> dict | None:
+	if not doctype or not name or not frappe.db.exists(doctype, name):
+		return None
+	doc = frappe.get_doc(doctype, name)
+	out = {"doctype": doctype, "name": name, "workflow_state": getattr(doc, "workflow_state", None) or "Draft"}
+	for fn in ("customer_name", "group_name", "principal", "term_months", "lifecycle_stage", "risk_band"):
+		if doc.meta.get_field(fn):
+			out[fn] = doc.get(fn)
+	return out
+
+
+@frappe.whitelist()
+def get_workflow_stage_screen(app: str, step_key: str, case_name: str | None = None) -> dict:
+	"""Return interactive screen payload for one of the 12 enterprise workflow stages."""
+	bpe = VERTICAL_BPE_SPECS.get(app) or {}
+	dt = bpe.get("case_doctype")
+	step = next((s for s in ENTERPRISE_WORKFLOW_STEPS if s["key"] == step_key), None)
+	if not step:
+		frappe.throw(_("Unknown workflow stage: {0}").format(step_key))
+	screen = dict(WORKFLOW_STAGE_SCREENS.get(step_key) or {})
+	screen["step"] = step
+	screen["app"] = app
+	screen["case_doctype"] = dt
+	screen["case"] = _case_summary(dt, case_name)
+	screen["workflow_steps"] = get_enterprise_workflow_steps()
+
+	# Enrich metrics from selected case when possible.
+	if screen.get("case") and screen.get("metrics"):
+		case = screen["case"]
+		for m in screen["metrics"]:
+			if m.get("value") == "—" and case.get("principal") and "Amount" in m.get("label_en", ""):
+				m["value"] = str(case.get("principal"))
+
+	if screen.get("screen_type") == "reports" and dt and frappe.db.exists("DocType", dt):
+		total = frappe.db.count(dt)
+		screen["metrics"] = [
+			{"label_ar": "إجمالي الطلبات", "label_en": "Applications", "value": total},
+			{"label_ar": "مسودة", "label_en": "Draft", "value": frappe.db.count(dt, {"workflow_state": "Draft"}) if frappe.get_meta(dt).get_field("workflow_state") else 0},
+			{"label_ar": "معتمد", "label_en": "Approved", "value": frappe.db.count(dt, {"workflow_state": "Approved"}) if frappe.get_meta(dt).get_field("workflow_state") else 0},
+		]
+
+	# Borrower complete file actions (PDF / Excel / Report) when a case is selected.
+	if screen.get("case") and screen["case"].get("name"):
+		extra = [
+			{"key": "print_dossier", "label_ar": "📄 ملف المقترض PDF", "label_en": "📄 Borrower File PDF", "primary": 0},
+			{"key": "export_dossier_excel", "label_ar": "📊 تصدير Excel", "label_en": "📊 Export Excel", "primary": 0},
+			{"key": "open_dossier_report", "label_ar": "📋 تقرير شامل", "label_en": "📋 Full Report", "primary": 0},
+		]
+		existing = {a.get("key") for a in screen.get("actions") or []}
+		screen["actions"] = list(screen.get("actions") or []) + [a for a in extra if a["key"] not in existing]
+
+	return screen

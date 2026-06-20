@@ -62,3 +62,10 @@ def boot_session(bootinfo):
 		bootinfo.finance_portal_registry = PORTAL_SPECS
 	except Exception:
 		bootinfo.finance_portal_registry = {}
+
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_borrower_dossier import get_finance_case_doctypes_boot
+
+		bootinfo.finance_case_doctypes = get_finance_case_doctypes_boot()
+	except Exception:
+		bootinfo.finance_case_doctypes = []

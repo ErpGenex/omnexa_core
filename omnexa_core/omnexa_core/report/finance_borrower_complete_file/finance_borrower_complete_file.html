@@ -1,0 +1,39 @@
+<!-- ERPGENEX report print template — Finance Borrower Complete File -->
+{% if title %}
+<h2 class="text-center">{{ __(title) }}</h2>
+<hr>
+{% endif %}
+
+{% if subtitle %}
+<p class="text-muted text-center">{{ subtitle }}</p>
+<hr>
+{% endif %}
+
+{% var current_section = "" %}
+{% for row in data %}
+	{% if row.section_ar != current_section %}
+		{% if current_section != "" %}
+		</tbody></table>
+		{% endif %}
+		{% current_section = row.section_ar %}
+		<h3 style="color:#003366;margin-top:18px;border-bottom:2px solid #e6f0f9;padding-bottom:6px;">
+			{{ row.section_ar }} / {{ row.section_en }}
+		</h3>
+		<table class="table table-bordered dossier-section-table">
+		<thead><tr><th style="width:35%">{{ __("Field") }}</th><th>{{ __("Value") }}</th></tr></thead>
+		<tbody>
+	{% endif %}
+	<tr>
+		<td style="{% if row.indent %}padding-left:{{ row.indent * 16 }}px{% endif %}">
+			<strong>{{ row.label_ar }}</strong><br><small class="text-muted">{{ row.label_en }}</small>
+		</td>
+		<td>{{ row.value }}</td>
+	</tr>
+{% endfor %}
+{% if current_section != "" %}
+</tbody></table>
+{% endif %}
+
+<p class="text-muted text-center" style="margin-top:24px;font-size:9px;">
+	ErpGenEx Finance Group · {{ __("Confidential Borrower File") }}
+</p>

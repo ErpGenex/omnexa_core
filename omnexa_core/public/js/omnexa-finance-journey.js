@@ -333,6 +333,93 @@
 		return $dlg;
 	}
 
+	function workflowStageScreen({ screen, workflowSteps, onAction, onStepSelect }) {
+		const step = screen.step || {};
+		const $panel = $(`<div class="oj-stage-screen"></div>`);
+		$panel.append(`<h4 class="oj-section-title">${esc(t(step.label_ar, step.label_en))}</h4>`);
+		$panel.append(`<p class="oj-muted oj-stage-desc">${esc(t(screen.desc_ar, screen.desc_en))}</p>`);
+		$panel.append(
+			`<div class="oj-stage-role oj-muted">${t("المسؤول", "Responsible")}: <strong>${esc(t(step.role_ar, step.role_en))}</strong></div>`
+		);
+
+		if (screen.case && screen.case.name) {
+			$panel.append(
+				`<div class="oj-stage-case-badge">${t("الحالة", "Case")}: <strong>${esc(screen.case.name)}</strong> · ${esc(screen.case.workflow_state || "")}</div>`
+			);
+		} else if (screen.case_doctype) {
+			$panel.append(
+				`<div class="oj-alert oj-alert-info">${t("اختر حالة من الجدول أدناه أو أنشئ طلباً جديداً.", "Select a case from the table below or create a new application.")}</div>`
+			);
+		}
+
+		if (screen.metrics && screen.metrics.length) {
+			const $m = $('<div class="oj-kpi-row oj-stage-metrics"></div>');
+			screen.metrics.forEach((m) => {
+				$m.append(
+					`<div class="oj-kpi-card"><div class="oj-kpi-value">${esc(m.value ?? "—")}</div><div class="oj-kpi-label">${esc(t(m.label_ar, m.label_en))}</div></div>`
+				);
+			});
+			$panel.append($m);
+		}
+
+		if (screen.checklist && screen.checklist.length) {
+			const $cl = $('<div class="oj-stage-checklist"></div>');
+			screen.checklist.forEach((item, idx) => {
+				$cl.append(`
+					<label class="oj-check-item">
+						<input type="checkbox" checked data-check-id="${esc(item.id || idx)}" />
+						<span>${esc(t(item.label_ar, item.label_en))}</span>
+						<span class="oj-badge oj-badge-green">${t("مكتمل", "Complete")}</span>
+					</label>`);
+			});
+			$panel.append($cl);
+		}
+
+		if (screen.fields && screen.fields.length) {
+			const $form = $('<div class="oj-stage-form row"></div>');
+			screen.fields.forEach((f) => {
+				const val =
+					(screen.case && screen.case[f.fieldname]) ||
+					(f.fieldname === "amount" && screen.case && screen.case.principal) ||
+					"";
+				$form.append(`
+					<div class="col-md-6 form-group">
+						<label class="small">${esc(t(f.label_ar, f.label_en))}</label>
+						<input class="form-control" name="${esc(f.fieldname)}" value="${esc(val)}" />
+					</div>`);
+			});
+			$panel.append($form);
+		}
+
+		if (screen.decisions && screen.decisions.length) {
+			const $d = $('<div class="oj-stage-decisions"></div>');
+			screen.decisions.forEach((d, idx) => {
+				$d.append(`
+					<label class="oj-radio-item">
+						<input type="radio" name="oj-stage-decision" value="${esc(d.value)}" ${idx === 0 ? "checked" : ""} />
+						<span>${esc(t(d.label_ar, d.label_en))}</span>
+					</label>`);
+			});
+			$panel.append($d);
+		}
+
+		if (screen.table_cols && screen.table_rows) {
+			const cols = screen.table_cols.map(([field, ar, en]) => ({ field, label: t(ar, en) }));
+			$panel.append(dataTable(cols, screen.table_rows));
+		}
+
+		const $actions = $('<div class="oj-stage-actions mt-3"></div>');
+		(screen.actions || []).forEach((act) => {
+			const cls = act.primary ? "btn btn-primary" : "btn btn-default ml-2";
+			const $btn = $(`<button type="button" class="${cls}" data-action="${esc(act.key)}">${esc(t(act.label_ar, act.label_en))}</button>`);
+			$btn.on("click", () => onAction && onAction(act.key, screen));
+			$actions.append($btn);
+		});
+		$panel.append($actions);
+
+		return $panel;
+	}
+
 	function caseTrackerPanel(doctype, name) {
 		const $wrap = $(`<div class="oj-case-tracker">${loading()}</div>`);
 		call("omnexa_core.omnexa_core.finance_demo.finance_workflow_journey.get_case_journey_detail", {
@@ -345,7 +432,6 @@
 				$wrap.append(
 					`<div class="oj-case-meta oj-muted mb-2">${t("المرحلة", "Stage")}: <strong>${esc(tracker.current_stage || "")}</strong> · ${t("الحالة", "Status")}: ${esc(tracker.approval_status || "")}</div>`
 				);
-				$wrap.append(progressStepper(tracker.enterprise_steps || tracker.progress || []));
 				$wrap.append(`<h5 class="oj-section-title">${t("السجل الزمني", "Audit Timeline")}</h5>`);
 				$wrap.append(timelinePanel(tracker.timeline || []));
 				$wrap.append(
@@ -398,6 +484,7 @@
 		progressStepper,
 		timelinePanel,
 		workflowJourneyGrid,
+		workflowStageScreen,
 		registrationWizard,
 		caseTrackerPanel,
 		portalCategoryGrid,

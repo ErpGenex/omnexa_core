@@ -9,7 +9,7 @@ const FINANCE_JOURNEY_JS = [
 	"/assets/omnexa_core/js/finance-portal-registry.js",
 ];
 
-omnexa_finance.PORTAL_UI_VERSION = "20260620-workflow-v3";
+omnexa_finance.PORTAL_UI_VERSION = "20260620-workflow-v5";
 
 omnexa_finance._hydrateRegistryFromBoot = function () {
 	if (omnexa_finance.PORTAL_REGISTRY) return;
@@ -126,6 +126,84 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 		const workflowSteps = data.workflow_steps || [];
 		const caseDoctype = data.case_doctype;
 		const isExec = (config.page || "").includes("executive");
+		const portalState = { selectedCaseName: null, activeStepKey: "registration" };
+
+		function stepByKey(key) {
+			return (workflowSteps || []).find((s) => s.key === key);
+		}
+
+		function nextStepKey(currentKey) {
+			const idx = workflowSteps.findIndex((s) => s.key === currentKey);
+			if (idx >= 0 && idx < workflowSteps.length - 1) return workflowSteps[idx + 1].key;
+			return null;
+		}
+
+		async function openStage(stepKey) {
+			if (!stepKey || !data.app) return;
+			portalState.activeStepKey = stepKey;
+			const $slot = $body.find(".oj-step-info");
+			$slot.html(OJ.loading());
+			$body.find(".oj-workflow-card").removeClass("selected");
+			$body.find(`.oj-workflow-card[data-step="${stepKey}"]`).addClass("selected");
+			try {
+				const screen = await OJ.call(
+					"omnexa_core.omnexa_core.finance_demo.finance_workflow_journey.get_workflow_stage_screen",
+					{
+						app: data.app,
+						step_key: stepKey,
+						case_name: portalState.selectedCaseName,
+					}
+				);
+				$slot.empty().append(
+					OJ.workflowStageScreen({
+						screen,
+						workflowSteps,
+						onStepSelect: (key) => openStage(key),
+						onAction: (actionKey) => {
+							if (actionKey === "wizard") {
+								$body.find(".btn-new-application").trigger("click");
+								return;
+							}
+							if (actionKey === "open_case" && caseDoctype && portalState.selectedCaseName) {
+								frappe.set_route("Form", caseDoctype, portalState.selectedCaseName);
+								return;
+							}
+							if (actionKey === "open_list" && caseDoctype) {
+								frappe.set_route("List", caseDoctype);
+								return;
+							}
+							if (actionKey === "print_dossier" && caseDoctype && portalState.selectedCaseName) {
+								omnexa_finance.dossier.downloadPdf(caseDoctype, portalState.selectedCaseName);
+								return;
+							}
+							if (actionKey === "export_dossier_excel" && caseDoctype && portalState.selectedCaseName) {
+								omnexa_finance.dossier.downloadExcel(caseDoctype, portalState.selectedCaseName);
+								return;
+							}
+							if (actionKey === "open_dossier_report" && caseDoctype && portalState.selectedCaseName) {
+								omnexa_finance.dossier.openReport(caseDoctype, portalState.selectedCaseName);
+								return;
+							}
+							if (actionKey === "next" || actionKey === "approve_step" || actionKey === "disburse" || actionKey === "collect") {
+								const nk = nextStepKey(stepKey);
+								if (nk) {
+									frappe.show_alert({
+										message: OJ.t("تم — الانتقال للمرحلة التالية", "Done — moving to next stage"),
+										indicator: "green",
+									});
+									openStage(nk);
+								}
+								return;
+							}
+						},
+					})
+				);
+				const top = $slot.offset() && $slot.offset().top;
+				if (top) $("html, body").animate({ scrollTop: top - 70 }, 250);
+			} catch (err) {
+				$slot.html(`<p class="text-danger">${OJ.esc(err.message || String(err))}</p>`);
+			}
+		}
 
 		if (!isExec && caseDoctype) {
 			const $actions = $(`<div class="oj-portal-actions mb-3"></div>`);
@@ -137,18 +215,9 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 
 		if (workflowSteps.length) {
 			$body.append(`<h4 class="oj-section-title">${OJ.t("مسار التمويل — 12 مرحلة", "Financing Journey — 12 Stages")}</h4>`);
-			const $journey = OJ.workflowJourneyGrid(workflowSteps, (step) => {
-				const $info = $body.find(".oj-step-info");
-				$info.html(`
-					<div class="oj-panel">
-						<h5>${OJ.esc(OJ.t(step.label_ar, step.label_en))}</h5>
-						<p class="oj-muted">${OJ.esc(OJ.t(step.role_ar, step.role_en))}</p>
-					</div>`);
-				$body.find(".oj-workflow-card").removeClass("selected");
-				$body.find(`.oj-workflow-card[data-step="${step.key}"]`).addClass("selected");
-			});
+			const $journey = OJ.workflowJourneyGrid(workflowSteps, (step) => openStage(step.key));
 			$body.append($journey);
-			$body.append(`<div class="oj-step-info mt-2"></div>`);
+			$body.append(`<div class="oj-step-info oj-stage-screen-slot mt-2"></div>`);
 		}
 
 		const $trackerSlot = $(`<div class="oj-case-tracker-slot mt-3"></div>`);
@@ -171,7 +240,9 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 					const idx = $(this).index();
 					const row = (data.rows || [])[idx];
 					if (!row || !row.name) return;
+					portalState.selectedCaseName = row.name;
 					$trackerSlot.empty().append(OJ.caseTrackerPanel(caseDoctype, row.name));
+					openStage(portalState.activeStepKey || "registration");
 					const top = $trackerSlot.offset() && $trackerSlot.offset().top;
 					if (top) $("html, body").animate({ scrollTop: top - 80 }, 300);
 				});
@@ -219,6 +290,14 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 		$(document).off("finance-portal-open-wizard").on("finance-portal-open-wizard", () => {
 			$body.find(".btn-new-application").trigger("click");
 		});
+
+		$(document).off("finance-portal-focus-step").on("finance-portal-focus-step", (_e, key) => {
+			if (key) openStage(key);
+		});
+
+		if (workflowSteps.length) {
+			openStage(portalState.activeStepKey);
+		}
 	}
 
 	render().catch((e) => {
