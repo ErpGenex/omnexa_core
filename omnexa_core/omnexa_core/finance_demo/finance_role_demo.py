@@ -386,6 +386,12 @@ def seed_finance_role_demo(company: str | None = None, branch: str | None = None
 	from omnexa_core.omnexa_core.finance_demo.finance_group_workspace import sync_finance_group_home
 
 	sync_finance_group_home()
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_vertical_bpe import sync_all_finance_vertical_bpe
+
+		sync_all_finance_vertical_bpe()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "seed_finance_role_demo: vertical bpe sync")
 
 	frappe.db.commit()
 	return {

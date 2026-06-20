@@ -1,5 +1,5 @@
 // Copyright (c) 2026, ErpGenEx
-// Desk: brand PNG logos on Finance Group sidebar children (over timeless sprite).
+// Desk: brand PNG logos on Finance Group sidebar children (no catalog numbers).
 
 (function () {
 	"use strict";
@@ -27,7 +27,7 @@
 			const iconWrap = el.querySelector(".sidebar-item-icon");
 			if (!iconWrap || iconWrap.dataset.omnexaBrandApplied) return;
 			iconWrap.dataset.omnexaBrandApplied = "1";
-			iconWrap.innerHTML = `<img src="${logo}" alt="" class="omnexa-fg-sidebar-logo" style="width:18px;height:18px;object-fit:contain;border-radius:3px" />`;
+			iconWrap.innerHTML = `<img src="${logo}" alt="" class="omnexa-fg-sidebar-logo" />`;
 		});
 	}
 

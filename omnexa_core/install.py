@@ -860,6 +860,18 @@ def run_site_hardening_after_app_changes():
 		from omnexa_core.omnexa_core.finance_demo.finance_group_sidebar import sync_finance_group_sidebar
 
 		sync_finance_group_sidebar()
+		try:
+			from omnexa_core.omnexa_core.finance_demo.finance_vertical_bpe import sync_all_finance_vertical_bpe
+
+			sync_all_finance_vertical_bpe()
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync_all_finance_vertical_bpe")
+		try:
+			from omnexa_core.omnexa_core.finance_demo.bootstrap_finance_portals import bootstrap_finance_portal_pages
+
+			bootstrap_finance_portal_pages()
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: bootstrap_finance_portal_pages")
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: sync Finance Group home workspace")
 	ensure_global_print_design_system()

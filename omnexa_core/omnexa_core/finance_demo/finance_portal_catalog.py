@@ -26,7 +26,7 @@ PORTAL_CATALOG: list[dict] = [
 	},
 	{
 		"id": "finance-group",
-		"route": "/app/finance_group",
+		"route": "/app/finance-group",
 		"page": "Finance Group",
 		"page_type": "Workspace",
 		"icon": "🏦",

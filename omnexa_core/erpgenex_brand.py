@@ -55,3 +55,10 @@ def boot_session(bootinfo):
 		inject_desk_visibility_boot(bootinfo)
 	except Exception:
 		pass
+
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_portal_registry import PORTAL_SPECS
+
+		bootinfo.finance_portal_registry = PORTAL_SPECS
+	except Exception:
+		bootinfo.finance_portal_registry = {}

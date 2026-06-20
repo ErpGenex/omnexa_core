@@ -13,6 +13,8 @@ from omnexa_core.omnexa_core.finance_demo.finance_group_sidebar import sync_fina
 from omnexa_core.omnexa_core.workspace_control_tower import _append_finance_group_workspace_nav_link
 
 WORKSPACE_NAME = "Finance Group"
+FINANCE_GROUP_ROUTE = "/app/finance-group"
+FINANCE_GROUP_LEGACY_ROUTE = "/app/finance_group"
 
 
 def _link_row(*, label: str, link_type: str, link_to: str, icon: str = "folder-normal") -> dict:

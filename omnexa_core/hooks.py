@@ -41,6 +41,7 @@ app_include_css = [
 	"/assets/omnexa_core/css/workspace_help_panel.css",
 	"/assets/omnexa_core/css/classic_form_tabs.css",
 	"/assets/omnexa_core/css/desk_context_switcher.css",
+	"/assets/omnexa_core/css/omnexa-finance-journey.css",
 ]
 app_include_js = [
 	"/assets/omnexa_core/js/frappe_ready_shim.js",
@@ -58,6 +59,11 @@ app_include_js = [
 	"/assets/omnexa_core/js/branch_eta_signing.js",
 	"/assets/omnexa_core/js/desk_context_switcher.js",
 	"/assets/omnexa_core/js/finance_sidebar_brand.js",
+	"/assets/omnexa_core/js/omnexa-finance-journey.js",
+	"/assets/omnexa_core/js/omnexa-finance-journey-kit.js",
+	"/assets/omnexa_core/js/finance-portal-registry.js",
+	"/assets/omnexa_core/js/finance_portal_page_boot.js",
+	"/assets/omnexa_core/js/finance-portal-factory.js",
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.
@@ -216,6 +222,14 @@ for _dt in _event_overlay_doctypes:
 	doc_events[_dt]["before_submit"] = "omnexa_core.omnexa_core.compliance_guard.enforce_global_submit_compliance"
 	doc_events[_dt]["on_submit"] = "omnexa_core.omnexa_core.event_dispatcher.on_submit_emit"
 	doc_events[_dt]["on_cancel"] = "omnexa_core.omnexa_core.event_dispatcher.on_cancel_emit"
+
+from omnexa_core.omnexa_core.finance_demo.finance_vertical_specs import VERTICAL_BPE_DOCTYPES
+
+for _bpe_dt in VERTICAL_BPE_DOCTYPES:
+	doc_events.setdefault(_bpe_dt, {})
+	doc_events[_bpe_dt]["before_workflow_action"] = (
+		"omnexa_core.omnexa_core.finance_demo.finance_vertical_bpe.before_workflow_action"
+	)
 
 # Default event subscribers (overlay-safe; can be extended by other apps).
 omnexa_core_event_handlers = [

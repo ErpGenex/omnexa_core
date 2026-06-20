@@ -133,7 +133,7 @@ def _shortcut_to_step_spec(shortcut, idx: int, ws_name: str) -> dict[str, Any] |
 			"action_label": "Open report",
 		}
 	if st == "Page" and link:
-		return {
+		spec = {
 			"name": f"{base}-page-{frappe.scrub(link)}",
 			"title": f"Open {label}",
 			"action": "Go to Page",
@@ -141,6 +141,17 @@ def _shortcut_to_step_spec(shortcut, idx: int, ws_name: str) -> dict[str, Any] |
 			"action_label": "Open",
 			"description": f"Jump to the **{label}** page.",
 		}
+		if link == "finance-demo-hub":
+			spec["callback_title"] = frappe._("Finance Demo Hub")
+			spec["callback_message"] = frappe._(
+				"Explore role portals and demo accounts below, then click Continue to finish this step."
+			)
+		elif link.endswith("-portal") or link.endswith("-dashboard"):
+			spec["callback_title"] = label
+			spec["callback_message"] = frappe._(
+				"Use the journey sidebar and work scenarios on this page, then click Continue."
+			)
+		return spec
 	return None
 
 
