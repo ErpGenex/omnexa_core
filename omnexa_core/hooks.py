@@ -263,6 +263,9 @@ override_whitelisted_methods = {
 	# Some deployments ship with `frappe.sessions.get` not registered as whitelisted.
 	# Desk relies on it for boot; we route it to an Omnexa-managed endpoint.
 	"frappe.sessions.get": "omnexa_core.session_boot.sessions_get",
+	"frappe.desk.desktop.get_workspace_sidebar_items": (
+		"omnexa_core.omnexa_core.finance_demo.finance_desktop_sidebar.get_workspace_sidebar_items"
+	),
 }
 #
 # each overriding function accepts a `data` argument;

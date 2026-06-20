@@ -6,9 +6,17 @@ from __future__ import annotations
 import frappe
 from frappe import _
 
+from omnexa_core.omnexa_core.finance_demo.finance_app_registry import (
+	CORE_ACCOUNTING_REGISTRY,
+	get_registry_entry,
+)
+from omnexa_core.omnexa_core.finance_demo.finance_vertical_specs import VERTICAL_BPE_SPECS
 from omnexa_core.omnexa_core.vertical_workspace_sync import build_content_from_link_rows
 
 DEMO_PASSWORD = "Finance@Demo2026"
+
+# Populated after ROLE_SPECS — stub workspaces hidden from desk sidebar.
+ROLE_DEMO_WORKSPACE_NAMES: frozenset[str] = frozenset()
 
 ROLE_SPECS: list[dict] = [
 	{
@@ -209,6 +217,22 @@ ROLE_SPECS: list[dict] = [
 	},
 ]
 
+ROLE_DEMO_WORKSPACE_NAMES = frozenset(s["workspace"] for s in ROLE_SPECS)
+
+
+def _desk_workspace_for_role(role: str) -> str:
+	if role == "Finance Group Executive":
+		return "Finance Engine"
+	for app, bpe in VERTICAL_BPE_SPECS.items():
+		if bpe.get("desk_role") != role:
+			continue
+		if app == "omnexa_accounting":
+			return CORE_ACCOUNTING_REGISTRY["workspace"]
+		entry = get_registry_entry(app)
+		if entry:
+			return entry["workspace"]
+	return "Finance Group"
+
 FINANCE_MODULES = frozenset({
 	"Omnexa Core",
 	"Omnexa Finance Engine",
@@ -285,11 +309,28 @@ def sync_role_workspace(spec: dict) -> str:
 	ws.set("roles", [{"role": role}])
 	ws.public = 1
 	ws.for_user = ""
+	ws.is_hidden = 1
 	ws.title = spec.get("title") or ws_name
 	ws.content = build_content_from_link_rows(rows, ws, title=ws.title, slug=frappe.scrub(ws_name))
 	ws.flags.ignore_permissions = True
 	ws.save()
 	return ws.name
+
+
+def hide_role_demo_workspaces() -> list[str]:
+	"""Ensure role-demo stub workspaces never appear in the desk sidebar."""
+	hidden: list[str] = []
+	for name in ROLE_DEMO_WORKSPACE_NAMES:
+		if not frappe.db.exists("Workspace", name):
+			continue
+		frappe.db.set_value(
+			"Workspace",
+			name,
+			{"is_hidden": 1, "public": 1, "parent_page": ""},
+			update_modified=False,
+		)
+		hidden.append(name)
+	return hidden
 
 
 def _block_non_finance_modules(user_doc) -> None:
@@ -346,7 +387,7 @@ def get_finance_demo_defaults() -> dict:
 def _ensure_demo_user(spec: dict, company: str, branch: str) -> str:
 	email = spec["email"]
 	role = spec["role"]
-	ws = spec["workspace"]
+	desk_ws = _desk_workspace_for_role(role)
 	if frappe.db.exists("User", email):
 		user = frappe.get_doc("User", email)
 	else:
@@ -366,7 +407,7 @@ def _ensure_demo_user(spec: dict, company: str, branch: str) -> str:
 	if not user.roles or not any(r.role == role for r in user.roles):
 		user.append("roles", {"role": role})
 	_block_non_finance_modules(user)
-	user.default_workspace = ws
+	user.default_workspace = desk_ws
 	user.save(ignore_permissions=True)
 	frappe.defaults.set_user_default("Company", company, email)
 	frappe.defaults.set_user_default("Branch", branch, email)
@@ -410,6 +451,10 @@ def seed_finance_role_demo(company: str | None = None, branch: str | None = None
 
 	sync_finance_group_home()
 	_sync_demo_page_roles()
+	hide_role_demo_workspaces()
+	from omnexa_core.omnexa_core.finance_demo.finance_group_sidebar import sync_finance_group_sidebar
+
+	sync_finance_group_sidebar()
 	try:
 		from omnexa_core.omnexa_core.finance_demo.finance_vertical_bpe import sync_all_finance_vertical_bpe
 
@@ -438,7 +483,7 @@ def get_finance_demo_credentials() -> dict:
 			{
 				"role": s["role"],
 				"email": s["email"],
-				"workspace": s["workspace"],
+				"workspace": _desk_workspace_for_role(s["role"]),
 				"route": s["default_route"],
 				"name": f"{s['first_name']} {s['last_name']}",
 			}
