@@ -76,3 +76,10 @@ def boot_session(bootinfo):
 		inject_finance_workcenter_boot(bootinfo)
 	except Exception:
 		bootinfo.finance_workcenter = {}
+
+	try:
+		from omnexa_core.omnexa_core.i18n.sync_desk_translations import inject_desk_i18n_boot
+
+		inject_desk_i18n_boot(bootinfo)
+	except Exception:
+		pass
