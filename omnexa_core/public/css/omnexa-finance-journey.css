@@ -1805,10 +1805,67 @@
 	color: var(--oj-primary);
 }
 
+/* Borrower document management */
+.oj-borrower-documents {
+	margin-top: 12px;
+}
+
+.oj-doc-list {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.oj-doc-card {
+	background: var(--oj-bg);
+	border: 1px solid var(--oj-accent);
+	border-radius: var(--oj-radius-sm);
+	padding: 16px;
+}
+
+.oj-doc-card-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 12px;
+	margin-bottom: 10px;
+	flex-wrap: wrap;
+}
+
+.oj-doc-meta .form-group {
+	margin-bottom: 8px;
+}
+
+.oj-doc-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.oj-badge {
+	display: inline-block;
+	padding: 3px 10px;
+	border-radius: 12px;
+	font-size: calc(0.75rem * var(--oj-portal-font-scale));
+	font-weight: 600;
+}
+
+.oj-badge-green { background: #d1fae5; color: #065f46; }
+.oj-badge-red { background: #fee2e2; color: #991b1b; }
+.oj-badge-blue { background: #dbeafe; color: #1e40af; }
+.oj-badge-gray { background: #e5e7eb; color: #374151; }
+
+.oj-doc-summary .oj-badge {
+	margin-left: 6px;
+}
+
+.finance-workcenter-journey .oj-clinic-card,
 .finance-demo-hub-journey .oj-clinic-card {
 	cursor: pointer;
 }
 
+.finance-workcenter-journey .oj-workcenter-panel,
+.finance-workcenter-journey .oj-demo-panel,
 .finance-demo-hub-journey .oj-demo-panel {
 	background: #fff;
 	border-radius: var(--oj-radius, 10px);

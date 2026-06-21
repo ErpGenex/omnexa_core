@@ -347,6 +347,12 @@ def build_borrower_dossier(doctype: str, name: str) -> dict:
 		)
 
 	rows.extend(_section_rows_from_doc(doc))
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_borrower_documents import get_dossier_document_rows
+
+		rows.extend(get_dossier_document_rows(doctype, name))
+	except Exception:
+		pass
 	rows.extend(_workflow_rows(doc))
 	rows.extend(_attachment_rows(doctype, name))
 	rows.extend(_timeline_rows(doctype, name))
@@ -461,6 +467,12 @@ h3 {{ color: #003366; border-bottom: 2px solid #e6f0f9; padding-bottom: 6px; mar
 @frappe.whitelist()
 def get_borrower_dossier(doctype: str, name: str) -> dict:
 	return build_borrower_dossier(doctype, name)
+
+
+@frappe.whitelist()
+def get_borrower_dossier_html(doctype: str, name: str) -> str:
+	"""HTML payload for browser print preview."""
+	return render_dossier_html(doctype, name)
 
 
 @frappe.whitelist()

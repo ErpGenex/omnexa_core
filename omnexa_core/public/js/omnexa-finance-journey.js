@@ -55,7 +55,7 @@
 		const $root = $(`<div class="oj-shell oj-finance-shell ${isRtl ? "oj-rtl" : "oj-ltr"}" dir="${isRtl ? "rtl" : "ltr"}"></div>`);
 		$root.html(`
 			<aside class="oj-sidebar oj-finance-sidebar">${navHtml}<div class="oj-sidebar-spacer"></div>
-				<a class="oj-sidebar-item" href="#" data-nav-route="/app/finance-demo-hub"><span class="oj-sidebar-emoji">🎯</span><span class="oj-sidebar-label">${t("الديمو", "Demo")}</span></a>
+				<a class="oj-sidebar-item" href="#" data-nav-route="/app/finance-workcenter" aria-label="${t("مركز العمل", "Workcenter")}"><span class="oj-sidebar-emoji">🏢</span><span class="oj-sidebar-label">${t("مركز العمل", "Workcenter")}</span></a>
 				<a class="oj-sidebar-item oj-logout" href="/app"><span class="oj-sidebar-emoji">⏻</span><span class="oj-sidebar-label">${t("خروج", "Logout")}</span></a>
 			</aside>
 			<div class="oj-main">
@@ -75,7 +75,7 @@
 			const route = $(this).attr("data-nav-route");
 			if (!route) return;
 			if (window.omnexa_finance && omnexa_finance.portal && omnexa_finance.portal._navigateRoute) {
-				omnexa_finance.portal._navigateRoute(route);
+				omnexa_finance.portal._navigateRoute(route, (opts.currentPage || ""));
 				return;
 			}
 			if (route.startsWith("/app/")) window.location.href = route;
@@ -83,7 +83,7 @@
 			else if (route.startsWith("Form/")) {
 				const p = route.split("/");
 				frappe.set_route("Form", p[1], p[2] || "");
-			} else window.location.href = route.startsWith("/") ? route : `/app/${route}`;
+			} else if (route.startsWith("Report/")) frappe.set_route("query-report", route.slice(7));
 		});
 		return $root;
 	}
@@ -150,7 +150,7 @@
 		executive: [
 			{ label: t("تنفيذي", "Executive"), route: "/app/fe-executive-dashboard", logoUrl: logoUrl("omnexa_finance_engine") },
 			{ label: t("محرك", "Engine"), route: "/app/fe-servicing-portal", logoUrl: logoUrl("omnexa_finance_engine") },
-			{ label: t("ديمو", "Demo Hub"), route: "/app/finance-demo-hub", icon: "🎯" },
+			{ label: t("مركز العمل", "Workcenter"), route: "/app/finance-workcenter", icon: "🏢" },
 		],
 		credit: [
 			{ label: t("منشأة", "Origination"), route: "/app/ce-servicing-portal", logoUrl: logoUrl("omnexa_credit_engine") },
@@ -333,6 +333,183 @@
 		return $dlg;
 	}
 
+	function statusBadgeClass(status) {
+		const s = (status || "").toLowerCase();
+		if (s.includes("approved")) return "oj-badge-green";
+		if (s === "rejected") return "oj-badge-red";
+		if (s === "pending review" || s === "uploaded") return "oj-badge-blue";
+		return "oj-badge-gray";
+	}
+
+	function borrowerDocumentsPanel({ caseDoctype, caseName, financeApp }) {
+		const $wrap = $(`<div class="oj-borrower-documents"></div>`);
+		if (!caseDoctype || !caseName) {
+			$wrap.append(
+				`<div class="oj-alert oj-alert-info">${t("اختر حالة من الجدول لرفع المستندات.", "Select a case from the table to upload documents.")}</div>`
+			);
+			return $wrap;
+		}
+
+		function renderDocCard(doc) {
+			const cap = doc.capture || {};
+			const $card = $(`<div class="oj-doc-card" data-doc-name="${esc(doc.name || "")}"></div>`);
+			const mandatory = doc.is_mandatory
+				? `<span class="oj-badge oj-badge-red">${t("إلزامي", "Mandatory")}</span>`
+				: `<span class="oj-badge oj-badge-gray">${t("اختياري", "Optional")}</span>`;
+			$card.append(`
+				<div class="oj-doc-card-head">
+					<div>
+						<strong>${esc(t(doc.label_ar, doc.label_en))}</strong>
+						<div class="oj-muted small">${esc(doc.document_code || "")}</div>
+					</div>
+					<div>${mandatory} <span class="oj-badge ${statusBadgeClass(doc.verification_status)}">${esc(doc.verification_status || "")}</span></div>
+				</div>`);
+
+			const $meta = $('<div class="oj-doc-meta row"></div>');
+			const fields = [];
+			if (cap.capture_national_id)
+				fields.push(["national_id", t("الرقم القومي", "National ID"), doc.national_id]);
+			if (cap.capture_commercial_registration)
+				fields.push(["commercial_registration", t("السجل التجاري", "CR"), doc.commercial_registration]);
+			if (cap.capture_tax_card) fields.push(["tax_card_number", t("البطاقة الضريبية", "Tax Card"), doc.tax_card_number]);
+			if (cap.capture_bank_account) fields.push(["bank_account", t("حساب بنكي", "Bank Account"), doc.bank_account]);
+			if (cap.capture_iban) fields.push(["iban", "IBAN", doc.iban]);
+			if (cap.capture_issue_date) fields.push(["issue_date", t("تاريخ الإصدار", "Issue Date"), doc.issue_date]);
+			if (cap.capture_expiry_date) fields.push(["expiry_date", t("تاريخ الانتهاء", "Expiry"), doc.expiry_date]);
+
+			fields.forEach(([fn, label, val]) => {
+				const type = fn.includes("date") ? "date" : "text";
+				$meta.append(`
+					<div class="col-md-6 form-group">
+						<label class="small">${esc(label)}</label>
+						<input class="form-control oj-doc-field" data-field="${fn}" type="${type}" value="${esc(val || "")}" />
+					</div>`);
+			});
+			if (fields.length) $card.append($meta);
+
+			const $fileRow = $('<div class="oj-doc-file-row mt-2"></div>');
+			if (doc.attachment) {
+				$fileRow.append(
+					`<a class="btn btn-sm btn-default" href="${esc(doc.attachment_url || doc.attachment)}" target="_blank">${t("عرض الملف", "View File")}</a>`
+				);
+			} else {
+				$fileRow.append(`<span class="oj-muted small">${t("لم يُرفع بعد", "Not uploaded yet")}</span>`);
+			}
+			$card.append($fileRow);
+
+			const $btns = $('<div class="oj-doc-actions mt-2"></div>');
+			const $upload = $(`<button type="button" class="btn btn-sm btn-primary">${t("رفع", "Upload")}</button>`);
+			$upload.on("click", () => {
+				new frappe.ui.FileUploader({
+					doctype: "Finance Borrower Case Document",
+					docname: doc.name,
+					fieldname: "attachment",
+					folder: "Home/Attachments",
+					on_success(file) {
+						const payload = { name: doc.name, attachment: file.file_url };
+						$card.find(".oj-doc-field").each(function () {
+							payload[$(this).data("field")] = $(this).val();
+						});
+						call("omnexa_core.omnexa_core.finance_demo.finance_borrower_documents.save_case_document", {
+							data: JSON.stringify(payload),
+						}).then(() => {
+							frappe.show_alert({ message: t("تم رفع المستند", "Document uploaded"), indicator: "green" });
+							load();
+						});
+					},
+				});
+			});
+			$btns.append($upload);
+
+			const $save = $(`<button type="button" class="btn btn-sm btn-default ml-1">${t("حفظ البيانات", "Save Metadata")}</button>`);
+			$save.on("click", () => {
+				const payload = { name: doc.name, attachment: doc.attachment || undefined };
+				$card.find(".oj-doc-field").each(function () {
+					payload[$(this).data("field")] = $(this).val();
+				});
+				call("omnexa_core.omnexa_core.finance_demo.finance_borrower_documents.save_case_document", {
+					data: JSON.stringify(payload),
+				}).then(() => frappe.show_alert({ message: t("تم الحفظ", "Saved"), indicator: "green" }));
+			});
+			$btns.append($save);
+
+			if (doc.name) {
+				const dossier = window.omnexa_finance && omnexa_finance.dossier;
+				const $printPdf = $(
+					`<button type="button" class="btn btn-sm btn-default ml-1 btn-print-doc-pdf" aria-label="${t("PDF", "PDF")}">${t("PDF", "PDF")}</button>`
+				);
+				$printPdf.on("click", () => {
+					if (dossier && dossier.printDocument) dossier.printDocument(doc.name);
+				});
+				const $print = $(
+					`<button type="button" class="btn btn-sm btn-default ml-1 btn-print-doc" aria-label="${t("طباعة", "Print")}">${t("طباعة", "Print")}</button>`
+				);
+				$print.on("click", () => {
+					if (dossier && dossier.printDocumentPreview) dossier.printDocumentPreview(doc.name);
+					else if (dossier && dossier.printDocument) dossier.printDocument(doc.name);
+				});
+				$btns.append($printPdf, $print);
+			}
+			if (doc.name && doc.attachment) {
+				const $eap = $(`<button type="button" class="btn btn-sm btn-success ml-1">${t("اعتماد إلكتروني", "E-Approve")}</button>`);
+				$eap.on("click", () =>
+					call("omnexa_core.omnexa_core.finance_demo.finance_borrower_documents.approve_document_electronic", {
+						name: doc.name,
+					}).then(() => load())
+				);
+				const $pap = $(`<button type="button" class="btn btn-sm btn-success ml-1">${t("اعتماد ورقي", "Paper Approve")}</button>`);
+				$pap.on("click", () =>
+					call("omnexa_core.omnexa_core.finance_demo.finance_borrower_documents.approve_document_paper", {
+						name: doc.name,
+					}).then(() => load())
+				);
+				const $rej = $(`<button type="button" class="btn btn-sm btn-danger ml-1">${t("رفض", "Reject")}</button>`);
+				$rej.on("click", () => {
+					frappe.prompt(
+						{ fieldname: "reason", label: t("سبب الرفض", "Rejection Reason"), fieldtype: "Small Text", reqd: 1 },
+						(v) =>
+							call("omnexa_core.omnexa_core.finance_demo.finance_borrower_documents.reject_case_document", {
+								name: doc.name,
+								reason: v.reason,
+							}).then(() => load())
+					);
+				});
+				$btns.append($eap, $pap, $rej);
+			}
+			$card.append($btns);
+			return $card;
+		}
+
+		function load() {
+			$wrap.html(loading());
+			call("omnexa_core.omnexa_core.finance_demo.finance_borrower_documents.get_case_documents", {
+				case_doctype: caseDoctype,
+				case_name: caseName,
+				finance_app: financeApp,
+			})
+				.then((payload) => {
+					$wrap.empty();
+					const s = payload.summary || {};
+					$wrap.append(`
+						<div class="oj-doc-summary mb-3">
+							<span class="oj-badge oj-badge-blue">${t("إجمالي", "Total")}: ${s.total || 0}</span>
+							<span class="oj-badge oj-badge-red ml-1">${t("إلزامي", "Mandatory")}: ${s.mandatory_uploaded || 0}/${s.mandatory_total || 0}</span>
+							<span class="oj-badge oj-badge-green ml-1">${t("معتمد", "Approved")}: ${s.approved || 0}</span>
+						</div>`);
+					const $list = $('<div class="oj-doc-list"></div>');
+					(payload.documents || []).forEach((doc) => $list.append(renderDocCard(doc)));
+					$wrap.append($list);
+					$wrap.append(
+						`<p class="oj-muted small mt-2">${t("إضافة أنواع مستندات من: Finance Borrower Document Settings", "Add document types via Finance Borrower Document Settings")}</p>`
+					);
+				})
+				.catch((e) => $wrap.html(`<p class="text-danger">${esc(e.message || String(e))}</p>`));
+		}
+
+		load();
+		return $wrap;
+	}
+
 	function workflowStageScreen({ screen, workflowSteps, onAction, onStepSelect }) {
 		const step = screen.step || {};
 		const $panel = $(`<div class="oj-stage-screen"></div>`);
@@ -350,6 +527,38 @@
 			$panel.append(
 				`<div class="oj-alert oj-alert-info">${t("اختر حالة من الجدول أدناه أو أنشئ طلباً جديداً.", "Select a case from the table below or create a new application.")}</div>`
 			);
+		}
+
+		if (screen.screen_type === "documents") {
+			$panel.append(
+				borrowerDocumentsPanel({
+					caseDoctype: screen.case_doctype,
+					caseName: screen.case && screen.case.name,
+					financeApp: screen.app,
+				})
+			);
+		}
+
+		if (screen.case && screen.case.name && screen.case_doctype) {
+			const $c360 = $(`<div class="oj-customer-360-slot mt-2" role="region" aria-label="${t("عميل 360", "Customer 360")}"></div>`);
+			$panel.append($c360);
+			call("omnexa_core.omnexa_core.finance_demo.finance_wave6_global_leader.get_finance_customer_360", {
+				case_doctype: screen.case_doctype,
+				case_name: screen.case.name,
+			})
+				.then((payload) => {
+					const cust = (payload && payload.customer) || {};
+					const docs = (payload && payload.documents_summary) || {};
+					let html = `<div class="oj-alert oj-alert-info oj-customer-360"><strong>${t("عميل 360", "Customer 360")}</strong>`;
+					if (cust.customer_link) {
+						html += ` · <a href="${esc(cust.customer_link)}">${esc(cust.customer || "")}</a>`;
+					} else {
+						html += ` · ${esc(cust.customer || t("—", "—"))}`;
+					}
+					html += `<br/><small>${t("مستندات", "Documents")}: ${docs.approved || 0}/${docs.total || 0} ${t("معتمد", "approved")}</small></div>`;
+					$c360.html(html);
+				})
+				.catch(() => $c360.remove());
 		}
 
 		if (screen.metrics && screen.metrics.length) {
@@ -437,6 +646,21 @@
 				$wrap.append(
 					`<button type="button" class="btn btn-sm btn-default mt-2 btn-open-case">${t("فتح السجل", "Open Record")}</button>`
 				);
+				const $row = $('<div class="mt-2 oj-case-export-btns"></div>');
+				const $pdf = $(`<button type="button" class="btn btn-sm btn-primary mr-1">${t("PDF", "PDF")}</button>`);
+				const $print = $(`<button type="button" class="btn btn-sm btn-default mr-1">${t("طباعة", "Print")}</button>`);
+				function bindDossier() {
+					const d = window.omnexa_finance && omnexa_finance.dossier;
+					if (!d) return false;
+					$pdf.off("click").on("click", () => d.downloadPdf(doctype, name));
+					$print.off("click").on("click", () => d.printPreview(doctype, name));
+					return true;
+				}
+				$row.append($pdf, $print);
+				$wrap.append($row);
+				if (!bindDossier()) {
+					frappe.require(["/assets/omnexa_core/js/finance_borrower_dossier.js"], bindDossier);
+				}
 				$wrap.find(".btn-open-case").on("click", () => frappe.set_route("Form", doctype, name));
 			})
 			.catch((e) => {
@@ -446,7 +670,7 @@
 	}
 
 	function portalCategoryGrid(groups) {
-		const $root = $('<div class="oj-portal-catalog oj-finance-demo-portals"></div>');
+		const $root = $('<div class="oj-portal-catalog oj-finance-workcenter-portals"></div>');
 		(groups || []).forEach((g) => {
 			const title = lang() === "ar" ? g.label_ar : g.label_en;
 			const $sec = $(`<div class="oj-portal-section"><h4 class="oj-portal-cat-title">${esc(title)}</h4></div>`);
@@ -485,6 +709,7 @@
 		timelinePanel,
 		workflowJourneyGrid,
 		workflowStageScreen,
+		borrowerDocumentsPanel,
 		registrationWizard,
 		caseTrackerPanel,
 		portalCategoryGrid,

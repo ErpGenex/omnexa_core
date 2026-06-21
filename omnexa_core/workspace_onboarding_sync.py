@@ -141,8 +141,8 @@ def _shortcut_to_step_spec(shortcut, idx: int, ws_name: str) -> dict[str, Any] |
 			"action_label": "Open",
 			"description": f"Jump to the **{label}** page.",
 		}
-		if link == "finance-demo-hub":
-			spec["callback_title"] = frappe._("Finance Demo Hub")
+		if link in ("finance-demo-hub", "finance-workcenter"):
+			spec["callback_title"] = frappe._("Finance Workcenter")
 			spec["callback_message"] = frappe._(
 				"Explore role portals and demo accounts below, then click Continue to finish this step."
 			)

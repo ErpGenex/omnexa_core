@@ -1,5 +1,5 @@
 # Copyright (c) 2026, ErpGenEx
-"""Finance Group portal catalog — single source of truth for finance-demo-hub."""
+"""Finance Group portal catalog — Workcenter portal registry."""
 
 from __future__ import annotations
 
@@ -15,14 +15,14 @@ for _row in FINANCE_APP_REGISTRY:
 
 PORTAL_CATALOG: list[dict] = [
 	{
-		"id": "demo-hub",
-		"route": "/app/finance-demo-hub",
-		"page": "finance-demo-hub",
-		"icon": "🎯",
+		"id": "workcenter",
+		"route": "/app/finance-workcenter",
+		"page": "finance-workcenter",
+		"icon": "🏢",
 		"category": "admin",
-		"roles": ["System Manager"],
-		"label_ar": "مركز تجربة المجموعة المالية",
-		"label_en": "Finance Demo Hub",
+		"roles": ["System Manager", "Finance Group Executive"],
+		"label_ar": "مركز عمل المجموعة المالية",
+		"label_en": "Finance Workcenter",
 	},
 	{
 		"id": "finance-group",

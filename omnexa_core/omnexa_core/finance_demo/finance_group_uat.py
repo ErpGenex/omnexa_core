@@ -43,7 +43,7 @@ def run_automated_uat() -> dict:
 			"passed": bool(_check_page("finance-group") or frappe.db.exists("Workspace", "Finance Group")),
 		}
 	)
-	scenarios.append({"id": "UAT-02", "name": "Finance Demo Hub", "passed": _check_page("finance-demo-hub")})
+	scenarios.append({"id": "UAT-02", "name": "Finance Workcenter", "passed": _check_page("finance-workcenter")})
 
 	for spec in ROLE_SPECS:
 		scenarios.append(

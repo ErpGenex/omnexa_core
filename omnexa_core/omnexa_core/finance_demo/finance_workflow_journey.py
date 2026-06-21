@@ -153,17 +153,11 @@ WORKFLOW_STAGE_SCREENS: dict[str, dict] = {
 		"actions": [{"key": "wizard", "label_ar": "➕ تسجيل طلب", "label_en": "➕ New Application", "primary": 1}],
 	},
 	"doc_verification": {
-		"screen_type": "checklist",
-		"desc_ar": "فحص المستندات الإلزامية قبل الاستعلام الائتماني.",
-		"desc_en": "Verify mandatory documents before credit bureau inquiry.",
-		"checklist": [
-			{"id": "id", "label_ar": "الهوية الوطنية", "label_en": "National ID"},
-			{"id": "cr", "label_ar": "السجل التجاري", "label_en": "Commercial Registration"},
-			{"id": "income", "label_ar": "شهادة الدخل", "label_en": "Income Certificate"},
-			{"id": "bank", "label_ar": "كشف حساب", "label_en": "Bank Statement"},
-		],
+		"screen_type": "documents",
+		"desc_ar": "رفع المستندات الإلزامية وتسجيل بياناتها (رقم قومي، سجل تجاري، بطاقة ضريبية، حساب بنكي) للمراجعة والاعتماد.",
+		"desc_en": "Upload mandatory documents with metadata (National ID, CR, Tax Card, Bank Account) for review and approval.",
 		"actions": [
-			{"key": "approve_step", "label_ar": "✓ اعتماد المستندات", "label_en": "✓ Verify Documents", "primary": 1},
+			{"key": "approve_step", "label_ar": "✓ اعتماد المرحلة", "label_en": "✓ Complete Verification", "primary": 1},
 			{"key": "open_case", "label_ar": "فتح السجل", "label_en": "Open Record"},
 		],
 	},
@@ -362,12 +356,6 @@ def _app_nav(app: str, page: str) -> list[dict]:
 		seen.add(route)
 		nav.append(_nav_item(label_ar=_label, label_en=_label, route=route, icon="🔗"))
 
-	ws = spec.get("workspace")
-	if ws and frappe.db.exists("Workspace", ws):
-		ws_route = f"/app/{frappe.scrub(ws)}"
-		if ws_route not in seen:
-			nav.append(_nav_item(label_ar=f"مساحة {brand}", label_en=f"{brand} Workspace", route=ws_route, icon="🏦"))
-
 	if is_exec:
 		nav.append(_nav_item(label_ar="التقارير", label_en="Reports", route="#step-reports", icon="📈"))
 	else:
@@ -457,6 +445,12 @@ def create_case_from_wizard(app: str, data: str | dict | None = None) -> dict:
 		doc.lifecycle_stage = "Origination"
 	doc.insert(ignore_permissions=True)
 	frappe.db.commit()
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_borrower_documents import ensure_case_document_slots
+
+		ensure_case_document_slots(dt, doc.name, app)
+	except Exception:
+		pass
 	return {"ok": True, "doctype": dt, "name": doc.name, "route": f"Form/{dt}/{doc.name}"}
 
 
@@ -523,6 +517,7 @@ def get_workflow_stage_screen(app: str, step_key: str, case_name: str | None = N
 	if screen.get("case") and screen["case"].get("name"):
 		extra = [
 			{"key": "print_dossier", "label_ar": "📄 ملف المقترض PDF", "label_en": "📄 Borrower File PDF", "primary": 0},
+			{"key": "print_dossier_preview", "label_ar": "🖨️ طباعة الملف", "label_en": "🖨️ Print File", "primary": 0},
 			{"key": "export_dossier_excel", "label_ar": "📊 تصدير Excel", "label_en": "📊 Export Excel", "primary": 0},
 			{"key": "open_dossier_report", "label_ar": "📋 تقرير شامل", "label_en": "📋 Full Report", "primary": 0},
 		]

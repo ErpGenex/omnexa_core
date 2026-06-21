@@ -7,9 +7,10 @@ frappe.provide("omnexa_finance.portal");
 const FINANCE_JOURNEY_JS = [
 	"/assets/omnexa_core/js/omnexa-finance-journey.js",
 	"/assets/omnexa_core/js/finance-portal-registry.js",
+	"/assets/omnexa_core/js/finance_borrower_dossier.js",
 ];
 
-omnexa_finance.PORTAL_UI_VERSION = "20260620-workflow-v5";
+omnexa_finance.PORTAL_UI_VERSION = "20260621-dossier-v1";
 
 omnexa_finance._hydrateRegistryFromBoot = function () {
 	if (omnexa_finance.PORTAL_REGISTRY) return;
@@ -82,7 +83,12 @@ omnexa_finance.portal.mountPage = function (wrapper, pageName) {
 	});
 };
 
-omnexa_finance.portal._navigateRoute = function (route) {
+omnexa_finance.portal._financePortalPages = function () {
+	const reg = (omnexa_finance.PORTAL_REGISTRY || {});
+	return new Set(Object.keys(reg));
+};
+
+omnexa_finance.portal._navigateRoute = function (route, currentPage) {
 	if (!route) return;
 	if (route === "#wizard") {
 		$(document).trigger("finance-portal-open-wizard");
@@ -93,13 +99,27 @@ omnexa_finance.portal._navigateRoute = function (route) {
 		$(document).trigger("finance-portal-focus-step", [key]);
 		return;
 	}
-	if (route.startsWith("/app/")) window.location.href = route;
-	else if (route.startsWith("List/")) frappe.set_route("List", route.slice(5));
+	if (route.startsWith("/app/")) {
+		const page = route.replace(/^\/app\//, "").split(/[?#]/)[0];
+		const allowed = omnexa_finance.portal._financePortalPages();
+		const extras = new Set(["finance-workcenter", "finance-demo-hub", "finance-control-center"]);
+		if (!allowed.has(page) && !extras.has(page)) {
+			frappe.show_alert({
+				message: __("This link is not a finance portal page. Use servicing/executive links inside the portal."),
+				indicator: "orange",
+			});
+			return;
+		}
+		if (page === (currentPage || "").replace(/^\/app\//, "")) return;
+		window.location.href = route;
+		return;
+	}
+	if (route.startsWith("List/")) frappe.set_route("List", route.slice(5));
 	else if (route.startsWith("Form/")) {
 		const p = route.split("/");
 		frappe.set_route("Form", p[1], p[2] || "");
 	} else if (route.startsWith("Report/")) frappe.set_route("query-report", route.slice(7));
-	else frappe.set_route(route);
+	else if (route.startsWith("query-report/")) frappe.set_route("query-report", route.slice(14));
 };
 
 omnexa_finance.portal.mount = function (wrapper, config) {
@@ -138,6 +158,28 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 			return null;
 		}
 
+		function runDossierAction(fn) {
+			if (!caseDoctype || !portalState.selectedCaseName) {
+				frappe.show_alert({
+					message: OJ.t("اختر حالة من الجدول أولاً", "Select a case from the table first"),
+					indicator: "orange",
+				});
+				return;
+			}
+			const dossier = window.omnexa_finance && omnexa_finance.dossier;
+			if (dossier && typeof dossier[fn] === "function") {
+				dossier[fn](caseDoctype, portalState.selectedCaseName);
+				return;
+			}
+			frappe.require(["/assets/omnexa_core/js/finance_borrower_dossier.js"], () => {
+				if (omnexa_finance.dossier && typeof omnexa_finance.dossier[fn] === "function") {
+					omnexa_finance.dossier[fn](caseDoctype, portalState.selectedCaseName);
+				} else {
+					frappe.msgprint(__("Borrower export module failed to load. Hard-refresh (Ctrl+Shift+R)."));
+				}
+			});
+		}
+
 		async function openStage(stepKey) {
 			if (!stepKey || !data.app) return;
 			portalState.activeStepKey = stepKey;
@@ -172,16 +214,20 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 								frappe.set_route("List", caseDoctype);
 								return;
 							}
-							if (actionKey === "print_dossier" && caseDoctype && portalState.selectedCaseName) {
-								omnexa_finance.dossier.downloadPdf(caseDoctype, portalState.selectedCaseName);
+							if (actionKey === "print_dossier") {
+								runDossierAction("downloadPdf");
 								return;
 							}
-							if (actionKey === "export_dossier_excel" && caseDoctype && portalState.selectedCaseName) {
-								omnexa_finance.dossier.downloadExcel(caseDoctype, portalState.selectedCaseName);
+							if (actionKey === "print_dossier_preview") {
+								runDossierAction("printPreview");
 								return;
 							}
-							if (actionKey === "open_dossier_report" && caseDoctype && portalState.selectedCaseName) {
-								omnexa_finance.dossier.openReport(caseDoctype, portalState.selectedCaseName);
+							if (actionKey === "export_dossier_excel") {
+								runDossierAction("downloadExcel");
+								return;
+							}
+							if (actionKey === "open_dossier_report") {
+								runDossierAction("openReport");
 								return;
 							}
 							if (actionKey === "next" || actionKey === "approve_step" || actionKey === "disburse" || actionKey === "collect") {
@@ -262,6 +308,7 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 			kpis,
 			sidebar: sidebarNav,
 			bodyEl: $body,
+			currentPage: config.page,
 		});
 
 		$shell.find(".oj-topbar-meta").prepend(
@@ -270,7 +317,7 @@ omnexa_finance.portal.mount = function (wrapper, config) {
 
 		$shell.find(".oj-sidebar-item[data-nav-route]").off("click").on("click", function (e) {
 			e.preventDefault();
-			omnexa_finance.portal._navigateRoute($(this).attr("data-nav-route"));
+			omnexa_finance.portal._navigateRoute($(this).attr("data-nav-route"), config.page);
 		});
 
 		$mount.empty().append($shell);

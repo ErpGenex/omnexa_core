@@ -840,6 +840,9 @@ def run_site_hardening_after_app_changes():
 	ensure_procurement_enterprise_fields()
 	ensure_inventory_enterprise_fields()
 	ensure_finance_enterprise_fields()
+	ensure_finance_borrower_document_bootstrap()
+	ensure_wave6_global_leader_bootstrap()
+	ensure_finance_workcenter_bootstrap()
 	ensure_project_contract_link_compat()
 	remove_legacy_people_workspace()
 	remove_legacy_finance_workspace()
@@ -1503,6 +1506,35 @@ def ensure_finance_enterprise_fields():
 			frappe.db.commit()
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_finance_enterprise_fields")
+
+
+def ensure_finance_borrower_document_bootstrap():
+	"""Seed borrower document types and per-app policies after migrate."""
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_borrower_documents import bootstrap_finance_borrower_documents
+
+		bootstrap_finance_borrower_documents()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_finance_borrower_document_bootstrap")
+
+
+def ensure_wave6_global_leader_bootstrap():
+	"""Wave 6 — accounting matrix, global leader platform closure."""
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_wave6_global_leader import bootstrap_wave6_global_leader
+
+		bootstrap_wave6_global_leader()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_wave6_global_leader_bootstrap")
+
+
+def ensure_finance_workcenter_bootstrap():
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_workcenter import ensure_workcenter_page
+
+		ensure_workcenter_page()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_finance_workcenter_bootstrap")
 
 
 def ensure_finance_workflow_templates():

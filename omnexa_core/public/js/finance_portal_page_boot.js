@@ -7,10 +7,11 @@ frappe.provide("omnexa_finance");
 const FINANCE_PORTAL_ASSETS = [
 	"/assets/omnexa_core/js/omnexa-finance-journey.js",
 	"/assets/omnexa_core/js/finance-portal-registry.js",
+	"/assets/omnexa_core/js/finance_borrower_dossier.js",
 	"/assets/omnexa_core/js/finance-portal-factory.js",
 ];
 
-omnexa_finance.PORTAL_UI_VERSION = "20260620-workflow-v5";
+omnexa_finance.PORTAL_UI_VERSION = "20260621-dossier-v1";
 
 omnexa_finance._hydrateRegistryFromBoot = function () {
 	if (window.omnexa_finance && omnexa_finance.PORTAL_REGISTRY) return;

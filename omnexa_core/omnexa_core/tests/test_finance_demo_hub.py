@@ -8,7 +8,7 @@ class TestFinanceDemoHub(unittest.TestCase):
 
 		self.assertGreater(len(PORTAL_CATALOG), 10)
 		catalog = get_portal_catalog(include_missing=1)
-		self.assertTrue(any(p["id"] == "demo-hub" for p in catalog))
+		self.assertTrue(any(p["id"] == "workcenter" for p in catalog))
 
 	def test_role_specs(self):
 		from omnexa_core.omnexa_core.finance_demo.finance_role_demo import ROLE_SPECS

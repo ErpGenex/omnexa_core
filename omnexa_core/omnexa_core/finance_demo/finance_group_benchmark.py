@@ -82,7 +82,7 @@ def _app_score(app: str) -> dict:
 
 
 def _demo_hub_gate() -> dict:
-	pages = ("finance-demo-hub", "finance-control-center", "mf-servicing-portal")
+	pages = ("finance-workcenter", "finance-control-center", "mf-servicing-portal")
 	roles_ok = False
 	try:
 		from omnexa_core.omnexa_core.finance_demo.finance_role_demo import ROLE_SPECS

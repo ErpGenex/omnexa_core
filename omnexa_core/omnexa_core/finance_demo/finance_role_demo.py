@@ -30,7 +30,7 @@ ROLE_SPECS: list[dict] = [
 		"sections": [
 			("📊 Group", [
 				("Page", "fe-executive-dashboard", "Finance Engine"),
-				("Page", "finance-demo-hub", "Demo Hub"),
+				("Page", "finance-workcenter", "Workcenter"),
 			]),
 		],
 	},
@@ -407,32 +407,26 @@ def _ensure_demo_user(spec: dict, company: str, branch: str) -> str:
 	if not user.roles or not any(r.role == role for r in user.roles):
 		user.append("roles", {"role": role})
 	_block_non_finance_modules(user)
-	user.default_workspace = desk_ws
+	# Portal-first: finance role users enter via Workcenter / role portal.
+	if role == "System Manager":
+		user.default_workspace = desk_ws
+	else:
+		user.default_workspace = ""
 	user.save(ignore_permissions=True)
 	frappe.defaults.set_user_default("Company", company, email)
 	frappe.defaults.set_user_default("Branch", branch, email)
 	return email
 
 
+def _sync_workcenter_page_roles() -> None:
+	from omnexa_core.omnexa_core.finance_demo.finance_workcenter import sync_workcenter_page_roles
+
+	sync_workcenter_page_roles()
+
+
 def _sync_demo_page_roles() -> None:
-	"""Ensure group hub pages are readable by finance demo roles."""
-	page_roles = {
-		"finance-demo-hub": ["Finance Group Executive"],
-		"finance-control-center": ["Finance Accounting Controller"],
-	}
-	for page_name, roles in page_roles.items():
-		if not frappe.db.exists("Page", page_name):
-			continue
-		page = frappe.get_doc("Page", page_name)
-		existing = {r.role for r in page.roles}
-		changed = False
-		for role in roles:
-			if role not in existing:
-				page.append("roles", {"role": role})
-				changed = True
-		if changed:
-			page.flags.ignore_permissions = True
-			page.save()
+	"""Legacy alias."""
+	_sync_workcenter_page_roles()
 
 
 @frappe.whitelist()
@@ -470,7 +464,7 @@ def seed_finance_role_demo(company: str | None = None, branch: str | None = None
 		"branch": branch,
 		"workspaces": workspaces,
 		"users": get_finance_demo_credentials()["users"],
-		"message": _("Finance role demo ready. Each user sees only their workspace."),
+		"message": _("Finance Workcenter roles ready. Each user enters via their role portal."),
 	}
 
 

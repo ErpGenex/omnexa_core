@@ -174,6 +174,14 @@ def get_app_route(workspace: str) -> str:
 	return f"/app/{frappe.scrub(workspace)}"
 
 
+def get_servicing_portal_route(app: str) -> str:
+	"""Default desk entry — finance servicing portal page (not workspace slug)."""
+	for row in get_full_finance_catalog():
+		if row.get("app") == app and row.get("serv_page"):
+			return f"/app/{row['serv_page']}"
+	return get_app_route((get_registry_entry(app) or {}).get("workspace") or app)
+
+
 def get_logo_url(app: str) -> str:
 	return f"/assets/{app}/logo.png"
 
@@ -184,7 +192,7 @@ def get_installed_registry() -> list[dict]:
 	for row in FINANCE_APP_REGISTRY:
 		if row["app"] in installed:
 			item = dict(row)
-			item["route"] = get_app_route(row["workspace"])
+			item["route"] = get_servicing_portal_route(row["app"])
 			item["logo_url"] = get_logo_url(row["app"])
 			out.append(item)
 	return out

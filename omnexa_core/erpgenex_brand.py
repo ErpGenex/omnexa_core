@@ -69,3 +69,10 @@ def boot_session(bootinfo):
 		bootinfo.finance_case_doctypes = get_finance_case_doctypes_boot()
 	except Exception:
 		bootinfo.finance_case_doctypes = []
+
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_workcenter import inject_finance_workcenter_boot
+
+		inject_finance_workcenter_boot(bootinfo)
+	except Exception:
+		bootinfo.finance_workcenter = {}

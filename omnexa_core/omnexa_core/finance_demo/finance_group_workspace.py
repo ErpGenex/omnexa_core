@@ -34,8 +34,8 @@ def _card_break(label: str, icon: str = "folder-normal") -> dict:
 
 def _build_links() -> list[dict]:
 	rows: list[dict] = [
-		_card_break("🎯 Demo & Portals", "star"),
-		_link_row(label=_("Finance Demo Hub"), link_type="Page", link_to="finance-demo-hub", icon="star"),
+		_card_break("🏢 Workcenter & Portals", "star"),
+		_link_row(label=_("Finance Workcenter"), link_type="Page", link_to="finance-workcenter", icon="star"),
 		_link_row(
 			label=_("Finance Control Center"),
 			link_type="Page",
@@ -93,8 +93,8 @@ def _build_shortcuts() -> list[dict]:
 	shortcuts = [
 		{
 			"type": "Page",
-			"link_to": "finance-demo-hub",
-			"label": _("Demo Hub"),
+			"link_to": "finance-workcenter",
+			"label": _("Workcenter"),
 			"color": "Blue",
 		},
 	]
@@ -132,8 +132,8 @@ def _build_content() -> str:
 				"text": (
 					'<span class="h4"><b>Finance Group</b></span><br>'
 					'<span class="text-muted">'
-					"Use the sidebar to open each finance workspace. "
-					"Start at <b>Finance Demo Hub</b> for role-based simulation."
+					"Use the sidebar to open each finance portal. "
+					"Start at <b>Finance Workcenter</b> — each user enters by role."
 					"</span>"
 				),
 				"col": 12,
