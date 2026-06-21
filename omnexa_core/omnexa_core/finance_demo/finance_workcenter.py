@@ -102,14 +102,23 @@ def sync_workcenter_page_roles() -> None:
 	"""Ensure finance roles can open Workcenter (filtered view)."""
 	if not frappe.db.exists("Page", WORKCENTER_PAGE):
 		return
+	from omnexa_core.omnexa_core.finance_demo.finance_role_demo import ROLE_SPECS, _ensure_role
+
 	page = frappe.get_doc("Page", WORKCENTER_PAGE)
+	# Remove stale Page Role rows when Role master is missing (fresh/partial sites).
+	kept = [r for r in page.roles if r.role and frappe.db.exists("Role", r.role)]
+	if len(kept) != len(page.roles):
+		page.set("roles", [{"role": r.role} for r in kept])
+
 	existing = {r.role for r in page.roles}
 	all_roles = {"System Manager", "Finance Group Executive"}
-	from omnexa_core.omnexa_core.finance_demo.finance_role_demo import ROLE_SPECS
-
 	all_roles.update(s["role"] for s in ROLE_SPECS)
-	changed = False
+	changed = len(kept) != len(page.roles)
 	for role in sorted(all_roles):
+		if role != "System Manager":
+			_ensure_role(role)
+		if not frappe.db.exists("Role", role):
+			continue
 		if role not in existing:
 			page.append("roles", {"role": role})
 			changed = True
