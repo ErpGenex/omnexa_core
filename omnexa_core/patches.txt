@@ -29,3 +29,4 @@ omnexa_core.patches.fix_item_custom_field_tabs
 omnexa_core.patches.seed_product_type_pos_settings
 omnexa_core.patches.add_item_show_in_retail_pos
 omnexa_core.patches.rename_finance_demo_hub_to_workcenter
+omnexa_core.patches.ensure_branch_finance_demo_fields

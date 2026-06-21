@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Finance Group\", \"col\": 12}}, {\"id\": \"fg-header\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Finance Group</b></span><br><span class=\\\"text-muted\\\">Use the sidebar to open each finance workspace. Start at <b>Finance Demo Hub</b> for role-based simulation.</span>\", \"col\": 12}}]",
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Finance Group\", \"col\": 12}}, {\"id\": \"fg-header\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Finance Group</b></span><br><span class=\\\"text-muted\\\">Use the sidebar to open each finance workspace. Start at <b>Finance Workcenter</b> for role-based portals.</span>\", \"col\": 12}}]",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -13,14 +13,14 @@
   {
    "hidden": 0,
    "icon": "star",
-   "label": "Demo & Portals",
+   "label": "Workcenter & Portals",
    "type": "Card Break"
   },
   {
    "hidden": 0,
    "icon": "star",
-   "label": "Finance Demo Hub",
-   "link_to": "finance-demo-hub",
+   "label": "Finance Workcenter",
+   "link_to": "finance-workcenter",
    "link_type": "Page",
    "type": "Link"
   },
@@ -81,8 +81,8 @@
  "shortcuts": [
   {
    "color": "Blue",
-   "label": "Demo Hub",
-   "link_to": "finance-demo-hub",
+   "label": "Workcenter",
+   "link_to": "finance-workcenter",
    "type": "Page"
   }
  ],

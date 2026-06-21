@@ -1,9 +1,9 @@
 {
 	"doctype": "Page",
 	"module": "Omnexa Core",
-	"name": "finance-demo-hub",
-	"page_name": "finance-demo-hub",
-	"title": "Finance Demo Hub",
+	"name": "finance-workcenter",
+	"page_name": "finance-workcenter",
+	"title": "Finance Workcenter",
 	"standard": "Yes",
 	"roles": [
 		{"role": "System Manager"},

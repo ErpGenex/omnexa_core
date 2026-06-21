@@ -142,6 +142,36 @@ class Branch(Document):
 			"force": cint(self.get("branch_demo_healthcare_force") or 0),
 		}
 
+	def _finance_demo_kwargs(self) -> dict:
+		return {
+			"customers": cint(self.get("branch_demo_finance_customers")) or 50,
+			"sync_roles": cint(self.get("branch_demo_finance_sync_roles") or 1),
+			"force": cint(self.get("branch_demo_finance_force") or 0),
+		}
+
+	@frappe.whitelist()
+	def branch_demo_action_finance_group(self):
+		result = self._run_branch_demo("finance_group", **self._finance_demo_kwargs()) or {}
+		if result.get("message") == "already_seeded":
+			frappe.msgprint(
+				result.get("hint") or _("Finance demo already exists for this branch."),
+				title=_("Finance Group demo"),
+				indicator="blue",
+			)
+			return result
+		frappe.msgprint(
+			_(
+				"Finance group demo seeded: {0} cases across {1} apps ({2} clients per app). Open Finance Workcenter to explore portals."
+			).format(
+				result.get("total_cases") or 0,
+				result.get("apps_seeded") or 0,
+				result.get("customers_per_app") or 50,
+			),
+			title=_("Finance Group demo"),
+			indicator="green",
+		)
+		return result
+
 	@frappe.whitelist()
 	def branch_demo_action_healthcare_hospital(self):
 		result = self._run_branch_demo("healthcare_hospital", **self._healthcare_demo_kwargs()) or {}

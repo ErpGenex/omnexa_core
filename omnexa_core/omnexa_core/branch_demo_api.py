@@ -73,6 +73,17 @@ def run_demo_action_for_branch(branch_doc, action_key: str, **kwargs) -> dict:
 			),
 		)
 
+	if key == "finance_group":
+		from omnexa_core.omnexa_core.finance_demo.finance_branch_demo_seed import seed_finance_group_branch_demo
+
+		return seed_finance_group_branch_demo(
+			company=company,
+			branch=branch,
+			customers=kwargs.get("customers", cint(branch_doc.get("branch_demo_finance_customers")) or 50),
+			sync_roles=kwargs.get("sync_roles", cint(branch_doc.get("branch_demo_finance_sync_roles") or 1)),
+			force=kwargs.get("force", cint(branch_doc.get("branch_demo_finance_force") or 0)),
+		)
+
 	if key == "reset_dry":
 		from omnexa_accounting.utils.production_readiness import reset_transactions
 
@@ -121,6 +132,14 @@ def wipe_branch_all_data(company: str, branch: str, confirm_text: str | None = N
 
 		healthcare = reset_healthcare_demo_for_branch(company=company, branch=branch, dry_run=0)
 
+	finance = None
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_branch_demo_seed import reset_finance_demo_for_branch
+
+		finance = reset_finance_demo_for_branch(company=company, branch=branch, dry_run=0)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "wipe_branch_all_data:finance")
+
 	return {
 		"ok": True,
 		"company": company,
@@ -128,4 +147,5 @@ def wipe_branch_all_data(company: str, branch: str, confirm_text: str | None = N
 		"transactions": tx,
 		"construction": construction,
 		"healthcare": healthcare,
+		"finance": finance,
 	}
