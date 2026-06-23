@@ -8,7 +8,7 @@ from frappe import _
 from frappe.utils import cint, get_table_name
 
 
-PRIVILEGED_ROLES = {"System Manager", "Company Admin"}
+PRIVILEGED_ROLES = {"System Manager", "Company Admin", "Education Manager"}
 
 
 def user_can_wipe_company(user: str | None = None) -> bool:
