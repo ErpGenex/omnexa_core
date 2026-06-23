@@ -843,12 +843,12 @@ ECL Movements,حركات خسائر الائتمان المتوقعة (ECL)
 ECL stage bars Bar,ECL (أعمدة مراحل)
 Edit Line Price,تعديل سعر الصنف
 Education,التعليم
-Education Campus Mix,Education حرم (مزيج)
-Education Institution Mix,Education مؤسسة (مزيج)
-Education Settings,Education Settings
-Education Workcenter,Education Workcenter
-Education · Education Campus Mix,التعليم · Education حرم (مزيج)
-Education · Education Institution Mix,التعليم · Education مؤسسة (مزيج)
+Education Campus Mix,توزيع الأحرام التعليمية
+Education Institution Mix,توزيع المؤسسات التعليمية
+Education Settings,إعدادات التعليم
+Education Workcenter,مركز عمل التعليم
+Education · Education Campus Mix,التعليم · توزيع الأحرام
+Education · Education Institution Mix,التعليم · توزيع المؤسسات
 Education · Status Bar,التعليم · شريط الحالة
 Eligibility Check,Eligibility Check
 Email,البريد
@@ -1329,7 +1329,7 @@ Hotel Asset Inspection,Hotel Asset Inspection
 Hotel Asset Transfer,Hotel Asset Transfer
 Hotel Assets by Floor,Hotel Assets by Floor
 Hotel Floor,فندق Floor
-Hotel Front Office,Hotel Front Office
+Hotel Front Office,مكتب استقبال الفندق
 Hotel Functional Area,Hotel Functional Area
 Hotel Inspection Summary,Hotel Inspection Summary
 Hotel Movement History,Hotel Movement History
@@ -1585,7 +1585,7 @@ Loyalty Tier,Loyalty Tier
 LTV / DSTI Monitor,مراقب LTV / DSTI
 LTV Monitor,مراقب نسبة القرض إلى القيمة (LTV)
 Maintenance,Maintenance
-Maintenance Core,Maintenance Core
+Maintenance Core,نواة الصيانة
 Maintenance Cost,Maintenance Cost
 Maintenance cost analysis,الصيانة تكلفة analysis
 Maintenance Record,Maintenance Record
@@ -2882,7 +2882,7 @@ ZATCA Submission Log,ZATCA Submission Log
 📁 Data & imports,📁 Data & imports
 📁 E-Invoicing,📁 E-Invoicing
 📁 E-Invoicing & e-receipt,📁 E-Invoicing & e-receipt
-📁 Education DocTypes (auto),📁 Education DocTypes (auto)
+📁 Education DocTypes (auto),📁 مستندات التعليم (تلقائي)
 📁 Email,📁 Email
 📁 Healthcare DocTypes (auto),📁 Healthcare DocTypes (auto)
 📁 Home,📁 Home
