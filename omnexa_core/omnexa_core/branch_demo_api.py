@@ -84,6 +84,24 @@ def run_demo_action_for_branch(branch_doc, action_key: str, **kwargs) -> dict:
 			force=kwargs.get("force", cint(branch_doc.get("branch_demo_finance_force") or 0)),
 		)
 
+	if key == "education":
+		if "omnexa_education" not in (frappe.get_installed_apps() or []):
+			frappe.throw(
+				_("Install and migrate omnexa_education on this site, then reload the Branch form."),
+				title=_("Education demo"),
+			)
+		from omnexa_education.education_demo.branch_demo_seed import seed_education_branch_demo
+
+		return seed_education_branch_demo(
+			company=company,
+			branch=branch,
+			institution_type=kwargs.get(
+				"institution_type", branch_doc.get("branch_demo_education_institution_type") or "All 5 Types"
+			),
+			seed_roles=kwargs.get("seed_roles", cint(branch_doc.get("branch_demo_education_seed_roles") or 1)),
+			sync_laravel=kwargs.get("sync_laravel", cint(branch_doc.get("branch_demo_education_sync_laravel") or 0)),
+		)
+
 	if key == "reset_dry":
 		from omnexa_accounting.utils.production_readiness import reset_transactions
 

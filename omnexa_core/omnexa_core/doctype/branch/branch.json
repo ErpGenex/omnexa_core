@@ -181,6 +181,11 @@
 		"branch_demo_finance_sync_roles",
 		"branch_demo_finance_force",
 		"branch_demo_btn_finance_group",
+		"branch_demo_group_education_label",
+		"branch_demo_education_institution_type",
+		"branch_demo_education_seed_roles",
+		"branch_demo_education_sync_laravel",
+		"branch_demo_btn_education",
 		"branch_demo_group_hotel_label",
 		"branch_demo_btn_hotel_assets",
 		"branch_demo_group_reset_label",
@@ -935,6 +940,45 @@
 			"fieldtype": "Button",
 			"label": "Seed Finance Group demo (50 clients × all apps)",
 			"options": "branch_demo_action_finance_group",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Education' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_education')>=0))",
+			"fieldname": "branch_demo_group_education_label",
+			"fieldtype": "HTML",
+			"label": "Education demo",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>EduSphere — التعليم</b><br><span class=\"text-muted\">5 أنواع مؤسسات · 8 بوابات أدوار · كلمة المرور: Education@Demo2026</span></div>"
+		},
+		{
+			"default": "All 5 Types",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Education' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_education')>=0))",
+			"description": "University, International School, Academy, Institute, or Training Center — or all five.",
+			"fieldname": "branch_demo_education_institution_type",
+			"fieldtype": "Select",
+			"label": "Institution type to seed",
+			"options": "All 5 Types\nUniversity\nInstitute\nInternational School\nAcademy\nTraining Center"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Education' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_education')>=0))",
+			"fieldname": "branch_demo_education_seed_roles",
+			"fieldtype": "Check",
+			"label": "Seed role portal users (8 accounts)"
+		},
+		{
+			"default": "0",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Education' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_education')>=0))",
+			"description": "Queue Laravel program sync if TLMS is enabled in Education Settings.",
+			"fieldname": "branch_demo_education_sync_laravel",
+			"fieldtype": "Check",
+			"label": "Queue Laravel TLMS sync"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Education' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_education')>=0))",
+			"fieldname": "branch_demo_btn_education",
+			"fieldtype": "Button",
+			"label": "تفعيل ديمو EduSphere (EduSphere Demo)",
+			"options": "branch_demo_action_education",
 			"primary": 1
 		},
 		{

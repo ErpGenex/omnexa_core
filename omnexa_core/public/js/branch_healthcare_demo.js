@@ -10,6 +10,10 @@ function omnexa_healthcare_demo_installed() {
 	return omnexa_installed("omnexa_healthcare");
 }
 
+function omnexa_education_demo_installed() {
+	return omnexa_installed("omnexa_education");
+}
+
 function omnexa_finance_group_installed() {
 	return omnexa_installed("omnexa_finance_engine") && omnexa_installed("omnexa_sme_retail_finance");
 }
@@ -22,6 +26,11 @@ frappe.ui.form.on("Branch", {
 		if (omnexa_healthcare_demo_installed() && !frm.doc.branch_demo_activity) {
 			frm.set_value("branch_demo_activity", "Healthcare");
 		}
+		if (omnexa_education_demo_installed() && frm.doc.branch_demo_activity === "Education") {
+			if (!frm.doc.branch_demo_education_institution_type) {
+				frm.set_value("branch_demo_education_institution_type", "All 5 Types");
+			}
+		}
 		if (omnexa_finance_group_installed() && frm.doc.branch_demo_activity === "Financial Services") {
 			frm.set_df_property("branch_demo_finance_customers", "description", __("Clients/cases per finance vertical app (default 50)."));
 		}
@@ -30,6 +39,14 @@ frappe.ui.form.on("Branch", {
 		if (frm.doc.branch_demo_activity === "Financial Services" && omnexa_finance_group_installed()) {
 			if (!frm.doc.branch_demo_finance_customers) {
 				frm.set_value("branch_demo_finance_customers", 50);
+			}
+		}
+		if (frm.doc.branch_demo_activity === "Education" && omnexa_education_demo_installed()) {
+			if (!frm.doc.branch_demo_education_institution_type) {
+				frm.set_value("branch_demo_education_institution_type", "All 5 Types");
+			}
+			if (frm.doc.branch_demo_education_seed_roles == null) {
+				frm.set_value("branch_demo_education_seed_roles", 1);
 			}
 		}
 	},

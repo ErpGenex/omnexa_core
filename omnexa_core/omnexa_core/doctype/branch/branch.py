@@ -149,6 +149,26 @@ class Branch(Document):
 			"force": cint(self.get("branch_demo_finance_force") or 0),
 		}
 
+	def _education_demo_kwargs(self) -> dict:
+		return {
+			"institution_type": self.get("branch_demo_education_institution_type") or "All 5 Types",
+			"seed_roles": cint(self.get("branch_demo_education_seed_roles") or 1),
+			"sync_laravel": cint(self.get("branch_demo_education_sync_laravel") or 0),
+		}
+
+	@frappe.whitelist()
+	def branch_demo_action_education(self):
+		result = self._run_branch_demo("education", **self._education_demo_kwargs()) or {}
+		inst_count = result.get("institutions_seeded") or len(result.get("institutions") or [])
+		frappe.msgprint(
+			_(
+				"EduSphere demo seeded: {0} institution(s) on branch {1}. Open Education Workcenter for role portals."
+			).format(inst_count, self.name),
+			title=_("EduSphere Education Demo"),
+			indicator="green",
+		)
+		return result
+
 	@frappe.whitelist()
 	def branch_demo_action_finance_group(self):
 		result = self._run_branch_demo("finance_group", **self._finance_demo_kwargs()) or {}
