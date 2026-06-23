@@ -3037,6 +3037,21 @@ def _last_insert_anchor_fieldname(doctype: str):
 	return None
 
 
+def _skip_supporting_attachment_doctype(doctype: str) -> bool:
+	"""Queue/log/integration doctypes should not get attachment UI fields."""
+	name = (doctype or "").strip().lower()
+	if not name:
+		return True
+	skip_patterns = (
+		" sync queue",
+		" access log",
+		" webhook",
+		" sync log",
+		" audit log",
+	)
+	return any(p in name for p in skip_patterns) or name.endswith(" queue") or name.endswith(" log")
+
+
 def ensure_company_branding_fields():
 	"""Ensure Company has a dedicated logo field for branding."""
 	try:
@@ -3091,6 +3106,8 @@ def ensure_global_supporting_attachment_fields():
 
 		custom_fields_map = {}
 		for dt in doctypes:
+			if _skip_supporting_attachment_doctype(dt):
+				continue
 			anchor = _last_insert_anchor_fieldname(dt)
 			if not anchor:
 				continue
@@ -3109,6 +3126,11 @@ def ensure_global_supporting_attachment_fields():
 				},
 			]
 
+		if not custom_fields_map:
+			return
+
 		create_custom_fields(custom_fields_map, update=True)
+		for dt in custom_fields_map:
+			_sync_doctype_database_schema(dt)
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_global_supporting_attachment_fields")
