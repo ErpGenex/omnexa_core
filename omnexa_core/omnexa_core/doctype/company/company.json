@@ -131,7 +131,7 @@
 			"fieldname": "demo_activity_website_help",
 			"fieldtype": "HTML",
 			"label": "Activity website demo",
-			"options": "<div class=\"text-muted small\">Seeds a <b>complete public website</b> matching <b>Business Activity</b>: Healthcare → hospital (doctors, services, bookings), Trading → store catalog, Education → campus programs, Tourism → rooms, etc. Requires <b>omnexa_experience</b> (and vertical apps as needed).</div>"
+			"options": "<div class=\"text-muted small\">Seeds a <b>complete public website</b> matching <b>Business Activity</b>: Healthcare → <code>/hospital</code>, Education → <code>/education</code> (EduSphere), Trading → <code>/store</code>, Tourism → <code>/stay</code>, etc. Legacy paths (e.g. <code>/campus</code>) redirect to the app design. Requires <b>omnexa_experience</b> and the matching vertical app.</div>"
 		},
 		{
 			"depends_on": "eval:!doc.__islocal",
