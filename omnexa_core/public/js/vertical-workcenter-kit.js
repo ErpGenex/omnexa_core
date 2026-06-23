@@ -57,28 +57,48 @@ frappe.provide("omnexa_core.vertical_workcenter");
 			args: { app: appName },
 			callback(r) {
 				const ctx = r.message || {};
-				const $body = $('<div class="vertical-workcenter-journey"></div>');
-				$body.append(
+				const groups = ctx.grouped_portals || [];
+				const $layout = $('<div class="oj-vertical-portal-layout"></div>');
+				const $sidebar = $('<aside class="oj-vertical-portal-aside"></aside>');
+				$sidebar.append(
+					`<div class="oj-vertical-portal-brand">
+						${ctx.logo_url ? `<img src="${ctx.logo_url}" alt="" />` : ""}
+						<strong>${frappe.utils.escape_html(t(ctx.title_ar, ctx.title_en))}</strong>
+					</div>`
+				);
+				(groups || []).forEach((g) => {
+					const gtitle = t(g.label_ar, g.label_en);
+					$sidebar.append(`<div class="oj-sidebar-section">${frappe.utils.escape_html(gtitle)}</div>`);
+					(g.portals || []).forEach((p) => {
+						const $link = $(`
+							<a class="oj-sidebar-link" href="${frappe.utils.escape_html(p.route)}">
+								<span class="oj-sidebar-icon">${p.icon || "🌐"}</span>
+								<span>${frappe.utils.escape_html(t(p.label_ar, p.label_en))}</span>
+							</a>`);
+						$link.on("click", (e) => {
+							e.preventDefault();
+							navigateRoute(p.route);
+						});
+						$sidebar.append($link);
+					});
+				});
+
+				const $main = $('<div class="oj-vertical-portal-main vertical-workcenter-journey"></div>');
+				$main.append(
 					`<p class="oj-muted">${t(
 						"مركز العمل — بوابات الأدوار · محاكاة من الفرع",
 						"Workcenter — role portals · branch simulation"
 					)}</p>`
 				);
-				if (ctx.logo_url) {
-					$body.append(
-						`<div style="margin-bottom:12px"><img src="${ctx.logo_url}" alt="" style="height:48px;border-radius:8px"/></div>`
-					);
-				}
-				$body.append(
-					`<h4 class="oj-section-title">${frappe.utils.escape_html(t(ctx.title_ar, ctx.title_en))}</h4>`
-				);
-				$body.append(portalGrid(ctx.grouped_portals));
 				if (ctx.can_simulate) {
-					$body.append(
-						`<p class="oj-muted" style="margin-top:16px">${frappe.utils.escape_html(ctx.branch_demo_hint || "")}</p>`
+					$main.append(
+						`<p class="oj-muted">${frappe.utils.escape_html(ctx.branch_demo_hint || "")}</p>`
 					);
 				}
-				$mount.empty().append($body);
+				$main.append(portalGrid(groups));
+
+				$layout.append($sidebar).append($main);
+				$mount.empty().append($layout);
 			},
 		});
 	};

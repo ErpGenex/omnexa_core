@@ -33,3 +33,4 @@ omnexa_core.patches.ensure_branch_finance_demo_fields
 omnexa_core.patches.ensure_branch_education_demo_fields
 omnexa_core.patches.ensure_tier1_vertical_workcenters
 omnexa_core.patches.ensure_vertical_workcenter_pages
+omnexa_core.patches.ensure_vertical_journey_portals

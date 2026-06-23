@@ -67,6 +67,7 @@ app_include_js = [
 	"/assets/omnexa_core/js/finance_borrower_dossier.js",
 	"/assets/omnexa_core/js/finance_workcenter_routing.js",
 	"/assets/omnexa_core/js/vertical-workcenter-kit.js",
+	"/assets/omnexa_core/js/vertical-portal-desk.js",
 ]
 
 # Fallback logo URL if Navbar Settings has no app_logo value.

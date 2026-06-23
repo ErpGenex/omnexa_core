@@ -124,14 +124,21 @@ def get_workcenter_context(app: str | None = None) -> dict:
 
 	slug = entry["slug"]
 	wc_page = entry["workcenter"]
-	portals = _workspace_page_portals(app) or _journey_pages(app, slug)
-	groups = [
-		{
-			"label_en": "Role Portals",
-			"label_ar": "بوابات الأدوار",
-			"portals": portals,
-		}
-	]
+	from omnexa_core.vertical_workcenter.default_portal_catalog import get_grouped_portal_catalog_for_app
+
+	groups = get_grouped_portal_catalog_for_app(app)
+	if not groups:
+		portals = _workspace_page_portals(app) or _journey_pages(app, slug)
+		groups = [
+			{
+				"label_en": "Role Portals",
+				"label_ar": "بوابات الأدوار",
+				"portals": portals,
+			}
+		]
+	portals = []
+	for g in groups:
+		portals.extend(g.get("portals") or [])
 	company = frappe.defaults.get_user_default("Company") or ""
 	branch = frappe.defaults.get_user_default("Branch") or ""
 	is_admin = frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles()

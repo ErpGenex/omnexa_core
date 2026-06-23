@@ -457,3 +457,81 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 	background: #1b5e20 !important;
 	border-color: #1b5e20 !important;
 }
+
+/* Vertical role portal layout (workcenter + role desks) */
+.oj-vertical-portal-layout {
+	display: flex;
+	gap: 20px;
+	min-height: 60vh;
+}
+.oj-vertical-portal-aside {
+	flex: 0 0 240px;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 16px;
+}
+.oj-vertical-portal-brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 16px;
+	font-size: 14px;
+	color: #003366;
+}
+.oj-vertical-portal-brand img {
+	width: 40px;
+	height: 40px;
+	border-radius: 8px;
+	object-fit: contain;
+}
+.oj-sidebar-section {
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: #64748b;
+	margin: 12px 0 6px;
+}
+.oj-sidebar-link {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 10px;
+	border-radius: 8px;
+	color: #1e293b;
+	text-decoration: none;
+	font-size: 13px;
+	margin-bottom: 2px;
+}
+.oj-sidebar-link:hover,
+.oj-sidebar-link.active {
+	background: #e6f0f9;
+	color: #003366;
+}
+.oj-sidebar-icon {
+	font-size: 16px;
+	line-height: 1;
+}
+.oj-sidebar-back {
+	margin-top: 12px;
+	border-top: 1px solid #e2e8f0;
+	padding-top: 12px;
+}
+.oj-vertical-portal-main {
+	flex: 1;
+	min-width: 0;
+}
+.oj-vertical-portal-card {
+	padding: 20px;
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+}
+@media (max-width: 900px) {
+	.oj-vertical-portal-layout {
+		flex-direction: column;
+	}
+	.oj-vertical-portal-aside {
+		flex: none;
+	}
+}
