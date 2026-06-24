@@ -53,3 +53,45 @@ def governance_policy_chart(*, pending: int, approved: int, rejected: int) -> di
 		"title": _("Policy Approval Status"),
 		"height": 260,
 	}
+
+
+_NUMERIC = ("Currency", "Float", "Int", "Percent")
+_DIMENSION = ("Data", "Link", "Select")
+_GROUP_HINTS = ("status", "type", "category", "stage", "bucket", "band", "severity", "department", "branch", "section")
+_VALUE_HINTS = ("count", "total", "amount", "revenue", "qty", "outstanding", "cases", "appointments", "balance", "profit")
+
+
+def auto_chart_for_columns(rows: list[dict], columns: list[dict], *, title: str | None = None) -> dict | None:
+	"""Pick a sensible bar chart from report rows + column metadata."""
+	if not rows or not columns:
+		return None
+
+	group_field = None
+	value_field = None
+	for col in columns:
+		fieldname = col.get("fieldname")
+		fieldtype = col.get("fieldtype")
+		if not fieldname:
+			continue
+		low = fieldname.lower()
+		if fieldtype in _DIMENSION and group_field is None and any(h in low for h in _GROUP_HINTS):
+			group_field = fieldname
+		if fieldtype in _NUMERIC and value_field is None and any(h in low for h in _VALUE_HINTS):
+			value_field = fieldname
+
+	if not group_field:
+		for col in columns:
+			if col.get("fieldtype") in _DIMENSION and col.get("fieldname"):
+				group_field = col["fieldname"]
+				break
+	if not value_field:
+		for col in columns:
+			fn = col.get("fieldname")
+			if col.get("fieldtype") in _NUMERIC and fn not in ("idx",):
+				value_field = fn
+				break
+	if not group_field or not value_field:
+		return None
+
+	chart_title = title or group_field.replace("_", " ").title()
+	return grouped_sum_chart(rows, group_field=group_field, value_field=value_field, title=chart_title)
