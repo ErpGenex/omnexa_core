@@ -130,7 +130,10 @@ def _read_py_signals(py_path: Path) -> dict:
 			text,
 		)
 	)
-	has_currency = bool(re.search(r'fieldtype["\']\s*:\s*["\']Currency["\']|["\']Currency["\']', text))
+	has_currency = bool(
+		re.search(r'fieldtype["\']\s*:\s*["\']Currency["\']|["\']Currency["\']', text)
+		or "_CURRENCY_COLUMNS" in text
+	)
 	has_branch = bool(re.search(r"branch|get_allowed_branches", text))
 	has_i18n = "__(" in text or "_(" in text or "report_query_filters" in text
 	has_bilingual_cols = bool(re.search(r"_en|_ar|Name \(EN\)|Name \(AR\)", text))

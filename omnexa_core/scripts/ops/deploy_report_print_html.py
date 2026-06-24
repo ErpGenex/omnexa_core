@@ -19,7 +19,7 @@ def _find_bench_root() -> Path:
 
 
 BENCH = _find_bench_root()
-TEMPLATE_DIR = Path(__file__).resolve().parents[2] / "report_print" / "templates"
+TEMPLATE_DIR = Path(__file__).resolve().parents[2] / "omnexa_core" / "report_print" / "templates"
 _MARKER = "ERPGENEX report print template"
 _AUDIT_KEYWORDS = ("audit", "compliance", "governance", "remediation", "evidence", "control")
 
