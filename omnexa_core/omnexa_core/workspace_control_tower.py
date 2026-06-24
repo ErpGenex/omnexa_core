@@ -1326,7 +1326,28 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		],
 		"extra_sections": [],
 	},
-	"omnexa_fixed_assets": {
+	"omnexa_edms": {
+		"_requires_app": "omnexa_edms",
+		"workspace": "Electronic Archive",
+		"module": "Omnexa EDMS",
+		"icon": "folder-open",
+		"headline": "Electronic Archive",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Enterprise electronic archiving and document records — registry, compliance, retention.",
+		"trend_doctypes": ["Omnexa Document Register"],
+		"status_doctypes": ["Omnexa Document Register"],
+		"kpis": [
+			("Registered documents", "Omnexa Document Register", []),
+		],
+		"shortcuts": [
+			("Document Register", "DocType", "Omnexa Document Register"),
+			("Registry Index", "Report", "Omnexa Document Registry Index"),
+			("Compliance Summary", "Report", "Omnexa Document Compliance Summary"),
+		],
+		"kpi_trends": [],
+		"extra_sections": [],
+	},
 		"_requires_app": "omnexa_fixed_assets",
 		# Must match `tabWorkspace.name` from omnexa_fixed_assets workspace fixture (not label/title casing).
 		"workspace": "Fixed Assets",
@@ -2891,6 +2912,7 @@ _VERTICAL_APP_OWNED_WORKSPACES: dict[str, str] = {
 	"Maintenance Core": "erpgenex_maintenance_core",
 	"Operational Risk": "omnexa_operational_risk",
 	"E-Invoice": "omnexa_einvoice",
+	"Electronic Archive": "omnexa_edms",
 }
 
 
@@ -3258,6 +3280,7 @@ def sync_workspace_for_app(app_name: str) -> None:
 		"erpgenex_maintenance_core",
 		"omnexa_operational_risk",
 		"omnexa_einvoice",
+		"omnexa_edms",
 	):
 		spec["desk_link_layout"] = None
 	else:

@@ -41,6 +41,7 @@ REQUIRED_SITE_APPS = [
 	# Engineering vertical + shared stubs should be fetched with core bootstrap.
 	"omnexa_engineering_consulting",
 	"omnexa_eng_document_control",
+	"omnexa_edms",
 	"omnexa_eng_platform_integrations",
 	"omnexa_eng_workflow_engine",
 	"omnexa_reporting_compliance",
@@ -58,6 +59,7 @@ REQUIRED_SITE_APPS = [
 OPTIONAL_OMNEXA_ENG_STUB_APPS = frozenset(
 	{
 		"omnexa_eng_document_control",
+		"omnexa_edms",
 		"omnexa_eng_platform_integrations",
 		"omnexa_eng_workflow_engine",
 	}
@@ -741,6 +743,19 @@ def sync_vertical_app_workspace_menus() -> dict:
 			stats[stat_key] = getattr(mod, fn_name)(save=True, rebuild=True)
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), f"Omnexa: sync {stat_key} workspace menu")
+	if "omnexa_edms" in installed:
+		try:
+			from omnexa_edms.workspace.edms_workspace import sync_edms_workspace_menu
+
+			stats["edms"] = sync_edms_workspace_menu(save=True, rebuild=True)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync EDMS workspace menu")
+	try:
+		from omnexa_core.omnexa_core.utils.workspace_report_sync import sync_all_registered_workspace_reports
+
+		stats["workspace_reports"] = sync_all_registered_workspace_reports(save=True)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: sync workspace reports")
 	return stats
 
 
