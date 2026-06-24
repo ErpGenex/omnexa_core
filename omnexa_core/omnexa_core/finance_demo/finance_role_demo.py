@@ -11,9 +11,29 @@ from omnexa_core.omnexa_core.finance_demo.finance_app_registry import (
 	get_registry_entry,
 )
 from omnexa_core.omnexa_core.finance_demo.finance_vertical_specs import VERTICAL_BPE_SPECS
-from omnexa_core.omnexa_core.vertical_workspace_sync import build_content_from_link_rows
+from omnexa_core.omnexa_core.vertical_workspace_sync import (
+	build_content_from_link_rows,
+	build_shortcuts_from_link_rows,
+	drop_missing_workspace_dashboard_links,
+)
 
 DEMO_PASSWORD = "Finance@Demo2026"
+
+_FINANCE_ROLE_ICONS = {
+	"Finance Executive": "es-line-dashboard",
+	"Finance Credit Origination": "es-line-shield",
+	"Finance Credit Risk": "es-line-trending-up",
+	"Finance Treasury": "es-line-pie-chart",
+	"Finance Consumer": "es-line-shopping-cart",
+	"Finance Auto": "es-line-truck",
+	"Finance Mortgage": "es-line-home",
+	"Finance Factoring": "es-line-file-text",
+	"Finance Leasing": "es-line-layers",
+	"Finance Microfinance": "es-line-users",
+	"Finance GRC": "es-line-shield",
+	"Finance SME": "es-line-briefcase",
+	"Finance Accounting": "es-line-book",
+}
 
 # Populated after ROLE_SPECS — stub workspaces hidden from desk sidebar.
 ROLE_DEMO_WORKSPACE_NAMES: frozenset[str] = frozenset()
@@ -306,11 +326,17 @@ def sync_role_workspace(spec: dict) -> str:
 	ws.set("links", [])
 	for row in rows:
 		ws.append("links", row)
+	shortcuts = build_shortcuts_from_link_rows(rows)
+	ws.set("shortcuts", [])
+	for sc in shortcuts:
+		ws.append("shortcuts", sc)
+	drop_missing_workspace_dashboard_links(ws)
 	ws.set("roles", [{"role": role}])
 	ws.public = 1
 	ws.for_user = ""
 	ws.is_hidden = 1
 	ws.title = spec.get("title") or ws_name
+	ws.icon = spec.get("icon") or _FINANCE_ROLE_ICONS.get(ws_name) or "es-line-dashboard"
 	ws.content = build_content_from_link_rows(rows, ws, title=ws.title, slug=frappe.scrub(ws_name))
 	ws.flags.ignore_permissions = True
 	ws.save()
