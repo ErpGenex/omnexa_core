@@ -37,3 +37,16 @@ def run(app: str = "omnexa_accounting") -> dict:
 		if py.exists() and "return _columns(), []" in py.read_text(encoding="utf-8"):
 			out["stubs"].append(name)
 	return out
+
+
+def audit_all() -> list[dict]:
+	"""Run :func:`run` for every installed Omnexa / ErpGenex app."""
+	apps = sorted(
+		a for a in frappe.get_installed_apps() if a.startswith("omnexa_") or a.startswith("erpgenex_")
+	)
+	bad = []
+	for app in apps:
+		result = run(app)
+		if result.get("import_errors") or result.get("error"):
+			bad.append(result)
+	return bad
