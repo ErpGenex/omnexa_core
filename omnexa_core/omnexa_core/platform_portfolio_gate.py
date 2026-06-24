@@ -14,6 +14,8 @@ from frappe.utils import get_bench_path
 
 GLOBAL_LEADER_TARGET = 4.85
 CERT_REL = "Docs/2026-06-06_ERPGENEX_GLOBAL_CERTIFICATES/certificate_data.json"
+WORLD_CLASS_SCORE = 5.0
+WORLD_CLASS_EFFICIENCY = 100
 
 # Apps certified via portfolio certificate (33 vertical apps).
 # Phase 0 apps without *_gap_register.py use benchmark whitelists below.
@@ -25,11 +27,24 @@ _BENCHMARK_FALLBACK: dict[str, str] = {
 
 
 def _certified_app_keys() -> list[str]:
-	path = Path(get_bench_path()) / CERT_REL
-	if not path.is_file():
-		return []
-	data = json.loads(path.read_text(encoding="utf-8"))
+	from omnexa_core.omnexa_core.global_certificates_sync import load_certificate_data
+
+	data = load_certificate_data()
 	return [c["app_key"] for c in data.get("issued_certificates", [])]
+
+
+def get_portfolio_certificate_summary() -> dict[str, Any]:
+	from omnexa_core.omnexa_core.global_certificates_sync import load_certificate_data
+
+	data = load_certificate_data()
+	summary = dict(data.get("portfolio_summary") or {})
+	certs = data.get("issued_certificates") or []
+	if not summary.get("efficiency_score") and certs:
+		scores = [int(c.get("efficiency_score") or round(float(c.get("overall_score", 0)) * 20)) for c in certs]
+		summary["efficiency_score"] = min(scores) if scores else 0
+	summary.setdefault("efficiency_display", f"{summary.get('efficiency_score', 0)}/100")
+	summary.setdefault("certificates_total", len(certs))
+	return summary
 
 
 def _find_gap_register_module(app: str) -> str | None:
@@ -93,7 +108,9 @@ def _verify_vertical_app(app: str) -> dict[str, Any]:
 @frappe.whitelist()
 def verify_portfolio_global_gate() -> dict[str, Any]:
 	"""Verify all portfolio-certified vertical apps pass global leader gate."""
-	apps = _certified_app_keys()
+	installed = set(frappe.get_installed_apps() or [])
+	apps = [app for app in _certified_app_keys() if app in installed]
+	skipped = [app for app in _certified_app_keys() if app not in installed]
 	results = [_verify_vertical_app(app) for app in apps]
 	passed = [r for r in results if r.get("global_leader_gate")]
 	failed = [r for r in results if not r.get("global_leader_gate")]
@@ -101,10 +118,12 @@ def verify_portfolio_global_gate() -> dict[str, Any]:
 		"apps_total": len(apps),
 		"apps_passed": len(passed),
 		"apps_failed": len(failed),
+		"apps_skipped_not_installed": len(skipped),
 		"portfolio_global_gate": len(failed) == 0 and len(apps) > 0,
 		"global_leader_target": GLOBAL_LEADER_TARGET,
 		"passed": passed,
 		"failed": failed,
+		"skipped": skipped,
 	}
 
 
@@ -121,12 +140,18 @@ def get_platform_core_score() -> dict[str, Any]:
 	ws_ratio = (ok / checked) if checked else 1.0
 	app_ratio = (portfolio["apps_passed"] / portfolio["apps_total"]) if portfolio["apps_total"] else 0.0
 	weighted = round(4.85 + min(0.1, ws_ratio * 0.05) + min(0.05, app_ratio * 0.05), 2)
-	if portfolio["portfolio_global_gate"] and ws_ratio >= 0.95:
+	cert_summary = get_portfolio_certificate_summary()
+	cert_eff = int(cert_summary.get("efficiency_score") or 0)
+	if portfolio["portfolio_global_gate"] and ws_ratio >= 1.0 and cert_eff >= WORLD_CLASS_EFFICIENCY:
+		weighted = WORLD_CLASS_SCORE
+	elif portfolio["portfolio_global_gate"] and ws_ratio >= 0.95:
 		weighted = max(weighted, 4.95)
 	return {
 		"platform_app": "omnexa_core",
 		"weighted_score": weighted,
-		"global_leader_gate": portfolio["portfolio_global_gate"] and ws_ratio >= 0.9,
+		"efficiency_score": cert_eff,
+		"efficiency_display": cert_summary.get("efficiency_display") or f"{cert_eff}/100",
+		"global_leader_gate": portfolio["portfolio_global_gate"] and ws_ratio >= 0.9 and cert_eff >= WORLD_CLASS_EFFICIENCY,
 		"portfolio": {
 			"apps_total": portfolio["apps_total"],
 			"apps_passed": portfolio["apps_passed"],

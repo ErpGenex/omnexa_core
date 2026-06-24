@@ -72,6 +72,15 @@ def execute():
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "close_all_audit_gaps: icon enricher")
 
+	for fn in (
+		"omnexa_construction.workspace.construction_workspace.sync_construction_workspace_menu",
+		"omnexa_edms.workspace.edms_workspace.sync_edms_workspace_menu",
+	):
+		try:
+			frappe.get_attr(fn)()
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), f"close_all_audit_gaps: {fn}")
+
 	frappe.clear_cache(doctype="Workspace")
 	frappe.db.commit()
 	return {"workspace_icons_updated": updated}

@@ -7,6 +7,7 @@ import frappe
 from frappe import _
 from frappe.utils import cint
 
+from omnexa_core.omnexa_core.activity_labels import get_company_activity_info, get_companies_activity_map
 from omnexa_core.omnexa_core.branch_access import (
 	get_allowed_branches,
 	get_default_branch,
@@ -50,12 +51,16 @@ def get_view_context(user: str | None = None) -> dict:
 	elif branch == VIEW_ALL_BRANCHES:
 		view_all = 1
 
+	activity_info = get_company_activity_info(company)
 	return {
 		"can_switch": can_switch,
 		"company": company,
 		"branch": branch if branch != VIEW_ALL_BRANCHES else None,
 		"view_all_branches": bool(view_all),
 		"label": _context_label(company, branch, view_all),
+		"activity": activity_info.get("activity"),
+		"activity_raw": activity_info.get("activity_raw"),
+		"activity_label": activity_info.get("label"),
 	}
 
 
@@ -182,6 +187,7 @@ def get_view_context_options() -> dict:
 		"context": get_view_context(user),
 		"companies": companies,
 		"branches_by_company": branches_by_company,
+		"company_activities": get_companies_activity_map(),
 	}
 
 

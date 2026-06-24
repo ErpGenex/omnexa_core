@@ -38,6 +38,9 @@
 				const data = r.message;
 				const branchesByCo = data.branches_by_company || {};
 				const active = data.context || ctx;
+				if (data.company_activities && window.omnexaSetCompanyActivities) {
+					window.omnexaSetCompanyActivities(data.company_activities);
+				}
 
 				$company.empty().append(`<option value="">${__("All companies")}</option>`);
 				(data.companies || []).forEach((co) => {
@@ -83,6 +86,9 @@
 						callback(res) {
 							if (!res.exc && res.message) {
 								frappe.boot.omnexa_view_context = res.message;
+								if (window.omnexaUpdateActivityBadge) {
+									window.omnexaUpdateActivityBadge(res.message.company);
+								}
 								frappe.show_alert({
 									message: __("View scope: {0}", [res.message.label || __("Updated")]),
 									indicator: "green",

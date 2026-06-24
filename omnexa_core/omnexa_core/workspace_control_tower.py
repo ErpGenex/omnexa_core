@@ -1348,6 +1348,7 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"kpi_trends": [],
 		"extra_sections": [],
 	},
+	"omnexa_fixed_assets": {
 		"_requires_app": "omnexa_fixed_assets",
 		# Must match `tabWorkspace.name` from omnexa_fixed_assets workspace fixture (not label/title casing).
 		"workspace": "Fixed Assets",

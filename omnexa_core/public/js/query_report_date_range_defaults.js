@@ -60,16 +60,36 @@
 		gl_account: "GL Account",
 	};
 
+	const _EMPTY_BRANCH_QUERY = { filters: { name: ["in", []] } };
+
+	function _branch_filter_query(report) {
+		const c =
+			report.get_filter_value?.("company", false) ||
+			frappe.defaults.get_user_default("company") ||
+			frappe.defaults.get_user_default("Company") ||
+			"";
+		return c ? { filters: { company: c } } : _EMPTY_BRANCH_QUERY;
+	}
+
 	function _ensure_branch_get_query(report, df) {
 		if (!df || df.fieldname !== "branch" || df.fieldtype !== "Link" || df.get_query) return;
-		df.get_query = () => {
-			const c =
-				report.get_filter_value?.("company", false) ||
-				frappe.defaults.get_user_default("company") ||
-				frappe.defaults.get_user_default("Company") ||
-				"";
-			return c ? { filters: { company: c } } : {};
-		};
+		df.get_query = () => _branch_filter_query(report);
+	}
+
+	function _clear_branch_if_company_mismatch(report) {
+		const company = report.get_filter_value?.("company", false);
+		const branch = report.get_filter_value?.("branch", false);
+		if (!branch) return;
+		if (!company) {
+			report.set_filter_value?.("branch", "");
+			return;
+		}
+		frappe.db.get_value("Branch", branch, "company").then((r) => {
+			const branch_company = r && r.message;
+			if (branch_company && branch_company !== company) {
+				report.set_filter_value?.("branch", "");
+			}
+		});
 	}
 
 	function normalize_filters_for_link_dropdowns(report, filter_defs) {
@@ -89,6 +109,14 @@
 			if (df.fieldtype === "Link") {
 				_ensure_branch_get_query(report, df);
 			}
+
+			if (df.fieldname === "company" && !df.on_change) {
+				const prev = df.on_change;
+				df.on_change = function () {
+					if (typeof prev === "function") prev.apply(this, arguments);
+					_clear_branch_if_company_mismatch(report);
+				};
+			}
 		}
 	}
 
@@ -106,6 +134,7 @@
 				label: __("Company"),
 				default: comp || undefined,
 				width: "80px",
+				on_change: () => _clear_branch_if_company_mismatch(report),
 			});
 		}
 
@@ -118,11 +147,8 @@
 					label: __("Branch"),
 					default: default_branch() || undefined,
 					width: "80px",
-					get_query: () => {
-						const c =
-							report.get_filter_value?.("company", false) || default_company();
-						return c ? { filters: { company: c } } : {};
-					},
+					get_query: () => _branch_filter_query(report),
+					on_change: () => _clear_branch_if_company_mismatch(report),
 				};
 		if (branchDf) {
 			defs.push(branchDf);

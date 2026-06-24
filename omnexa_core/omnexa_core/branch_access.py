@@ -148,6 +148,82 @@ def get_default_branch(company: str, user: str | None = None) -> str | None:
 	return frappe.db.get_value("Branch", {"company": company}, "name")
 
 
+_BRANCH_COHERENCE_SKIP = frozenset(
+	{
+		"DocType",
+		"Custom Field",
+		"Property Setter",
+		"Patch Log",
+		"Version",
+		"Error Log",
+		"File",
+		"Module Def",
+		"Production Seed Log",
+		"COA Reset Audit Log",
+	}
+)
+
+
+def _assert_branch_belongs_to_company(branch: str, company: str | None, context: str) -> None:
+	branch_company = frappe.db.get_value("Branch", branch, "company")
+	if not branch_company:
+		frappe.throw(_("Branch {0} was not found.").format(branch), title=_("Branch"))
+	if not company:
+		frappe.throw(
+			_("Select Company before choosing Branch ({0}).").format(context),
+			title=_("Branch"),
+		)
+	if branch_company != company:
+		frappe.throw(
+			_("Branch {0} does not belong to Company {1}.").format(branch, company),
+			title=_("Branch"),
+		)
+
+
+def enforce_branch_company_coherence(doc, method=None) -> None:
+	"""Reject documents where branch is not a child of the selected company."""
+	if getattr(frappe.flags, "in_install", False) or getattr(frappe.flags, "in_migrate", False):
+		return
+	if getattr(frappe.flags, "in_import", False):
+		return
+	if getattr(getattr(doc, "flags", None), "ignore_branch_company_coherence", False):
+		return
+
+	doctype = getattr(doc, "doctype", None)
+	if not doctype or doctype in _BRANCH_COHERENCE_SKIP:
+		return
+
+	meta = getattr(doc, "meta", None)
+	if not meta:
+		return
+
+	if doctype == "Branch":
+		parent_branch = doc.get("parent_branch")
+		company = doc.get("company")
+		if parent_branch and company:
+			_assert_branch_belongs_to_company(parent_branch, company, doctype)
+		return
+
+	if meta.has_field("branch") and doc.get("branch"):
+		company = doc.get("company") if meta.has_field("company") else None
+		_assert_branch_belongs_to_company(doc.branch, company, doctype)
+
+	parent_company = doc.get("company") if meta.has_field("company") else None
+	for table_field in meta.get_table_fields() or []:
+		child_meta = frappe.get_meta(table_field.options)
+		if not child_meta.has_field("branch"):
+			continue
+		for row in doc.get(table_field.fieldname) or []:
+			if not row.get("branch"):
+				continue
+			row_company = row.get("company") if child_meta.has_field("company") else parent_company
+			_assert_branch_belongs_to_company(
+				row.branch,
+				row_company,
+				f"{doctype}.{table_field.fieldname}[{row.idx}]",
+			)
+
+
 def enforce_branch_access(doc, method=None, user: str | None = None):
 	user = user or frappe.session.user
 	if user == "Guest" or getattr(getattr(doc, "flags", None), "ignore_branch_access", False):

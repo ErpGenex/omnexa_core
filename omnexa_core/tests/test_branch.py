@@ -167,3 +167,22 @@ class TestOmnexaBranch(FrappeTestCase):
 	def test_branch_permission_query_accepts_spaced_doctype_names(self):
 		frappe.set_user("Administrator")
 		self.assertEqual(permission_query_conditions_for_branch_field("BOQ Item"), "")
+
+	def test_branch_must_belong_to_selected_company_on_document(self):
+		company_a = self._make_company("J")
+		company_b = self._make_company("K")
+		branch_b = frappe.get_doc(
+			{
+				"doctype": "Branch",
+				"company": company_b.name,
+				"branch_name": "Branch B",
+				"branch_code": "BB",
+			}
+		).insert(ignore_permissions=True)
+		from omnexa_core.omnexa_core.branch_access import enforce_branch_company_coherence
+
+		doc = frappe.new_doc("Event Audit Log")
+		doc.company = company_a.name
+		doc.branch = branch_b.name
+		with self.assertRaises(frappe.ValidationError):
+			enforce_branch_company_coherence(doc)

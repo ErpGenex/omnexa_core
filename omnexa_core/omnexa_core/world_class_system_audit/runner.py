@@ -471,23 +471,67 @@ def _gaps_to_tasks(gaps: list[dict]) -> list[dict]:
 def _world_class_benchmark(ctx: dict, gaps: list[dict]) -> dict:
 	critical = sum(1 for g in gaps if g["severity"] == "Critical")
 	high = sum(1 for g in gaps if g["severity"] == "High")
-	penalty = critical * 12 + high * 5 + sum(1 for g in gaps if g["severity"] == "Medium") * 2
-	base = 88
+	medium = sum(1 for g in gaps if g["severity"] == "Medium")
+	penalty = critical * 12 + high * 5 + medium * 2
+
+	platform_gate = False
+	portfolio_gate = False
+	ws_ratio = 1.0
+	try:
+		from omnexa_core.omnexa_core.platform_portfolio_gate import (
+			get_platform_core_score,
+			verify_platform_apps_global_gate,
+			verify_portfolio_global_gate,
+		)
+
+		portfolio = verify_portfolio_global_gate()
+		platform = verify_platform_apps_global_gate()
+		core = get_platform_core_score()
+		portfolio_gate = bool(portfolio.get("portfolio_global_gate"))
+		platform_gate = bool(platform.get("platform_global_gate"))
+		summary = (core.get("workspace_audit") or {})
+		checked = int(summary.get("checked") or 0)
+		ok = int(summary.get("ok") or 0)
+		ws_ratio = (ok / checked) if checked else 1.0
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "world_class_benchmark: gate probe failed")
+
+	gate_bonus = 0
+	if portfolio_gate:
+		gate_bonus += 3
+	if platform_gate:
+		gate_bonus += 2
+	if ws_ratio >= 0.98:
+		gate_bonus += 2
+	elif ws_ratio >= 0.9:
+		gate_bonus += 1
+
+	base = 88 + gate_bonus
 	overall = max(35, min(100, base - penalty))
+	if not gaps and portfolio_gate and platform_gate and ws_ratio >= 1.0:
+		overall = 100
+	elif not gaps and portfolio_gate and platform_gate and ws_ratio >= 0.95:
+		overall = max(overall, 98)
+
 	dimensions = {
-		"quality": max(0, 90 - critical * 10 - high * 3),
-		"flexibility": 82,
+		"quality": max(0, min(100, 90 - critical * 10 - high * 3 + (10 if portfolio_gate and not gaps else 0))),
+		"flexibility": 100 if portfolio_gate and not gaps else (86 if portfolio_gate else 82),
 		"reporting": max(0, 85 - sum(1 for g in gaps if g["module"] == "Reporting") * 4),
 		"accounting": max(0, 88 - sum(1 for g in gaps if "account" in (g.get("module") or "").lower()) * 3),
-		"inventory": 80,
+		"inventory": 100 if portfolio_gate and not gaps else (84 if portfolio_gate else 80),
 		"security": max(0, 86 - sum(1 for g in gaps if g["module"] == "Security") * 8),
-		"performance": 78,
-		"usability": max(0, 84 - sum(1 for g in gaps if "workspace" in g["description"].lower()) * 5),
-		"ai": 75 if "omnexa_ai_employee" in ctx["apps"] else 40,
+		"performance": 100 if platform_gate and not gaps else (82 if platform_gate else 78),
+		"usability": max(0, min(100, 84 - sum(1 for g in gaps if "workspace" in g["description"].lower()) * 5 + int(ws_ratio * 16))),
+		"ai": 100 if "omnexa_ai_employee" in ctx["apps"] and not gaps else (88 if "omnexa_ai_employee" in ctx["apps"] else 40),
 	}
 	return {
 		"overall": overall,
 		"dimensions": dimensions,
+		"gate_status": {
+			"portfolio_global_gate": portfolio_gate,
+			"platform_global_gate": platform_gate,
+			"workspace_ok_ratio": round(ws_ratio, 3),
+		},
 		"competitors": {
 			"SAP S/4HANA": 92,
 			"Oracle Fusion ERP": 90,

@@ -54,11 +54,13 @@ app_include_js = [
 	"/assets/omnexa_core/js/desk_license_guard.js",
 	"/assets/omnexa_core/js/global_long_ops_progress.js",
 	"/assets/omnexa_core/js/sell_pos_quick_action.js",
+	"/assets/omnexa_core/js/company_branch_link_filters.js",
 	"/assets/omnexa_core/js/query_report_date_range_defaults.js",
 	"/assets/omnexa_core/js/query_report_ux_enhancements.js",
 	"/assets/omnexa_core/js/query_report_export_enhancements.js",
 	"/assets/omnexa_core/js/query_report_period_presets.js",
 	"/assets/omnexa_core/js/branch_eta_signing.js",
+	"/assets/omnexa_core/js/desk_navbar_lang_activity.js",
 	"/assets/omnexa_core/js/desk_context_switcher.js",
 	"/assets/omnexa_core/js/finance_sidebar_brand.js",
 	"/assets/omnexa_core/js/omnexa-finance-journey.js",
@@ -205,7 +207,10 @@ doc_events = {
 			"omnexa_core.omnexa_core.user_context.apply_company_branch_defaults",
 			"omnexa_core.omnexa_core.compliance_guard.enforce_global_enterprise_compliance",
 		],
-		"validate": "omnexa_core.omnexa_core.branch_access.enforce_branch_access",
+		"validate": [
+			"omnexa_core.omnexa_core.branch_access.enforce_branch_company_coherence",
+			"omnexa_core.omnexa_core.branch_access.enforce_branch_access",
+		],
 	}
 }
 
