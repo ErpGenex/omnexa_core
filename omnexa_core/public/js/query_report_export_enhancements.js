@@ -86,6 +86,17 @@
 		download_blob(`${slug(report.report_name)}.html`, "text/html;charset=utf-8", html);
 	}
 
+	function export_word_doc(report) {
+		const table = report.$report?.find("table")?.[0];
+		if (!table) {
+			frappe.msgprint(__("Run the report first, then export Word."));
+			return;
+		}
+		// Word can open HTML when saved as .doc. This is court-friendly for Arabic prints.
+		const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${report.report_name}</title></head><body>${table.outerHTML}</body></html>`;
+		download_blob(`${slug(report.report_name)}.doc`, "application/msword", html);
+	}
+
 	function omnexaEnsureExportToolbar(report) {
 		if (!report.page || report._omnexa_export_toolbar_installed) return;
 		report._omnexa_export_toolbar_installed = true;
@@ -105,6 +116,7 @@
 		report.page.add_inner_button(__("CSV"), () => export_csv(report), group);
 		report.page.add_inner_button(__("JSON"), () => export_json(report), group);
 		report.page.add_inner_button(__("HTML"), () => export_html_snapshot(report), group);
+		report.page.add_inner_button(__("Word"), () => export_word_doc(report), group);
 	}
 
 	const proto = frappe.views?.QueryReport?.prototype;

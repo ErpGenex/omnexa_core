@@ -1,39 +1,24 @@
 #!/usr/bin/env python3
-"""Deploy ERPGENEX print HTML templates to all report folders (no Frappe required)."""
+"""Deploy categorized ERPGENEX print HTML templates to all report folders."""
 
 from __future__ import annotations
 
 import json
-import re
+import sys
 from pathlib import Path
 
-def _find_bench_root() -> Path:
-	p = Path(__file__).resolve().parent
-	for _ in range(12):
-		if (p / "sites" / "apps.txt").is_file():
-			return p
-		if p.parent == p:
-			break
-		p = p.parent
-	raise SystemExit("Cannot find frappe-bench root (missing sites/apps.txt)")
+BENCH = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(BENCH / "apps" / "omnexa_core"))
+
+from omnexa_core.omnexa_core.report_print.report_print_categories import (  # noqa: E402
+	report_print_category,
+	template_filename,
+)
+
+TEMPLATE_DIR = BENCH / "apps" / "omnexa_core/omnexa_core/omnexa_core/report_print/templates"
 
 
-BENCH = _find_bench_root()
-TEMPLATE_DIR = Path(__file__).resolve().parents[2] / "omnexa_core" / "report_print" / "templates"
-_MARKER = "ERPGENEX report print template"
-_AUDIT_KEYWORDS = ("audit", "compliance", "governance", "remediation", "evidence", "control")
-
-
-def _slug(name: str) -> str:
-	return re.sub(r"[^\w\s-]", "", name).strip().lower().replace(" ", "_")
-
-
-def _is_audit(report_name: str, module: str | None) -> bool:
-	blob = f"{report_name} {module or ''}".lower()
-	return any(k in blob for k in _AUDIT_KEYWORDS)
-
-
-def main():
+def main(force: bool = False) -> None:
 	written = skipped = 0
 	for app_dir in sorted((BENCH / "apps").iterdir()):
 		if not app_dir.is_dir():
@@ -48,17 +33,27 @@ def main():
 			if doc.get("doctype") != "Report":
 				continue
 			report_name = doc.get("name") or json_path.stem
-			audit = _is_audit(report_name, doc.get("module"))
-			tpl = "erpgenex_audit_report_print.html" if audit else "erpgenex_report_print.html"
-			content = (TEMPLATE_DIR / tpl).read_text(encoding="utf-8")
-			html_path = json_path.parent / f"{_slug(report_name)}.html"
-			if html_path.exists() and _MARKER in html_path.read_text(encoding="utf-8"):
-				skipped += 1
-				continue
+			category = report_print_category(report_name, doc.get("module"), doc.get("ref_doctype"))
+			tpl_name = template_filename(category)
+			content = (TEMPLATE_DIR / tpl_name).read_text(encoding="utf-8")
+			slug = report_name.lower().replace(" ", "_").replace("(", "").replace(")", "")
+			html_path = json_path.parent / f"{json_path.parent.name}.html"
+			if not html_path.name.endswith(".html"):
+				html_path = json_path.with_suffix(".html")
+			# Frappe scrub naming
+			import re
+
+			slug = re.sub(r"[^\w\s-]", "", report_name).strip().lower().replace(" ", "_")
+			html_path = json_path.parent / f"{slug}.html"
+			marker = f"erpg-{category[:3]}-print"
+			if html_path.exists() and not force:
+				if marker in html_path.read_text(encoding="utf-8"):
+					skipped += 1
+					continue
 			html_path.write_text(content, encoding="utf-8")
 			written += 1
 	print(f"html_written={written} html_skipped={skipped}")
 
 
 if __name__ == "__main__":
-	main()
+	main(force="--force" in sys.argv)

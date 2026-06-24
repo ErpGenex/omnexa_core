@@ -96,6 +96,154 @@ html, body {
 .print-format [dir="ltr"], [dir="ltr"] .print-format {
 	direction: ltr;
 }
+
+/* ERPGENEX financial & inventory report print (v3) */
+.erpg-fin-print, .erpg-inv-print {
+	direction: rtl;
+	font-family: "Cairo", "Inter", "Noto Sans Arabic", Arial, sans-serif;
+	color: #1E293B;
+}
+.erpg-fin-print__banner, .erpg-inv-print__banner {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background: linear-gradient(135deg, #0F3D75 0%, #1a5a9e 100%);
+	color: #fff;
+	padding: 14px 18px;
+	border-radius: 8px;
+	margin-bottom: 14px;
+}
+.erpg-inv-print__banner {
+	background: linear-gradient(135deg, #0d4d3f 0%, #1a7a62 100%);
+}
+.erpg-fin-print__banner-icon, .erpg-inv-print__banner-icon {
+	font-size: 28px;
+	line-height: 1;
+}
+.erpg-fin-print__banner-title, .erpg-inv-print__banner-title {
+	font-size: 16px;
+	font-weight: 700;
+}
+.erpg-fin-print__banner-sub, .erpg-inv-print__banner-sub {
+	font-size: 10px;
+	opacity: 0.9;
+	margin-top: 2px;
+}
+.erpg-fin-print__meta-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 8px;
+	margin-bottom: 12px;
+}
+.erpg-fin-print__meta-box {
+	border: 1px solid #D9E1EC;
+	border-radius: 6px;
+	padding: 8px 10px;
+	background: #F8FAFC;
+}
+.erpg-fin-print__meta-label {
+	font-size: 8px;
+	color: #5A6B85;
+	text-transform: uppercase;
+	font-weight: 600;
+}
+.erpg-fin-print__meta-value {
+	font-size: 10px;
+	font-weight: 600;
+	color: #0F3D75;
+	margin-top: 2px;
+}
+.erpg-fin-print__subtitle {
+	font-size: 10px;
+	color: #5A6B85;
+	margin-bottom: 10px;
+	padding: 6px 10px;
+	background: #FFFBEB;
+	border: 1px solid #FDE68A;
+	border-radius: 4px;
+}
+.erpg-fin-print__table, .erpg-inv-print__table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 9px;
+}
+.erpg-fin-print__table thead th, .erpg-inv-print__table thead th {
+	background: #0F3D75 !important;
+	color: #fff !important;
+	font-weight: 600;
+	padding: 7px 8px;
+	border: 1px solid #0a2d57;
+}
+.erpg-inv-print__table thead th {
+	background: #0d4d3f !important;
+	border-color: #0a3d32;
+}
+.erpg-fin-print__th-num, .erpg-fin-print__td-num {
+	width: 28px;
+	text-align: center !important;
+}
+.erpg-fin-print__table tbody td, .erpg-inv-print__table tbody td {
+	padding: 5px 8px;
+	border: 1px solid #E2E8F0;
+}
+.erpg-fin-print__table tbody tr:nth-child(even) td {
+	background: #F8FAFC;
+}
+.erpg-fin-print__row-bold td, .erpg-fin-print__row-total td {
+	font-weight: 700 !important;
+	background: #EFF6FF !important;
+}
+.erpg-fin-print__row-year td {
+	font-weight: 700 !important;
+	background: #DBEAFE !important;
+	color: #0F3D75;
+	font-size: 10px;
+}
+.erpg-fin-print__notes {
+	margin-top: 16px;
+	page-break-inside: avoid;
+}
+.erpg-fin-print__notes-title {
+	font-size: 11px;
+	font-weight: 700;
+	color: #0F3D75;
+	margin-bottom: 8px;
+	border-bottom: 2px solid #0F3D75;
+	padding-bottom: 4px;
+}
+.erpg-fin-print__notes-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 6px;
+}
+.erpg-fin-print__note-card {
+	border: 1px solid #D9E1EC;
+	border-radius: 4px;
+	padding: 6px 8px;
+	font-size: 8px;
+	background: #fff;
+	text-align: center;
+}
+.erpg-fin-print__footer, .erpg-inv-print__footer {
+	margin-top: 14px;
+	padding-top: 10px;
+	border-top: 2px solid #0F3D75;
+	font-size: 8px;
+	color: #5A6B85;
+}
+.erpg-fin-print__footer-meta {
+	margin-top: 6px;
+	text-align: center;
+}
+@media print {
+	.erpg-fin-print__banner, .erpg-inv-print__banner {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+	.erpg-fin-print__row-year {
+		page-break-before: always;
+	}
+}
 """
 
 GLOBAL_LETTER_HEAD_HEADER_HTML = """

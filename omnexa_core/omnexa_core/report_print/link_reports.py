@@ -11,10 +11,10 @@ import frappe
 from frappe.modules import scrub
 
 from omnexa_core.global_print_design import GLOBAL_LETTER_HEAD_NAME, ensure_global_print_design_system
+from omnexa_core.omnexa_core.report_print.report_print_categories import report_print_category, template_filename
 
 _TEMPLATE_DIR = Path(__file__).resolve().parent / "templates"
 _MARKER = "ERPGENEX report print template"
-_AUDIT_KEYWORDS = ("audit", "compliance", "governance", "remediation", "evidence", "control")
 
 
 def _erpgenex_app_names() -> set[str]:
@@ -23,11 +23,6 @@ def _erpgenex_app_names() -> set[str]:
 		for app in frappe.get_installed_apps()
 		if app != "frappe" and (app.startswith("omnexa_") or app.startswith("erpgenex_"))
 	}
-
-
-def _is_audit_report(report_name: str, module: str | None) -> bool:
-	blob = f"{report_name} {module or ''}".lower()
-	return any(k in blob for k in _AUDIT_KEYWORDS)
 
 
 def _find_report_folder(report_name: str) -> Path | None:
@@ -43,26 +38,33 @@ def _find_report_folder(report_name: str) -> Path | None:
 	return None
 
 
-def _template_html(audit: bool) -> str:
-	name = "erpgenex_audit_report_print.html" if audit else "erpgenex_report_print.html"
+def _template_html(report_name: str, module: str | None = None, ref_doctype: str | None = None) -> str:
+	category = report_print_category(report_name, module, ref_doctype)
+	name = template_filename(category)
 	return (_TEMPLATE_DIR / name).read_text(encoding="utf-8")
 
 
-def _write_print_html(folder: Path, report_name: str, audit: bool) -> bool:
+def _write_print_html(
+	folder: Path,
+	report_name: str,
+	*,
+	module: str | None = None,
+	ref_doctype: str | None = None,
+	force: bool = False,
+) -> bool:
 	html_path = folder / f"{scrub(report_name)}.html"
-	content = _template_html(audit)
-	if html_path.exists():
+	category = report_print_category(report_name, module, ref_doctype)
+	content = _template_html(report_name, module, ref_doctype)
+	if html_path.exists() and not force:
 		existing = html_path.read_text(encoding="utf-8")
-		if _MARKER in existing:
-			if audit and "statutory audit opinion" in existing:
-				return False
-			if not audit and "statutory audit opinion" not in existing:
-				return False
+		marker = f"erpg-{category[:3]}-print"
+		if marker in existing:
+			return False
 	html_path.write_text(content, encoding="utf-8")
 	return True
 
 
-def _link_html_in_repo(*, only_missing: bool = True) -> dict[str, int]:
+def _link_html_in_repo(*, only_missing: bool = True, force: bool = False) -> dict[str, int]:
 	"""Deploy print HTML beside every Report JSON in ErpGenEx apps (filesystem)."""
 	stats = {"json_seen": 0, "html_written": 0, "html_skipped": 0}
 	for app in _erpgenex_app_names():
@@ -80,23 +82,31 @@ def _link_html_in_repo(*, only_missing: bool = True) -> dict[str, int]:
 			stats["json_seen"] += 1
 			report_name = doc.get("name") or json_path.stem
 			folder = json_path.parent
-			audit = _is_audit_report(report_name, doc.get("module"))
-			html_path = folder / f"{scrub(report_name)}.html"
-			if only_missing and html_path.exists():
-				try:
-					if _MARKER in html_path.read_text(encoding="utf-8"):
-						stats["html_skipped"] += 1
-						continue
-				except OSError:
-					pass
-			if _write_print_html(folder, report_name, audit):
+			if only_missing and not force:
+				html_path = folder / f"{scrub(report_name)}.html"
+				if html_path.exists():
+					try:
+						text = html_path.read_text(encoding="utf-8")
+						cat = report_print_category(report_name, doc.get("module"), doc.get("ref_doctype"))
+						if f"erpg-{cat[:3]}-print" in text:
+							stats["html_skipped"] += 1
+							continue
+					except OSError:
+						pass
+			if _write_print_html(
+				folder,
+				report_name,
+				module=doc.get("module"),
+				ref_doctype=doc.get("ref_doctype"),
+				force=force,
+			):
 				stats["html_written"] += 1
 			else:
 				stats["html_skipped"] += 1
 	return stats
 
 
-def link_erpgenex_report_print_assets(*, only_missing_html: bool = False) -> dict[str, int]:
+def link_erpgenex_report_print_assets(*, only_missing_html: bool = False, force_html: bool = False) -> dict[str, int]:
 	"""Assign global letter head + deploy print HTML for ErpGenEx reports."""
 	ensure_global_print_design_system()
 	letter_head = (
@@ -104,7 +114,7 @@ def link_erpgenex_report_print_assets(*, only_missing_html: bool = False) -> dic
 		or frappe.db.get_value("Letter Head", {"is_default": 1}, "name")
 	)
 
-	repo_stats = _link_html_in_repo(only_missing=only_missing_html)
+	repo_stats = _link_html_in_repo(only_missing=only_missing_html, force=force_html)
 	stats = {
 		"reports_seen": 0,
 		"letter_head_set": 0,
@@ -117,7 +127,7 @@ def link_erpgenex_report_print_assets(*, only_missing_html: bool = False) -> dic
 	reports = frappe.get_all(
 		"Report",
 		filters={"disabled": 0, "report_type": "Script Report"},
-		fields=["name", "module"],
+		fields=["name", "module", "ref_doctype"],
 	)
 
 	for row in reports:
@@ -126,17 +136,22 @@ def link_erpgenex_report_print_assets(*, only_missing_html: bool = False) -> dic
 			continue
 
 		stats["reports_seen"] += 1
-		audit = _is_audit_report(row.name, row.module)
 
 		if letter_head and frappe.db.get_value("Report", row.name, "letter_head") != letter_head:
 			frappe.db.set_value("Report", row.name, "letter_head", letter_head, update_modified=False)
 			stats["letter_head_set"] += 1
 
-		if only_missing_html and (folder / f"{scrub(row.name)}.html").exists():
+		if only_missing_html and not force_html and (folder / f"{scrub(row.name)}.html").exists():
 			stats["html_skipped"] += 1
 			continue
 
-		if _write_print_html(folder, row.name, audit):
+		if _write_print_html(
+			folder,
+			row.name,
+			module=row.module,
+			ref_doctype=row.ref_doctype,
+			force=force_html,
+		):
 			stats["html_written"] += 1
 		else:
 			stats["html_skipped"] += 1
