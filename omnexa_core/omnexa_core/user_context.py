@@ -70,7 +70,9 @@ def apply_company_branch_defaults(doc, method=None):
 	company = doc.get("company") if has_company else None
 
 	if has_branch and doc.get("branch") and not _branch_belongs_to_company(doc.branch, company):
-		doc.branch = None
+		# Mismatch is rejected in validate (enforce_branch_company_coherence).
+		_apply_company_currency_default(doc)
+		return
 
 	if has_branch and not doc.get("branch"):
 		doc.branch = _resolve_doc_branch(doc, company)

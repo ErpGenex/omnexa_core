@@ -58,6 +58,9 @@ APP_REGISTRY: dict[str, dict[str, str]] = {
 	"omnexa_user_academy": {"family": "infra", "vertical": "user_academy"},
 	"omnexa_theme_manager": {"family": "infra", "vertical": "theme_manager"},
 	"erpgenex_theme_0426": {"family": "infra", "vertical": "erpgenex_theme_0426"},
+	"omnexa_edms": {"family": "infra", "vertical": "edms"},
+	"omnexa_sme_microfinance": {"family": "fs", "vertical": "sme_microfinance"},
+	"omnexa_ai_employee": {"family": "infra", "vertical": "ai_employee"},
 }
 
 

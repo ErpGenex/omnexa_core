@@ -26,52 +26,12 @@ from frappe.utils import get_bench_path
 from frappe.utils.file_manager import save_file
 
 
-SUPPORTED_FRAPPE_MAJOR = 15
-REQUIRED_SITE_APPS = [
-	"omnexa_accounting",
-	"erpgenex_theme_0426",
-	"omnexa_backup",
-	"omnexa_customer_core",
-	"omnexa_einvoice",
-	"omnexa_experience",
-	"omnexa_fixed_assets",
-	"omnexa_hr",
-	"omnexa_intelligence_core",
-	"omnexa_projects_pm",
-	# Engineering vertical + shared stubs should be fetched with core bootstrap.
-	"omnexa_engineering_consulting",
-	"omnexa_eng_document_control",
-	"omnexa_edms",
-	"omnexa_eng_platform_integrations",
-	"omnexa_eng_workflow_engine",
-	"omnexa_reporting_compliance",
-	"omnexa_services",
-	"omnexa_setup_intelligence",
-	"omnexa_statutory_audit",
-	"omnexa_theme_manager",
-	"omnexa_trading",
-	"omnexa_user_academy",
-	"omnexa_n8n_bridge",
-]
-
-# Optional bench stubs; legacy hooks on ``omnexa_engineering_consulting`` may still list them. If absent from
-# disk, Frappe's ``parse_app_name`` falls through to GitHub tag parsing → InvalidRemoteException.
-OPTIONAL_OMNEXA_ENG_STUB_APPS = frozenset(
-	{
-		"omnexa_eng_document_control",
-		"omnexa_edms",
-		"omnexa_eng_platform_integrations",
-		"omnexa_eng_workflow_engine",
-	}
+from omnexa_core.omnexa_core.install_pkg.constants import (
+	OPTIONAL_OMNEXA_ENG_STUB_APPS,
+	REQUIRED_SITE_APPS,
+	SUPPORTED_FRAPPE_MAJOR,
+	strict_required_site_apps as _strict_required_site_apps,
 )
-
-
-def _strict_required_site_apps() -> list[str]:
-	"""Required apps that must exist for bootstrap to continue.
-
-	Engineering stub repos can be private on fresh servers, so they remain best-effort.
-	"""
-	return [app for app in REQUIRED_SITE_APPS if app not in OPTIONAL_OMNEXA_ENG_STUB_APPS]
 
 
 @contextmanager

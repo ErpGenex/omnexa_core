@@ -13,7 +13,6 @@ from frappe.tests.utils import FrappeTestCase
 
 from omnexa_core.omnexa_core.omnexa_license import (
 	COMMERCIAL_JWT_LICENSE_APPS,
-	DEVELOPER_BYPASS_CODE,
 	FREE_APPS,
 	assert_app_licensed_or_raise,
 	is_free_app,
@@ -273,8 +272,12 @@ class TestOmnexaLicense(FrappeTestCase):
 	def test_developer_bypass_code_grants_license(self):
 		app = "thirdparty_paid_app"
 		old_lic = frappe.local.conf.get("omnexa_licenses")
+		old_bypass = frappe.local.conf.get("omnexa_developer_bypass_code")
+		old_dev = frappe.local.conf.get("developer_mode")
 		try:
-			frappe.local.conf["omnexa_licenses"] = {app: DEVELOPER_BYPASS_CODE}
+			frappe.local.conf["developer_mode"] = 1
+			frappe.local.conf["omnexa_developer_bypass_code"] = "TEST-BYPASS-CODE"
+			frappe.local.conf["omnexa_licenses"] = {app: "TEST-BYPASS-CODE"}
 			r = verify_app_license(app)
 			self.assertEqual(r.status, "licensed_dev_override")
 		finally:
@@ -282,13 +285,25 @@ class TestOmnexaLicense(FrappeTestCase):
 				frappe.local.conf.pop("omnexa_licenses", None)
 			else:
 				frappe.local.conf["omnexa_licenses"] = old_lic
+			if old_bypass is None:
+				frappe.local.conf.pop("omnexa_developer_bypass_code", None)
+			else:
+				frappe.local.conf["omnexa_developer_bypass_code"] = old_bypass
+			if old_dev is None:
+				frappe.local.conf.pop("developer_mode", None)
+			else:
+				frappe.local.conf["developer_mode"] = old_dev
 
 	def test_developer_bypass_works_without_platform_marker(self):
 		app = "omnexa_tourism"
 		old_lic = frappe.local.conf.get("omnexa_licenses")
 		old_platform = frappe.local.conf.get("omnexa_platform")
+		old_bypass = frappe.local.conf.get("omnexa_developer_bypass_code")
+		old_dev = frappe.local.conf.get("developer_mode")
 		try:
-			frappe.local.conf["omnexa_licenses"] = {app: DEVELOPER_BYPASS_CODE}
+			frappe.local.conf["developer_mode"] = 1
+			frappe.local.conf["omnexa_developer_bypass_code"] = "TEST-BYPASS-CODE-2"
+			frappe.local.conf["omnexa_licenses"] = {app: "TEST-BYPASS-CODE-2"}
 			frappe.local.conf.pop("omnexa_platform", None)
 			r = verify_app_license(app)
 			self.assertEqual(r.status, "licensed_dev_override")
@@ -301,6 +316,14 @@ class TestOmnexaLicense(FrappeTestCase):
 				frappe.local.conf.pop("omnexa_platform", None)
 			else:
 				frappe.local.conf["omnexa_platform"] = old_platform
+			if old_bypass is None:
+				frappe.local.conf.pop("omnexa_developer_bypass_code", None)
+			else:
+				frappe.local.conf["omnexa_developer_bypass_code"] = old_bypass
+			if old_dev is None:
+				frappe.local.conf.pop("developer_mode", None)
+			else:
+				frappe.local.conf["developer_mode"] = old_dev
 
 	def test_jwt_licensed_valid_rs256(self):
 		import jwt

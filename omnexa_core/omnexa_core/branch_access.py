@@ -275,6 +275,16 @@ def permission_query_conditions_for_branch_field(doctype: str, user: str | None 
 	from omnexa_core.omnexa_core.session_context import get_effective_branch_list, get_effective_company
 
 	user = user or frappe.session.user
+	if user_can_access_all_branches(user):
+		stored_company = frappe.defaults.get_user_default("omnexa_view_company", user)
+		view_all = cint(frappe.defaults.get_user_default("omnexa_view_all_branches", user))
+		stored_branch = frappe.defaults.get_user_default("omnexa_view_branch", user)
+		has_view_context = bool(stored_company) or view_all or (
+			stored_branch and stored_branch not in ("", "__ALL__")
+		)
+		if not has_view_context:
+			return ""
+
 	company = get_effective_company(user)
 	allowed = get_effective_branch_list(user, company)
 

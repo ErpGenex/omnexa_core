@@ -5,11 +5,13 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from omnexa_core.omnexa_core.branch_access import permission_query_conditions_for_branch_field
+from omnexa_core.tests.test_helpers import clear_privileged_view_context
 
 
 class TestOmnexaBranch(FrappeTestCase):
 	def setUp(self):
 		super().setUp()
+		clear_privileged_view_context()
 		if not frappe.db.exists("Currency", "EGP"):
 			frappe.get_doc(
 				{"doctype": "Currency", "currency_name": "EGP", "symbol": "E£", "enabled": 1}

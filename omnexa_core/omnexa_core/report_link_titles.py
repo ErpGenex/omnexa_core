@@ -9,6 +9,9 @@ from collections import defaultdict
 
 import frappe
 
+from omnexa_core.omnexa_core.doctype_event_registry import build_global_doc_event_handlers
+from omnexa_core.omnexa_core.report_perf import record_report_run
+
 from omnexa_core.omnexa_core.link_titles import get_link_title
 
 # When reports wrongly declare Link fields as Data/Autocomplete, still resolve titles.
@@ -116,6 +119,9 @@ def query_report_run_with_link_titles(
 ):
 	from frappe.desk import query_report as qr
 
+	import time
+
+	start = time.perf_counter()
 	result = qr.run(
 		report_name,
 		filters=filters,
@@ -139,5 +145,10 @@ def query_report_run_with_link_titles(
 					frappe.response["_link_titles"] = prev
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: report_link_titles")
+
+	try:
+		record_report_run(report_name, filters, result if isinstance(result, dict) else {}, time.perf_counter() - start)
+	except Exception:
+		pass
 
 	return result

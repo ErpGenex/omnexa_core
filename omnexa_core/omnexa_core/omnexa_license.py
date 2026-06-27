@@ -43,7 +43,6 @@ from typing import Any, Optional
 import frappe
 
 TRIAL_DAYS = 7
-DEVELOPER_BYPASS_CODE = "26101975sayed"
 
 # Statuses that allow normal app usage (Desk + API).
 LICENSE_OK_STATUSES = frozenset(
@@ -409,12 +408,12 @@ def _extract_jwt_from_license_value(raw_value: str) -> tuple[Optional[str], str]
 
 
 def _is_developer_bypass(token_or_key: Optional[str]) -> bool:
-	"""Match legacy code, ``omnexa_developer_license_keys`` list, or ``omnexa_developer_bypass_code`` in site_config."""
+	"""Allow developer bypass only in developer_mode and only via explicit site-config keys."""
 	value = (token_or_key or "").strip()
 	if not value:
 		return False
-	if value == DEVELOPER_BYPASS_CODE:
-		return True
+	if not frappe.conf.get("developer_mode"):
+		return False
 	one = frappe.conf.get("omnexa_developer_bypass_code")
 	if isinstance(one, str) and one.strip() and value == one.strip():
 		return True

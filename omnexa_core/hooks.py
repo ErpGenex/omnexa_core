@@ -5,6 +5,8 @@ app_description = "Core platform for ERPGENEX (omnexa_core)"
 app_email = "dev@erpgenex.com"
 app_license = "mit"
 
+from omnexa_core.omnexa_core.doctype_event_registry import build_global_doc_event_handlers
+
 # Apps
 # ------------------
 
@@ -201,18 +203,7 @@ after_app_install = "omnexa_core.install.after_any_app_install"
 # 		"on_trash": "method"
 # 	}
 # }
-doc_events = {
-	"*": {
-		"before_validate": [
-			"omnexa_core.omnexa_core.user_context.apply_company_branch_defaults",
-			"omnexa_core.omnexa_core.compliance_guard.enforce_global_enterprise_compliance",
-		],
-		"validate": [
-			"omnexa_core.omnexa_core.branch_access.enforce_branch_company_coherence",
-			"omnexa_core.omnexa_core.branch_access.enforce_branch_access",
-		],
-	}
-}
+doc_events = build_global_doc_event_handlers()
 
 permission_query_conditions = {
 	"*": "omnexa_core.omnexa_core.permissions.global_branch_permission_query_conditions",
@@ -299,6 +290,7 @@ override_whitelisted_methods = {
 # ----------------
 before_request = [
 	"omnexa_core.omnexa_core.license_gate.before_request",
+	"omnexa_core.omnexa_core.omnexa_mfa_gate.before_request",
 	"omnexa_core.omnexa_core.report_defaults.auto_apply_company_branch_report_filters",
 ]
 # after_request = ["omnexa_core.utils.after_request"]

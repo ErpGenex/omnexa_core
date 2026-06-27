@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 from urllib.parse import urlencode
 
 import frappe
+from frappe.rate_limiter import rate_limit
 from frappe.utils import get_app_version, get_bench_path
 from frappe.utils.backups import new_backup
 
@@ -76,7 +77,7 @@ def _restore_frappe_session_snapshot(snapshot: dict | None) -> None:
 	session = frappe.local.session
 	session.user = user
 	sid = snapshot.get("sid")
-	if sid and not is_invalid_session_user(sid) and sid not in (user, "Administrator", "Guest"):
+	if sid and not is_invalid_session_user(sid):
 		session.sid = sid
 
 	saved_data = snapshot.get("data")
@@ -1511,7 +1512,8 @@ def _compute_signature(secret: str, app_slug: str, activation_key: str, timestam
 	return hmac.new(secret.encode("utf-8"), payload.encode("utf-8"), hashlib.sha256).hexdigest()
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=True, methods=["POST"])
+@rate_limit(limit=30, seconds=60)
 def auto_activate_from_platform(app_slug: str, activation_key: str, timestamp: str, signature: str):
 	"""
 	Automatic activation endpoint called by ErpGenEx platform after payment.

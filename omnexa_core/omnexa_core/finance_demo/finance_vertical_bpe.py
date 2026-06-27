@@ -101,25 +101,20 @@ def ensure_bpe_fields(spec: dict) -> None:
 	meta = frappe.get_meta(dt)
 	if meta.get_field("workflow_state") and meta.get_field("rejection_reason") and meta.get_field("sla_due"):
 		return
-	prev_dev = frappe.conf.get("developer_mode")
-	frappe.conf.developer_mode = 1
-	try:
-		meta = frappe.get_meta(dt)
-		if not meta.get_field("workflow_state"):
-			_ensure_custom_field(
-				dt,
-				"workflow_state",
-				"Data",
-				"Workflow State",
-				mod,
-				insert_after="modified",
-			)
-		if not meta.get_field("rejection_reason"):
-			_ensure_custom_field(dt, "rejection_reason", "Small Text", "Rejection Reason", mod)
-		if not meta.get_field("sla_due"):
-			_ensure_custom_field(dt, "sla_due", "Datetime", "SLA Due", mod)
-	finally:
-		frappe.conf.developer_mode = prev_dev
+	meta = frappe.get_meta(dt)
+	if not meta.get_field("workflow_state"):
+		_ensure_custom_field(
+			dt,
+			"workflow_state",
+			"Data",
+			"Workflow State",
+			mod,
+			insert_after="modified",
+		)
+	if not meta.get_field("rejection_reason"):
+		_ensure_custom_field(dt, "rejection_reason", "Small Text", "Rejection Reason", mod)
+	if not meta.get_field("sla_due"):
+		_ensure_custom_field(dt, "sla_due", "Datetime", "SLA Due", mod)
 	frappe.clear_cache(doctype=dt)
 
 
@@ -158,47 +153,42 @@ def sync_case_permissions(spec: dict) -> None:
 	if not frappe.db.exists("DocType", dt):
 		return
 	ensure_submittable(dt)
-	prev_dev = frappe.conf.get("developer_mode")
-	frappe.conf.developer_mode = 1
-	try:
-		meta = frappe.get_doc("DocType", dt)
-		submittable = bool(meta.is_submittable)
-		perms = [
-			(_role(prefix, "Field Officer"), dict(create=1, read=1, write=1, submit=0)),
-			(_role(prefix, "Branch Manager"), dict(create=0, read=1, write=1, submit=1 if submittable else 0)),
-			(_role(prefix, "Disbursement Officer"), dict(create=0, read=1, write=1, submit=1 if submittable else 0)),
-			(_role(prefix, "Collection Officer"), dict(create=0, read=1, write=1, submit=0)),
-			(_role(prefix, "Risk Analyst"), dict(create=0, read=1, write=1, submit=0)),
-			(desk, dict(create=1, read=1, write=1, submit=1 if submittable else 0)),
-		]
-		existing = {r.role: r for r in meta.permissions}
-		for role, p in perms:
-			row = {
-				"role": role,
-				"create": p.get("create", 0),
-				"read": p.get("read", 1),
-				"write": p.get("write", 0),
-				"delete": 0,
-				"submit": p.get("submit", 0),
-				"cancel": 0,
-				"amend": 0,
-				"report": 1,
-				"export": 1,
-				"print": 1,
-				"email": 1,
-				"share": 1,
-			}
-			if role in existing:
-				doc = existing[role]
-				for k, v in row.items():
-					if k != "role":
-						setattr(doc, k, v)
-			else:
-				meta.append("permissions", row)
-		meta.flags.ignore_permissions = True
-		meta.save()
-	finally:
-		frappe.conf.developer_mode = prev_dev
+	meta = frappe.get_doc("DocType", dt)
+	submittable = bool(meta.is_submittable)
+	perms = [
+		(_role(prefix, "Field Officer"), dict(create=1, read=1, write=1, submit=0)),
+		(_role(prefix, "Branch Manager"), dict(create=0, read=1, write=1, submit=1 if submittable else 0)),
+		(_role(prefix, "Disbursement Officer"), dict(create=0, read=1, write=1, submit=1 if submittable else 0)),
+		(_role(prefix, "Collection Officer"), dict(create=0, read=1, write=1, submit=0)),
+		(_role(prefix, "Risk Analyst"), dict(create=0, read=1, write=1, submit=0)),
+		(desk, dict(create=1, read=1, write=1, submit=1 if submittable else 0)),
+	]
+	existing = {r.role: r for r in meta.permissions}
+	for role, p in perms:
+		row = {
+			"role": role,
+			"create": p.get("create", 0),
+			"read": p.get("read", 1),
+			"write": p.get("write", 0),
+			"delete": 0,
+			"submit": p.get("submit", 0),
+			"cancel": 0,
+			"amend": 0,
+			"report": 1,
+			"export": 1,
+			"print": 1,
+			"email": 1,
+			"share": 1,
+		}
+		if role in existing:
+			doc = existing[role]
+			for k, v in row.items():
+				if k != "role":
+					setattr(doc, k, v)
+		else:
+			meta.append("permissions", row)
+	meta.flags.ignore_permissions = True
+	meta.save()
 	frappe.clear_cache(doctype=dt)
 
 

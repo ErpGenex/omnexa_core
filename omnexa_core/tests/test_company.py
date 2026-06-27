@@ -4,10 +4,13 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
+from omnexa_core.tests.test_helpers import clear_privileged_view_context, delete_company_with_branches
+
 
 class TestOmnexaCompany(FrappeTestCase):
 	def setUp(self):
 		super().setUp()
+		clear_privileged_view_context()
 		if not frappe.db.exists("Currency", "EGP"):
 			frappe.get_doc(
 				{"doctype": "Currency", "currency_name": "EGP", "symbol": "E£", "enabled": 1}
@@ -27,7 +30,7 @@ class TestOmnexaCompany(FrappeTestCase):
 		doc.insert(ignore_permissions=True)
 		self.assertTrue(frappe.db.exists("Company", doc.name))
 		self.assertTrue(frappe.db.exists("Branch", {"company": doc.name, "is_head_office": 1}))
-		doc.delete(ignore_permissions=True)
+		delete_company_with_branches(doc.name)
 
 	def test_company_save_with_rin_and_tax_id(self):
 		doc = frappe.new_doc("Company")
@@ -41,4 +44,4 @@ class TestOmnexaCompany(FrappeTestCase):
 		doc.insert(ignore_permissions=True)
 		doc.save(ignore_permissions=True)
 		self.assertEqual(frappe.db.get_value("Company", doc.name, "rin"), "258797215")
-		doc.delete(ignore_permissions=True)
+		delete_company_with_branches(doc.name)

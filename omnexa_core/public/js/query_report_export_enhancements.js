@@ -2,6 +2,20 @@
 // Extended export actions: Excel, CSV, JSON, HTML snapshot for Query Reports.
 
 (function () {
+	const SERVER_XLSX_REPORTS = new Set([
+		"Trial Balance",
+		"Adjusted Trial Balance",
+		"Profit and Loss Statement",
+		"Balance Sheet",
+		"Statement of Changes in Equity",
+		"VAT Position",
+		"General Ledger",
+		"General Journal",
+		"Income Statement",
+		"Cash Flow Statement (Indirect)",
+		"Cash Flow Statement Structured",
+	]);
+
 	function report_rows(report) {
 		const dt = report.datatable;
 		if (!dt || !dt.datamanager) return [];
@@ -97,6 +111,28 @@
 		download_blob(`${slug(report.report_name)}.doc`, "application/msword", html);
 	}
 
+	function export_server_xlsx(report) {
+		if (!SERVER_XLSX_REPORTS.has(report.report_name)) {
+			frappe.msgprint(__("Server Excel export is not configured for this report."));
+			return;
+		}
+		const filters = report.get_filter_values ? report.get_filter_values() : {};
+		frappe.call({
+			method: "omnexa_accounting.utils.financial_report_xlsx.export_financial_report_xlsx",
+			args: { report_name: report.report_name, filters },
+			freeze: true,
+			freeze_message: __("Generating Excel…"),
+			callback(r) {
+				const url = r.message && r.message.file_url;
+				if (!url) {
+					frappe.msgprint(__("Excel export failed."));
+					return;
+				}
+				window.open(frappe.urllib.get_full_url(url), "_blank");
+			},
+		});
+	}
+
 	function omnexaEnsureExportToolbar(report) {
 		if (!report.page || report._omnexa_export_toolbar_installed) return;
 		report._omnexa_export_toolbar_installed = true;
@@ -106,6 +142,9 @@
 
 		if (!mayExport()) return;
 
+		if (SERVER_XLSX_REPORTS.has(report.report_name)) {
+			report.page.add_inner_button(__("Excel (Server)"), () => export_server_xlsx(report), group);
+		}
 		report.page.add_inner_button(__("Excel"), () => {
 			if (!frappe.views?.QueryReport?.prototype?.export_report) {
 				frappe.msgprint(__("Excel export unavailable."));

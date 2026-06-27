@@ -120,6 +120,8 @@
 		"eta_address_landmark",
 		"eta_address_additional",
 		"eta_einvoice_enabled",
+		"tax_authority_profile",
+		"signing_profile",
 		"eta_invoice_connection_section",
 		"eta_invoice_environment",
 		"eta_invoice_base_url",
@@ -518,6 +520,20 @@
 			"fieldname": "eta_einvoice_enabled",
 			"fieldtype": "Check",
 			"label": "Enable E-Invoice"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "tax_authority_profile",
+			"fieldtype": "Link",
+			"label": "Tax Authority Profile",
+			"options": "Tax Authority Profile"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "signing_profile",
+			"fieldtype": "Link",
+			"label": "Signing Profile",
+			"options": "Signing Profile"
 		},
 		{
 			"depends_on": "eval:doc.eta_einvoice_enabled",

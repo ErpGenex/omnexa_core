@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import frappe
+from frappe.rate_limiter import rate_limit
 
 
 @frappe.whitelist(allow_guest=True)
+@rate_limit(limit=120, seconds=60)
 def sessions_get():
 	"""Stable boot endpoint for Desk.
 

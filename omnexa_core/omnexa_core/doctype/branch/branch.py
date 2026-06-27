@@ -15,6 +15,36 @@ class Branch(Document):
 		self._validate_unique_code_per_company()
 		self._validate_parent_branch_company()
 		self._validate_single_head_office()
+		self._validate_eta_einvoice()
+
+	def _validate_eta_einvoice(self):
+		if not cint(self.eta_einvoice_enabled):
+			return
+		meta = self.meta
+		if meta.has_field("tax_authority_profile") and meta.has_field("signing_profile"):
+			if not self.get("tax_authority_profile") or not self.get("signing_profile"):
+				frappe.throw(
+					_("Tax Authority Profile and Signing Profile are required when e-invoice is enabled."),
+					title=_("E-Invoice"),
+				)
+			for fieldname in ("tax_authority_profile", "signing_profile"):
+				profile = self.get(fieldname)
+				if not profile:
+					continue
+				options = meta.get_field(fieldname).options
+				profile_company = frappe.db.get_value(options, profile, "company")
+				if profile_company and profile_company != self.company:
+					frappe.throw(
+						_("{0} must belong to the same company as the branch.").format(
+							meta.get_label(fieldname)
+						),
+						title=_("E-Invoice"),
+					)
+			return
+		if not (self.get("eta_invoice_rin") or "").strip():
+			frappe.throw(_("E-Invoice Taxpayer RIN is required when e-invoice is enabled."), title=_("E-Invoice"))
+		if not (self.get("eta_invoice_client_id") or "").strip():
+			frappe.throw(_("E-Invoice Client ID is required when e-invoice is enabled."), title=_("E-Invoice"))
 
 	def _validate_default_vat_rate(self):
 		if not getattr(self, "default_vat_rate", None):

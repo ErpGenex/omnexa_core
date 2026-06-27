@@ -25,6 +25,8 @@ class TestERPGenexE2EVerticals(FrappeTestCase):
 
 	def test_qa01_pmc_rental_lifecycle(self):
 		"""Property → unit → lease → billing run → owner statement."""
+		if not frappe.get_meta("Rental Contract").has_field("pmc_property_unit"):
+			self.skipTest("PMC Rental Contract schema not active (car rental override)")
 		tag = self._tag
 		prop = frappe.get_doc(
 			{
