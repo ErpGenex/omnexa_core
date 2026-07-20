@@ -1,0 +1,222 @@
+{
+  "role_id": "education_teacher",
+  "role_name": "Teacher",
+  "application": "education",
+  "portal": "education_teacher",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "today_classes",
+        "title": "Today's Classes",
+        "value": "count",
+        "source": "class_schedule",
+        "filter": "today"
+      },
+      {
+        "id": "total_students",
+        "title": "Total Students",
+        "value": "count",
+        "source": "student_enrollment",
+        "filter": "my_classes"
+      },
+      {
+        "id": "assignments_pending",
+        "title": "Assignments to Grade",
+        "value": "count",
+        "source": "assignment",
+        "filter": "pending_grading"
+      },
+      {
+        "id": "attendance_rate",
+        "title": "Class Attendance Rate",
+        "value": "percentage",
+        "source": "attendance",
+        "filter": "my_classes"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "take_attendance",
+        "title": "Take Attendance",
+        "action": "create",
+        "doctype": "attendance"
+      },
+      {
+        "id": "create_assignment",
+        "title": "Create Assignment",
+        "action": "create",
+        "doctype": "assignment"
+      },
+      {
+        "id": "record_grades",
+        "title": "Record Grades",
+        "action": "update",
+        "doctype": "grade"
+      },
+      {
+        "id": "create_exam",
+        "title": "Create Exam",
+        "action": "create",
+        "doctype": "exam"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "my_classes",
+        "title": "My Classes",
+        "type": "list",
+        "source": "class_schedule"
+      },
+      {
+        "id": "students",
+        "title": "My Students",
+        "type": "list",
+        "source": "student_enrollment"
+      },
+      {
+        "id": "assignments_to_grade",
+        "title": "Assignments to Grade",
+        "type": "list",
+        "source": "assignment"
+      }
+    ],
+    "charts": [
+      {
+        "id": "class_performance",
+        "title": "Class Performance",
+        "type": "line",
+        "source": "grade"
+      },
+      {
+        "id": "attendance_trend",
+        "title": "Attendance Trend",
+        "type": "bar",
+        "source": "attendance"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Classes",
+        "items": [
+          {
+            "id": "my_classes",
+            "title": "My Classes",
+            "icon": "class",
+            "route": "/app/education/teacher/my-classes"
+          },
+          {
+            "id": "class_schedule",
+            "title": "Class Schedule",
+            "icon": "schedule",
+            "route": "/app/education/teacher/class-schedule"
+          }
+        ]
+      },
+      {
+        "title": "Students",
+        "items": [
+          {
+            "id": "my_students",
+            "title": "My Students",
+            "icon": "people",
+            "route": "/app/education/teacher/my-students"
+          },
+          {
+            "id": "student_performance",
+            "title": "Student Performance",
+            "icon": "trending_up",
+            "route": "/app/education/teacher/student-performance"
+          }
+        ]
+      },
+      {
+        "title": "Academic",
+        "items": [
+          {
+            "id": "attendance",
+            "title": "Attendance",
+            "icon": "event_available",
+            "route": "/app/education/teacher/attendance"
+          },
+          {
+            "id": "assignments",
+            "title": "Assignments",
+            "icon": "assignment",
+            "route": "/app/education/teacher/assignments"
+          },
+          {
+            "id": "grades",
+            "title": "Grades",
+            "icon": "grade",
+            "route": "/app/education/teacher/grades"
+          },
+          {
+            "id": "exams",
+            "title": "Exams",
+            "icon": "quiz",
+            "route": "/app/education/teacher/exams"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "class_report",
+            "title": "Class Report",
+            "icon": "assessment",
+            "route": "/app/education/teacher/reports/class"
+          },
+          {
+            "id": "student_report",
+            "title": "Student Report",
+            "icon": "person",
+            "route": "/app/education/teacher/reports/student"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "class_schedule",
+      "student_enrollment",
+      "attendance",
+      "assignment",
+      "grade",
+      "exam",
+      "lesson_plan"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "course_management",
+      "financial_records",
+      "hr_records",
+      "administrative_functions"
+    ]
+  },
+  "reports": [
+    {
+      "id": "class_report",
+      "title": "Class Report",
+      "route": "/app/education/teacher/reports/class"
+    },
+    {
+      "id": "performance_report",
+      "title": "Performance Report",
+      "route": "/app/education/teacher/reports/performance"
+    }
+  ],
+  "notifications": [
+    "assignment_submission",
+    "exam_scheduled",
+    "attendance_alert",
+    "student_message"
+  ]
+}

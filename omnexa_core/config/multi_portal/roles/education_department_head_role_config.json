@@ -1,0 +1,213 @@
+{
+  "role_id": "education_department_head",
+  "role_name": "Department Head",
+  "application": "education",
+  "portal": "education_department_head",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "department_students",
+        "title": "Department Students",
+        "value": "count",
+        "source": "student_enrollment",
+        "filter": "department"
+      },
+      {
+        "id": "department_teachers",
+        "title": "Department Teachers",
+        "value": "count",
+        "source": "teacher",
+        "filter": "department"
+      },
+      {
+        "id": "department_courses",
+        "title": "Department Courses",
+        "value": "count",
+        "source": "course",
+        "filter": "department"
+      },
+      {
+        "id": "department_performance",
+        "title": "Department Performance",
+        "value": "percentage",
+        "source": "grade",
+        "filter": "department"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "view_department_reports",
+        "title": "View Department Reports",
+        "action": "read",
+        "doctype": "report"
+      },
+      {
+        "id": "manage_department_staff",
+        "title": "Manage Department Staff",
+        "action": "update",
+        "doctype": "teacher"
+      },
+      {
+        "id": "approve_department_requests",
+        "title": "Approve Department Requests",
+        "action": "update",
+        "doctype": "request"
+      },
+      {
+        "id": "send_department_announcement",
+        "title": "Send Department Announcement",
+        "action": "create",
+        "doctype": "announcement"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "department_overview",
+        "title": "Department Overview",
+        "type": "overview",
+        "source": "department"
+      },
+      {
+        "id": "department_pending_approvals",
+        "title": "Department Pending Approvals",
+        "type": "list",
+        "source": "request"
+      },
+      {
+        "id": "department_activities",
+        "title": "Department Activities",
+        "type": "list",
+        "source": "activity_log"
+      }
+    ],
+    "charts": [
+      {
+        "id": "department_performance",
+        "title": "Department Performance",
+        "type": "line",
+        "source": "grade"
+      },
+      {
+        "id": "course_enrollment",
+        "title": "Course Enrollment",
+        "type": "bar",
+        "source": "course_enrollment"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Department Overview",
+        "items": [
+          {
+            "id": "department_dashboard",
+            "title": "Department Dashboard",
+            "icon": "dashboard",
+            "route": "/app/education/department-head/department-dashboard"
+          },
+          {
+            "id": "department_overview",
+            "title": "Department Overview",
+            "icon": "business",
+            "route": "/app/education/department-head/department-overview"
+          }
+        ]
+      },
+      {
+        "title": "Department Management",
+        "items": [
+          {
+            "id": "department_staff",
+            "title": "Department Staff",
+            "icon": "people",
+            "route": "/app/education/department-head/department-staff"
+          },
+          {
+            "id": "department_courses",
+            "title": "Department Courses",
+            "icon": "class",
+            "route": "/app/education/department-head/department-courses"
+          },
+          {
+            "id": "department_resources",
+            "title": "Department Resources",
+            "icon": "inventory",
+            "route": "/app/education/department-head/department-resources"
+          }
+        ]
+      },
+      {
+        "title": "Department Approvals",
+        "items": [
+          {
+            "id": "department_pending_approvals",
+            "title": "Department Pending Approvals",
+            "icon": "assignment",
+            "route": "/app/education/department-head/department-pending-approvals"
+          },
+          {
+            "id": "department_approval_history",
+            "title": "Department Approval History",
+            "icon": "history",
+            "route": "/app/education/department-head/department-approval-history"
+          }
+        ]
+      },
+      {
+        "title": "Department Reports",
+        "items": [
+          {
+            "id": "department_report",
+            "title": "Department Report",
+            "icon": "assessment",
+            "route": "/app/education/department-head/reports/department"
+          },
+          {
+            "id": "department_performance",
+            "title": "Department Performance",
+            "icon": "trending_up",
+            "route": "/app/education/department-head/reports/performance"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "student",
+      "teacher",
+      "course",
+      "request",
+      "announcement",
+      "report"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "institution_level_settings",
+      "other_departments"
+    ]
+  },
+  "reports": [
+    {
+      "id": "department_report",
+      "title": "Department Report",
+      "route": "/app/education/department-head/reports/department"
+    },
+    {
+      "id": "department_performance",
+      "title": "Department Performance",
+      "route": "/app/education/department-head/reports/performance"
+    }
+  ],
+  "notifications": [
+    "department_approval_request",
+    "department_staff_alert",
+    "department_student_alert",
+    "department_system_alert"
+  ]
+}

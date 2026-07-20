@@ -1,0 +1,211 @@
+{
+  "role_id": "commerce_general_manager",
+  "role_name": "General Manager",
+  "application": "commerce",
+  "portal": "commerce_general_manager",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "total_revenue",
+        "title": "Total Revenue",
+        "value": "sum",
+        "source": "sales_order",
+        "filter": "current_month"
+      },
+      {
+        "id": "total_employees",
+        "title": "Total Employees",
+        "value": "count",
+        "source": "employee",
+        "filter": "active"
+      },
+      {
+        "id": "total_branches",
+        "title": "Total Branches",
+        "value": "count",
+        "source": "branch",
+        "filter": "active"
+      },
+      {
+        "id": "company_performance",
+        "title": "Company Performance",
+        "value": "percentage",
+        "source": "sales_target",
+        "filter": "company"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "view_company_reports",
+        "title": "View Company Reports",
+        "action": "read",
+        "doctype": "report"
+      },
+      {
+        "id": "manage_branches",
+        "title": "Manage Branches",
+        "action": "update",
+        "doctype": "branch"
+      },
+      {
+        "id": "approve_requests",
+        "title": "Approve Requests",
+        "action": "update",
+        "doctype": "request"
+      },
+      {
+        "id": "send_announcement",
+        "title": "Send Announcement",
+        "action": "create",
+        "doctype": "announcement"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "company_overview",
+        "title": "Company Overview",
+        "type": "overview",
+        "source": "company"
+      },
+      {
+        "id": "pending_approvals",
+        "title": "Pending Approvals",
+        "type": "list",
+        "source": "request"
+      },
+      {
+        "id": "branch_performance",
+        "title": "Branch Performance",
+        "type": "list",
+        "source": "branch"
+      }
+    ],
+    "charts": [
+      {
+        "id": "revenue_trend",
+        "title": "Revenue Trend",
+        "type": "line",
+        "source": "sales_order"
+      },
+      {
+        "id": "branch_comparison",
+        "title": "Branch Comparison",
+        "type": "bar",
+        "source": "branch"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Overview",
+        "items": [
+          {
+            "id": "company_dashboard",
+            "title": "Company Dashboard",
+            "icon": "dashboard",
+            "route": "/app/commerce/general-manager/company-dashboard"
+          },
+          {
+            "id": "company_overview",
+            "title": "Company Overview",
+            "icon": "business",
+            "route": "/app/commerce/general-manager/company-overview"
+          }
+        ]
+      },
+      {
+        "title": "Management",
+        "items": [
+          {
+            "id": "branch_management",
+            "title": "Branch Management",
+            "icon": "store",
+            "route": "/app/commerce/general-manager/branch-management"
+          },
+          {
+            "id": "staff_management",
+            "title": "Staff Management",
+            "icon": "people",
+            "route": "/app/commerce/general-manager/staff-management"
+          },
+          {
+            "id": "resource_management",
+            "title": "Resource Management",
+            "icon": "inventory",
+            "route": "/app/commerce/general-manager/resource-management"
+          }
+        ]
+      },
+      {
+        "title": "Approvals",
+        "items": [
+          {
+            "id": "pending_approvals",
+            "title": "Pending Approvals",
+            "icon": "assignment",
+            "route": "/app/commerce/general-manager/pending-approvals"
+          },
+          {
+            "id": "approval_history",
+            "title": "Approval History",
+            "icon": "history",
+            "route": "/app/commerce/general-manager/approval-history"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "company_report",
+            "title": "Company Report",
+            "icon": "assessment",
+            "route": "/app/commerce/general-manager/reports/company"
+          },
+          {
+            "id": "performance_report",
+            "title": "Performance Report",
+            "icon": "trending_up",
+            "route": "/app/commerce/general-manager/reports/performance"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "branch",
+      "employee",
+      "sales_order",
+      "request",
+      "announcement",
+      "report"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update",
+      "delete"
+    ],
+    "restricted_doctypes": []
+  },
+  "reports": [
+    {
+      "id": "company_report",
+      "title": "Company Report",
+      "route": "/app/commerce/general-manager/reports/company"
+    },
+    {
+      "id": "performance_report",
+      "title": "Performance Report",
+      "route": "/app/commerce/general-manager/reports/performance"
+    }
+  ],
+  "notifications": [
+    "approval_request",
+    "branch_alert",
+    "staff_alert",
+    "system_alert"
+  ]
+}

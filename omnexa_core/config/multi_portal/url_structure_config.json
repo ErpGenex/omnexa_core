@@ -1,0 +1,125 @@
+{
+  "url_structure": {
+    "base_pattern": "/app/{application}/{portal}/{page}",
+    "applications": {
+      "healthcare": {
+        "base_url": "/app/healthcare",
+        "portals": {
+          "healthcare_reception": "/app/healthcare/reception",
+          "healthcare_doctor": "/app/healthcare/doctor",
+          "healthcare_nurse": "/app/healthcare/nurse",
+          "healthcare_pharmacy": "/app/healthcare/pharmacy",
+          "healthcare_lab": "/app/healthcare/lab",
+          "healthcare_radiology": "/app/healthcare/radiology",
+          "healthcare_cashier": "/app/healthcare/cashier",
+          "healthcare_medical_records": "/app/healthcare/medical-records",
+          "healthcare_insurance": "/app/healthcare/insurance",
+          "healthcare_manager": "/app/healthcare/manager",
+          "healthcare_branch_manager": "/app/healthcare/branch-manager",
+          "healthcare_admin": "/app/healthcare/admin"
+        }
+      },
+      "education": {
+        "base_url": "/app/education",
+        "portals": {
+          "education_student": "/app/education/student",
+          "education_teacher": "/app/education/teacher",
+          "education_assistant_teacher": "/app/education/assistant-teacher",
+          "education_registrar": "/app/education/registrar",
+          "education_accountant": "/app/education/accountant",
+          "education_parent": "/app/education/parent",
+          "education_principal": "/app/education/principal",
+          "education_department_head": "/app/education/department-head",
+          "education_library": "/app/education/library",
+          "education_hr": "/app/education/hr",
+          "education_admin": "/app/education/admin"
+        }
+      },
+      "commerce": {
+        "base_url": "/app/commerce",
+        "portals": {
+          "commerce_sales": "/app/commerce/sales",
+          "commerce_pos": "/app/commerce/pos",
+          "commerce_warehouse": "/app/commerce/warehouse",
+          "commerce_purchasing": "/app/commerce/purchasing",
+          "commerce_inventory": "/app/commerce/inventory",
+          "commerce_customer_service": "/app/commerce/customer-service",
+          "commerce_finance": "/app/commerce/finance",
+          "commerce_hr": "/app/commerce/hr",
+          "commerce_branch_manager": "/app/commerce/branch-manager",
+          "commerce_general_manager": "/app/commerce/general-manager",
+          "commerce_admin": "/app/commerce/admin"
+        }
+      }
+    },
+    "page_patterns": {
+      "dashboard": "/dashboard",
+      "list": "/list/{doctype}",
+      "form": "/form/{doctype}/{name}",
+      "report": "/report/{report_name}",
+      "settings": "/settings"
+    },
+    "routing_rules": {
+      "strict_application_isolation": true,
+      "strict_portal_isolation": true,
+      "allow_cross_application_redirect": false,
+      "require_authentication": true,
+      "session_based_routing": true
+    },
+    "redirect_rules": {
+      "unauthenticated": "/login",
+      "unauthorized": "/unauthorized",
+      "not_found": "/404",
+      "server_error": "/500"
+    },
+    "url_parameters": {
+      "supported": [
+        "page",
+        "limit",
+        "offset",
+        "sort",
+        "order",
+        "filter",
+        "search"
+      ],
+      "required": [],
+      "optional": [
+        "page",
+        "limit",
+        "offset",
+        "sort",
+        "order",
+        "filter",
+        "search"
+      ]
+    },
+    "url_validation": {
+      "max_length": 2048,
+      "allowed_characters": "a-zA-Z0-9-_/=?&",
+      "forbidden_patterns": [
+        "..",
+        "//",
+        "\\\\"
+      ]
+    },
+    "url_caching": {
+      "enabled": true,
+      "ttl": 300,
+      "cacheable_patterns": [
+        "/dashboard",
+        "/list",
+        "/report"
+      ],
+      "non_cacheable_patterns": [
+        "/form",
+        "/settings"
+      ]
+    },
+    "url_security": {
+      "enforce_https": true,
+      "csrf_protection": true,
+      "xss_protection": true,
+      "sql_injection_protection": true
+    }
+  }
+}

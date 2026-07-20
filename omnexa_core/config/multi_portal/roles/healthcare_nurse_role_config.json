@@ -1,0 +1,199 @@
+{
+  "role_id": "healthcare_nurse",
+  "role_name": "Nurse",
+  "application": "healthcare",
+  "portal": "healthcare_nurse",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "assigned_patients",
+        "title": "Assigned Patients",
+        "value": "count",
+        "source": "patient_assignment",
+        "filter": "active"
+      },
+      {
+        "id": "medications_pending",
+        "title": "Medications Pending",
+        "value": "count",
+        "source": "medication_administration",
+        "filter": "pending"
+      },
+      {
+        "id": "vitals_recorded",
+        "title": "Vitals Recorded Today",
+        "value": "count",
+        "source": "vital_signs",
+        "filter": "today"
+      },
+      {
+        "id": "tasks_completed",
+        "title": "Tasks Completed",
+        "value": "count",
+        "source": "nursing_task",
+        "filter": "completed_today"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "record_vitals",
+        "title": "Record Vitals",
+        "action": "create",
+        "doctype": "vital_signs"
+      },
+      {
+        "id": "administer_medication",
+        "title": "Administer Medication",
+        "action": "update",
+        "doctype": "medication_administration"
+      },
+      {
+        "id": "update_care_plan",
+        "title": "Update Care Plan",
+        "action": "update",
+        "doctype": "nursing_care_plan"
+      },
+      {
+        "id": "patient_monitoring",
+        "title": "Patient Monitoring",
+        "action": "read",
+        "doctype": "patient_monitoring"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "my_patients",
+        "title": "My Patients",
+        "type": "list",
+        "source": "patient_assignment"
+      },
+      {
+        "id": "medication_schedule",
+        "title": "Medication Schedule",
+        "type": "schedule",
+        "source": "medication_administration"
+      },
+      {
+        "id": "nursing_tasks",
+        "title": "Nursing Tasks",
+        "type": "task_list",
+        "source": "nursing_task"
+      }
+    ],
+    "charts": [
+      {
+        "id": "patient_care_chart",
+        "title": "Patient Care Activities",
+        "type": "bar",
+        "source": "nursing_task"
+      },
+      {
+        "id": "medication_adherence",
+        "title": "Medication Adherence",
+        "type": "line",
+        "source": "medication_administration"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "My Patients",
+        "items": [
+          {
+            "id": "assigned_patients",
+            "title": "Assigned Patients",
+            "icon": "people",
+            "route": "/app/healthcare/nurse/assigned-patients"
+          },
+          {
+            "id": "patient_monitoring",
+            "title": "Patient Monitoring",
+            "icon": "monitor_heart",
+            "route": "/app/healthcare/nurse/patient-monitoring"
+          }
+        ]
+      },
+      {
+        "title": "Care",
+        "items": [
+          {
+            "id": "vital_signs",
+            "title": "Vital Signs",
+            "icon": "favorite",
+            "route": "/app/healthcare/nurse/vital-signs"
+          },
+          {
+            "id": "medication_administration",
+            "title": "Medication Administration",
+            "icon": "medication",
+            "route": "/app/healthcare/nurse/medication-administration"
+          },
+          {
+            "id": "nursing_care_plan",
+            "title": "Nursing Care Plan",
+            "icon": "assignment",
+            "route": "/app/healthcare/nurse/nursing-care-plan"
+          }
+        ]
+      },
+      {
+        "title": "Tasks",
+        "items": [
+          {
+            "id": "nursing_tasks",
+            "title": "Nursing Tasks",
+            "icon": "task",
+            "route": "/app/healthcare/nurse/nursing-tasks"
+          },
+          {
+            "id": "task_history",
+            "title": "Task History",
+            "icon": "history",
+            "route": "/app/healthcare/nurse/task-history"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "patient",
+      "vital_signs",
+      "medication_administration",
+      "nursing_care_plan",
+      "nursing_task",
+      "patient_monitoring"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "prescription",
+      "lab_order",
+      "radiology_order",
+      "billing",
+      "accounting_entry"
+    ]
+  },
+  "reports": [
+    {
+      "id": "nursing_care_report",
+      "title": "Nursing Care Report",
+      "route": "/app/healthcare/nurse/reports/nursing-care"
+    },
+    {
+      "id": "medication_report",
+      "title": "Medication Report",
+      "route": "/app/healthcare/nurse/reports/medication"
+    }
+  ],
+  "notifications": [
+    "medication_due",
+    "vital_signs_due",
+    "patient_alert",
+    "task_assignment"
+  ]
+}

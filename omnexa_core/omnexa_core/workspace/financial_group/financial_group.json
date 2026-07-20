@@ -1,0 +1,90 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Finance Group\", \"col\": 12}}, {\"id\": \"fg-header\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Finance Group</b></span><br><span class=\\\"text-muted\\\">Use the sidebar to open each finance workspace. Start at <b>Finance Workcenter</b> for role-based portals.</span>\", \"col\": 12}}]",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "accounting",
+ "is_hidden": 0,
+ "label": "Finance Group",
+ "links": [
+  {
+   "hidden": 0,
+   "icon": "star",
+   "label": "Workcenter & Portals",
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "icon": "star",
+   "label": "Finance Workcenter",
+   "link_to": "finance-workcenter",
+   "link_type": "Page",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon": "setting",
+   "label": "Finance Control Center",
+   "link_to": "finance-control-center",
+   "link_type": "Page",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon": "bank",
+   "label": "Core Engines",
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "icon": "reports",
+   "label": "Bank Reconciliation Suggestions",
+   "link_to": "Bank Reconciliation Suggestions",
+   "link_type": "Report",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon": "reports",
+   "label": "Bank Balance Summary",
+   "link_to": "Bank Balance Summary",
+   "link_type": "Report",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon": "quality",
+   "label": "Finance Posting Rule",
+   "link_to": "Finance Posting Rule",
+   "link_type": "DocType",
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon": "tool",
+   "label": "Bank Statement Import",
+   "link_to": "Bank Statement Import",
+   "link_type": "DocType",
+   "type": "Link"
+  }
+ ],
+ "module": "Omnexa Core",
+ "name": "Finance Group",
+ "number_cards": [],
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 7.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "label": "Workcenter",
+   "link_to": "finance-workcenter",
+   "type": "Page"
+  }
+ ],
+ "title": "Finance Group"
+}

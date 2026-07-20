@@ -1,0 +1,261 @@
+{
+  "design_system": {
+    "typography": {
+      "font_family": "Inter, system-ui, sans-serif",
+      "font_sizes": {
+        "xs": "0.75rem",
+        "sm": "0.875rem",
+        "base": "1rem",
+        "lg": "1.125rem",
+        "xl": "1.25rem",
+        "2xl": "1.5rem",
+        "3xl": "1.875rem",
+        "4xl": "2.25rem"
+      },
+      "font_weights": {
+        "light": "300",
+        "normal": "400",
+        "medium": "500",
+        "semibold": "600",
+        "bold": "700"
+      },
+      "line_heights": {
+        "tight": "1.25",
+        "normal": "1.5",
+        "relaxed": "1.75"
+      }
+    },
+    "colors": {
+      "neutral": {
+        "50": "#FAFAFA",
+        "100": "#F5F5F5",
+        "200": "#EEEEEE",
+        "300": "#E0E0E0",
+        "400": "#BDBDBD",
+        "500": "#9E9E9E",
+        "600": "#757575",
+        "700": "#616161",
+        "800": "#424242",
+        "900": "#212121"
+      },
+      "success": {
+        "light": "#81C784",
+        "main": "#4CAF50",
+        "dark": "#388E3C"
+      },
+      "warning": {
+        "light": "#FFB74D",
+        "main": "#FF9800",
+        "dark": "#F57C00"
+      },
+      "error": {
+        "light": "#E57373",
+        "main": "#F44336",
+        "dark": "#D32F2F"
+      },
+      "info": {
+        "light": "#64B5F6",
+        "main": "#2196F3",
+        "dark": "#1976D2"
+      }
+    },
+    "spacing": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "1rem",
+      "lg": "1.5rem",
+      "xl": "2rem",
+      "2xl": "3rem",
+      "3xl": "4rem"
+    },
+    "border_radius": {
+      "sm": "0.25rem",
+      "md": "0.5rem",
+      "lg": "0.75rem",
+      "xl": "1rem",
+      "full": "9999px"
+    },
+    "shadows": {
+      "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+      "lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+      "xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+    },
+    "cards": {
+      "border_radius": "0.75rem",
+      "shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+      "padding": "1.5rem",
+      "background": "#FFFFFF",
+      "hover_shadow": "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
+    },
+    "buttons": {
+      "primary": {
+        "border_radius": "0.5rem",
+        "padding": "0.75rem 1.5rem",
+        "font_weight": "500",
+        "transition": "all 0.2s ease"
+      },
+      "secondary": {
+        "border_radius": "0.5rem",
+        "padding": "0.75rem 1.5rem",
+        "font_weight": "500",
+        "transition": "all 0.2s ease"
+      },
+      "icon": {
+        "border_radius": "50%",
+        "padding": "0.5rem",
+        "transition": "all 0.2s ease"
+      }
+    },
+    "tables": {
+      "border_radius": "0.5rem",
+      "header_background": "#F5F5F5",
+      "row_hover": "#FAFAFA",
+      "border_color": "#E0E0E0",
+      "cell_padding": "0.75rem 1rem"
+    },
+    "forms": {
+      "input_border_radius": "0.5rem",
+      "input_padding": "0.75rem 1rem",
+      "input_border_color": "#E0E0E0",
+      "input_focus_border_color": "#2196F3",
+      "input_focus_shadow": "0 0 0 3px rgba(33, 150, 243, 0.1)",
+      "label_font_weight": "500"
+    },
+    "navigation": {
+      "sidebar": {
+        "width": "280px",
+        "collapsed_width": "64px",
+        "item_height": "48px",
+        "item_padding": "0 1rem"
+      },
+      "navbar": {
+        "height": "64px",
+        "padding": "0 1.5rem"
+      },
+      "breadcrumb": {
+        "item_padding": "0.25rem 0.5rem"
+      }
+    },
+    "dashboard": {
+      "kpi_card": {
+        "padding": "1.5rem",
+        "border_radius": "0.75rem",
+        "shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+      },
+      "chart_card": {
+        "padding": "1.5rem",
+        "border_radius": "0.75rem",
+        "shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+        "height": "300px"
+      },
+      "widget_card": {
+        "padding": "1.25rem",
+        "border_radius": "0.5rem",
+        "shadow": "0 2px 4px -1px rgba(0, 0, 0, 0.1)"
+      }
+    },
+    "icons": {
+      "sizes": {
+        "xs": "16px",
+        "sm": "20px",
+        "md": "24px",
+        "lg": "32px",
+        "xl": "48px"
+      }
+    },
+    "animations": {
+      "duration": {
+        "fast": "150ms",
+        "normal": "300ms",
+        "slow": "500ms"
+      },
+      "easing": {
+        "ease_in": "cubic-bezier(0.4, 0, 1, 1)",
+        "ease_out": "cubic-bezier(0, 0, 0.2, 1)",
+        "ease_in_out": "cubic-bezier(0.4, 0, 0.2, 1)"
+      }
+    },
+    "breakpoints": {
+      "xs": "0px",
+      "sm": "640px",
+      "md": "768px",
+      "lg": "1024px",
+      "xl": "1280px",
+      "2xl": "1536px"
+    },
+    "grid": {
+      "columns": 12,
+      "gutter": "1.5rem",
+      "max_width": "1400px"
+    }
+  },
+  "themes": {
+    "healthcare": {
+      "primary": "#2196F3",
+      "secondary": "#1976D2",
+      "accent": "#FF4081",
+      "background": "#FAFAFA",
+      "surface": "#FFFFFF"
+    },
+    "education": {
+      "primary": "#4CAF50",
+      "secondary": "#388E3C",
+      "accent": "#FFC107",
+      "background": "#FAFAFA",
+      "surface": "#FFFFFF"
+    },
+    "commerce": {
+      "primary": "#9C27B0",
+      "secondary": "#7B1FA2",
+      "accent": "#FF9800",
+      "background": "#FAFAFA",
+      "surface": "#FFFFFF"
+    }
+  },
+  "components": {
+    "modal": {
+      "border_radius": "0.75rem",
+      "padding": "1.5rem",
+      "max_width": "600px",
+      "shadow": "0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+    },
+    "tooltip": {
+      "border_radius": "0.25rem",
+      "padding": "0.5rem 0.75rem",
+      "font_size": "0.875rem",
+      "shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+    },
+    "dropdown": {
+      "border_radius": "0.5rem",
+      "padding": "0.5rem",
+      "shadow": "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+      "min_width": "200px"
+    },
+    "badge": {
+      "border_radius": "9999px",
+      "padding": "0.25rem 0.75rem",
+      "font_size": "0.75rem",
+      "font_weight": "500"
+    },
+    "avatar": {
+      "border_radius": "50%",
+      "sizes": {
+        "xs": "24px",
+        "sm": "32px",
+        "md": "40px",
+        "lg": "48px",
+        "xl": "64px"
+      }
+    },
+    "progress": {
+      "height": "8px",
+      "border_radius": "9999px"
+    },
+    "skeleton": {
+      "border_radius": "0.5rem",
+      "background": "#E0E0E0",
+      "animation": "pulse"
+    }
+  }
+}

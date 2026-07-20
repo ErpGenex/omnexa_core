@@ -1,0 +1,76 @@
+/*
+Classic form tabs styling (like older Frappe UI).
+Scoped to form layout to avoid affecting other tab systems.
+*/
+
+.layout-main-section .form-tabs .nav-tabs,
+.layout-main-section .nav.nav-tabs {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+  gap: 0;
+}
+
+.layout-main-section .form-tabs .nav-tabs .nav-item,
+.layout-main-section .nav.nav-tabs .nav-item {
+  margin-bottom: -1px;
+}
+
+.layout-main-section .form-tabs .nav-tabs .nav-link,
+.layout-main-section .nav.nav-tabs .nav-link {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  padding: 10px 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.layout-main-section .form-tabs .nav-tabs .nav-link:hover,
+.layout-main-section .nav.nav-tabs .nav-link:hover {
+  color: #0f172a;
+  background: transparent;
+}
+
+.layout-main-section .form-tabs .nav-tabs .nav-link.active,
+.layout-main-section .nav.nav-tabs .nav-link.active {
+  color: #0f172a;
+  background: transparent;
+  border-bottom-color: var(--primary, #2563eb);
+}
+
+/* Company → Demo data tab: inline seed action buttons */
+.erpgenex-demo-action-panel {
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  background: var(--card-bg, #f8fafc);
+}
+
+.erpgenex-demo-group + .erpgenex-demo-group {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(15, 23, 42, 0.12);
+}
+
+.erpgenex-demo-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.erpgenex-demo-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.erpgenex-demo-btn {
+  white-space: normal;
+  text-align: start;
+  max-width: 100%;
+}
+

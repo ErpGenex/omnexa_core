@@ -1,0 +1,212 @@
+{
+  "role_id": "education_library",
+  "role_name": "Library",
+  "application": "education",
+  "portal": "education_library",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "books_issued",
+        "title": "Books Issued",
+        "value": "count",
+        "source": "book_issue",
+        "filter": "today"
+      },
+      {
+        "id": "books_returned",
+        "title": "Books Returned",
+        "value": "count",
+        "source": "book_return",
+        "filter": "today"
+      },
+      {
+        "id": "overdue_books",
+        "title": "Overdue Books",
+        "value": "count",
+        "source": "book_issue",
+        "filter": "overdue"
+      },
+      {
+        "id": "new_books",
+        "title": "New Books",
+        "value": "count",
+        "source": "book",
+        "filter": "this_month"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "issue_book",
+        "title": "Issue Book",
+        "action": "create",
+        "doctype": "book_issue"
+      },
+      {
+        "id": "return_book",
+        "title": "Return Book",
+        "action": "update",
+        "doctype": "book_return"
+      },
+      {
+        "id": "add_book",
+        "title": "Add Book",
+        "action": "create",
+        "doctype": "book"
+      },
+      {
+        "id": "search_books",
+        "title": "Search Books",
+        "action": "read",
+        "doctype": "book"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_returns",
+        "title": "Pending Returns",
+        "type": "list",
+        "source": "book_issue"
+      },
+      {
+        "id": "new_arrivals",
+        "title": "New Arrivals",
+        "type": "list",
+        "source": "book"
+      },
+      {
+        "id": "popular_books",
+        "title": "Popular Books",
+        "type": "list",
+        "source": "book"
+      }
+    ],
+    "charts": [
+      {
+        "id": "issue_trend",
+        "title": "Issue Trend",
+        "type": "line",
+        "source": "book_issue"
+      },
+      {
+        "id": "category_distribution",
+        "title": "Category Distribution",
+        "type": "pie",
+        "source": "book"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Books",
+        "items": [
+          {
+            "id": "book_catalog",
+            "title": "Book Catalog",
+            "icon": "menu_book",
+            "route": "/app/education/library/book-catalog"
+          },
+          {
+            "id": "book_search",
+            "title": "Book Search",
+            "icon": "search",
+            "route": "/app/education/library/book-search"
+          }
+        ]
+      },
+      {
+        "title": "Circulation",
+        "items": [
+          {
+            "id": "issue_book",
+            "title": "Issue Book",
+            "icon": "bookmark",
+            "route": "/app/education/library/issue-book"
+          },
+          {
+            "id": "return_book",
+            "title": "Return Book",
+            "icon": "bookmark_border",
+            "route": "/app/education/library/return-book"
+          },
+          {
+            "id": "renew_book",
+            "title": "Renew Book",
+            "icon": "autorenew",
+            "route": "/app/education/library/renew-book"
+          }
+        ]
+      },
+      {
+        "title": "Management",
+        "items": [
+          {
+            "id": "book_management",
+            "title": "Book Management",
+            "icon": "library_books",
+            "route": "/app/education/library/book-management"
+          },
+          {
+            "id": "member_management",
+            "title": "Member Management",
+            "icon": "people",
+            "route": "/app/education/library/member-management"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "circulation_report",
+            "title": "Circulation Report",
+            "icon": "assessment",
+            "route": "/app/education/library/reports/circulation"
+          },
+          {
+            "id": "inventory_report",
+            "title": "Inventory Report",
+            "icon": "inventory",
+            "route": "/app/education/library/reports/inventory"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "book",
+      "book_issue",
+      "book_return",
+      "library_member"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "student_records",
+      "academic_records",
+      "financial_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "circulation_report",
+      "title": "Circulation Report",
+      "route": "/app/education/library/reports/circulation"
+    },
+    {
+      "id": "inventory_report",
+      "title": "Inventory Report",
+      "route": "/app/education/library/reports/inventory"
+    }
+  ],
+  "notifications": [
+    "book_due",
+    "book_overdue",
+    "new_book_added",
+    "reservation_available"
+  ]
+}

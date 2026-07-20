@@ -1,0 +1,1665 @@
+frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
+	if (!document.getElementById("erpgenex-marketplace-compact-style")) {
+		const style = document.createElement("style");
+		style.id = "erpgenex-marketplace-compact-style";
+		style.textContent = `
+			.erpgenex-marketplace .table {
+				font-size: 12px;
+				table-layout: fixed;
+			}
+			.erpgenex-marketplace .table th,
+			.erpgenex-marketplace .table td {
+				padding: 0.3rem 0.35rem;
+				vertical-align: top;
+				word-break: break-word;
+			}
+			.erpgenex-marketplace .table th:nth-child(1),
+			.erpgenex-marketplace .table td:nth-child(1) { width: 28px; }
+			.erpgenex-marketplace .table th:nth-child(2),
+			.erpgenex-marketplace .table td:nth-child(2) { width: 36px; }
+			.erpgenex-marketplace .table th:nth-child(3),
+			.erpgenex-marketplace .table td:nth-child(3) { width: 170px; }
+			.erpgenex-marketplace .table th:nth-child(4),
+			.erpgenex-marketplace .table td:nth-child(4) { width: 120px; }
+			.erpgenex-marketplace .table th:nth-child(5),
+			.erpgenex-marketplace .table td:nth-child(5) { width: 96px; }
+			.erpgenex-marketplace .table th:nth-child(6),
+			.erpgenex-marketplace .table td:nth-child(6) { width: 72px; }
+			.erpgenex-marketplace .table th:nth-child(7),
+			.erpgenex-marketplace .table td:nth-child(7) { width: 86px; }
+			.erpgenex-marketplace .table th:nth-child(8),
+			.erpgenex-marketplace .table td:nth-child(8) { width: 56px; }
+			.erpgenex-marketplace .table th:nth-child(9),
+			.erpgenex-marketplace .table td:nth-child(9) { width: 68px; }
+			.erpgenex-marketplace .table th:nth-child(10),
+			.erpgenex-marketplace .table td:nth-child(10) { width: 120px; }
+			.erpgenex-marketplace .table th:nth-child(11),
+			.erpgenex-marketplace .table td:nth-child(11) { width: 62px; }
+			.erpgenex-marketplace .table th:nth-child(12),
+			.erpgenex-marketplace .table td:nth-child(12) { width: 106px; }
+			.erpgenex-marketplace [data-section="bulk-bar"] {
+				border: 1px solid var(--border-color, #dee2e6);
+				border-radius: 6px;
+				background: var(--fg-color, #fff);
+			}
+			.erpgenex-marketplace .btn.btn-sm {
+				padding: 0.12rem 0.35rem;
+				font-size: 11px;
+				line-height: 1.2;
+			}
+		`;
+		document.head.appendChild(style);
+	}
+
+	const page = frappe.ui.make_app_page({
+		parent: wrapper,
+		title: __("ErpGenEx Marketplace"),
+		single_column: true,
+	});
+
+	const $container = $(`
+		<div class="erpgenex-marketplace">
+			<div class="mb-2" data-section="update-banner"></div>
+			<div class="card mb-3 d-none" data-section="activity-scope">
+				<div class="card-body py-2">
+					<div class="row g-2 align-items-end">
+						<div class="col-lg-5">
+							<label class="form-label small mb-1">${__("Site business activity")}</label>
+							<select class="form-select form-select-sm" data-scope-activity></select>
+							<div class="form-text">${__(
+								"Keeps platform apps (Core, Accounting, Theme, Backup, HR…) plus apps matching this activity. Removes other verticals from this site."
+							)}</div>
+						</div>
+						<div class="col-lg-4 d-flex flex-wrap gap-2">
+							<button type="button" class="btn btn-sm btn-outline-primary" data-action="scope-preview">${__(
+								"Preview changes"
+							)}</button>
+							<button type="button" class="btn btn-sm btn-danger" data-action="scope-apply">${__(
+								"Apply activity scope"
+							)}</button>
+						</div>
+						<div class="col-lg-3 small text-muted" data-scope-summary></div>
+					</div>
+				</div>
+			</div>
+			<div class="mb-3 text-muted" data-section="meta"></div>
+			<div class="row g-2 mb-2" data-section="filters">
+				<div class="col-md-5">
+					<input type="text" class="form-control form-control-sm" data-filter="search" placeholder="${__("Search by title, description, slug, or version")}">
+				</div>
+				<div class="col-md-2">
+					<select class="form-select form-select-sm" data-filter="activity">
+						<option value="">${__("All Activities")}</option>
+					</select>
+				</div>
+				<div class="col-md-2">
+					<input type="text" class="form-control form-control-sm" data-filter="version" placeholder="${__("Version")}">
+				</div>
+				<div class="col-md-3">
+					<button class="btn btn-sm btn-light w-100" data-action="reset-filters">${__("Reset")}</button>
+				</div>
+			</div>
+			<div class="d-none mb-2 p-2 d-flex flex-wrap align-items-center gap-2" data-section="bulk-bar">
+				<span class="small fw-bold" data-bulk-count></span>
+				<select class="form-select form-select-sm" data-action="group-select" style="width:auto;min-width:11rem;max-width:14rem" title="${__("App group")}">
+					<option value="">${__("App group…")}</option>
+				</select>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="bulk-select-group" title="${__("Select all installed apps in the chosen group")}">${__("Select group")}</button>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="group-hide-desk" title="${__("Hide installed group apps from Desk sidebar")}">${__("Hide group")}</button>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="group-show-desk" title="${__("Show group apps on Desk again")}">${__("Show group")}</button>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="bulk-select-visible">${__("Select visible uninstallable")}</button>
+				<button type="button" class="btn btn-sm btn-light" data-action="bulk-clear">${__("Clear selection")}</button>
+				<button type="button" class="btn btn-sm btn-outline-primary" data-action="bulk-preview">${__("Preview uninstall")}</button>
+				<button type="button" class="btn btn-sm btn-danger" data-action="bulk-uninstall">${__("Uninstall selected")}</button>
+			</div>
+			<div class="mb-2 small text-muted" data-section="sort-hint">${__("Sort: click a column title (toggle ascending / descending).")}</div>
+			<div class="row g-2 mb-3" data-section="filters-dates">
+				<div class="col-md-3">
+					<input type="date" class="form-control form-control-sm" data-filter="updated_from" title="${__("Updated from")}">
+				</div>
+				<div class="col-md-3">
+					<input type="date" class="form-control form-control-sm" data-filter="updated_to" title="${__("Updated to")}">
+				</div>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-sm table-hover">
+					<thead>
+						<tr>
+							<th class="text-center" title="${__("Select for bulk uninstall")}">
+								<input type="checkbox" class="form-check-input m-0" data-action="bulk-select-all" aria-label="${__("Select all visible")}">
+							</th>
+							<th>${__("Icon")}</th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="title" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("App")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="description" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Description")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="activity" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Activity")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="version" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Version")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="updated" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Updated")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="type" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Type")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="installed" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Install")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="license" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("License Status")}<span class="sort-indicator text-primary"></span></th>
+							<th class="marketplace-sort-th user-select-none" data-sort-col="expires" role="button" tabindex="0" title="${__("Sort")}" style="cursor:pointer">${__("Expires")}<span class="sort-indicator text-primary"></span></th>
+							<th>${__("Actions")}</th>
+						</tr>
+					</thead>
+					<tbody data-section="rows">
+						<tr><td colspan="12" class="text-muted">${__("Loading...")}</td></tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	`);
+	$(page.body).append($container);
+	if (!frappe.user.has_role("System Manager")) {
+		$container.find('[data-action="bulk-select-all"]').closest("th").addClass("d-none");
+		$container.find('[data-section="bulk-bar"]').remove();
+	}
+	let allItems = [];
+	let lastTrialDays = 7;
+	let sortColumn = "title";
+	let sortDir = "asc";
+	let catalogAutoRefreshTimer = null;
+	let lastScopePlan = null;
+	const selectedSlugs = new Set();
+	const bulkUninstallEnabled = frappe.user.has_role("System Manager");
+	let uninstallGroups = [];
+
+	function ensureMarketplaceSession() {
+		if (!frappe.session || frappe.session.user === "Guest") {
+			frappe.msgprint({
+				title: __("Session refreshed"),
+				indicator: "blue",
+				message: __("Reloading Desk to restore your session after app changes."),
+			});
+			window.location.reload();
+			return false;
+		}
+		return true;
+	}
+
+	function getSelectedGroupKey() {
+		return String($container.find('[data-action="group-select"]').val() || "").trim();
+	}
+
+	function renderUninstallGroupSelect() {
+		const $sel = $container.find('[data-action="group-select"]');
+		if (!$sel.length) return;
+		const current = getSelectedGroupKey();
+		const options = [`<option value="">${frappe.utils.escape_html(__("App group…"))}</option>`];
+		(uninstallGroups || []).forEach((g) => {
+			const label = frappe.utils.escape_html(g.label || g.key);
+			const count = Number(g.installed_count) || 0;
+			const suffix = count ? ` (${count})` : "";
+			options.push(
+				`<option value="${frappe.utils.escape_html(g.key)}">${label}${frappe.utils.escape_html(suffix)}</option>`
+			);
+		});
+		$sel.html(options.join(""));
+		if (current && uninstallGroups.some((g) => g.key === current)) {
+			$sel.val(current);
+		}
+	}
+
+	async function loadUninstallGroups() {
+		if (!bulkUninstallEnabled) return;
+		try {
+			const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_uninstall_groups");
+			uninstallGroups = ((r && r.message) || {}).groups || [];
+			renderUninstallGroupSelect();
+		} catch (e) {
+			uninstallGroups = [];
+		}
+	}
+
+	function selectGroupApps(groupKey, { uninstallableOnly = true } = {}) {
+		const group = (uninstallGroups || []).find((g) => g.key === groupKey);
+		if (!group) {
+			frappe.msgprint(__("Choose an app group first."));
+			return 0;
+		}
+		const slugs = uninstallableOnly ? group.uninstallable || [] : group.installed || [];
+		if (!slugs.length) {
+			frappe.msgprint(__("No installed apps in this group to select."));
+			return 0;
+		}
+		slugs.forEach((slug) => selectedSlugs.add(String(slug)));
+		applyFiltersAndRender();
+		return slugs.length;
+	}
+
+	async function onBulkSelectGroup() {
+		const key = getSelectedGroupKey();
+		if (!key) {
+			frappe.msgprint(__("Choose an app group from the list first."));
+			return;
+		}
+		const n = selectGroupApps(key, { uninstallableOnly: true });
+		if (n) {
+			frappe.show_alert({ message: __("Selected {0} app(s) from group", [String(n)]), indicator: "green" });
+		}
+	}
+
+	async function onGroupDeskVisibility(hidden) {
+		const key = getSelectedGroupKey();
+		if (!key) {
+			frappe.msgprint(__("Choose an app group from the list first."));
+			return;
+		}
+		const group = (uninstallGroups || []).find((g) => g.key === key);
+		const label = (group && group.label) || key;
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				hidden
+					? __("<b>Hide {0} from Desk sidebar?</b><br>Apps stay installed; only the launcher and workspaces are hidden.", [
+							frappe.utils.escape_html(label),
+					  ])
+					: __("<b>Show {0} on Desk again?</b>", [frappe.utils.escape_html(label)]),
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) return;
+		const r = await frappe.call({
+			method: "omnexa_core.omnexa_core.app_visibility.set_group_desk_visibility",
+			args: { group_key: key, hidden: hidden ? 1 : 0 },
+		});
+		const result = (r && r.message) || {};
+		frappe.show_alert({
+			message: hidden
+				? __("Group hidden from Desk: {0}", [label])
+				: __("Group shown on Desk: {0}", [label]),
+			indicator: "green",
+		});
+		if (result.desk_hidden_apps) {
+			allItems.forEach((item) => {
+				item.desk_hidden = result.desk_hidden_apps.includes(item.app_slug);
+			});
+			applyFiltersAndRender();
+		} else {
+			await loadCatalog();
+		}
+	}
+
+	async function onGroupUninstallPreview() {
+		const key = getSelectedGroupKey();
+		if (!key) {
+			frappe.msgprint(__("Choose an app group from the list first."));
+			return;
+		}
+		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_group_uninstall_plan", {
+			group_key: key,
+		});
+		const plan = (r && r.message) || {};
+		frappe.msgprint({
+			title: __("Group uninstall preview"),
+			indicator: plan.can_uninstall ? "blue" : "orange",
+			message: bulkPlanSummaryHtml(plan),
+		});
+	}
+
+	/** Paid marketplace row (server: not in FREE_APPS — includes erpgenex_* verticals). */
+	function isPaidCatalogItem(item) {
+		return Boolean(item && !item.is_free);
+	}
+
+	/** License or developer bypass accepted — hide Buy / Activate; allow Install from public repo. */
+	function is_license_gate_passed(status) {
+		return [
+			"licensed",
+			"licensed_free",
+			"licensed_dev_override",
+			"licensed_bundle",
+			"trial",
+			"licensed_grace",
+			"trial_grace",
+		].includes(String(status || ""));
+	}
+
+	/** Shown while install/uninstall API runs (server does not stream real %). */
+	function startMarketplaceProgress(title, description) {
+		frappe.show_progress(title, 0, 100, description, false);
+		let pseudo = 0;
+		const interval = setInterval(() => {
+			pseudo = Math.min(pseudo + (pseudo < 45 ? 4 : pseudo < 80 ? 2 : 1), 92);
+			frappe.show_progress(title, pseudo, 100, description, false);
+		}, 400);
+		return () => clearInterval(interval);
+	}
+
+	async function completeMarketplaceProgress(title) {
+		frappe.show_progress(title, 100, 100, __("Completed"), true);
+		await new Promise((resolve) => setTimeout(resolve, 550));
+	}
+
+	function renderUpdateBanner(items) {
+		const $b = $container.find('[data-section="update-banner"]');
+		const stale = (items || []).filter((x) => x.update_available);
+		if (!stale.length) {
+			$b.empty();
+			return;
+		}
+		const names = stale
+			.map((i) => frappe.utils.escape_html(String(i.title || i.app_slug || "")))
+			.slice(0, 12)
+			.join(", ");
+		const more = stale.length > 12 ? ` (+${stale.length - 12})` : "";
+		$b.html(
+			`<div class="alert alert-info alert-dismissible fade show mb-0" role="alert">
+				<strong>${frappe.utils.escape_html(__("Updates available"))}</strong>
+				<div class="small mt-1">${frappe.utils.escape_html(
+					__(
+						"The catalog checks Git in the background. When you are ready, use Update on a row and choose branch or tag."
+					)
+				)}</div>
+				<div class="small font-monospace mt-1">${names}${frappe.utils.escape_html(more)}</div>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="${frappe.utils.escape_html(
+					__("Close")
+				)}"></button>
+			</div>`
+		);
+	}
+
+	function scheduleCatalogAutoRefresh(ms) {
+		let n = Number(ms);
+		if (!Number.isFinite(n) || n < 60000) {
+			n = 600000;
+		}
+		if (catalogAutoRefreshTimer) {
+			clearInterval(catalogAutoRefreshTimer);
+			catalogAutoRefreshTimer = null;
+		}
+		catalogAutoRefreshTimer = setInterval(function () {
+			loadCatalog();
+		}, n);
+	}
+
+	function pickUpdateTargetRef(plan, appSlug) {
+		return new Promise((resolve) => {
+			const refs = plan.update_refs || [];
+			if (!refs.length) {
+				resolve("");
+				return;
+			}
+			const gm = plan.git_meta || {};
+			const shaLine =
+				gm.local_sha && gm.remote_sha
+					? `<div class="small text-muted">${frappe.utils.escape_html(__("Local git"))}: <code>${frappe.utils.escape_html(
+							gm.local_sha
+					  )}</code> → ${frappe.utils.escape_html(__("Remote"))}: <code>${frappe.utils.escape_html(
+							gm.remote_sha
+					  )}</code></div>`
+					: "";
+			const d = new frappe.ui.Dialog({
+				title: __("Update {0}", [appSlug]),
+				fields: [
+					{
+						fieldname: "hint",
+						fieldtype: "HTML",
+						options:
+							`<p class="small"><b>${frappe.utils.escape_html(__("Repo"))}:</b> ${frappe.utils.escape_html(
+								plan.repo_url || ""
+							)}<br>` +
+							`<b>${frappe.utils.escape_html(__("App version"))}:</b> ${frappe.utils.escape_html(
+								plan.current_version || "N/A"
+							)}</p>` +
+							shaLine +
+							`<p class="text-muted small mt-2">${frappe.utils.escape_html(plan.warning || "")}</p>`,
+					},
+					{
+						fieldname: "target_ref",
+						fieldtype: "Select",
+						label: __("Version / branch"),
+						options: refs.map((r) => r.label).join("\n"),
+						default: refs[0].label,
+						reqd: 1,
+					},
+				],
+				primary_action_label: __("Continue"),
+				primary_action() {
+					const label = d.get_value("target_ref");
+					const picked = refs.find((r) => r.label === label);
+					d.hide();
+					resolve(picked ? picked.value : "");
+				},
+				secondary_action_label: __("Cancel"),
+				secondary_action() {
+					d.hide();
+					resolve(null);
+				},
+			});
+			d.show();
+		});
+	}
+
+	function canBulkSelect(item) {
+		return bulkUninstallEnabled && item.is_installed && item.uninstall_allowed !== false;
+	}
+
+	function updateBulkBar() {
+		const $bar = $container.find('[data-section="bulk-bar"]');
+		if (!bulkUninstallEnabled) {
+			$bar.addClass("d-none");
+			return;
+		}
+		const n = selectedSlugs.size;
+		if (!n) {
+			$bar.addClass("d-none");
+			$bar.find("[data-bulk-count]").text("");
+			return;
+		}
+		$bar.removeClass("d-none");
+		$bar.find("[data-bulk-count]").text(__("{0} app(s) selected", [String(n)]));
+	}
+
+	function syncBulkSelectAllCheckbox(visibleRows) {
+		const selectable = (visibleRows || []).filter(canBulkSelect);
+		const allSelected =
+			selectable.length > 0 && selectable.every((item) => selectedSlugs.has(String(item.app_slug || "")));
+		$container.find('[data-action="bulk-select-all"]').prop("checked", allSelected);
+	}
+
+	function renderRow(item) {
+		const status = frappe.utils.escape_html(item.license_status || "");
+		const title = frappe.utils.escape_html(item.title || item.app_slug);
+		const appSlug = frappe.utils.escape_html(item.app_slug);
+		const slugRaw = String(item.app_slug || "");
+		const bulkChecked = selectedSlugs.has(slugRaw) ? "checked" : "";
+		const bulkCell = canBulkSelect(item)
+			? `<input type="checkbox" class="form-check-input m-0" data-action="bulk-row-select" data-app="${appSlug}" ${bulkChecked} aria-label="${__(
+					"Select {0}",
+					[title]
+			  )}">`
+			: "";
+		const shortDesc = frappe.utils.escape_html(item.short_description || "");
+		const activity = frappe.utils.escape_html(item.activity || "General");
+		let versionHtml = frappe.utils.escape_html(item.current_version || "N/A");
+		if (item.update_available) {
+			versionHtml += ` <span class="badge bg-info-subtle text-info ms-1" title="${frappe.utils.escape_html(
+				__("New commits on remote — open Update to choose a version")
+			)}">${__("Update available")}</span>`;
+		}
+		const updated = frappe.utils.escape_html(formatDate(item.updated_at));
+		const expires = item.is_free
+			? frappe.utils.escape_html(__("Forever"))
+			: frappe.utils.escape_html(formatDate(item.license_expires_on));
+		const expiresSrc = frappe.utils.escape_html(item.license_expiry_source || "");
+		const type = item.is_free ? __("Free") : isPaidCatalogItem(item) ? __("Paid") : __("Repo");
+		const iconUrl = frappe.utils.escape_html(item.icon_url || "/assets/frappe/images/frappe-framework-logo.svg");
+		const installState = item.is_installed ? __("Installed") : __("Not Installed");
+		const outOfScope = item.is_installed && item.matches_company_activity === false;
+		const installBadge = item.is_installed
+			? `<span class="badge bg-success-subtle text-success">${installState}</span>${
+					item.desk_hidden
+						? ` <span class="badge bg-secondary-subtle text-secondary" title="${__("Hidden from Desk apps launcher")}">${__(
+								"Hidden"
+						  )}</span>`
+						: ""
+			  }${
+					outOfScope
+						? ` <span class="badge bg-warning-subtle text-warning" title="${__("Not shown on Desk — outside your company business activity")}">${__(
+								"Out of scope"
+						  )}</span>`
+						: ""
+			  }`
+			: `<span class="badge bg-warning-subtle text-warning">${installState}</span>`;
+		const gate = is_license_gate_passed(item.license_status);
+		const actions = [];
+		// Public repos: anyone with server access can install once license gate passes (free apps always pass when licensed_free).
+		if (item.is_free || gate) {
+			if (item.is_installed) {
+				actions.push(
+					`<button class="btn btn-sm btn-outline-primary me-2" data-action="update" data-app="${appSlug}">${__("Update")}</button>`
+				);
+			} else {
+				actions.push(
+					`<button class="btn btn-sm btn-outline-primary me-2" data-action="install" data-app="${appSlug}">${__("Install")}</button>`
+				);
+			}
+		}
+		if (String(item.app_slug || "") === "omnexa_core" && item.is_installed) {
+			actions.push(
+				`<span class="small text-muted me-2 align-middle" title="${__("Hosts ErpGenEx Marketplace — use Update only")}">${__(
+					"Platform core (update only)"
+				)}</span>`
+			);
+		}
+		if (frappe.user.has_role("System Manager") && item.is_installed && item.uninstall_allowed !== false) {
+			actions.push(
+				`<button class="btn btn-sm btn-outline-danger me-2" data-action="uninstall" data-app="${appSlug}">${__("Uninstall")}</button>`
+			);
+		}
+		if (frappe.user.has_role("System Manager") && item.is_installed && !["frappe", "omnexa_core"].includes(item.app_slug)) {
+			if (item.desk_hidden) {
+				actions.push(
+					`<button class="btn btn-sm btn-outline-secondary me-2" data-action="show-desk" data-app="${appSlug}">${__("Show on Desk")}</button>`
+				);
+			} else {
+				actions.push(
+					`<button class="btn btn-sm btn-outline-secondary me-2" data-action="hide-desk" data-app="${appSlug}">${__("Hide from Desk")}</button>`
+				);
+			}
+		}
+		if (isPaidCatalogItem(item) && !gate) {
+			actions.push(
+				`<button class="btn btn-sm btn-primary me-2" data-action="buy" data-app="${appSlug}">${__("Buy")}</button>`
+			);
+		}
+		if (isPaidCatalogItem(item) && !gate) {
+			actions.push(
+				`<button class="btn btn-sm btn-secondary" data-action="activate" data-app="${appSlug}">${__("Activate Key")}</button>`
+			);
+		}
+		return `
+			<tr data-app="${appSlug}">
+				<td class="text-center">${bulkCell}</td>
+				<td><img src="${iconUrl}" style="width:24px;height:24px;object-fit:contain;" alt="${title}"/></td>
+				<td><strong>${title}</strong><div class="text-muted small font-monospace">${appSlug}</div></td>
+				<td class="small text-muted" style="max-width:22rem;">${shortDesc || "—"}</td>
+				<td>${activity}</td>
+				<td>${versionHtml}</td>
+				<td>${updated}</td>
+				<td>${type}</td>
+				<td>${installBadge}</td>
+				<td>${status}${expires !== "N/A" ? `<div class="small text-muted">${__("Expires")}: ${expires}${expiresSrc ? ` (${expiresSrc})` : ""}</div>` : ""}</td>
+				<td>${expires}</td>
+				<td>${actions.join("")}</td>
+			</tr>`;
+	}
+
+	function formatDate(value) {
+		if (!value) return "N/A";
+		const d = new Date(value);
+		if (Number.isNaN(d.getTime())) return "N/A";
+		return frappe.datetime.str_to_user(d.toISOString().slice(0, 10));
+	}
+
+	function updateActivityFilterOptions(items) {
+		const $activity = $container.find('[data-filter="activity"]');
+		const selected = $activity.val() || "";
+		const activities = Array.from(
+			new Set((items || []).map((x) => String(x.activity || "General").trim()).filter(Boolean))
+		).sort();
+		$activity.empty();
+		$activity.append(`<option value="">${__("All Activities")}</option>`);
+		activities.forEach((a) => $activity.append(`<option value="${frappe.utils.escape_html(a)}">${frappe.utils.escape_html(a)}</option>`));
+		if (selected && activities.includes(selected)) $activity.val(selected);
+	}
+
+	function parseUpdatedTs(item) {
+		const v = item.updated_at;
+		if (!v) return 0;
+		const t = new Date(v).getTime();
+		return Number.isNaN(t) ? 0 : t;
+	}
+
+	function typeRank(item) {
+		if (item.is_free) {
+			return 0;
+		}
+		if (isPaidCatalogItem(item)) {
+			return 1;
+		}
+		return 2;
+	}
+
+	function titleCmp(a, b) {
+		return String(a.title || a.app_slug || "").localeCompare(String(b.title || b.app_slug || ""), undefined, {
+			sensitivity: "base",
+		});
+	}
+
+	function sortFilteredRows(rows) {
+		const list = [...(rows || [])];
+		const desc = sortDir === "desc";
+		const verCmp = (a, b) =>
+			String(a.current_version || "").localeCompare(String(b.current_version || ""), undefined, {
+				numeric: true,
+			});
+		const licCmp = (a, b) =>
+			String(a.license_status || "").localeCompare(String(b.license_status || ""), undefined, {
+				sensitivity: "base",
+			});
+		const expCmp = (a, b) =>
+			String(a.license_expires_on || "").localeCompare(String(b.license_expires_on || ""), undefined, {
+				sensitivity: "base",
+			});
+		const descCmp = (a, b) =>
+			String(a.short_description || "").localeCompare(String(b.short_description || ""), undefined, {
+				sensitivity: "base",
+			});
+		const col = sortColumn || "title";
+
+		list.sort((a, b) => {
+			let c = 0;
+			if (col === "title") {
+				c = titleCmp(a, b);
+			} else if (col === "description") {
+				c = descCmp(a, b);
+			} else if (col === "activity") {
+				c = String(a.activity || "").localeCompare(String(b.activity || ""), undefined, { sensitivity: "base" });
+			} else if (col === "version") {
+				c = verCmp(a, b);
+			} else if (col === "updated") {
+				c = parseUpdatedTs(a) - parseUpdatedTs(b);
+			} else if (col === "type") {
+				c = typeRank(a) - typeRank(b);
+			} else if (col === "installed") {
+				c = Number(!!a.is_installed) - Number(!!b.is_installed);
+			} else if (col === "license") {
+				c = licCmp(a, b);
+			} else if (col === "expires") {
+				c = expCmp(a, b);
+			} else {
+				c = titleCmp(a, b);
+			}
+			if (c === 0) {
+				c = titleCmp(a, b);
+			}
+			if (desc) {
+				c = -c;
+			}
+			return c;
+		});
+		return list;
+	}
+
+	function updateSortColumnIndicators() {
+		const arrow = sortDir === "asc" ? " \u25b2" : " \u25bc";
+		$container.find(".marketplace-sort-th").each(function () {
+			const col = $(this).attr("data-sort-col");
+			const $ind = $(this).find(".sort-indicator");
+			if (col === sortColumn) {
+				$ind.text(arrow);
+			} else {
+				$ind.text("");
+			}
+		});
+	}
+
+	function applyFiltersAndRender() {
+		const q = String($container.find('[data-filter="search"]').val() || "").trim().toLowerCase();
+		const activity = String($container.find('[data-filter="activity"]').val() || "").trim();
+		const version = String($container.find('[data-filter="version"]').val() || "").trim().toLowerCase();
+		const from = String($container.find('[data-filter="updated_from"]').val() || "").trim();
+		const to = String($container.find('[data-filter="updated_to"]').val() || "").trim();
+
+		const filtered = (allItems || []).filter((item) => {
+			const haystack = `${item.title || ""} ${item.app_slug || ""} ${item.short_description || ""} ${item.current_version || ""}`.toLowerCase();
+			if (q && !haystack.includes(q)) return false;
+			if (activity && String(item.activity || "General").trim() !== activity) return false;
+			if (version && !String(item.current_version || "").toLowerCase().includes(version)) return false;
+			const day = item.updated_at ? String(item.updated_at).slice(0, 10) : "";
+			if (from && (!day || day < from)) return false;
+			if (to && (!day || day > to)) return false;
+			return true;
+		});
+
+		const rows = sortFilteredRows(filtered);
+
+		if (!rows.length) {
+			$container.find('[data-section="rows"]').html(`<tr><td colspan="12" class="text-muted">${__("No apps match current filters.")}</td></tr>`);
+			updateSortColumnIndicators();
+			syncBulkSelectAllCheckbox([]);
+			updateBulkBar();
+			return;
+		}
+		$container.find('[data-section="rows"]').html(rows.map(renderRow).join(""));
+		updateSortColumnIndicators();
+		syncBulkSelectAllCheckbox(rows);
+		updateBulkBar();
+	}
+
+	function mergeItemsBySlug(baseItems, freshItems) {
+		const freshMap = new Map((freshItems || []).map((x) => [String(x.app_slug || ""), x]));
+		return (baseItems || []).map((row) => {
+			const slug = String(row.app_slug || "");
+			const fresher = freshMap.get(slug);
+			return fresher ? { ...row, ...fresher } : row;
+		});
+	}
+
+	async function refreshUpdateStatusInBackground() {
+		try {
+			const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_marketplace_catalog", {
+				with_git_meta: 1,
+			});
+			const payload = (r && r.message) || {};
+			const freshItems = payload.items || [];
+			if (!freshItems.length) return;
+			allItems = mergeItemsBySlug(allItems, freshItems);
+			renderUpdateBanner(allItems);
+			applyFiltersAndRender();
+		} catch (e) {
+			// Keep initial fast catalog on screen; background update checks are best-effort.
+		}
+	}
+
+	async function initActivityScopePanel(payload) {
+		const $panel = $container.find('[data-section="activity-scope"]');
+		if (!payload.activity_scope_enabled || !frappe.user.has_role("System Manager")) {
+			$panel.addClass("d-none");
+			return;
+		}
+		$panel.removeClass("d-none");
+		const optResp = await frappe.call({
+			method: "omnexa_core.omnexa_core.marketplace.get_activity_scope_options",
+		});
+		const opt = (optResp && optResp.message) || {};
+		const activities = opt.activities || [];
+		const current = opt.current_company_activity || payload.company_activity || "General";
+		const $sel = $panel.find("[data-scope-activity]");
+		$sel.empty();
+		activities.forEach((a) => {
+			$sel.append(
+				`<option value="${frappe.utils.escape_html(a)}">${frappe.utils.escape_html(a)}</option>`
+			);
+		});
+		if (activities.includes(current)) {
+			$sel.val(current);
+		}
+		$panel.find("[data-scope-summary]").text(
+			`${__("Company activity now")}: ${frappe.utils.escape_html(current)}`
+		);
+	}
+
+	async function fetchScopePlan(activity) {
+		const r = await frappe.call({
+			method: "omnexa_core.omnexa_core.marketplace.get_activity_scope_plan",
+			args: { company_activity: activity },
+		});
+		lastScopePlan = (r && r.message) || {};
+		return lastScopePlan;
+	}
+
+	function scopePlanStatusMessage(plan) {
+		if (plan.already_scoped) {
+			return __("This site is already scoped to {0}. No apps need to be removed.", [
+				plan.company_activity || __("this activity"),
+			]);
+		}
+		if (plan.blocked && plan.blocked.length) {
+			return (
+				`${__("Uninstall blocked — resolve these dependencies first")}:<br>` +
+				`<pre class="small">${frappe.utils.escape_html(JSON.stringify(plan.blocked, null, 2))}</pre>`
+			);
+		}
+		return __("Nothing to apply for this activity. Use Preview to see details.");
+	}
+
+	async function onScopePreview() {
+		const activity = $container.find("[data-scope-activity]").val();
+		const plan = await fetchScopePlan(activity);
+		const keep = (plan.apps_to_keep || []).join(", ") || "—";
+		const remove = (plan.apps_to_remove || []).join(", ") || __("(none)");
+		const skipped = (plan.apps_skipped_dependency || [])
+			.map((s) => `${s.app} ← ${(s.kept_because_required_by || []).join(", ")}`)
+			.join("<br>");
+		frappe.msgprint({
+			title: __("Activity scope preview"),
+			indicator: plan.can_apply ? "blue" : plan.already_scoped ? "green" : "orange",
+			message:
+				`<b>${__("Activity")}:</b> ${frappe.utils.escape_html(plan.company_activity || activity)}` +
+				(plan.current_company_activity
+					? ` · ${__("Current")}: ${frappe.utils.escape_html(plan.current_company_activity)}`
+					: "") +
+				`<br><b>${__("Keep")} (${(plan.apps_to_keep || []).length}):</b><br>` +
+				`<span class="small font-monospace">${frappe.utils.escape_html(keep)}</span><br><br>` +
+				`<b>${__("Remove from site")} (${(plan.apps_to_remove || []).length}):</b><br>` +
+				`<span class="small font-monospace text-danger">${frappe.utils.escape_html(remove)}</span>` +
+				(skipped
+					? `<p class="text-warning small mt-2"><b>${__("Kept (required by platform app)")}:</b><br>${skipped}</p>`
+					: "") +
+				(plan.blocked && plan.blocked.length
+					? `<p class="text-danger mt-2">${__("Blocked by dependencies")}: ${frappe.utils.escape_html(
+							JSON.stringify(plan.blocked)
+					  )}</p>`
+					: "") +
+				(plan.already_scoped
+					? `<p class="text-success small mt-2">${frappe.utils.escape_html(
+							scopePlanStatusMessage(plan)
+					  )}</p>`
+					: "") +
+				`<p class="text-muted small mt-2">${frappe.utils.escape_html(plan.warning || "")}</p>`,
+		});
+	}
+
+	async function onScopeApply() {
+		const activity = $container.find("[data-scope-activity]").val();
+		const plan = await fetchScopePlan(activity);
+		if (!plan.can_apply) {
+			frappe.msgprint({
+				title: __("Cannot apply activity scope"),
+				indicator: plan.already_scoped ? "green" : "orange",
+				message: scopePlanStatusMessage(plan),
+			});
+			return;
+		}
+		const remove = plan.apps_to_remove || [];
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				`<b>${__("Apply site activity scope?")}</b><br><br>` +
+					`<b>${__("Activity")}:</b> ${frappe.utils.escape_html(activity)}<br>` +
+					`<b>${__("Apps to uninstall")}:</b> ${remove.length}<br>` +
+					`<span class="text-danger small">${frappe.utils.escape_html(plan.warning || "")}</span>`,
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) {
+			return;
+		}
+		const stopTick = startMarketplaceProgress(
+			__("Applying activity scope"),
+			__("Backup (if enabled), then uninstalling out-of-scope apps — may take several minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.apply_activity_site_scope",
+				args: { company_activity: activity, confirm: 1 },
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		await completeMarketplaceProgress(__("Applying activity scope"));
+		const result = (r && r.message) || {};
+		if (result.applied) {
+			const failed = result.failed || [];
+			frappe.show_alert({
+				message: __("Activity scope applied — removed {0} app(s)", [(result.uninstalled || []).length]),
+				indicator: failed.length ? "orange" : "green",
+			});
+			if (failed.length) {
+				frappe.msgprint({
+					title: __("Some uninstalls failed"),
+					indicator: "red",
+					message: `<pre class="small">${frappe.utils.escape_html(JSON.stringify(failed, null, 2))}</pre>`,
+				});
+			}
+			await loadCatalog();
+		}
+	}
+
+	async function loadCatalog() {
+		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_marketplace_catalog", {
+			with_git_meta: 0,
+		});
+		const payload = (r && r.message) || {};
+		const items = payload.items || [];
+		allItems = items;
+		lastTrialDays = Number(payload.trial_days) > 0 ? Number(payload.trial_days) : 7;
+		renderUpdateBanner(items);
+		scheduleCatalogAutoRefresh(payload.catalog_auto_refresh_ms);
+		await initActivityScopePanel(payload);
+		await loadUninstallGroups();
+		updateActivityFilterOptions(items);
+		const gh = frappe.utils.escape_html(payload.github_base || "https://github.com/ErpGenex");
+		const helpHtml = payload.license_help_html || "";
+		const companyActivity = frappe.utils.escape_html(payload.company_activity || __("General"));
+		$container.find('[data-section="meta"]').html(
+			(helpHtml ? `<div class="mb-2">${helpHtml}</div>` : "") +
+				`<div class="alert alert-info py-2 px-3 mb-2 small">` +
+				`<b>${__("Desk apps scope")}:</b> ${__(
+					"Users see only apps for company activity"
+				)} <b>${companyActivity}</b> ${__(
+					"+ platform apps (Accounting, e-Invoice, …). Set activity on"
+				)} <a href="/app/company">${__("Company")}</a>. ` +
+				`${__("System Managers always see all apps on Desk.")}</div>` +
+				`<div class="mb-2">${__(
+					"Install and update use one GitHub organization base for every app (no GitHub login on this server)."
+				)} <code class="small">${gh}/&lt;app&gt;.git</code></div>` +
+				`<div>${__("Marketplace")}: <a href="${frappe.utils.escape_html(payload.platform_url || "https://erpgenex.com")}" target="_blank">` +
+				`${frappe.utils.escape_html(payload.platform_url || "https://erpgenex.com")}</a> — ${__("Support")}: ` +
+				`${frappe.utils.escape_html(payload.support_email || "info@erpgenex.com")}</div>`
+		);
+		if (!items.length) {
+			$container.find('[data-section="rows"]').html(`<tr><td colspan="12" class="text-muted">${__("No apps found.")}</td></tr>`);
+			updateSortColumnIndicators();
+			refreshUpdateStatusInBackground();
+			return;
+		}
+		applyFiltersAndRender();
+		refreshUpdateStatusInBackground();
+	}
+
+	async function onBuy(appSlug) {
+		const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_checkout_url", {
+			app_slug: appSlug,
+			months: 12,
+		});
+		const url = r && r.message && r.message.url;
+		if (url) window.open(url, "_blank", "noopener,noreferrer");
+	}
+
+	async function onInstall(appSlug) {
+		const planResp = await frappe.call("omnexa_core.omnexa_core.marketplace.get_install_plan", {
+			app_slug: appSlug,
+		});
+		const plan = (planResp && planResp.message) || {};
+		const installSources = Array.isArray(plan.install_sources) ? plan.install_sources : [];
+		const enabledSources = installSources.filter((s) => s && s.enabled);
+		const installRefs = Array.isArray(plan.install_refs) ? plan.install_refs : [];
+		const localAvailable = !!plan.local_available;
+		let installSource = localAvailable ? "local" : "github";
+		if (!localAvailable && enabledSources.length > 1) {
+			installSource = await new Promise((resolve) => {
+				frappe.prompt(
+					[
+						{
+							fieldname: "install_source",
+							label: __("Install source"),
+							fieldtype: "Select",
+							reqd: 1,
+							options: enabledSources.map((s) => `${s.value}|${__(s.label)}`).join("\n"),
+							default: "github",
+							description: __("Choose source before installation."),
+						},
+					],
+					(values) => resolve((values && values.install_source) || "github"),
+					__("Install Source"),
+					__("Continue")
+				);
+			});
+			if (!installSource) return;
+		} else if (!localAvailable && enabledSources.length === 1) {
+			installSource = enabledSources[0].value || "github";
+		}
+		let installRef = "";
+		if (installSource === "github") {
+			installRef = await new Promise((resolve) => {
+				const quickRefs = installRefs
+					.filter((r) => r && r.value && /^v?\d+\.\d+\.\d+/.test(r.value))
+					.slice(0, 6);
+				const d = new frappe.ui.Dialog({
+					title: __("Choose Version"),
+					fields: [
+						{
+							fieldname: "quick_hint",
+							fieldtype: "HTML",
+							options: quickRefs.length
+								? `<div class="small text-muted mb-2">${__(
+										"Quick buttons for latest release tags"
+								  )}</div>
+								   <div class="d-flex flex-wrap gap-2">
+									${quickRefs
+										.map(
+											(r) =>
+												`<button class="btn btn-xs btn-secondary js-install-ref-chip" data-ref="${frappe.utils.escape_html(
+													r.value
+												)}">${frappe.utils.escape_html(r.value)}</button>`
+										)
+										.join("")}
+								   </div>`
+								: `<div class="small text-muted">${__("No quick tags available. Use pick list or manual ref.")}</div>`,
+						},
+						{
+							fieldname: "install_ref_pick",
+							label: __("Version / branch (pick list)"),
+							fieldtype: "Select",
+							options: [__("Default (server policy / default branch)")]
+								.concat(installRefs.map((r) => r.label || r.value))
+								.join("\n"),
+							default: __("Default (server policy / default branch)"),
+						},
+						{
+							fieldname: "install_ref",
+							label: __("Version / branch / tag"),
+							fieldtype: "Data",
+							description: __("Optional. Example: develop, main, v1.0.0-beta"),
+						},
+					],
+					primary_action_label: __("Continue"),
+					primary_action() {
+						const manual = (d.get_value("install_ref") || "").trim();
+						if (manual) {
+							d.hide();
+							resolve(manual);
+							return;
+						}
+						const pickedLabel = d.get_value("install_ref_pick") || "";
+						const picked = installRefs.find((r) => (r.label || r.value) === pickedLabel);
+						d.hide();
+						resolve((picked && picked.value) || "");
+					},
+					secondary_action_label: __("Cancel"),
+					secondary_action() {
+						d.hide();
+						resolve(null);
+					},
+				});
+				d.show();
+				d.$wrapper.on("click", ".js-install-ref-chip", (e) => {
+					e.preventDefault();
+					const ref = $(e.currentTarget).attr("data-ref") || "";
+					d.set_value("install_ref", ref);
+				});
+			});
+			if (installRef === null) return;
+		}
+		const sourceLabel =
+			(installSources.find((s) => s && s.value === installSource) || {}).label || installSource;
+		const missingBasic = Array.isArray(plan.missing_basic_apps) ? plan.missing_basic_apps : [];
+		const skippedRequired = Array.isArray(plan.skipped_required_apps) ? plan.skipped_required_apps : [];
+		const policyNote = plan.install_policy_note || "";
+		const prereqHtml =
+			missingBasic.length || skippedRequired.length || policyNote
+				? `<br><br><b>${__("Install policy")}:</b> ${frappe.utils.escape_html(policyNote || "")}` +
+				  (missingBasic.length
+						? `<br><b>${__("Basic apps to ensure first")}:</b> ${frappe.utils.escape_html(
+								missingBasic.join(", ")
+						  )}`
+						: "") +
+				  (skippedRequired.length
+						? `<br><b>${__("Not auto-installed")}:</b> ${frappe.utils.escape_html(
+								skippedRequired.join(", ")
+						  )}`
+						: "")
+				: "";
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				`${__("Proceed with app installation?")}<br><br>` +
+					`<b>${__("Source")}:</b> ${frappe.utils.escape_html(__(sourceLabel))}<br>` +
+					(installSource === "github"
+						? `<b>${__("Version / ref")}:</b> ${frappe.utils.escape_html(installRef || __("Default"))}<br>`
+						: "") +
+					`<b>${__("Repo")}:</b> ${frappe.utils.escape_html(plan.repo_url || "")}<br>` +
+					`<b>${__("Current Version")}:</b> ${frappe.utils.escape_html(plan.current_version || "N/A")}<br>` +
+					`<b>${__("What's New")}:</b> ${frappe.utils.escape_html(plan.whats_new || "")}` +
+					prereqHtml +
+					`<br><br>${__("A full backup will run before install to avoid data loss.")}`,
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) return;
+		const stopTick = startMarketplaceProgress(
+			__("Installing app"),
+			localAvailable
+				? __("Ensuring basic platform apps, then installing from local copy…")
+				: __("Backup, repository fetch, and install may take a few minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.install_app_now",
+				args: { app_slug: appSlug, confirm_install: 1, install_source: installSource, install_ref: installRef },
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		if (!r || r.exc) {
+			frappe.hide_progress();
+			return;
+		}
+		await completeMarketplaceProgress(__("Installing app"));
+		const result = (r && r.message) || {};
+		if (result.installed) {
+			const version = result.version || "N/A";
+			const whatsNew = result.whats_new || "";
+			const skipped = Array.isArray(result.skipped_required_apps) ? result.skipped_required_apps : [];
+			frappe.show_alert({ message: __("App is installed: {0}", [appSlug]), indicator: "green" });
+			frappe.msgprint({
+				title: __("Installation Completed"),
+				indicator: "green",
+				message:
+					`<b>${__("Version")}:</b> ${frappe.utils.escape_html(version)}<br>` +
+					`<b>${__("What's New")}:</b> ${frappe.utils.escape_html(whatsNew)}` +
+					(skipped.length
+						? `<br><b>${__("Dependencies not auto-installed")}:</b> ${frappe.utils.escape_html(
+								skipped.join(", ")
+						  )}`
+						: ""),
+			});
+		} else {
+			const detail = result.error || result.output || "";
+			frappe.msgprint(
+				`${__("Install status: {0}", [result.message || "unknown"])}` +
+					(detail ? `<br><pre class="small">${frappe.utils.escape_html(String(detail).slice(-800))}</pre>` : "")
+			);
+		}
+		await loadCatalog();
+	}
+
+	function getFilteredRows() {
+		const q = String($container.find('[data-filter="search"]').val() || "").trim().toLowerCase();
+		const activity = String($container.find('[data-filter="activity"]').val() || "").trim();
+		const version = String($container.find('[data-filter="version"]').val() || "").trim().toLowerCase();
+		const from = String($container.find('[data-filter="updated_from"]').val() || "").trim();
+		const to = String($container.find('[data-filter="updated_to"]').val() || "").trim();
+		return (allItems || []).filter((item) => {
+			const haystack = `${item.title || ""} ${item.app_slug || ""} ${item.short_description || ""} ${item.current_version || ""}`.toLowerCase();
+			if (q && !haystack.includes(q)) return false;
+			if (activity && String(item.activity || "General").trim() !== activity) return false;
+			if (version && !String(item.current_version || "").toLowerCase().includes(version)) return false;
+			const day = item.updated_at ? String(item.updated_at).slice(0, 10) : "";
+			if (from && (!day || day < from)) return false;
+			if (to && (!day || day > to)) return false;
+			return true;
+		});
+	}
+
+	function getSelectedSlugsList() {
+		return Array.from(selectedSlugs);
+	}
+
+	async function fetchBulkUninstallPlan() {
+		const slugs = getSelectedSlugsList();
+		if (!slugs.length) {
+			frappe.msgprint(__("Select at least one installed app to uninstall."));
+			return null;
+		}
+		const r = await frappe.call({
+			method: "omnexa_core.omnexa_core.marketplace.get_bulk_uninstall_plan",
+			args: { app_slugs: JSON.stringify(slugs) },
+		});
+		return (r && r.message) || null;
+	}
+
+	function bulkPlanSummaryHtml(plan) {
+		const order = (plan.uninstall_order || []).join(", ") || "—";
+		const blocked = plan.blocked || [];
+		const protectedRows = plan.protected || [];
+		const notInstalled = plan.not_installed || [];
+		let extra = "";
+		if (protectedRows.length) {
+			extra += `<p class="text-muted small"><b>${__("Protected (skipped)")}:</b> ${frappe.utils.escape_html(
+				protectedRows.map((x) => x.app).join(", ")
+			)}</p>`;
+		}
+		if (notInstalled.length) {
+			extra += `<p class="text-muted small"><b>${__("Not installed (skipped)")}:</b> ${frappe.utils.escape_html(
+				notInstalled.join(", ")
+			)}</p>`;
+		}
+		if (blocked.length) {
+			extra += `<p class="text-warning small"><b>${__("Blocked by dependencies")}:</b><br><pre class="small mb-0">${frappe.utils.escape_html(
+				JSON.stringify(blocked, null, 2)
+			)}</pre></p>`;
+		}
+		return (
+			`<b>${__("Will uninstall")} (${(plan.uninstall_order || []).length}):</b><br>` +
+			`<span class="small font-monospace">${frappe.utils.escape_html(order)}</span>` +
+			extra +
+			`<p class="text-muted small mt-2">${frappe.utils.escape_html(plan.warning || "")}</p>`
+		);
+	}
+
+	async function onBulkPreview() {
+		const plan = await fetchBulkUninstallPlan();
+		if (!plan) return;
+		frappe.msgprint({
+			title: __("Bulk uninstall preview"),
+			indicator: plan.can_uninstall ? "blue" : "orange",
+			message: bulkPlanSummaryHtml(plan),
+		});
+	}
+
+	async function onBulkUninstall() {
+		const plan = await fetchBulkUninstallPlan();
+		if (!plan) return;
+		if (!plan.can_uninstall) {
+			frappe.msgprint({
+				title: __("Cannot uninstall selection"),
+				indicator: "orange",
+				message: bulkPlanSummaryHtml(plan),
+			});
+			return;
+		}
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				`<b>${__("Remove {0} app(s) from this site?", [(plan.uninstall_order || []).length])}</b><br><br>` +
+					bulkPlanSummaryHtml(plan) +
+					`<span class="text-danger">${__("This deletes DocTypes and data for each app on this site.")}</span>`,
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) return;
+		const stopTick = startMarketplaceProgress(
+			__("Bulk uninstall"),
+			__("Backup (if enabled), then removing apps one by one — may take several minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.bulk_uninstall_apps_now",
+				args: {
+					app_slugs: JSON.stringify(getSelectedSlugsList()),
+					confirm_uninstall: 1,
+				},
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		await completeMarketplaceProgress(__("Bulk uninstall"));
+		if (!ensureMarketplaceSession()) return;
+		const result = (r && r.message) || {};
+		const done = result.apps_uninstalled || [];
+		const failed = result.failed || [];
+		selectedSlugs.clear();
+		updateBulkBar();
+		if (done.length) {
+			frappe.show_alert({
+				message: __("Uninstalled {0} app(s) from site", [done.length]),
+				indicator: failed.length ? "orange" : "green",
+			});
+		}
+		if (failed.length) {
+			frappe.msgprint({
+				title: __("Some uninstalls failed"),
+				indicator: "red",
+				message: `<pre class="small">${frappe.utils.escape_html(JSON.stringify(failed, null, 2))}</pre>`,
+			});
+		} else if (done.length) {
+			frappe.msgprint({
+				title: __("Bulk uninstall completed"),
+				indicator: "green",
+				message: `<span class="font-monospace small">${frappe.utils.escape_html(done.join(", "))}</span>`,
+			});
+		} else {
+			frappe.msgprint(__("Bulk uninstall status: {0}", [result.message || "unknown"]));
+		}
+		await loadCatalog();
+	}
+
+	async function onUninstall(appSlug) {
+		const planResp = await frappe.call("omnexa_core.omnexa_core.marketplace.get_uninstall_plan", {
+			app_slug: appSlug,
+		});
+		const plan = (planResp && planResp.message) || {};
+		if (!plan.is_installed) {
+			frappe.msgprint(__("This app is not installed on this site."));
+			return;
+		}
+		if (plan.is_protected) {
+			frappe.msgprint(__("This app cannot be uninstalled from here (protected platform app)."));
+			return;
+		}
+		if ((plan.dependents || []).length) {
+			frappe.msgprint(
+				`${__("Uninstall blocked — other apps depend on this one")}: <b>${frappe.utils.escape_html(
+					(plan.dependents || []).join(", ")
+				)}</b>`
+			);
+			return;
+		}
+		if (!plan.can_uninstall) {
+			frappe.msgprint(__("Uninstall is not available for this app right now."));
+			return;
+		}
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				`<b>${__("Remove this app from the current site?")}</b><br><br>` +
+					`${frappe.utils.escape_html(plan.warning || "")}<br><br>` +
+					`<span class="text-danger">${__("This deletes DocTypes and data for this app on this site.")}</span>`,
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) return;
+		const stopTick = startMarketplaceProgress(
+			__("Uninstalling app"),
+			__("Backup (if enabled), then removing modules and DocTypes — may take a few minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.uninstall_app_now",
+				args: { app_slug: appSlug, confirm_uninstall: 1 },
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		if (!r || r.exc) {
+			frappe.hide_progress();
+			return;
+		}
+		await completeMarketplaceProgress(__("Uninstalling app"));
+		if (!ensureMarketplaceSession()) return;
+		const result = (r && r.message) || {};
+		if (result.uninstalled) {
+			frappe.show_alert({ message: __("App uninstalled from site: {0}", [appSlug]), indicator: "green" });
+			frappe.msgprint({
+				title: __("Uninstall completed"),
+				indicator: "green",
+				message: __("The app was removed from this site. Restart bench or clear cache if Desk still shows old menus."),
+			});
+		} else {
+			frappe.msgprint(__("Uninstall status: {0}", [result.message || "unknown"]));
+		}
+		await loadCatalog();
+	}
+
+	async function onToggleDeskVisibility(appSlug, hidden) {
+		const r = await frappe.call({
+			method: "omnexa_core.omnexa_core.app_visibility.set_app_desk_visibility",
+			args: { app_slug: appSlug, hidden: hidden ? 1 : 0 },
+		});
+		const result = (r && r.message) || {};
+		frappe.show_alert({
+			message: hidden
+				? __("App hidden from Desk: {0}", [appSlug])
+				: __("App shown on Desk: {0}", [appSlug]),
+			indicator: "green",
+		});
+		if (result.desk_hidden_apps) {
+			allItems.forEach((item) => {
+				item.desk_hidden = result.desk_hidden_apps.includes(item.app_slug);
+			});
+			applyFiltersAndRender();
+		} else {
+			await loadCatalog();
+		}
+	}
+
+	async function onUpdate(appSlug) {
+		const planResp = await frappe.call("omnexa_core.omnexa_core.marketplace.get_update_plan", {
+			app_slug: appSlug,
+		});
+		const plan = (planResp && planResp.message) || {};
+		const updateSources = Array.isArray(plan.update_sources) ? plan.update_sources : [];
+		const enabledSources = updateSources.filter((s) => s && s.enabled);
+		let updateSource = "github";
+		if (enabledSources.length > 1) {
+			updateSource = await new Promise((resolve) => {
+				frappe.prompt(
+					[
+						{
+							fieldname: "update_source",
+							label: __("Update source"),
+							fieldtype: "Select",
+							reqd: 1,
+							options: enabledSources.map((s) => `${s.value}|${__(s.label)}`).join("\n"),
+							default: "github",
+							description: __("Choose source before update."),
+						},
+					],
+					(values) => resolve((values && values.update_source) || "github"),
+					__("Update Source"),
+					__("Continue")
+				);
+			});
+			if (!updateSource) return;
+		} else if (enabledSources.length === 1) {
+			updateSource = enabledSources[0].value || "github";
+		}
+		const targetRef = updateSource === "github" ? await pickUpdateTargetRef(plan, appSlug) : "";
+		if (targetRef === null) {
+			return;
+		}
+		const stopTick = startMarketplaceProgress(
+			__("Updating app"),
+			__("Git pull, database migrate, and asset build may take several minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.update_app_now",
+				args: { app_slug: appSlug, confirm_update: 1, target_ref: targetRef, update_source: updateSource },
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		if (!r || r.exc) {
+			frappe.hide_progress();
+			return;
+		}
+		await completeMarketplaceProgress(__("Updating app"));
+		const result = (r && r.message) || {};
+		if (result.updated) {
+			const version = result.version || "N/A";
+			const buildNote = result.build_ok
+				? ""
+				: `<br><span class="text-warning">${__("Asset build reported a problem; check bench logs.")}</span>`;
+			frappe.show_alert({ message: __("App updated: {0}", [appSlug]), indicator: "green" });
+			frappe.msgprint({
+				title: __("Update completed"),
+				indicator: "green",
+				message:
+					`<b>${__("Version")}:</b> ${frappe.utils.escape_html(version)}` +
+					buildNote,
+			});
+		} else {
+			frappe.msgprint(
+				`${__("Update status")}: ${frappe.utils.escape_html(result.message || "unknown")}` +
+					(result.output ? `<pre class="small">${frappe.utils.escape_html(result.output)}</pre>` : "")
+			);
+		}
+		await loadCatalog();
+	}
+
+	/** ``frappe.prompt`` returns a Dialog, not a Promise — use callback style only. */
+	function onRevoke(appSlug, isFree) {
+		const fields = [];
+		if (!isFree) {
+			fields.push({
+				fieldname: "remove_key",
+				fieldtype: "Check",
+				label: __("Remove stored license key from this site"),
+				default: 1,
+			});
+		}
+		fields.push({
+			fieldname: "clear_trial",
+			fieldtype: "Check",
+			label: __("Reset trial counter (new {0}-day window from next license check)", [String(lastTrialDays)]),
+			default: 0,
+		});
+		frappe.prompt(
+			fields,
+			function (values) {
+				const removeKey = isFree ? 0 : values.remove_key ? 1 : 0;
+				const clearTrial = values.clear_trial ? 1 : 0;
+				frappe.call({
+					method: "omnexa_core.omnexa_core.marketplace.revoke_app_license",
+					args: {
+						app_slug: appSlug,
+						remove_key: removeKey,
+						clear_trial: clearTrial,
+					},
+					freeze: true,
+					callback: function (resp) {
+						if (resp.exc) {
+							return;
+						}
+						const msg = (resp.message && resp.message.status) || "";
+						frappe.show_alert({
+							message: __("License data updated: {0}. Reloading…", [msg]),
+							indicator: "orange",
+						});
+						if (typeof frappe.refresh_omnexa_license_boot === "function") {
+							frappe.refresh_omnexa_license_boot().always(function () {
+								window.location.reload();
+							});
+						} else {
+							window.location.reload();
+						}
+					},
+				});
+			},
+			__("Revoke or reset trial"),
+			__("Apply")
+		);
+	}
+
+	function onActivate(appSlug) {
+		frappe.prompt(
+			[
+				{
+					fieldname: "activation_key",
+					fieldtype: "Password",
+					label: __("License or developer key"),
+					length: 2048,
+					description: __("Supports long JWT / armored activation keys."),
+					reqd: 1,
+				},
+			],
+			function (values) {
+				if (!values || !values.activation_key) {
+					return;
+				}
+				const key = String(values.activation_key).trim();
+				if (!key) {
+					return;
+				}
+				frappe.call({
+					method: "omnexa_core.omnexa_core.marketplace.activate_app_license",
+					args: {
+						app_slug: appSlug,
+						activation_key: key,
+					},
+					freeze: true,
+					freeze_message: __("Validating license..."),
+					callback: function (r) {
+						if (r.exc) {
+							return;
+						}
+						const result = r.message || {};
+						const installMsg = result.install
+							? ` (${__("install")}: ${result.install.message || "n/a"})`
+							: "";
+						frappe.show_alert({
+							message: __("License activated") + installMsg,
+							indicator: "green",
+						});
+						loadCatalog();
+					},
+				});
+			},
+			__("Activate license"),
+			__("Save")
+		);
+	}
+
+	$container.on("click", '[data-action="buy"]', async function () {
+		await onBuy($(this).data("app"));
+	});
+	$container.on("click", '[data-action="install"]', async function () {
+		await onInstall($(this).data("app"));
+	});
+	$container.on("click", '[data-action="update"]', async function () {
+		await onUpdate($(this).data("app"));
+	});
+	$container.on("click", '[data-action="uninstall"]', async function () {
+		await onUninstall($(this).data("app"));
+	});
+	$container.on("change", '[data-action="bulk-row-select"]', function () {
+		const slug = String($(this).data("app") || "");
+		if (!slug) return;
+		if (this.checked) {
+			selectedSlugs.add(slug);
+		} else {
+			selectedSlugs.delete(slug);
+		}
+		syncBulkSelectAllCheckbox(getFilteredRows());
+		updateBulkBar();
+	});
+	$container.on("change", '[data-action="bulk-select-all"]', function () {
+		const checked = this.checked;
+		getFilteredRows()
+			.filter(canBulkSelect)
+			.forEach((item) => {
+				const slug = String(item.app_slug || "");
+				if (checked) {
+					selectedSlugs.add(slug);
+				} else {
+					selectedSlugs.delete(slug);
+				}
+			});
+		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="bulk-select-group"]', async function () {
+		await onBulkSelectGroup();
+	});
+	$container.on("click", '[data-action="group-hide-desk"]', async function () {
+		await onGroupDeskVisibility(true);
+	});
+	$container.on("click", '[data-action="group-show-desk"]', async function () {
+		await onGroupDeskVisibility(false);
+	});
+	$container.on("click", '[data-action="bulk-select-visible"]', function () {
+		getFilteredRows()
+			.filter(canBulkSelect)
+			.forEach((item) => selectedSlugs.add(String(item.app_slug || "")));
+		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="bulk-clear"]', function () {
+		selectedSlugs.clear();
+		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="bulk-preview"]', async function () {
+		await onBulkPreview();
+	});
+	$container.on("click", '[data-action="bulk-uninstall"]', async function () {
+		await onBulkUninstall();
+	});
+	$container.on("click", '[data-action="scope-preview"]', async function () {
+		await onScopePreview();
+	});
+	$container.on("click", '[data-action="scope-apply"]', async function () {
+		await onScopeApply();
+	});
+	$container.on("click", '[data-action="hide-desk"]', async function () {
+		await onToggleDeskVisibility($(this).data("app"), true);
+	});
+	$container.on("click", '[data-action="show-desk"]', async function () {
+		await onToggleDeskVisibility($(this).data("app"), false);
+	});
+	$container.on("click", '[data-action="activate"]', function () {
+		onActivate($(this).data("app"));
+	});
+	$container.on("input change", "[data-filter]", function () {
+		applyFiltersAndRender();
+	});
+	$container.on("click", ".marketplace-sort-th", function (e) {
+		e.preventDefault();
+		const col = $(this).attr("data-sort-col");
+		if (!col) {
+			return;
+		}
+		if (sortColumn === col) {
+			sortDir = sortDir === "asc" ? "desc" : "asc";
+		} else {
+			sortColumn = col;
+			sortDir = col === "updated" ? "desc" : "asc";
+		}
+		applyFiltersAndRender();
+	});
+	$container.on("keydown", ".marketplace-sort-th", function (e) {
+		if (e.key === "Enter" || e.key === " ") {
+			e.preventDefault();
+			$(this).trigger("click");
+		}
+	});
+	$container.on("click", '[data-action="reset-filters"]', function () {
+		$container.find('[data-filter="search"]').val("");
+		$container.find('[data-filter="activity"]').val("");
+		$container.find('[data-filter="version"]').val("");
+		$container.find('[data-filter="updated_from"]').val("");
+		$container.find('[data-filter="updated_to"]').val("");
+		sortColumn = "title";
+		sortDir = "asc";
+		applyFiltersAndRender();
+	});
+
+	loadCatalog();
+};

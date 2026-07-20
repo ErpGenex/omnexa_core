@@ -1,0 +1,35 @@
+/* Business Category Headers in Sidebar */
+.sidebar-category-header {
+	padding: 12px 16px;
+	background: #f8f9fa;
+	border-left: 4px solid #007bff;
+	font-weight: 600;
+	font-size: 0.875rem;
+	color: #333;
+	margin-top: 8px;
+	margin-bottom: 4px;
+	border-radius: 4px;
+}
+
+.sidebar-category-header .category-label {
+	display: block;
+	font-size: 0.95rem;
+}
+
+.sidebar-category-header .category-purpose {
+	display: block;
+	font-size: 0.75rem;
+	color: #666;
+	margin-top: 2px;
+	font-weight: 400;
+}
+
+/* Hide empty categories */
+.sidebar-category-header:empty {
+	display: none;
+}
+
+/* Style for category items */
+.sidebar-category-item {
+	padding-left: 24px;
+}

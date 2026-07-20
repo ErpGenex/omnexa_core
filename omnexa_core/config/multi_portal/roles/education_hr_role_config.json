@@ -1,0 +1,207 @@
+{
+  "role_id": "education_hr",
+  "role_name": "HR",
+  "application": "education",
+  "portal": "education_hr",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "total_staff",
+        "title": "Total Staff",
+        "value": "count",
+        "source": "employee",
+        "filter": "active"
+      },
+      {
+        "id": "pending_leaves",
+        "title": "Pending Leaves",
+        "value": "count",
+        "source": "leave_application",
+        "filter": "pending"
+      },
+      {
+        "id": "new_applications",
+        "title": "New Applications",
+        "value": "count",
+        "source": "job_application",
+        "filter": "pending"
+      },
+      {
+        "id": "attendance_rate",
+        "title": "Staff Attendance",
+        "value": "percentage",
+        "source": "attendance",
+        "filter": "current_month"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "approve_leave",
+        "title": "Approve Leave",
+        "action": "update",
+        "doctype": "leave_application"
+      },
+      {
+        "id": "add_employee",
+        "title": "Add Employee",
+        "action": "create",
+        "doctype": "employee"
+      },
+      {
+        "id": "process_application",
+        "title": "Process Application",
+        "action": "update",
+        "doctype": "job_application"
+      },
+      {
+        "id": "view_attendance",
+        "title": "View Attendance",
+        "action": "read",
+        "doctype": "attendance"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_leaves",
+        "title": "Pending Leaves",
+        "type": "list",
+        "source": "leave_application"
+      },
+      {
+        "id": "job_applications",
+        "title": "Job Applications",
+        "type": "list",
+        "source": "job_application"
+      },
+      {
+        "id": "staff_attendance",
+        "title": "Staff Attendance",
+        "type": "list",
+        "source": "attendance"
+      }
+    ],
+    "charts": [
+      {
+        "id": "attendance_trend",
+        "title": "Attendance Trend",
+        "type": "line",
+        "source": "attendance"
+      },
+      {
+        "id": "leave_distribution",
+        "title": "Leave Distribution",
+        "type": "pie",
+        "source": "leave_application"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Employees",
+        "items": [
+          {
+            "id": "employee_list",
+            "title": "Employee List",
+            "icon": "people",
+            "route": "/app/education/hr/employee-list"
+          },
+          {
+            "id": "employee_profile",
+            "title": "Employee Profile",
+            "icon": "person",
+            "route": "/app/education/hr/employee-profile"
+          }
+        ]
+      },
+      {
+        "title": "Leave Management",
+        "items": [
+          {
+            "id": "leave_applications",
+            "title": "Leave Applications",
+            "icon": "event_busy",
+            "route": "/app/education/hr/leave-applications"
+          },
+          {
+            "id": "leave_balance",
+            "title": "Leave Balance",
+            "icon": "account_balance_wallet",
+            "route": "/app/education/hr/leave-balance"
+          }
+        ]
+      },
+      {
+        "title": "Recruitment",
+        "items": [
+          {
+            "id": "job_applications",
+            "title": "Job Applications",
+            "icon": "work",
+            "route": "/app/education/hr/job-applications"
+          },
+          {
+            "id": "job_postings",
+            "title": "Job Postings",
+            "icon": "post_add",
+            "route": "/app/education/hr/job-postings"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "hr_report",
+            "title": "HR Report",
+            "icon": "assessment",
+            "route": "/app/education/hr/reports/hr"
+          },
+          {
+            "id": "attendance_report",
+            "title": "Attendance Report",
+            "icon": "event_available",
+            "route": "/app/education/hr/reports/attendance"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "employee",
+      "leave_application",
+      "job_application",
+      "attendance",
+      "payroll"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "student_records",
+      "academic_records",
+      "financial_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "hr_report",
+      "title": "HR Report",
+      "route": "/app/education/hr/reports/hr"
+    },
+    {
+      "id": "attendance_report",
+      "title": "Attendance Report",
+      "route": "/app/education/hr/reports/attendance"
+    }
+  ],
+  "notifications": [
+    "leave_application",
+    "job_application",
+    "attendance_alert",
+    "payroll_ready"
+  ]
+}

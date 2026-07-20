@@ -1,0 +1,197 @@
+{
+  "role_id": "commerce_inventory",
+  "role_name": "Inventory",
+  "application": "commerce",
+  "portal": "commerce_inventory",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "total_items",
+        "title": "Total Items",
+        "value": "count",
+        "source": "item",
+        "filter": "active"
+      },
+      {
+        "id": "low_stock_alerts",
+        "title": "Low Stock Alerts",
+        "value": "count",
+        "source": "item",
+        "filter": "low_stock"
+      },
+      {
+        "id": "total_value",
+        "title": "Total Inventory Value",
+        "value": "sum",
+        "source": "item",
+        "filter": "current_value"
+      },
+      {
+        "id": "stock_movements",
+        "title": "Stock Movements Today",
+        "value": "count",
+        "source": "stock_entry",
+        "filter": "today"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "add_item",
+        "title": "Add Item",
+        "action": "create",
+        "doctype": "item"
+      },
+      {
+        "id": "stock_entry",
+        "title": "Stock Entry",
+        "action": "create",
+        "doctype": "stock_entry"
+      },
+      {
+        "id": "stock_reconciliation",
+        "title": "Stock Reconciliation",
+        "action": "create",
+        "doctype": "stock_reconciliation"
+      },
+      {
+        "id": "view_inventory",
+        "title": "View Inventory",
+        "action": "read",
+        "doctype": "item"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "low_stock_items",
+        "title": "Low Stock Items",
+        "type": "list",
+        "source": "item"
+      },
+      {
+        "id": "recent_movements",
+        "title": "Recent Movements",
+        "type": "list",
+        "source": "stock_entry"
+      },
+      {
+        "id": "expiring_items",
+        "title": "Expiring Items",
+        "type": "list",
+        "source": "item"
+      }
+    ],
+    "charts": [
+      {
+        "id": "inventory_value",
+        "title": "Inventory Value",
+        "type": "bar",
+        "source": "item"
+      },
+      {
+        "id": "stock_movement_trend",
+        "title": "Stock Movement Trend",
+        "type": "line",
+        "source": "stock_entry"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Inventory",
+        "items": [
+          {
+            "id": "items",
+            "title": "Items",
+            "icon": "inventory_2",
+            "route": "/app/commerce/inventory/items"
+          },
+          {
+            "id": "item_groups",
+            "title": "Item Groups",
+            "icon": "category",
+            "route": "/app/commerce/inventory/item-groups"
+          },
+          {
+            "id": "warehouses",
+            "title": "Warehouses",
+            "icon": "warehouse",
+            "route": "/app/commerce/inventory/warehouses"
+          }
+        ]
+      },
+      {
+        "title": "Stock",
+        "items": [
+          {
+            "id": "stock_entries",
+            "title": "Stock Entries",
+            "icon": "inventory",
+            "route": "/app/commerce/inventory/stock-entries"
+          },
+          {
+            "id": "stock_reconciliation",
+            "title": "Stock Reconciliation",
+            "icon": "balance",
+            "route": "/app/commerce/inventory/stock-reconciliation"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "inventory_report",
+            "title": "Inventory Report",
+            "icon": "assessment",
+            "route": "/app/commerce/inventory/reports/inventory"
+          },
+          {
+            "id": "stock_report",
+            "title": "Stock Report",
+            "icon": "list_alt",
+            "route": "/app/commerce/inventory/reports/stock"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "item",
+      "item_group",
+      "warehouse",
+      "stock_entry",
+      "stock_reconciliation"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "sales_order",
+      "purchase_order",
+      "financial_records",
+      "hr_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "inventory_report",
+      "title": "Inventory Report",
+      "route": "/app/commerce/inventory/reports/inventory"
+    },
+    {
+      "id": "valuation_report",
+      "title": "Valuation Report",
+      "route": "/app/commerce/inventory/reports/valuation"
+    }
+  ],
+  "notifications": [
+    "low_stock_alert",
+    "stock_reconciliation_required",
+    "expiry_alert",
+    "movement_alert"
+  ]
+}

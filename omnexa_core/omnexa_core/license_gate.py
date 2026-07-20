@@ -1,0 +1,287 @@
+from __future__ import annotations
+
+from datetime import datetime, timezone
+import json
+from urllib.parse import unquote
+
+import frappe
+
+from omnexa_core.omnexa_core.omnexa_license import is_license_status_ok, verify_app_license
+
+
+NOTICE_INTERVAL_SECONDS = 30 * 60
+
+
+def _remaining_seconds(result) -> int:
+	claims = result.claims or {}
+	if not isinstance(claims, dict):
+		return 0
+
+	if isinstance(claims.get("remaining_seconds"), int):
+		return max(0, int(claims.get("remaining_seconds")))
+
+	if "trial_expires_at" in claims:
+		try:
+			end = datetime.fromisoformat(str(claims.get("trial_expires_at")))
+			now = datetime.now(end.tzinfo) if end.tzinfo else datetime.now()
+			return max(0, int((end - now).total_seconds()))
+		except Exception:
+			return 0
+
+	exp = claims.get("exp")
+	if isinstance(exp, (int, float)):
+		now_utc = int(datetime.now(timezone.utc).timestamp())
+		return max(0, int(exp) - now_utc)
+
+	return 0
+
+
+def _format_remaining(seconds: int) -> str:
+	if seconds <= 0:
+		return "0m"
+	days, rem = divmod(seconds, 86400)
+	hours, rem = divmod(rem, 3600)
+	minutes = rem // 60
+	parts = []
+	if days:
+		parts.append(f"{days}d")
+	if hours:
+		parts.append(f"{hours}h")
+	if minutes or not parts:
+		parts.append(f"{minutes}m")
+	return " ".join(parts)
+
+
+def _maybe_notify_expiry(app: str, result) -> None:
+	if frappe.session.user == "Guest":
+		return
+	if result.status not in ("licensed", "trial"):
+		return
+
+	remaining = _remaining_seconds(result)
+	if remaining <= 0:
+		return
+
+	now_ts = int(datetime.now(timezone.utc).timestamp())
+	notice_key = f"omnexa_license_notice_ts_{frappe.scrub(app)}"
+	last_notice = frappe.db.get_default(notice_key)
+	try:
+		last_notice_ts = int(str(last_notice))
+	except Exception:
+		last_notice_ts = 0
+	if last_notice_ts and now_ts - last_notice_ts < NOTICE_INTERVAL_SECONDS:
+		return
+
+	frappe.db.set_default(notice_key, str(now_ts))
+	frappe.db.commit()
+	frappe.msgprint(
+		frappe._("License for {0} expires in {1}. Renew before lock.").format(app, _format_remaining(remaining)),
+		title=frappe._("License Notice"),
+		indicator="orange",
+		alert=True,
+	)
+
+
+def _license_enforcement_enabled() -> bool:
+	return frappe.conf.get("omnexa_license_enforce") in (1, True, "1", "true", "True")
+
+
+def _exempt_api_method(method: str) -> bool:
+	"""Allow core Frappe, auth, file, and Omnexa marketplace / license refresh."""
+	if not method:
+		return True
+	m = method.split("?", 1)[0].strip("/")
+	low = m.lower()
+	if low in ("login", "logout"):
+		return True
+	if m.startswith("frappe."):
+		return True
+	if m.startswith("file."):
+		return True
+	if m.startswith("omnexa_core.omnexa_core.marketplace."):
+		return True
+	# Boot refresh (module path: omnexa_core.desk_license_boot)
+	if m.startswith("omnexa_core.desk_license_boot."):
+		return True
+	return False
+
+
+def _app_from_api_method(method: str) -> str | None:
+	m = method.split("?", 1)[0].strip("/")
+	if not m or "." not in m:
+		return None
+	head = m.split(".", 1)[0]
+	if head.startswith("omnexa_") or head.startswith("erpgenex_"):
+		return head
+	return None
+
+
+def _app_from_doctype(doctype: str | None) -> str | None:
+	"""Resolve owning app from DocType metadata (module -> app)."""
+	if not doctype or not isinstance(doctype, str):
+		return None
+	try:
+		meta = frappe.get_meta(doctype)
+		module = getattr(meta, "module", None)
+		if not module:
+			return None
+		app = (frappe.local.module_app or {}).get(frappe.scrub(module))
+		if isinstance(app, str) and (app.startswith("omnexa_") or app.startswith("erpgenex_")):
+			return app
+	except Exception:
+		return None
+	return None
+
+
+def _doctype_from_resource_path(path: str) -> str | None:
+	# /api/resource/<Doctype>[/name]
+	if not path.startswith("/api/resource/"):
+		return None
+	rest = path[len("/api/resource/") :].split("?", 1)[0].strip("/")
+	if not rest:
+		return None
+	return unquote(rest.split("/", 1)[0]).strip()
+
+
+def _doctype_from_frappe_method(method: str) -> str | None:
+	"""
+	Extract DocType for frappe.* calls so paid apps are gated on reads as well as writes.
+
+	Writes (doc JSON or explicit doctype):
+	- frappe.client.insert/save/submit/cancel/delete
+	- frappe.desk.form.save.savedocs
+
+	Reads / queries (doctype in form_dict — list view, form load, reportview, search, calendar, etc.):
+	- Any ``frappe.desk.*`` call that passes ``doctype`` (Desk data APIs).
+	- Most ``frappe.client.*`` calls that pass ``doctype`` (get/get_list/...); excludes
+	  asset/bootstrap helpers without a DocType.
+	"""
+	fd = getattr(frappe.local, "form_dict", {}) or {}
+	if method in (
+		"frappe.client.insert",
+		"frappe.client.save",
+		"frappe.client.submit",
+		"frappe.client.cancel",
+		"frappe.client.delete",
+	):
+		dt = fd.get("doctype")
+		if dt:
+			return str(dt)
+		doc_payload = fd.get("doc")
+		if doc_payload:
+			try:
+				doc = json.loads(str(doc_payload))
+				if isinstance(doc, dict) and doc.get("doctype"):
+					return str(doc.get("doctype"))
+			except Exception:
+				pass
+		return None
+	if method == "frappe.desk.form.save.savedocs":
+		doc_payload = fd.get("doc")
+		if not doc_payload:
+			return None
+		try:
+			doc = json.loads(str(doc_payload))
+			if isinstance(doc, dict) and doc.get("doctype"):
+				return str(doc.get("doctype"))
+		except Exception:
+			return None
+		return None
+
+	# --- Reads / list / form / search: standard Desk + Client data APIs carry ``doctype`` ---
+	if method.startswith("frappe.desk.") and fd.get("doctype"):
+		return str(fd.get("doctype")).strip()
+
+	if method.startswith("frappe.client."):
+		if method in ("frappe.client.get_js", "frappe.client.get_time_zone"):
+			return None
+		if fd.get("doctype"):
+			return str(fd.get("doctype")).strip()
+
+	return None
+
+
+def _enforce_for_frappe_multi_doc_methods(method: str) -> bool:
+	"""
+	Return True if handled (enforced). Used for JSON list payloads without top-level doctype.
+	"""
+	if method not in ("frappe.client.bulk_update", "frappe.client.insert_many"):
+		return False
+	fd = getattr(frappe.local, "form_dict", {}) or {}
+	raw = fd.get("docs")
+	if not raw:
+		return True
+	try:
+		docs = json.loads(str(raw))
+	except Exception:
+		return True
+	if not isinstance(docs, list):
+		return True
+	for doc in docs:
+		if not isinstance(doc, dict) or not doc.get("doctype"):
+			continue
+		app_for_dt = _app_from_doctype(str(doc.get("doctype")))
+		if app_for_dt:
+			_enforce_for_app(app_for_dt)
+	return True
+
+
+def _enforce_for_app(app: str) -> None:
+	result = verify_app_license(app)
+	if is_license_status_ok(result.status):
+		_maybe_notify_expiry(app, result)
+		return
+	frappe.throw(
+		frappe._("Application {0} is not licensed ({1}). Open ErpGenEx Marketplace to add a license or developer key.").format(
+			app, result.status
+		),
+		title=frappe._("License required"),
+	)
+
+
+def before_request():
+	"""
+	When ``omnexa_license_enforce`` is set, block API calls whose method namespace is ``omnexa_*``
+	or ``erpgenex_*`` (commercial apps)
+	if that app's license is not OK.
+
+	Also blocks common ``frappe.desk.*`` / ``frappe.client.*`` data calls when the target DocType
+	belongs to an unlicensed paid Omnexa / ErpGenEx commercial app (list/form/reportview reads, not just writes).
+
+	Desk HTML routes under ``/app/`` still load; unlicensed-module navigation is reinforced by
+	``desk_license_guard.js``.
+	"""
+	if not _license_enforcement_enabled():
+		return
+	if not getattr(frappe.local, "request", None):
+		return
+	if frappe.session.user == "Guest":
+		return
+
+	path = frappe.local.request.path or ""
+	for prefix in ("/assets/", "/files/", "/.well-known"):
+		if path.startswith(prefix):
+			return
+
+	if path.startswith("/api/method/"):
+		method = path[len("/api/method/") :].split("?", 1)[0].strip("/")
+		if not _exempt_api_method(method):
+			app = _app_from_api_method(method)
+			if app:
+				_enforce_for_app(app)
+				return
+		if _enforce_for_frappe_multi_doc_methods(method):
+			return
+		# frappe.* list/form/reportview/etc.: resolve DocType -> owning app.
+		dt = _doctype_from_frappe_method(method)
+		app_for_dt = _app_from_doctype(dt)
+		if app_for_dt:
+			_enforce_for_app(app_for_dt)
+			return
+
+	if path.startswith("/api/resource/"):
+		dt = _doctype_from_resource_path(path)
+		app_for_dt = _app_from_doctype(dt)
+		if app_for_dt:
+			_enforce_for_app(app_for_dt)
+			return

@@ -1,0 +1,537 @@
+/*
+Global desk card shadows for ErpGenEx.
+Keep existing color palette untouched; only depth and hover elevation are added.
+*/
+
+.desk-container .widget,
+.desk-container .widget.links-widget-box,
+.desk-container .widget.shortcut-widget-box,
+.desk-container .widget.number-widget-box,
+.desk-container .widget.dashboard-widget-box,
+.desk-container .report-summary,
+.desk-container .form-dashboard-section,
+.desk-container .form-dashboard-wrapper {
+	box-shadow: 0 3px 10px rgba(15, 23, 42, 0.12);
+	transition: box-shadow 0.2s ease;
+}
+
+.desk-container .widget:hover,
+.desk-container .widget.links-widget-box:hover,
+.desk-container .widget.shortcut-widget-box:hover,
+.desk-container .widget.number-widget-box:hover,
+.desk-container .widget.dashboard-widget-box:hover,
+.desk-container .report-summary:hover {
+	box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+}
+
+/* Leading icon on control-tower workspace shortcuts (workspace_shortcut_icons.js) */
+.desk-container .shortcut-widget-box .widget-head .widget-label .widget-title {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.desk-container .shortcut-widget-box .widget-head .widget-label .widget-title .omnexa-ws-sc-ic {
+	flex: none;
+}
+
+/* -------- Global form UX optimizer (non-destructive) -------- */
+:root {
+	/* Spacing scale (4 / 8 / 16 / 24 / 32) — ErpGenex Design System */
+	--omnexa-micro: 4px;
+	--omnexa-space-0: 8px;
+	--omnexa-space-1: 8px;
+	--omnexa-space-2: 12px;
+	--omnexa-space-3: 16px;
+	--omnexa-space-4: 24px;
+	--omnexa-section-gap: 24px;
+	--omnexa-page-gap: 32px;
+	--omnexa-radius: 8px;
+	--omnexa-radius-input: 6px;
+	--omnexa-border: 1px solid rgba(15, 23, 42, 0.08);
+	--omnexa-shadow-soft: 0 2px 10px rgba(15, 23, 42, 0.06);
+	--omnexa-focus: 0 0 0 3px rgba(37, 99, 235, 0.18);
+	--omnexa-zebra: rgba(241, 245, 249, 0.72);
+	--omnexa-zebra-list: rgba(241, 245, 249, 0.45);
+}
+
+.layout-main-section .omnexa-form-optimized .form-page {
+	padding-inline: var(--omnexa-space-2);
+	padding-bottom: var(--omnexa-page-gap);
+}
+
+.layout-main-section .omnexa-form-optimized .form-section {
+	background: var(--card-bg, #fff);
+	border: var(--omnexa-border);
+	border-radius: var(--omnexa-radius);
+	box-shadow: var(--omnexa-shadow-soft);
+	padding: var(--omnexa-space-2);
+	margin-bottom: var(--omnexa-section-gap);
+}
+
+.layout-main-section .omnexa-form-optimized .section-head {
+	font-size: 1.0625rem;
+	font-weight: 700;
+	margin-bottom: var(--omnexa-space-2);
+	padding-bottom: var(--omnexa-micro);
+	border-bottom: 1px solid rgba(15, 23, 42, 0.07);
+}
+
+.layout-main-section .omnexa-form-optimized .section-body {
+	display: grid;
+	/* Enterprise default: 3 columns on desktop (like Item) */
+	grid-template-columns: repeat(3, minmax(220px, 1fr));
+	gap: var(--omnexa-space-2) var(--omnexa-space-3);
+	align-items: start;
+}
+
+/* Some Frappe forms still render Bootstrap `.row` wrappers inside section-body. Flatten them. */
+.layout-main-section .omnexa-form-optimized .section-body > .row {
+	display: contents;
+}
+
+/* Many Frappe forms wrap controls inside `.form-column` nodes. Flatten them so controls participate in the grid. */
+.layout-main-section .omnexa-form-optimized .section-body > .form-column {
+	display: contents;
+}
+
+.layout-main-section .omnexa-form-optimized .section-body > .row > .form-column {
+	display: contents;
+}
+
+.layout-main-section .omnexa-form-optimized .section-body > .form-column > .frappe-control {
+	min-width: 0;
+}
+
+.layout-main-section .omnexa-form-optimized .section-body > .row > .form-column > .frappe-control {
+	min-width: 0;
+}
+
+.layout-main-section .omnexa-form-optimized.omnexa-layout-dense .section-body,
+.layout-main-section .omnexa-form-optimized.omnexa-layout-complex .section-body {
+	grid-template-columns: repeat(3, minmax(180px, 1fr));
+}
+
+.layout-main-section .omnexa-form-optimized.omnexa-layout-single .section-body {
+	grid-template-columns: 1fr;
+}
+
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Section Break"],
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Column Break"],
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="HTML"],
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Table"],
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Text Editor"],
+.layout-main-section .omnexa-form-optimized .section-body > .frappe-control[data-fieldtype="Code"] {
+	grid-column: 1 / -1;
+}
+
+/* Ensure grid tables span full available width */
+.layout-main-section .omnexa-form-optimized .frappe-control[data-fieldtype="Table"],
+.layout-main-section .omnexa-form-optimized .frappe-control[data-fieldtype="Table"] .control-input-wrapper,
+.layout-main-section .omnexa-form-optimized .frappe-control[data-fieldtype="Table"] .control-input,
+.layout-main-section .omnexa-form-optimized .frappe-control[data-fieldtype="Table"] .form-grid-container {
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+}
+
+.layout-main-section .omnexa-form-optimized .form-grid {
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+}
+
+.layout-main-section .omnexa-form-optimized .form-grid .grid-heading-row,
+.layout-main-section .omnexa-form-optimized .form-grid .grid-body,
+.layout-main-section .omnexa-form-optimized .form-grid .grid-footer {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* DataTable internals used by Frappe grids */
+.layout-main-section .omnexa-form-optimized .form-grid .dt-scrollable,
+.layout-main-section .omnexa-form-optimized .form-grid .dt-scrollable .dt-scrollable-container,
+.layout-main-section .omnexa-form-optimized .form-grid .dt-scrollable .dt-scrollable-container .dt-row,
+.layout-main-section .omnexa-form-optimized .form-grid .dt-scrollable .dt-scrollable-container .dt-cell {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+.layout-main-section .omnexa-form-optimized .form-grid .dt-scrollable .dt-scrollable-container {
+	min-width: 100% !important;
+}
+
+/* Cover nested wrappers where Table is not a direct section-body child */
+.layout-main-section .omnexa-form-optimized .section-body .frappe-control[data-fieldtype="Table"] {
+	grid-column: 1 / -1 !important;
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* If a section has a Table, keep section body block to avoid grid squeezing. */
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-has-table-section .section-body {
+	display: block !important;
+}
+
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-has-table-section .frappe-control[data-fieldtype="Table"] {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* HARD OVERRIDE (all Desk forms): any Table control must occupy full row/width */
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] {
+	grid-column: 1 / -1 !important;
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	flex: 0 0 100% !important;
+}
+
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .control-input-wrapper,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .control-input,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .form-grid-container,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .form-grid,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .grid-body,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .grid-footer,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .dt-scrollable,
+.layout-main-section .form-layout .frappe-control[data-fieldtype="Table"] .dt-scrollable .dt-scrollable-container {
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+}
+
+/* Frappe core sometimes renders .form-grid as inline-block in columns; force block/full row */
+.layout-main-section .form-layout .form-grid-container,
+.layout-main-section .form-layout .form-grid,
+.layout-main-section .form-layout .form-column .form-grid-container,
+.layout-main-section .form-layout .form-column .form-grid {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* Frappe puts fields inside .form-column > form; detail controls must span full section width */
+.layout-main-section .omnexa-form-optimized .section-body > .form-column:has(
+		.frappe-control[data-fieldtype="Table"],
+		.frappe-control[data-fieldtype="Text Editor"],
+		.frappe-control[data-fieldtype="Code"],
+		.frappe-control[data-fieldtype="HTML"]
+	) {
+	grid-column: 1 / -1;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0;
+}
+
+.layout-main-section .omnexa-form-optimized .frappe-control .control-label {
+	margin-bottom: var(--omnexa-micro);
+	font-weight: 600;
+	font-size: 0.8125rem;
+}
+
+.layout-main-section .omnexa-form-optimized .frappe-control input,
+.layout-main-section .omnexa-form-optimized .frappe-control select,
+.layout-main-section .omnexa-form-optimized .frappe-control textarea,
+.layout-main-section .omnexa-form-optimized .frappe-control .control-value,
+.layout-main-section .omnexa-form-optimized .frappe-control .like-disabled-input {
+	border-radius: var(--omnexa-radius-input);
+	min-height: 34px;
+	font-size: 0.875rem;
+}
+
+.layout-main-section .omnexa-form-optimized .frappe-control input:focus,
+.layout-main-section .omnexa-form-optimized .frappe-control select:focus,
+.layout-main-section .omnexa-form-optimized .frappe-control textarea:focus {
+	box-shadow: var(--omnexa-focus);
+}
+
+.layout-main-section .omnexa-form-optimized .frappe-control.omnexa-important-control .control-label {
+	color: #1e40af;
+}
+
+.layout-main-section .omnexa-form-optimized .frappe-control.omnexa-required-control .control-label::after {
+	content: " *";
+	color: #dc2626;
+	font-weight: 700;
+}
+
+.layout-main-section .omnexa-form-optimized .omnexa-align-end {
+	text-align: end;
+}
+
+.layout-main-section .omnexa-form-optimized .omnexa-compact-input {
+	max-width: 220px;
+}
+
+/* Transaction form density (Journal Entry reference): tighter sections on all main DocType forms. */
+.layout-main-section .omnexa-form-optimized.omnexa-transaction-density .form-section {
+	margin-bottom: 12px;
+}
+
+.layout-main-section .omnexa-form-optimized .frappe-control.omnexa-je-remarks {
+	grid-column: 1 / span 2;
+}
+
+.layout-main-section .omnexa-form-optimized .frappe-control.omnexa-je-remarks textarea {
+	min-height: 34px !important;
+	max-height: 34px !important;
+	height: 34px !important;
+	resize: none;
+	overflow-y: auto;
+}
+
+/* Currency section: keep Currency as single control column, Default Tax Rule opposite it */
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-currency-section .section-body {
+	grid-template-columns: repeat(2, minmax(220px, 1fr));
+}
+
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-currency-section .frappe-control[data-fieldname="currency"] {
+	grid-column: 1;
+	order: 1;
+}
+
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-currency-section .frappe-control[data-fieldname="supporting_attachment"] {
+	grid-column: 2;
+	order: 2;
+}
+
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-currency-section .frappe-control[data-fieldname="default_tax_rule"] {
+	grid-column: 2;
+	order: 4;
+}
+
+.layout-main-section .omnexa-form-optimized .form-section.omnexa-currency-section .frappe-control[data-fieldname="conversion_rate"] {
+	grid-column: 1;
+	order: 3;
+}
+
+@media (max-width: 1199px) {
+	.layout-main-section .omnexa-form-optimized .section-body,
+	.layout-main-section .omnexa-form-optimized.omnexa-layout-dense .section-body,
+	.layout-main-section .omnexa-form-optimized.omnexa-layout-complex .section-body {
+		grid-template-columns: repeat(2, minmax(180px, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.layout-main-section .omnexa-form-optimized .section-body,
+	.layout-main-section .omnexa-form-optimized.omnexa-layout-dense .section-body,
+	.layout-main-section .omnexa-form-optimized.omnexa-layout-complex .section-body {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	.layout-main-section .form-layout.omnexa-form-optimized .form-section {
+		border-color: rgba(148, 163, 184, 0.24);
+		box-shadow: 0 2px 14px rgba(2, 6, 23, 0.28);
+	}
+}
+
+/* -------- Document title + status (page head inside form wrapper) -------- */
+.omnexa-form-optimized .page-head .title-area .title-text {
+	font-size: clamp(1.125rem, 0.6vw + 1rem, 1.5rem);
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+/* -------- Child tables: sticky heading + zebra (items grid) -------- */
+.layout-main-section .omnexa-form-optimized .form-grid .grid-heading-row {
+	position: sticky;
+	top: 0;
+	z-index: 4;
+	background-color: var(--subtle-fg, var(--fg-color, #f4f5f6));
+	box-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
+}
+
+.layout-main-section .omnexa-form-optimized .form-grid .grid-body > .grid-row:nth-child(even) {
+	background-color: var(--omnexa-zebra);
+}
+
+/* -------- List views: subtle row banding -------- */
+.frappe-list .result .list-row-container:nth-child(even) .list-row:not(.list-row-head) {
+	background-color: var(--omnexa-zebra-list);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--omnexa-zebra: rgba(30, 41, 59, 0.45);
+		--omnexa-zebra-list: rgba(30, 41, 59, 0.35);
+	}
+}
+
+/* -------- Query Report: full-width content + clearer Link filter affordance -------- */
+#page-query-report .layout-main-section {
+	max-width: 100% !important;
+}
+
+#page-query-report .page-container,
+#page-query-report .container,
+#page-query-report .page-body,
+#page-query-report .page-content {
+	max-width: 100%;
+}
+
+#page-query-report .report-wrapper,
+#page-query-report .report-container,
+#page-query-report .datatable {
+	width: 100%;
+}
+
+#page-query-report .page-form .link-field .input-with-feedback,
+#page-query-report .page-form .frappe-control[data-fieldtype="Link"] .input-with-feedback {
+	position: relative;
+}
+
+#page-query-report .page-form .link-field .link-btn,
+#page-query-report .page-form .frappe-control[data-fieldtype="Link"] .link-btn {
+	opacity: 1;
+}
+
+/* -------- Company Demo data tab: action buttons in right column -------- */
+.frappe-control[data-fieldname^="demo_group_"] .erpgenex-demo-group-title {
+	margin-top: 0.75rem;
+	margin-bottom: 0.25rem;
+}
+
+.frappe-control[data-fieldname="demo_group_production_label"] .erpgenex-demo-group-title {
+	margin-top: 0;
+}
+
+.frappe-control[data-fieldname^="demo_btn_"] .btn {
+	display: block;
+	width: 100%;
+	margin-bottom: 0.35rem;
+	text-align: left;
+	white-space: normal;
+}
+
+.frappe-control[data-fieldname^="branch_demo_btn_"] .btn {
+	display: block;
+	width: 100%;
+	margin-bottom: 0.35rem;
+	text-align: left;
+	white-space: normal;
+}
+
+/* Sell workspace — prominent Retail POS launch */
+.erpgenex-sell-pos-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin: 0 0 16px;
+	padding: 14px 18px;
+	border-radius: 12px;
+	background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+	border: 1px solid #a5d6a7;
+	box-shadow: 0 2px 8px rgba(46, 125, 50, 0.12);
+}
+
+.erpgenex-sell-pos-banner__text {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	color: #1b5e20;
+}
+
+.erpgenex-sell-pos-banner__text strong {
+	font-size: 15px;
+}
+
+.erpgenex-sell-pos-banner__text span {
+	font-size: 12px;
+	color: #388e3c;
+}
+
+.erpgenex-sell-pos-banner__btn,
+.erpgenex-sell-pos-btn {
+	background: #2e7d32 !important;
+	border-color: #2e7d32 !important;
+}
+
+.erpgenex-sell-pos-banner__btn:hover,
+.erpgenex-sell-pos-btn:hover {
+	background: #1b5e20 !important;
+	border-color: #1b5e20 !important;
+}
+
+/* Vertical role portal layout (workcenter + role desks) */
+.oj-vertical-portal-layout {
+	display: flex;
+	gap: 20px;
+	min-height: 60vh;
+}
+.oj-vertical-portal-aside {
+	flex: 0 0 240px;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 16px;
+}
+.oj-vertical-portal-brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 16px;
+	font-size: 14px;
+	color: #003366;
+}
+.oj-vertical-portal-brand img {
+	width: 40px;
+	height: 40px;
+	border-radius: 8px;
+	object-fit: contain;
+}
+.oj-sidebar-section {
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: #64748b;
+	margin: 12px 0 6px;
+}
+.oj-sidebar-link {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 10px;
+	border-radius: 8px;
+	color: #1e293b;
+	text-decoration: none;
+	font-size: 13px;
+	margin-bottom: 2px;
+}
+.oj-sidebar-link:hover,
+.oj-sidebar-link.active {
+	background: #e6f0f9;
+	color: #003366;
+}
+.oj-sidebar-icon {
+	font-size: 16px;
+	line-height: 1;
+}
+.oj-sidebar-back {
+	margin-top: 12px;
+	border-top: 1px solid #e2e8f0;
+	padding-top: 12px;
+}
+.oj-vertical-portal-main {
+	flex: 1;
+	min-width: 0;
+}
+.oj-vertical-portal-card {
+	padding: 20px;
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+}
+@media (max-width: 900px) {
+	.oj-vertical-portal-layout {
+		flex-direction: column;
+	}
+	.oj-vertical-portal-aside {
+		flex: none;
+	}
+}

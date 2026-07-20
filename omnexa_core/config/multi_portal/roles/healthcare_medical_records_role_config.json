@@ -1,0 +1,207 @@
+{
+  "role_id": "healthcare_medical_records",
+  "role_name": "Medical Records",
+  "application": "healthcare",
+  "portal": "healthcare_medical_records",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "records_pending",
+        "title": "Records Pending",
+        "value": "count",
+        "source": "medical_record",
+        "filter": "pending"
+      },
+      {
+        "id": "records_digitized_today",
+        "title": "Records Digitized Today",
+        "value": "count",
+        "source": "medical_record",
+        "filter": "digitized_today"
+      },
+      {
+        "id": "record_requests",
+        "title": "Record Requests",
+        "value": "count",
+        "source": "record_request",
+        "filter": "pending"
+      },
+      {
+        "id": "release_authorizations",
+        "title": "Release Authorizations",
+        "value": "count",
+        "source": "release_authorization",
+        "filter": "pending"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "create_record",
+        "title": "Create Record",
+        "action": "create",
+        "doctype": "medical_record"
+      },
+      {
+        "id": "digitize_record",
+        "title": "Digitize Record",
+        "action": "update",
+        "doctype": "medical_record"
+      },
+      {
+        "id": "process_request",
+        "title": "Process Request",
+        "action": "update",
+        "doctype": "record_request"
+      },
+      {
+        "id": "authorize_release",
+        "title": "Authorize Release",
+        "action": "create",
+        "doctype": "release_authorization"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_records",
+        "title": "Pending Records",
+        "type": "list",
+        "source": "medical_record"
+      },
+      {
+        "id": "record_requests",
+        "title": "Record Requests",
+        "type": "list",
+        "source": "record_request"
+      },
+      {
+        "id": "recent_releases",
+        "title": "Recent Releases",
+        "type": "list",
+        "source": "release_authorization"
+      }
+    ],
+    "charts": [
+      {
+        "id": "record_volume",
+        "title": "Record Volume",
+        "type": "line",
+        "source": "medical_record"
+      },
+      {
+        "id": "request_types",
+        "title": "Request Types",
+        "type": "pie",
+        "source": "record_request"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Medical Records",
+        "items": [
+          {
+            "id": "medical_records",
+            "title": "Medical Records",
+            "icon": "folder",
+            "route": "/app/healthcare/medical-records/medical-records"
+          },
+          {
+            "id": "record_search",
+            "title": "Record Search",
+            "icon": "search",
+            "route": "/app/healthcare/medical-records/record-search"
+          }
+        ]
+      },
+      {
+        "title": "Requests",
+        "items": [
+          {
+            "id": "record_requests",
+            "title": "Record Requests",
+            "icon": "assignment",
+            "route": "/app/healthcare/medical-records/record-requests"
+          },
+          {
+            "id": "request_history",
+            "title": "Request History",
+            "icon": "history",
+            "route": "/app/healthcare/medical-records/request-history"
+          }
+        ]
+      },
+      {
+        "title": "Releases",
+        "items": [
+          {
+            "id": "release_authorizations",
+            "title": "Release Authorizations",
+            "icon": "verified",
+            "route": "/app/healthcare/medical-records/release-authorizations"
+          },
+          {
+            "id": "release_history",
+            "title": "Release History",
+            "icon": "history",
+            "route": "/app/healthcare/medical-records/release-history"
+          }
+        ]
+      },
+      {
+        "title": "Compliance",
+        "items": [
+          {
+            "id": "hipaa_compliance",
+            "title": "HIPAA Compliance",
+            "icon": "policy",
+            "route": "/app/healthcare/medical-records/hipaa-compliance"
+          },
+          {
+            "id": "audit_logs",
+            "title": "Audit Logs",
+            "icon": "list_alt",
+            "route": "/app/healthcare/medical-records/audit-logs"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "medical_record",
+      "record_request",
+      "release_authorization",
+      "patient_record"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "healthcare_encounter",
+      "prescription",
+      "billing",
+      "financial_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "record_report",
+      "title": "Record Report",
+      "route": "/app/healthcare/medical-records/reports/record"
+    },
+    {
+      "id": "compliance_report",
+      "title": "Compliance Report",
+      "route": "/app/healthcare/medical-records/reports/compliance"
+    }
+  ],
+  "notifications": [
+    "new_record_request",
+    "record_digitized",
+    "release_authorized",
+    "compliance_alert"
+  ]
+}

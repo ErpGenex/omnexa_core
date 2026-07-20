@@ -1,0 +1,208 @@
+{
+  "role_id": "healthcare_lab_technician",
+  "role_name": "Lab Technician",
+  "application": "healthcare",
+  "portal": "healthcare_lab",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "pending_tests",
+        "title": "Pending Tests",
+        "value": "count",
+        "source": "lab_test",
+        "filter": "pending"
+      },
+      {
+        "id": "tests_completed_today",
+        "title": "Tests Completed Today",
+        "value": "count",
+        "source": "lab_result",
+        "filter": "today"
+      },
+      {
+        "id": "urgent_tests",
+        "title": "Urgent Tests",
+        "value": "count",
+        "source": "lab_test",
+        "filter": "urgent"
+      },
+      {
+        "id": "quality_checks",
+        "title": "Quality Checks Pending",
+        "value": "count",
+        "source": "quality_check",
+        "filter": "pending"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "create_lab_test",
+        "title": "Create Lab Test",
+        "action": "create",
+        "doctype": "lab_test"
+      },
+      {
+        "id": "record_result",
+        "title": "Record Result",
+        "action": "update",
+        "doctype": "lab_result"
+      },
+      {
+        "id": "quality_check",
+        "title": "Quality Check",
+        "action": "create",
+        "doctype": "quality_check"
+      },
+      {
+        "id": "sample_tracking",
+        "title": "Sample Tracking",
+        "action": "read",
+        "doctype": "sample"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_tests",
+        "title": "Pending Tests",
+        "type": "list",
+        "source": "lab_test"
+      },
+      {
+        "id": "sample_queue",
+        "title": "Sample Queue",
+        "type": "queue",
+        "source": "sample"
+      },
+      {
+        "id": "recent_results",
+        "title": "Recent Results",
+        "type": "list",
+        "source": "lab_result"
+      }
+    ],
+    "charts": [
+      {
+        "id": "test_volume",
+        "title": "Test Volume",
+        "type": "line",
+        "source": "lab_test"
+      },
+      {
+        "id": "test_types",
+        "title": "Test Types Distribution",
+        "type": "pie",
+        "source": "lab_test"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Lab Tests",
+        "items": [
+          {
+            "id": "lab_tests",
+            "title": "Lab Tests",
+            "icon": "science",
+            "route": "/app/healthcare/lab/lab-tests"
+          },
+          {
+            "id": "test_templates",
+            "title": "Test Templates",
+            "icon": "description",
+            "route": "/app/healthcare/lab/test-templates"
+          }
+        ]
+      },
+      {
+        "title": "Samples",
+        "items": [
+          {
+            "id": "sample_collection",
+            "title": "Sample Collection",
+            "icon": "vial",
+            "route": "/app/healthcare/lab/sample-collection"
+          },
+          {
+            "id": "sample_tracking",
+            "title": "Sample Tracking",
+            "icon": "qr_code",
+            "route": "/app/healthcare/lab/sample-tracking"
+          }
+        ]
+      },
+      {
+        "title": "Results",
+        "items": [
+          {
+            "id": "lab_results",
+            "title": "Lab Results",
+            "icon": "assessment",
+            "route": "/app/healthcare/lab/lab-results"
+          },
+          {
+            "id": "result_approval",
+            "title": "Result Approval",
+            "icon": "verified",
+            "route": "/app/healthcare/lab/result-approval"
+          }
+        ]
+      },
+      {
+        "title": "Quality",
+        "items": [
+          {
+            "id": "quality_checks",
+            "title": "Quality Checks",
+            "icon": "verified_user",
+            "route": "/app/healthcare/lab/quality-checks"
+          },
+          {
+            "id": "equipment_maintenance",
+            "title": "Equipment Maintenance",
+            "icon": "build",
+            "route": "/app/healthcare/lab/equipment-maintenance"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "lab_test",
+      "lab_result",
+      "sample",
+      "quality_check",
+      "test_template"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "patient",
+      "healthcare_encounter",
+      "prescription",
+      "billing"
+    ]
+  },
+  "reports": [
+    {
+      "id": "lab_report",
+      "title": "Lab Report",
+      "route": "/app/healthcare/lab/reports/lab"
+    },
+    {
+      "id": "quality_report",
+      "title": "Quality Report",
+      "route": "/app/healthcare/lab/reports/quality"
+    }
+  ],
+  "notifications": [
+    "new_test_order",
+    "sample_collected",
+    "result_ready",
+    "quality_alert"
+  ]
+}

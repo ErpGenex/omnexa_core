@@ -1,0 +1,224 @@
+{
+  "role_id": "healthcare_receptionist",
+  "role_name": "Receptionist",
+  "application": "healthcare",
+  "portal": "healthcare_reception",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "today_appointments",
+        "title": "Today's Appointments",
+        "value": "count",
+        "source": "healthcare_appointment",
+        "filter": "today"
+      },
+      {
+        "id": "walk_in_patients",
+        "title": "Walk-in Patients",
+        "value": "count",
+        "source": "patient",
+        "filter": "walk_in_today"
+      },
+      {
+        "id": "queue_size",
+        "title": "Queue",
+        "value": "count",
+        "source": "patient_queue"
+      },
+      {
+        "id": "today_revenue",
+        "title": "Today's Revenue",
+        "value": "sum",
+        "source": "payment",
+        "filter": "today"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "patient_registration",
+        "title": "Patient Registration",
+        "action": "create",
+        "doctype": "patient"
+      },
+      {
+        "id": "book_appointment",
+        "title": "Book Appointment",
+        "action": "create",
+        "doctype": "healthcare_appointment"
+      },
+      {
+        "id": "check_in",
+        "title": "Check-in",
+        "action": "update",
+        "doctype": "patient"
+      },
+      {
+        "id": "check_out",
+        "title": "Check-out",
+        "action": "update",
+        "doctype": "patient"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "today_tasks",
+        "title": "Today's Tasks",
+        "type": "task_list",
+        "source": "healthcare_appointment"
+      },
+      {
+        "id": "waiting_patients",
+        "title": "Waiting Patients",
+        "type": "list",
+        "source": "patient_queue"
+      },
+      {
+        "id": "doctor_availability",
+        "title": "Doctor Availability",
+        "type": "availability",
+        "source": "healthcare_practitioner"
+      }
+    ],
+    "charts": [
+      {
+        "id": "appointments_chart",
+        "title": "Appointments Today",
+        "type": "line",
+        "source": "healthcare_appointment"
+      },
+      {
+        "id": "revenue_chart",
+        "title": "Revenue Today",
+        "type": "bar",
+        "source": "payment"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Patients",
+        "items": [
+          {
+            "id": "patient_registration",
+            "title": "Patient Registration",
+            "icon": "person_add",
+            "route": "/app/healthcare/reception/patient-registration"
+          },
+          {
+            "id": "patient_list",
+            "title": "Patient List",
+            "icon": "people",
+            "route": "/app/healthcare/reception/patient-list"
+          },
+          {
+            "id": "patient_queue",
+            "title": "Patient Queue",
+            "icon": "queue",
+            "route": "/app/healthcare/reception/patient-queue"
+          }
+        ]
+      },
+      {
+        "title": "Appointments",
+        "items": [
+          {
+            "id": "book_appointment",
+            "title": "Book Appointment",
+            "icon": "calendar_today",
+            "route": "/app/healthcare/reception/book-appointment"
+          },
+          {
+            "id": "appointment_list",
+            "title": "Appointment List",
+            "icon": "event",
+            "route": "/app/healthcare/reception/appointment-list"
+          },
+          {
+            "id": "today_appointments",
+            "title": "Today's Appointments",
+            "icon": "today",
+            "route": "/app/healthcare/reception/today-appointments"
+          }
+        ]
+      },
+      {
+        "title": "Payments",
+        "items": [
+          {
+            "id": "payment_collection",
+            "title": "Payment Collection",
+            "icon": "payments",
+            "route": "/app/healthcare/reception/payment-collection"
+          },
+          {
+            "id": "payment_history",
+            "title": "Payment History",
+            "icon": "history",
+            "route": "/app/healthcare/reception/payment-history"
+          }
+        ]
+      },
+      {
+        "title": "Insurance",
+        "items": [
+          {
+            "id": "insurance_verification",
+            "title": "Insurance Verification",
+            "icon": "verified",
+            "route": "/app/healthcare/reception/insurance-verification"
+          },
+          {
+            "id": "insurance_claims",
+            "title": "Insurance Claims",
+            "icon": "claim",
+            "route": "/app/healthcare/reception/insurance-claims"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "patient",
+      "healthcare_appointment",
+      "payment",
+      "insurance_claim"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "medical_record",
+      "lab_result",
+      "radiology_report",
+      "prescription",
+      "accounting_entry"
+    ]
+  },
+  "reports": [
+    {
+      "id": "daily_appointments_report",
+      "title": "Daily Appointments Report",
+      "route": "/app/healthcare/reception/reports/daily-appointments"
+    },
+    {
+      "id": "daily_revenue_report",
+      "title": "Daily Revenue Report",
+      "route": "/app/healthcare/reception/reports/daily-revenue"
+    },
+    {
+      "id": "patient_statistics_report",
+      "title": "Patient Statistics Report",
+      "route": "/app/healthcare/reception/reports/patient-statistics"
+    }
+  ],
+  "notifications": [
+    "new_appointment",
+    "patient_check_in",
+    "payment_received",
+    "insurance_claim_status"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+ "item_code": "applications",
+ "item_name": "Applications",
+ "item_group": "Omnexa Core",
+ "module": "Omnexa Core",
+ "workspace_name": "Applications",
+ "creation": "2026-07-19 23:26:00.000000",
+ "docstatus": 0,
+ "idx": 0,
+ "modified": "2026-07-19 23:26:00.000000",
+ "modified_by": "Administrator",
+ "owner": "Administrator",
+ "onboarding": "",
+ "extends_another_page": 0,
+ "extends": "",
+ "forbidden_doctypes": "",
+ "is_standard": 1,
+ "label": "Applications",
+ "links": [],
+ "icon": "grid",
+ "indicator_color": "blue",
+ "shortcuts": [],
+ "title": "ERPGenex Applications",
+ "roles": [
+  {
+   "role": "System User",
+   "read": 1
+  },
+  {
+   "role": "Administrator",
+   "read": 1
+  }
+ ]
+}

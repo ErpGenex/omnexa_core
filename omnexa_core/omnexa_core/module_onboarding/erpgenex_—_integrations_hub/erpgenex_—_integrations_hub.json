@@ -1,0 +1,41 @@
+{
+ "allow_roles": [
+  {
+   "role": "Desk User"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "creation": "2026-05-02 01:05:26.009278",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "documentation_url": "https://frappe.io/framework",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-07-11 14:37:29.920133",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "ERPGENEX \u2014 Integrations Hub",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "step": "ERPGENEX-WS-integrations_hub-01-e_document_submission"
+  },
+  {
+   "step": "ERPGENEX-WS-integrations_hub-02-tax_authority_profile"
+  },
+  {
+   "step": "ERPGENEX-WS-integrations_hub-03-signing_profile"
+  },
+  {
+   "step": "ERPGENEX-WS-integrations_hub-04-payment_intent"
+  },
+  {
+   "step": "ERPGENEX-WS-integrations_hub-home"
+  }
+ ],
+ "subtitle": "Guided setup for this workspace.",
+ "success_message": "You are ready to work in Integrations Hub.",
+ "title": "Integrations Hub"
+}

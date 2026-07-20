@@ -1,0 +1,214 @@
+{
+  "role_id": "education_accountant",
+  "role_name": "Accountant",
+  "application": "education",
+  "portal": "education_accountant",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "fees_collected",
+        "title": "Fees Collected",
+        "value": "sum",
+        "source": "fee_payment",
+        "filter": "current_month"
+      },
+      {
+        "id": "fees_pending",
+        "title": "Fees Pending",
+        "value": "count",
+        "source": "fee_payment",
+        "filter": "pending"
+      },
+      {
+        "id": "scholarships_awarded",
+        "title": "Scholarships Awarded",
+        "value": "count",
+        "source": "scholarship",
+        "filter": "current_month"
+      },
+      {
+        "id": "refunds_processed",
+        "title": "Refunds Processed",
+        "value": "count",
+        "source": "refund",
+        "filter": "current_month"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "collect_fees",
+        "title": "Collect Fees",
+        "action": "create",
+        "doctype": "fee_payment"
+      },
+      {
+        "id": "create_invoice",
+        "title": "Create Invoice",
+        "action": "create",
+        "doctype": "fee_invoice"
+      },
+      {
+        "id": "process_refund",
+        "title": "Process Refund",
+        "action": "create",
+        "doctype": "refund"
+      },
+      {
+        "id": "award_scholarship",
+        "title": "Award Scholarship",
+        "action": "create",
+        "doctype": "scholarship"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_payments",
+        "title": "Pending Payments",
+        "type": "list",
+        "source": "fee_payment"
+      },
+      {
+        "id": "recent_collections",
+        "title": "Recent Collections",
+        "type": "list",
+        "source": "fee_payment"
+      },
+      {
+        "id": "scholarship_requests",
+        "title": "Scholarship Requests",
+        "type": "list",
+        "source": "scholarship"
+      }
+    ],
+    "charts": [
+      {
+        "id": "fee_collection_trend",
+        "title": "Fee Collection Trend",
+        "type": "line",
+        "source": "fee_payment"
+      },
+      {
+        "id": "payment_methods",
+        "title": "Payment Methods",
+        "type": "pie",
+        "source": "fee_payment"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Fees",
+        "items": [
+          {
+            "id": "fee_payments",
+            "title": "Fee Payments",
+            "icon": "payments",
+            "route": "/app/education/accountant/fee-payments"
+          },
+          {
+            "id": "fee_invoices",
+            "title": "Fee Invoices",
+            "icon": "receipt",
+            "route": "/app/education/accountant/fee-invoices"
+          },
+          {
+            "id": "fee_structure",
+            "title": "Fee Structure",
+            "icon": "list_alt",
+            "route": "/app/education/accountant/fee-structure"
+          }
+        ]
+      },
+      {
+        "title": "Scholarships",
+        "items": [
+          {
+            "id": "scholarships",
+            "title": "Scholarships",
+            "icon": "workspace_premium",
+            "route": "/app/education/accountant/scholarships"
+          },
+          {
+            "id": "scholarship_requests",
+            "title": "Scholarship Requests",
+            "icon": "assignment",
+            "route": "/app/education/accountant/scholarship-requests"
+          }
+        ]
+      },
+      {
+        "title": "Refunds",
+        "items": [
+          {
+            "id": "refunds",
+            "title": "Refunds",
+            "icon": "refund",
+            "route": "/app/education/accountant/refunds"
+          },
+          {
+            "id": "refund_requests",
+            "title": "Refund Requests",
+            "icon": "assignment",
+            "route": "/app/education/accountant/refund-requests"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "fee_report",
+            "title": "Fee Report",
+            "icon": "assessment",
+            "route": "/app/education/accountant/reports/fee"
+          },
+          {
+            "id": "collection_report",
+            "title": "Collection Report",
+            "icon": "trending_up",
+            "route": "/app/education/accountant/reports/collection"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "fee_payment",
+      "fee_invoice",
+      "scholarship",
+      "refund",
+      "fee_structure"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "student_records",
+      "academic_records",
+      "teacher_assignments",
+      "hr_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "fee_report",
+      "title": "Fee Report",
+      "route": "/app/education/accountant/reports/fee"
+    },
+    {
+      "id": "scholarship_report",
+      "title": "Scholarship Report",
+      "route": "/app/education/accountant/reports/scholarship"
+    }
+  ],
+  "notifications": [
+    "payment_received",
+    "fee_due",
+    "refund_request",
+    "scholarship_application"
+  ]
+}

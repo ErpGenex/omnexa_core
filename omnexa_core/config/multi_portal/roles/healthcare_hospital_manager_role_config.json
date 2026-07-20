@@ -1,0 +1,211 @@
+{
+  "role_id": "healthcare_hospital_manager",
+  "role_name": "Hospital Manager",
+  "application": "healthcare",
+  "portal": "healthcare_manager",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "total_patients",
+        "title": "Total Patients",
+        "value": "count",
+        "source": "patient",
+        "filter": "active"
+      },
+      {
+        "id": "total_doctors",
+        "title": "Total Doctors",
+        "value": "count",
+        "source": "healthcare_practitioner",
+        "filter": "active"
+      },
+      {
+        "id": "daily_revenue",
+        "title": "Daily Revenue",
+        "value": "sum",
+        "source": "payment",
+        "filter": "today"
+      },
+      {
+        "id": "bed_occupancy",
+        "title": "Bed Occupancy",
+        "value": "percentage",
+        "source": "healthcare_bed",
+        "filter": "current"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "view_reports",
+        "title": "View Reports",
+        "action": "read",
+        "doctype": "report"
+      },
+      {
+        "id": "manage_staff",
+        "title": "Manage Staff",
+        "action": "update",
+        "doctype": "healthcare_practitioner"
+      },
+      {
+        "id": "approve_requests",
+        "title": "Approve Requests",
+        "action": "update",
+        "doctype": "request"
+      },
+      {
+        "id": "send_announcement",
+        "title": "Send Announcement",
+        "action": "create",
+        "doctype": "announcement"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "hospital_overview",
+        "title": "Hospital Overview",
+        "type": "overview",
+        "source": "hospital"
+      },
+      {
+        "id": "pending_approvals",
+        "title": "Pending Approvals",
+        "type": "list",
+        "source": "request"
+      },
+      {
+        "id": "department_performance",
+        "title": "Department Performance",
+        "type": "list",
+        "source": "department"
+      }
+    ],
+    "charts": [
+      {
+        "id": "patient_volume",
+        "title": "Patient Volume",
+        "type": "line",
+        "source": "patient"
+      },
+      {
+        "id": "revenue_trend",
+        "title": "Revenue Trend",
+        "type": "bar",
+        "source": "payment"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Overview",
+        "items": [
+          {
+            "id": "dashboard",
+            "title": "Dashboard",
+            "icon": "dashboard",
+            "route": "/app/healthcare/manager/dashboard"
+          },
+          {
+            "id": "hospital_overview",
+            "title": "Hospital Overview",
+            "icon": "local_hospital",
+            "route": "/app/healthcare/manager/hospital-overview"
+          }
+        ]
+      },
+      {
+        "title": "Management",
+        "items": [
+          {
+            "id": "staff_management",
+            "title": "Staff Management",
+            "icon": "people",
+            "route": "/app/healthcare/manager/staff-management"
+          },
+          {
+            "id": "department_management",
+            "title": "Department Management",
+            "icon": "business",
+            "route": "/app/healthcare/manager/department-management"
+          },
+          {
+            "id": "resource_management",
+            "title": "Resource Management",
+            "icon": "inventory",
+            "route": "/app/healthcare/manager/resource-management"
+          }
+        ]
+      },
+      {
+        "title": "Approvals",
+        "items": [
+          {
+            "id": "pending_approvals",
+            "title": "Pending Approvals",
+            "icon": "assignment",
+            "route": "/app/healthcare/manager/pending-approvals"
+          },
+          {
+            "id": "approval_history",
+            "title": "Approval History",
+            "icon": "history",
+            "route": "/app/healthcare/manager/approval-history"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "hospital_report",
+            "title": "Hospital Report",
+            "icon": "assessment",
+            "route": "/app/healthcare/manager/reports/hospital"
+          },
+          {
+            "id": "performance_report",
+            "title": "Performance Report",
+            "icon": "trending_up",
+            "route": "/app/healthcare/manager/reports/performance"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "patient",
+      "healthcare_practitioner",
+      "department",
+      "request",
+      "announcement",
+      "report"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update",
+      "delete"
+    ],
+    "restricted_doctypes": []
+  },
+  "reports": [
+    {
+      "id": "hospital_report",
+      "title": "Hospital Report",
+      "route": "/app/healthcare/manager/reports/hospital"
+    },
+    {
+      "id": "performance_report",
+      "title": "Performance Report",
+      "route": "/app/healthcare/manager/reports/performance"
+    }
+  ],
+  "notifications": [
+    "approval_request",
+    "staff_alert",
+    "patient_alert",
+    "system_alert"
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "role_id": "education_assistant_teacher",
+  "role_name": "Assistant Teacher",
+  "application": "education",
+  "portal": "education_assistant_teacher",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "today_classes",
+        "title": "Today's Classes",
+        "value": "count",
+        "source": "class_schedule",
+        "filter": "today"
+      },
+      {
+        "id": "assigned_students",
+        "title": "Assigned Students",
+        "value": "count",
+        "source": "student_enrollment",
+        "filter": "my_classes"
+      },
+      {
+        "id": "assignments_to_grade",
+        "title": "Assignments to Grade",
+        "value": "count",
+        "source": "assignment",
+        "filter": "pending_grading"
+      },
+      {
+        "id": "attendance_rate",
+        "title": "Class Attendance Rate",
+        "value": "percentage",
+        "source": "attendance",
+        "filter": "my_classes"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "take_attendance",
+        "title": "Take Attendance",
+        "action": "create",
+        "doctype": "attendance"
+      },
+      {
+        "id": "grade_assignments",
+        "title": "Grade Assignments",
+        "action": "update",
+        "doctype": "assignment"
+      },
+      {
+        "id": "support_students",
+        "title": "Support Students",
+        "action": "read",
+        "doctype": "student"
+      },
+      {
+        "id": "view_schedule",
+        "title": "View Schedule",
+        "action": "read",
+        "doctype": "class_schedule"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "my_classes",
+        "title": "My Classes",
+        "type": "list",
+        "source": "class_schedule"
+      },
+      {
+        "id": "students",
+        "title": "My Students",
+        "type": "list",
+        "source": "student_enrollment"
+      },
+      {
+        "id": "assignments_to_grade",
+        "title": "Assignments to Grade",
+        "type": "list",
+        "source": "assignment"
+      }
+    ],
+    "charts": [
+      {
+        "id": "class_performance",
+        "title": "Class Performance",
+        "type": "line",
+        "source": "grade"
+      },
+      {
+        "id": "attendance_trend",
+        "title": "Attendance Trend",
+        "type": "bar",
+        "source": "attendance"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Classes",
+        "items": [
+          {
+            "id": "my_classes",
+            "title": "My Classes",
+            "icon": "class",
+            "route": "/app/education/assistant-teacher/my-classes"
+          },
+          {
+            "id": "class_schedule",
+            "title": "Class Schedule",
+            "icon": "schedule",
+            "route": "/app/education/assistant-teacher/class-schedule"
+          }
+        ]
+      },
+      {
+        "title": "Students",
+        "items": [
+          {
+            "id": "my_students",
+            "title": "My Students",
+            "icon": "people",
+            "route": "/app/education/assistant-teacher/my-students"
+          },
+          {
+            "id": "student_support",
+            "title": "Student Support",
+            "icon": "support_agent",
+            "route": "/app/education/assistant-teacher/student-support"
+          }
+        ]
+      },
+      {
+        "title": "Academic",
+        "items": [
+          {
+            "id": "attendance",
+            "title": "Attendance",
+            "icon": "event_available",
+            "route": "/app/education/assistant-teacher/attendance"
+          },
+          {
+            "id": "assignments",
+            "title": "Assignments",
+            "icon": "assignment",
+            "route": "/app/education/assistant-teacher/assignments"
+          },
+          {
+            "id": "grades",
+            "title": "Grades",
+            "icon": "grade",
+            "route": "/app/education/assistant-teacher/grades"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "class_schedule",
+      "student_enrollment",
+      "attendance",
+      "assignment",
+      "grade"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "course_management",
+      "financial_records",
+      "hr_records",
+      "administrative_functions"
+    ]
+  },
+  "reports": [
+    {
+      "id": "class_report",
+      "title": "Class Report",
+      "route": "/app/education/assistant-teacher/reports/class"
+    },
+    {
+      "id": "student_support_report",
+      "title": "Student Support Report",
+      "route": "/app/education/assistant-teacher/reports/student-support"
+    }
+  ],
+  "notifications": [
+    "assignment_submission",
+    "attendance_alert",
+    "student_message",
+    "teacher_message"
+  ]
+}

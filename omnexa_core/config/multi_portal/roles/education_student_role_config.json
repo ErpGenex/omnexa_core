@@ -1,0 +1,215 @@
+{
+  "role_id": "education_student",
+  "role_name": "Student",
+  "application": "education",
+  "portal": "education_student",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "current_courses",
+        "title": "Current Courses",
+        "value": "count",
+        "source": "course_enrollment",
+        "filter": "active"
+      },
+      {
+        "id": "attendance_rate",
+        "title": "Attendance Rate",
+        "value": "percentage",
+        "source": "attendance",
+        "filter": "current_term"
+      },
+      {
+        "id": "pending_assignments",
+        "title": "Pending Assignments",
+        "value": "count",
+        "source": "assignment",
+        "filter": "pending"
+      },
+      {
+        "id": "upcoming_exams",
+        "title": "Upcoming Exams",
+        "value": "count",
+        "source": "exam",
+        "filter": "upcoming"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "view_courses",
+        "title": "View Courses",
+        "action": "read",
+        "doctype": "course_enrollment"
+      },
+      {
+        "id": "submit_assignment",
+        "title": "Submit Assignment",
+        "action": "update",
+        "doctype": "assignment"
+      },
+      {
+        "id": "view_grades",
+        "title": "View Grades",
+        "action": "read",
+        "doctype": "grade"
+      },
+      {
+        "id": "view_timetable",
+        "title": "View Timetable",
+        "action": "read",
+        "doctype": "timetable"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "my_courses",
+        "title": "My Courses",
+        "type": "list",
+        "source": "course_enrollment"
+      },
+      {
+        "id": "assignments",
+        "title": "Assignments",
+        "type": "list",
+        "source": "assignment"
+      },
+      {
+        "id": "exam_schedule",
+        "title": "Exam Schedule",
+        "type": "schedule",
+        "source": "exam"
+      }
+    ],
+    "charts": [
+      {
+        "id": "grade_progress",
+        "title": "Grade Progress",
+        "type": "line",
+        "source": "grade"
+      },
+      {
+        "id": "attendance_chart",
+        "title": "Attendance",
+        "type": "bar",
+        "source": "attendance"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Academic",
+        "items": [
+          {
+            "id": "my_courses",
+            "title": "My Courses",
+            "icon": "school",
+            "route": "/app/education/student/my-courses"
+          },
+          {
+            "id": "timetable",
+            "title": "Timetable",
+            "icon": "calendar_today",
+            "route": "/app/education/student/timetable"
+          },
+          {
+            "id": "attendance",
+            "title": "Attendance",
+            "icon": "event_available",
+            "route": "/app/education/student/attendance"
+          }
+        ]
+      },
+      {
+        "title": "Assignments",
+        "items": [
+          {
+            "id": "assignments",
+            "title": "Assignments",
+            "icon": "assignment",
+            "route": "/app/education/student/assignments"
+          },
+          {
+            "id": "submissions",
+            "title": "My Submissions",
+            "icon": "upload",
+            "route": "/app/education/student/submissions"
+          }
+        ]
+      },
+      {
+        "title": "Grades",
+        "items": [
+          {
+            "id": "grades",
+            "title": "Grades",
+            "icon": "grade",
+            "route": "/app/education/student/grades"
+          },
+          {
+            "id": "transcript",
+            "title": "Transcript",
+            "icon": "description",
+            "route": "/app/education/student/transcript"
+          }
+        ]
+      },
+      {
+        "title": "Fees",
+        "items": [
+          {
+            "id": "my_fees",
+            "title": "My Fees",
+            "icon": "payments",
+            "route": "/app/education/student/my-fees"
+          },
+          {
+            "id": "payment_history",
+            "title": "Payment History",
+            "icon": "history",
+            "route": "/app/education/student/payment-history"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "course_enrollment",
+      "assignment",
+      "grade",
+      "attendance",
+      "timetable",
+      "fee_payment"
+    ],
+    "allowed_actions": [
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "course_management",
+      "student_records",
+      "teacher_assignments",
+      "financial_reports"
+    ]
+  },
+  "reports": [
+    {
+      "id": "academic_report",
+      "title": "Academic Report",
+      "route": "/app/education/student/reports/academic"
+    },
+    {
+      "id": "attendance_report",
+      "title": "Attendance Report",
+      "route": "/app/education/student/reports/attendance"
+    }
+  ],
+  "notifications": [
+    "new_assignment",
+    "assignment_due",
+    "exam_reminder",
+    "grade_posted",
+    "fee_due"
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "role_id": "commerce_warehouse",
+  "role_name": "Warehouse",
+  "application": "commerce",
+  "portal": "commerce_warehouse",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "total_stock",
+        "title": "Total Stock",
+        "value": "count",
+        "source": "stock_entry",
+        "filter": "current"
+      },
+      {
+        "id": "low_stock_items",
+        "title": "Low Stock Items",
+        "value": "count",
+        "source": "item",
+        "filter": "low_stock"
+      },
+      {
+        "id": "pending_transfers",
+        "title": "Pending Transfers",
+        "value": "count",
+        "source": "stock_transfer",
+        "filter": "pending"
+      },
+      {
+        "id": "today_movements",
+        "title": "Today's Stock Movements",
+        "value": "count",
+        "source": "stock_entry",
+        "filter": "today"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "stock_entry",
+        "title": "Stock Entry",
+        "action": "create",
+        "doctype": "stock_entry"
+      },
+      {
+        "id": "stock_transfer",
+        "title": "Stock Transfer",
+        "action": "create",
+        "doctype": "stock_transfer"
+      },
+      {
+        "id": "stock_reconciliation",
+        "title": "Stock Reconciliation",
+        "action": "create",
+        "doctype": "stock_reconciliation"
+      },
+      {
+        "id": "purchase_receipt",
+        "title": "Purchase Receipt",
+        "action": "create",
+        "doctype": "purchase_receipt"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "stock_levels",
+        "title": "Stock Levels",
+        "type": "list",
+        "source": "item"
+      },
+      {
+        "id": "pending_transfers",
+        "title": "Pending Transfers",
+        "type": "list",
+        "source": "stock_transfer"
+      },
+      {
+        "id": "recent_movements",
+        "title": "Recent Movements",
+        "type": "list",
+        "source": "stock_entry"
+      }
+    ],
+    "charts": [
+      {
+        "id": "stock_trend",
+        "title": "Stock Trend",
+        "type": "line",
+        "source": "stock_entry"
+      },
+      {
+        "id": "inventory_value",
+        "title": "Inventory Value",
+        "type": "bar",
+        "source": "item"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Stock",
+        "items": [
+          {
+            "id": "stock_entries",
+            "title": "Stock Entries",
+            "icon": "inventory",
+            "route": "/app/commerce/warehouse/stock-entries"
+          },
+          {
+            "id": "stock_transfers",
+            "title": "Stock Transfers",
+            "icon": "swap_horiz",
+            "route": "/app/commerce/warehouse/stock-transfers"
+          },
+          {
+            "id": "stock_reconciliation",
+            "title": "Stock Reconciliation",
+            "icon": "balance",
+            "route": "/app/commerce/warehouse/stock-reconciliation"
+          }
+        ]
+      },
+      {
+        "title": "Inventory",
+        "items": [
+          {
+            "id": "items",
+            "title": "Items",
+            "icon": "inventory_2",
+            "route": "/app/commerce/warehouse/items"
+          },
+          {
+            "id": "item_groups",
+            "title": "Item Groups",
+            "icon": "category",
+            "route": "/app/commerce/warehouse/item-groups"
+          },
+          {
+            "id": "warehouses",
+            "title": "Warehouses",
+            "icon": "warehouse",
+            "route": "/app/commerce/warehouse/warehouses"
+          }
+        ]
+      },
+      {
+        "title": "Purchasing",
+        "items": [
+          {
+            "id": "purchase_receipts",
+            "title": "Purchase Receipts",
+            "icon": "receipt_long",
+            "route": "/app/commerce/warehouse/purchase-receipts"
+          },
+          {
+            "id": "purchase_orders",
+            "title": "Purchase Orders",
+            "icon": "shopping_bag",
+            "route": "/app/commerce/warehouse/purchase-orders"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "stock_report",
+            "title": "Stock Report",
+            "icon": "assessment",
+            "route": "/app/commerce/warehouse/reports/stock"
+          },
+          {
+            "id": "movement_report",
+            "title": "Movement Report",
+            "icon": "trending_up",
+            "route": "/app/commerce/warehouse/reports/movement"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "stock_entry",
+      "stock_transfer",
+      "stock_reconciliation",
+      "item",
+      "warehouse",
+      "purchase_receipt",
+      "purchase_order"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "sales_order",
+      "customer_management",
+      "financial_records",
+      "hr_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "stock_report",
+      "title": "Stock Report",
+      "route": "/app/commerce/warehouse/reports/stock"
+    },
+    {
+      "id": "valuation_report",
+      "title": "Valuation Report",
+      "route": "/app/commerce/warehouse/reports/valuation"
+    }
+  ],
+  "notifications": [
+    "low_stock_alert",
+    "stock_transfer_request",
+    "purchase_receipt_ready",
+    "reconciliation_required"
+  ]
+}

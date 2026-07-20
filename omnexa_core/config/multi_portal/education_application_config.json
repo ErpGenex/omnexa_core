@@ -1,0 +1,175 @@
+{
+  "application_id": "education",
+  "application_name": "ERPGenEx Education",
+  "primary_color": "#4CAF50",
+  "secondary_color": "#388E3C",
+  "accent_color": "#FFC107",
+  "base_url": "/app/education",
+  "icon": "school",
+  "logo": "/assets/education/logo.png",
+  "roles": [
+    "education_student",
+    "education_teacher",
+    "education_assistant_teacher",
+    "education_registrar",
+    "education_accountant",
+    "education_parent",
+    "education_principal",
+    "education_department_head",
+    "education_library",
+    "education_hr",
+    "education_system_administrator"
+  ],
+  "portals": [
+    {
+      "portal_id": "education_student",
+      "portal_name": "Student Portal",
+      "role": "education_student",
+      "url": "/app/education/student"
+    },
+    {
+      "portal_id": "education_teacher",
+      "portal_name": "Teacher Portal",
+      "role": "education_teacher",
+      "url": "/app/education/teacher"
+    },
+    {
+      "portal_id": "education_assistant_teacher",
+      "portal_name": "Assistant Teacher Portal",
+      "role": "education_assistant_teacher",
+      "url": "/app/education/assistant-teacher"
+    },
+    {
+      "portal_id": "education_registrar",
+      "portal_name": "Registrar Portal",
+      "role": "education_registrar",
+      "url": "/app/education/registrar"
+    },
+    {
+      "portal_id": "education_accountant",
+      "portal_name": "Accountant Portal",
+      "role": "education_accountant",
+      "url": "/app/education/accountant"
+    },
+    {
+      "portal_id": "education_parent",
+      "portal_name": "Parent Portal",
+      "role": "education_parent",
+      "url": "/app/education/parent"
+    },
+    {
+      "portal_id": "education_principal",
+      "portal_name": "Principal Portal",
+      "role": "education_principal",
+      "url": "/app/education/principal"
+    },
+    {
+      "portal_id": "education_department_head",
+      "portal_name": "Department Head Portal",
+      "role": "education_department_head",
+      "url": "/app/education/department-head"
+    },
+    {
+      "portal_id": "education_library",
+      "portal_name": "Library Portal",
+      "role": "education_library",
+      "url": "/app/education/library"
+    },
+    {
+      "portal_id": "education_hr",
+      "portal_name": "HR Portal",
+      "role": "education_hr",
+      "url": "/app/education/hr"
+    },
+    {
+      "portal_id": "education_admin",
+      "portal_name": "System Administrator Portal",
+      "role": "education_system_administrator",
+      "url": "/app/education/admin"
+    }
+  ],
+  "modules": [
+    "students",
+    "teachers",
+    "courses",
+    "attendance",
+    "grades",
+    "assignments",
+    "exams",
+    "fees",
+    "library",
+    "hr"
+  ],
+  "isolation": {
+    "pages": true,
+    "menus": true,
+    "workspaces": true,
+    "dashboards": true,
+    "reports": true,
+    "permissions": true,
+    "shortcuts": true,
+    "navbar_items": true,
+    "modules": true
+  },
+  "navigation": {
+    "sidebar": {
+      "enabled": true,
+      "collapsible": true,
+      "position": "left"
+    },
+    "navbar": {
+      "enabled": true,
+      "position": "top",
+      "search_enabled": true,
+      "notifications_enabled": true,
+      "user_menu_enabled": true
+    },
+    "breadcrumb": {
+      "enabled": true,
+      "position": "top"
+    }
+  },
+  "dashboard": {
+    "layout": "grid",
+    "columns": 12,
+    "default_widgets": [
+      "kpis",
+      "quick_actions",
+      "today_tasks",
+      "charts",
+      "recent_activities",
+      "notifications"
+    ]
+  },
+  "features": {
+    "student_management": true,
+    "teacher_management": true,
+    "course_management": true,
+    "attendance_tracking": true,
+    "grade_management": true,
+    "assignment_management": true,
+    "exam_management": true,
+    "fee_management": true,
+    "library_management": true,
+    "parent_portal": true
+  },
+  "integrations": {
+    "learning_management_systems": ["moodle", "canvas", "blackboard"],
+    "library_systems": ["koha", "evergreen"],
+    "payment_gateways": ["stripe", "paypal"],
+    "communication_systems": ["twilio", "sendgrid"]
+  },
+  "security": {
+    "ferpa_compliant": true,
+    "data_encryption": true,
+    "audit_logging": true,
+    "role_based_access": true,
+    "session_timeout": 1800
+  },
+  "performance": {
+    "lazy_loading": true,
+    "caching_enabled": true,
+    "bundle_optimization": true,
+    "image_optimization": true
+  }
+}

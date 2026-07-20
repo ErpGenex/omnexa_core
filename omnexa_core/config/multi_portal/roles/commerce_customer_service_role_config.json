@@ -1,0 +1,208 @@
+{
+  "role_id": "commerce_customer_service",
+  "role_name": "Customer Service",
+  "application": "commerce",
+  "portal": "commerce_customer_service",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "open_tickets",
+        "title": "Open Tickets",
+        "value": "count",
+        "source": "support_ticket",
+        "filter": "open"
+      },
+      {
+        "id": "tickets_resolved_today",
+        "title": "Tickets Resolved Today",
+        "value": "count",
+        "source": "support_ticket",
+        "filter": "resolved_today"
+      },
+      {
+        "id": "pending_returns",
+        "title": "Pending Returns",
+        "value": "count",
+        "source": "return",
+        "filter": "pending"
+      },
+      {
+        "id": "customer_satisfaction",
+        "title": "Customer Satisfaction",
+        "value": "percentage",
+        "source": "feedback",
+        "filter": "current"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "create_ticket",
+        "title": "Create Ticket",
+        "action": "create",
+        "doctype": "support_ticket"
+      },
+      {
+        "id": "process_return",
+        "title": "Process Return",
+        "action": "update",
+        "doctype": "return"
+      },
+      {
+        "id": "view_customer",
+        "title": "View Customer",
+        "action": "read",
+        "doctype": "customer"
+      },
+      {
+        "id": "send_communication",
+        "title": "Send Communication",
+        "action": "create",
+        "doctype": "communication"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "open_tickets",
+        "title": "Open Tickets",
+        "type": "list",
+        "source": "support_ticket"
+      },
+      {
+        "id": "pending_returns",
+        "title": "Pending Returns",
+        "type": "list",
+        "source": "return"
+      },
+      {
+        "id": "recent_feedback",
+        "title": "Recent Feedback",
+        "type": "list",
+        "source": "feedback"
+      }
+    ],
+    "charts": [
+      {
+        "id": "ticket_trend",
+        "title": "Ticket Trend",
+        "type": "line",
+        "source": "support_ticket"
+      },
+      {
+        "id": "satisfaction_score",
+        "title": "Satisfaction Score",
+        "type": "bar",
+        "source": "feedback"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Support",
+        "items": [
+          {
+            "id": "support_tickets",
+            "title": "Support Tickets",
+            "icon": "support_agent",
+            "route": "/app/commerce/customer-service/support-tickets"
+          },
+          {
+            "id": "ticket_history",
+            "title": "Ticket History",
+            "icon": "history",
+            "route": "/app/commerce/customer-service/ticket-history"
+          }
+        ]
+      },
+      {
+        "title": "Returns",
+        "items": [
+          {
+            "id": "returns",
+            "title": "Returns",
+            "icon": "refund",
+            "route": "/app/commerce/customer-service/returns"
+          },
+          {
+            "id": "return_history",
+            "title": "Return History",
+            "icon": "history",
+            "route": "/app/commerce/customer-service/return-history"
+          }
+        ]
+      },
+      {
+        "title": "Customers",
+        "items": [
+          {
+            "id": "customers",
+            "title": "Customers",
+            "icon": "people",
+            "route": "/app/commerce/customer-service/customers"
+          },
+          {
+            "id": "customer_feedback",
+            "title": "Customer Feedback",
+            "icon": "feedback",
+            "route": "/app/commerce/customer-service/customer-feedback"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "support_report",
+            "title": "Support Report",
+            "icon": "assessment",
+            "route": "/app/commerce/customer-service/reports/support"
+          },
+          {
+            "id": "satisfaction_report",
+            "title": "Satisfaction Report",
+            "icon": "sentiment_satisfied",
+            "route": "/app/commerce/customer-service/reports/satisfaction"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "support_ticket",
+      "return",
+      "customer",
+      "feedback",
+      "communication"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "sales_order",
+      "purchase_order",
+      "inventory_management",
+      "financial_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "support_report",
+      "title": "Support Report",
+      "route": "/app/commerce/customer-service/reports/support"
+    },
+    {
+      "id": "satisfaction_report",
+      "title": "Satisfaction Report",
+      "route": "/app/commerce/customer-service/reports/satisfaction"
+    }
+  ],
+  "notifications": [
+    "new_ticket",
+    "ticket_escalated",
+    "return_request",
+    "customer_feedback"
+  ]
+}

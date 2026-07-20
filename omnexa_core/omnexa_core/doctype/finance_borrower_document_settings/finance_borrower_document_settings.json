@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "creation": "2026-06-21 00:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_policy",
+  "document_policies",
+  "section_help",
+  "help_text"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_policy",
+   "fieldtype": "Section Break",
+   "label": "Document Policy by Finance App"
+  },
+  {
+   "fieldname": "document_policies",
+   "fieldtype": "Table",
+   "label": "Document Policies",
+   "options": "Finance Borrower Document Policy Line"
+  },
+  {
+   "fieldname": "section_help",
+   "fieldtype": "Section Break",
+   "label": "Help"
+  },
+  {
+   "default": "Configure mandatory and optional borrower documents per finance vertical. Add new document types under Finance Borrower Document Type.",
+   "fieldname": "help_text",
+   "fieldtype": "Small Text",
+   "label": "Help Text",
+   "read_only": 1
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-06-21 00:00:00",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "Finance Borrower Document Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Finance Group Executive",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

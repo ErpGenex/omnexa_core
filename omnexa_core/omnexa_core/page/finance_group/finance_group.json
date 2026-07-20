@@ -1,0 +1,9 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Core",
+	"name": "finance_group",
+	"page_name": "finance_group",
+	"title": "Finance Group",
+	"standard": "Yes",
+	"roles": [{"role": "All"}]
+}

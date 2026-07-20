@@ -1,0 +1,12 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Core",
+	"name": "finance-demo-hub",
+	"page_name": "finance-demo-hub",
+	"title": "Finance Demo Hub",
+	"standard": "Yes",
+	"roles": [
+		{"role": "System Manager"},
+		{"role": "Finance Group Executive"}
+	]
+}

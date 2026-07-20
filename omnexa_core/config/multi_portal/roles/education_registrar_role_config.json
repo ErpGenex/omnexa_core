@@ -1,0 +1,207 @@
+{
+  "role_id": "education_registrar",
+  "role_name": "Registrar",
+  "application": "education",
+  "portal": "education_registrar",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "new_registrations",
+        "title": "New Registrations",
+        "value": "count",
+        "source": "student_registration",
+        "filter": "today"
+      },
+      {
+        "id": "pending_applications",
+        "title": "Pending Applications",
+        "value": "count",
+        "source": "application",
+        "filter": "pending"
+      },
+      {
+        "id": "enrolled_students",
+        "title": "Enrolled Students",
+        "value": "count",
+        "source": "student_enrollment",
+        "filter": "active"
+      },
+      {
+        "id": "transfers_pending",
+        "title": "Transfers Pending",
+        "value": "count",
+        "source": "transfer_request",
+        "filter": "pending"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "register_student",
+        "title": "Register Student",
+        "action": "create",
+        "doctype": "student_registration"
+      },
+      {
+        "id": "process_application",
+        "title": "Process Application",
+        "action": "update",
+        "doctype": "application"
+      },
+      {
+        "id": "issue_certificate",
+        "title": "Issue Certificate",
+        "action": "create",
+        "doctype": "certificate"
+      },
+      {
+        "id": "process_transfer",
+        "title": "Process Transfer",
+        "action": "update",
+        "doctype": "transfer_request"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_applications",
+        "title": "Pending Applications",
+        "type": "list",
+        "source": "application"
+      },
+      {
+        "id": "recent_registrations",
+        "title": "Recent Registrations",
+        "type": "list",
+        "source": "student_registration"
+      },
+      {
+        "id": "transfer_requests",
+        "title": "Transfer Requests",
+        "type": "list",
+        "source": "transfer_request"
+      }
+    ],
+    "charts": [
+      {
+        "id": "registration_trend",
+        "title": "Registration Trend",
+        "type": "line",
+        "source": "student_registration"
+      },
+      {
+        "id": "enrollment_status",
+        "title": "Enrollment Status",
+        "type": "pie",
+        "source": "student_enrollment"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Registrations",
+        "items": [
+          {
+            "id": "student_registrations",
+            "title": "Student Registrations",
+            "icon": "person_add",
+            "route": "/app/education/registrar/student-registrations"
+          },
+          {
+            "id": "registration_history",
+            "title": "Registration History",
+            "icon": "history",
+            "route": "/app/education/registrar/registration-history"
+          }
+        ]
+      },
+      {
+        "title": "Applications",
+        "items": [
+          {
+            "id": "applications",
+            "title": "Applications",
+            "icon": "assignment",
+            "route": "/app/education/registrar/applications"
+          },
+          {
+            "id": "application_review",
+            "title": "Application Review",
+            "icon": "rate_review",
+            "route": "/app/education/registrar/application-review"
+          }
+        ]
+      },
+      {
+        "title": "Records",
+        "items": [
+          {
+            "id": "student_records",
+            "title": "Student Records",
+            "icon": "folder",
+            "route": "/app/education/registrar/student-records"
+          },
+          {
+            "id": "academic_records",
+            "title": "Academic Records",
+            "icon": "school",
+            "route": "/app/education/registrar/academic-records"
+          }
+        ]
+      },
+      {
+        "title": "Certificates",
+        "items": [
+          {
+            "id": "certificates",
+            "title": "Certificates",
+            "icon": "workspace_premium",
+            "route": "/app/education/registrar/certificates"
+          },
+          {
+            "id": "certificate_templates",
+            "title": "Certificate Templates",
+            "icon": "description",
+            "route": "/app/education/registrar/certificate-templates"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "student_registration",
+      "application",
+      "student_record",
+      "certificate",
+      "transfer_request"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "financial_records",
+      "hr_records",
+      "teacher_assignments"
+    ]
+  },
+  "reports": [
+    {
+      "id": "registration_report",
+      "title": "Registration Report",
+      "route": "/app/education/registrar/reports/registration"
+    },
+    {
+      "id": "enrollment_report",
+      "title": "Enrollment Report",
+      "route": "/app/education/registrar/reports/enrollment"
+    }
+  ],
+  "notifications": [
+    "new_application",
+    "transfer_request",
+    "certificate_request",
+    "registration_complete"
+  ]
+}

@@ -1,0 +1,572 @@
+/**
+ * Demo Wizard CSS
+ * Enterprise-grade styling for the demo execution wizard.
+ * Follows ERPNext Design System with modern card-based layout.
+ */
+
+/* Demo Wizard Container */
+.demo-wizard-container {
+    margin: 20px 0;
+    padding: 0;
+}
+
+.demo-wizard-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* Demo Configuration Section */
+.demo-config-section {
+    min-height: 400px;
+}
+
+.demo-config-card {
+    background: #fff;
+    border: 1px solid #d1d8dd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.demo-config-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.demo-config-header h4 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.demo-config-header p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.demo-config-body {
+    padding: 20px;
+}
+
+/* Demo Execution Section */
+.demo-execution-section {
+    min-height: 400px;
+}
+
+.demo-execution-card {
+    background: #fff;
+    border: 1px solid #d1d8dd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.demo-execution-header {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: #fff;
+    padding: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.demo-execution-header h4 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.demo-execution-header p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.demo-execution-body {
+    padding: 20px;
+}
+
+/* Demo Field Groups */
+.demo-field-group {
+    margin-bottom: 20px;
+}
+
+.demo-field-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #334155;
+    font-size: 14px;
+}
+
+.demo-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d8dd;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.demo-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Demo Information Panel */
+.demo-info-panel {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.demo-info-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.demo-info-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+}
+
+.demo-info-header h5 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.demo-info-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.demo-description {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.demo-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.demo-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.demo-info-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.demo-info-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.demo-info-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.demo-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.demo-info-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.demo-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #e0e7ff;
+    color: #4338ca;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Demo Warnings */
+.demo-warnings {
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: 6px;
+    padding: 12px;
+}
+
+.demo-warning-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #92400e;
+}
+
+.demo-warnings-list {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+    color: #92400e;
+    font-size: 13px;
+}
+
+.demo-warnings-list li {
+    margin-bottom: 4px;
+}
+
+/* Execute Button */
+.demo-execute-btn {
+    width: 100%;
+    padding: 14px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.demo-execute-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.demo-execute-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.demo-execute-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #cbd5e1;
+}
+
+/* Progress Container */
+.demo-progress-container {
+    margin-top: 20px;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+}
+
+.demo-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.demo-progress-status {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.demo-progress-percent {
+    font-weight: 600;
+    color: #667eea;
+}
+
+.demo-progress-bar {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.3s ease;
+}
+
+.demo-progress-message {
+    margin: 12px 0 0 0;
+    font-size: 13px;
+    color: #64748b;
+    text-align: center;
+}
+
+/* Confirmation Dialog */
+.demo-confirmation-dialog {
+    padding: 16px 0;
+}
+
+.demo-confirmation-dialog h4 {
+    margin: 0 0 16px 0;
+    color: #1e293b;
+}
+
+.demo-confirmation-details {
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 12px 0;
+    border-left: 4px solid #667eea;
+}
+
+.demo-confirmation-details strong {
+    color: #1e293b;
+}
+
+.demo-confirmation-info {
+    margin: 16px 0;
+    padding: 12px;
+    background: #f1f5f9;
+    border-radius: 6px;
+}
+
+.demo-confirmation-info div {
+    margin-bottom: 8px;
+}
+
+.demo-confirmation-info strong {
+    color: #64748b;
+}
+
+.demo-confirmation-warnings {
+    margin: 16px 0;
+    padding: 12px;
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: 6px;
+}
+
+.demo-confirmation-warnings strong {
+    color: #92400e;
+}
+
+.demo-confirmation-warnings ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+    color: #92400e;
+}
+
+/* Success Dialog */
+.demo-success-dialog {
+    padding: 16px 0;
+}
+
+.demo-success-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.demo-success-item:last-child {
+    border-bottom: none;
+}
+
+.demo-success-item strong {
+    color: #64748b;
+}
+
+.demo-success-item span {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Error Dialog */
+.demo-error-dialog {
+    padding: 16px 0;
+}
+
+.demo-error-message {
+    background: #fef2f2;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    border-left: 4px solid #ef4444;
+}
+
+.demo-error-message strong {
+    color: #dc2626;
+}
+
+.demo-error-message span {
+    color: #991b1b;
+}
+
+.demo-error-log {
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 12px;
+}
+
+.demo-error-log strong {
+    color: #64748b;
+}
+
+.demo-error-log span {
+    color: #1e293b;
+    font-family: monospace;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .demo-wizard-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .demo-config-section,
+    .demo-execution-section {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .demo-wizard-container {
+        margin: 10px 0;
+    }
+    
+    .demo-config-header,
+    .demo-execution-header {
+        padding: 16px;
+    }
+    
+    .demo-config-header h4,
+    .demo-execution-header h4 {
+        font-size: 16px;
+    }
+    
+    .demo-config-body,
+    .demo-execution-body {
+        padding: 16px;
+    }
+    
+    .demo-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .demo-execute-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+/* RTL Support */
+[dir="rtl"] .demo-wizard-layout {
+    direction: rtl;
+}
+
+[dir="rtl"] .demo-info-header {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .demo-warnings-list {
+    padding-right: 20px;
+    padding-left: 0;
+}
+
+[dir="rtl"] .demo-confirmation-details,
+[dir="rtl"] .demo-error-message {
+    border-left: none;
+    border-right: 4px solid #667eea;
+}
+
+[dir="rtl"] .demo-error-message {
+    border-right-color: #ef4444;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.demo-info-panel {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Loading Spinner */
+.demo-execute-btn.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.demo-execute-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Badge Colors */
+.badge-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.badge-dark {
+    background: #1e293b;
+    color: #fff;
+}

@@ -1,0 +1,266 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-07-03 12:48:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "execution_section",
+  "execution_id",
+  "demo_action",
+  "demo_title",
+  "category",
+  "execution_mode",
+  "status",
+  "start_time",
+  "end_time",
+  "duration",
+  "user_section",
+  "user",
+  "user_email",
+  "user_roles",
+  "context_section",
+  "company",
+  "branch",
+  "ip_address",
+  "results_section",
+  "records_created",
+  "records_updated",
+  "records_deleted",
+  "warnings",
+  "errors",
+  "error_details",
+  "system_section",
+  "modules_installed",
+  "dependencies_satisfied",
+  "rollback_available",
+  "rollback_performed",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "execution_section",
+   "fieldtype": "Section Break",
+   "label": "Execution Details"
+  },
+  {
+   "fieldname": "execution_id",
+   "fieldtype": "Data",
+   "label": "Execution ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "demo_action",
+   "fieldtype": "Data",
+   "label": "Demo Action Key",
+   "read_only": 1
+  },
+  {
+   "fieldname": "demo_title",
+   "fieldtype": "Data",
+   "label": "Demo Title",
+   "read_only": 1
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Data",
+   "label": "Category",
+   "read_only": 1
+  },
+  {
+   "fieldname": "execution_mode",
+   "fieldtype": "Data",
+   "label": "Execution Mode",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nRunning\nCompleted\nFailed\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Datetime",
+   "label": "Start Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Datetime",
+   "label": "End Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Duration",
+   "label": "Duration",
+   "read_only": 1
+  },
+  {
+   "fieldname": "user_section",
+   "fieldtype": "Section Break",
+   "label": "User Information"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "user_email",
+   "fieldtype": "Data",
+   "label": "User Email",
+   "read_only": 1
+  },
+  {
+   "fieldname": "user_roles",
+   "fieldtype": "Text",
+   "label": "User Roles",
+   "read_only": 1
+  },
+  {
+   "fieldname": "context_section",
+   "fieldtype": "Section Break",
+   "label": "Execution Context"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ip_address",
+   "fieldtype": "Data",
+   "label": "IP Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "results_section",
+   "fieldtype": "Section Break",
+   "label": "Execution Results"
+  },
+  {
+   "fieldname": "records_created",
+   "fieldtype": "Int",
+   "label": "Records Created",
+   "read_only": 1
+  },
+  {
+   "fieldname": "records_updated",
+   "fieldtype": "Int",
+   "label": "Records Updated",
+   "read_only": 1
+  },
+  {
+   "fieldname": "records_deleted",
+   "fieldtype": "Int",
+   "label": "Records Deleted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warnings",
+   "fieldtype": "Int",
+   "label": "Warnings",
+   "read_only": 1
+  },
+  {
+   "fieldname": "errors",
+   "fieldtype": "Int",
+   "label": "Errors",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error_details",
+   "fieldtype": "Code",
+   "label": "Error Details",
+   "read_only": 1
+  },
+  {
+   "fieldname": "system_section",
+   "fieldtype": "Section Break",
+   "label": "System Information"
+  },
+  {
+   "fieldname": "modules_installed",
+   "fieldtype": "Text",
+   "label": "Modules Installed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dependencies_satisfied",
+   "fieldtype": "Check",
+   "label": "Dependencies Satisfied",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rollback_available",
+   "fieldtype": "Check",
+   "label": "Rollback Available",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rollback_performed",
+   "fieldtype": "Check",
+   "label": "Rollback Performed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Demo Execution Log",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-03 12:48:00.000000",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "Demo Execution Log",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Administrator",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

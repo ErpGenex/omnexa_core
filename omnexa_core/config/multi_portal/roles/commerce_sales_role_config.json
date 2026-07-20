@@ -1,0 +1,215 @@
+{
+  "role_id": "commerce_sales",
+  "role_name": "Sales",
+  "application": "commerce",
+  "portal": "commerce_sales",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "today_sales",
+        "title": "Today's Sales",
+        "value": "sum",
+        "source": "sales_order",
+        "filter": "today"
+      },
+      {
+        "id": "pending_orders",
+        "title": "Pending Orders",
+        "value": "count",
+        "source": "sales_order",
+        "filter": "pending"
+      },
+      {
+        "id": "monthly_target",
+        "title": "Monthly Target",
+        "value": "percentage",
+        "source": "sales_target",
+        "filter": "current_month"
+      },
+      {
+        "id": "new_customers",
+        "title": "New Customers",
+        "value": "count",
+        "source": "customer",
+        "filter": "this_month"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "create_sales_order",
+        "title": "Create Sales Order",
+        "action": "create",
+        "doctype": "sales_order"
+      },
+      {
+        "id": "add_customer",
+        "title": "Add Customer",
+        "action": "create",
+        "doctype": "customer"
+      },
+      {
+        "id": "create_invoice",
+        "title": "Create Invoice",
+        "action": "create",
+        "doctype": "sales_invoice"
+      },
+      {
+        "id": "record_payment",
+        "title": "Record Payment",
+        "action": "create",
+        "doctype": "payment_entry"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "recent_orders",
+        "title": "Recent Orders",
+        "type": "list",
+        "source": "sales_order"
+      },
+      {
+        "id": "top_customers",
+        "title": "Top Customers",
+        "type": "list",
+        "source": "customer"
+      },
+      {
+        "id": "pending_deliveries",
+        "title": "Pending Deliveries",
+        "type": "list",
+        "source": "delivery_order"
+      }
+    ],
+    "charts": [
+      {
+        "id": "sales_trend",
+        "title": "Sales Trend",
+        "type": "line",
+        "source": "sales_order"
+      },
+      {
+        "id": "product_sales",
+        "title": "Product Sales",
+        "type": "bar",
+        "source": "sales_order_item"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Sales",
+        "items": [
+          {
+            "id": "sales_orders",
+            "title": "Sales Orders",
+            "icon": "shopping_cart",
+            "route": "/app/commerce/sales/sales-orders"
+          },
+          {
+            "id": "quotations",
+            "title": "Quotations",
+            "icon": "description",
+            "route": "/app/commerce/sales/quotations"
+          },
+          {
+            "id": "invoices",
+            "title": "Invoices",
+            "icon": "receipt",
+            "route": "/app/commerce/sales/invoices"
+          }
+        ]
+      },
+      {
+        "title": "Customers",
+        "items": [
+          {
+            "id": "customer_list",
+            "title": "Customer List",
+            "icon": "people",
+            "route": "/app/commerce/sales/customer-list"
+          },
+          {
+            "id": "customer_groups",
+            "title": "Customer Groups",
+            "icon": "group",
+            "route": "/app/commerce/sales/customer-groups"
+          }
+        ]
+      },
+      {
+        "title": "Payments",
+        "items": [
+          {
+            "id": "payments",
+            "title": "Payments",
+            "icon": "payments",
+            "route": "/app/commerce/sales/payments"
+          },
+          {
+            "id": "payment_history",
+            "title": "Payment History",
+            "icon": "history",
+            "route": "/app/commerce/sales/payment-history"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "sales_report",
+            "title": "Sales Report",
+            "icon": "assessment",
+            "route": "/app/commerce/sales/reports/sales"
+          },
+          {
+            "id": "customer_report",
+            "title": "Customer Report",
+            "icon": "person",
+            "route": "/app/commerce/sales/reports/customer"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "sales_order",
+      "quotation",
+      "sales_invoice",
+      "customer",
+      "payment_entry",
+      "delivery_order"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "purchase_order",
+      "inventory_management",
+      "accounting_entries",
+      "hr_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "sales_report",
+      "title": "Sales Report",
+      "route": "/app/commerce/sales/reports/sales"
+    },
+    {
+      "id": "commission_report",
+      "title": "Commission Report",
+      "route": "/app/commerce/sales/reports/commission"
+    }
+  ],
+  "notifications": [
+    "new_order",
+    "payment_received",
+    "order_status_update",
+    "customer_inquiry"
+  ]
+}

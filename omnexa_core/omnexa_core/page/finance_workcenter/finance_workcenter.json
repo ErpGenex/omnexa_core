@@ -1,0 +1,62 @@
+{
+ "content": null,
+ "creation": "2026-07-10 22:23:29.542211",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-07-10 22:26:35.890968",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "finance-workcenter",
+ "owner": "Administrator",
+ "page_name": "finance-workcenter",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Finance Group Executive"
+  },
+  {
+   "role": "Finance Accounting Controller"
+  },
+  {
+   "role": "Finance Auto Officer"
+  },
+  {
+   "role": "Finance Consumer Officer"
+  },
+  {
+   "role": "Finance Credit Officer"
+  },
+  {
+   "role": "Finance Factoring Officer"
+  },
+  {
+   "role": "Finance GRC Officer"
+  },
+  {
+   "role": "Finance Leasing Officer"
+  },
+  {
+   "role": "Finance Microfinance Officer"
+  },
+  {
+   "role": "Finance Mortgage Officer"
+  },
+  {
+   "role": "Finance Risk Analyst"
+  },
+  {
+   "role": "Finance SME Officer"
+  },
+  {
+   "role": "Finance Treasury Officer"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "Finance Workcenter"
+}

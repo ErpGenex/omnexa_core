@@ -1,0 +1,326 @@
+{
+ "charts": [
+  {
+   "chart_name": "Commerce · Web Order Mix",
+   "label": "Web Order Mix"
+  },
+  {
+   "chart_name": "Commerce · Booking Mix",
+   "label": "Booking Mix"
+  }
+ ],
+ "content": "[{\"id\": \"erpgenex-onboarding\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"ERPGENEX — Commerce\", \"col\": 12}}, {\"id\": \"commerce-h\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Commerce</b></span>\", \"col\": 12}}, {\"id\": \"commerce-nc0\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Catalog Item\", \"col\": 4}}, {\"id\": \"commerce-nc1\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Web Order\", \"col\": 4}}, {\"id\": \"commerce-nc2\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Experience Tenant Theme\", \"col\": 4}}, {\"id\": \"commerce-nc3\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Bookable Resource\", \"col\": 4}}, {\"id\": \"commerce-nc4\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Booking\", \"col\": 4}}, {\"id\": \"commerce-nc5\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Payment Intent\", \"col\": 4}}, {\"id\": \"commerce-ch0\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Commerce · Web Order Mix\", \"col\": 4}}, {\"id\": \"commerce-ch1\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Commerce · Booking Mix\", \"col\": 4}}, {\"id\": \"commerce-ops\", \"type\": \"header\", \"data\": {\"text\": \"<b>Quick Actions</b>\", \"col\": 12}}, {\"id\": \"commerce-sc0\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Catalog Item\", \"col\": 3}}, {\"id\": \"commerce-sc1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Web Order\", \"col\": 3}}, {\"id\": \"commerce-sc2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Experience Tenant Theme\", \"col\": 3}}, {\"id\": \"commerce-sc3\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Bookable Resource\", \"col\": 3}}, {\"id\": \"commerce-sc4\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Booking\", \"col\": 3}}, {\"id\": \"commerce-sc5\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Payment Intent\", \"col\": 3}}, {\"id\": \"commerce-ql-h\", \"type\": \"header\", \"data\": {\"text\": \"<b>Operational queues</b> <span class=\\\"text-muted\\\">(exception monitoring)</span>\", \"col\": 12}}, {\"id\": \"commerce-ql0\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Pending payment\", \"col\": 3}}, {\"id\": \"commerce-ql1\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Draft web orders\", \"col\": 3}}, {\"id\": \"commerce-ql2\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Bookings on hold\", \"col\": 3}}, {\"id\": \"commerce-ql3\", \"type\": \"quick_list\", \"data\": {\"quick_list_name\": \"Failed payment intents\", \"col\": 3}}]",
+ "creation": "2026-04-15 00:12:38.110041",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "retail",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Commerce",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Catalog & orders",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Catalog Item",
+   "link_count": 0,
+   "link_to": "Catalog Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Web Order",
+   "link_count": 0,
+   "link_to": "Web Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Experience Tenant Theme",
+   "link_count": 0,
+   "link_to": "Experience Tenant Theme",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Booking",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Bookable Resource",
+   "link_count": 0,
+   "link_to": "Bookable Resource",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Booking",
+   "link_count": 0,
+   "link_to": "Booking",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payments",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Intent",
+   "link_count": 0,
+   "link_to": "Payment Intent",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Analytics (IFRS 15 / IFRS 8 / O2C / ISO-style KPIs)",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Commerce Order-to-Cash Pipeline",
+   "link_count": 0,
+   "link_to": "Commerce Order-to-Cash Pipeline",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Commerce Booking Pipeline",
+   "link_count": 0,
+   "link_to": "Commerce Booking Pipeline",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Commerce Payment Outcomes",
+   "link_count": 0,
+   "link_to": "Commerce Payment Outcomes",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Commerce Revenue Disaggregation",
+   "link_count": 0,
+   "link_to": "Commerce Revenue Disaggregation",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Commerce Order Cycle Time",
+   "link_count": 0,
+   "link_to": "Commerce Order Cycle Time",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Commerce Web Order Line Mix",
+   "link_count": 0,
+   "link_to": "Commerce Web Order Line Mix",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Commerce Booking Service Hours",
+   "link_count": 0,
+   "link_to": "Commerce Booking Service Hours",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-04-17 23:45:47.297797",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "Commerce",
+ "number_cards": [
+  {
+   "label": "Catalog Item",
+   "number_card_name": "Catalog Item"
+  },
+  {
+   "label": "Web Order",
+   "number_card_name": "Web Order"
+  },
+  {
+   "label": "Experience Tenant Theme",
+   "number_card_name": "Experience Tenant Theme"
+  },
+  {
+   "label": "Bookable Resource",
+   "number_card_name": "Bookable Resource"
+  },
+  {
+   "label": "Booking",
+   "number_card_name": "Booking"
+  },
+  {
+   "label": "Payment Intent",
+   "number_card_name": "Payment Intent"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "doctype": "Workspace Quick List",
+   "document_type": "Web Order",
+   "label": "Pending payment",
+   "quick_list_filter": "[[\"status\", \"=\", \"Pending Payment\"]]"
+  },
+  {
+   "doctype": "Workspace Quick List",
+   "document_type": "Web Order",
+   "label": "Draft web orders",
+   "quick_list_filter": "[[\"status\", \"=\", \"Draft\"]]"
+  },
+  {
+   "doctype": "Workspace Quick List",
+   "document_type": "Booking",
+   "label": "Bookings on hold",
+   "quick_list_filter": "[[\"status\", \"=\", \"Hold\"]]"
+  },
+  {
+   "doctype": "Workspace Quick List",
+   "document_type": "Payment Intent",
+   "label": "Failed payment intents",
+   "quick_list_filter": "[[\"status\", \"=\", \"failed\"]]"
+  }
+ ],
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 7.0,
+ "shortcuts": [
+  {
+   "color": "Cyan",
+   "doc_view": "List",
+   "label": "Catalog Item",
+   "link_to": "Catalog Item",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "Web Order",
+   "link_to": "Web Order",
+   "type": "DocType"
+  },
+  {
+   "color": "Purple",
+   "doc_view": "List",
+   "label": "Experience Tenant Theme",
+   "link_to": "Experience Tenant Theme",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "Bookable Resource",
+   "link_to": "Bookable Resource",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "Booking",
+   "link_to": "Booking",
+   "type": "DocType"
+  },
+  {
+   "color": "Red",
+   "doc_view": "List",
+   "label": "Payment Intent",
+   "link_to": "Payment Intent",
+   "type": "DocType"
+  },
+  {
+   "color": "Gray",
+   "doc_view": "List",
+   "icon": "chart",
+   "label": "Revenue disaggregation",
+   "link_to": "Commerce Revenue Disaggregation",
+   "type": "Report"
+  },
+  {
+   "color": "Gray",
+   "doc_view": "List",
+   "icon": "time",
+   "label": "Order cycle time",
+   "link_to": "Commerce Order Cycle Time",
+   "type": "Report"
+  },
+  {
+   "color": "Gray",
+   "doc_view": "List",
+   "icon": "list",
+   "label": "Web order line mix",
+   "link_to": "Commerce Web Order Line Mix",
+   "type": "Report"
+  },
+  {
+   "color": "Gray",
+   "doc_view": "List",
+   "icon": "duration",
+   "label": "Booking service hours",
+   "link_to": "Commerce Booking Service Hours",
+   "type": "Report"
+  }
+ ],
+ "title": "Commerce"
+}

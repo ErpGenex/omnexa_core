@@ -1,0 +1,164 @@
+/* ErpGenEx Multi-Portal Theme — additive CSS variables, does not override Desk core styles */
+
+:root {
+	--app-primary: var(--primary-color, #2196f3);
+	--app-secondary: var(--secondary-color, #1976d2);
+	--app-accent: var(--accent-color, #ff4081);
+}
+
+.omnexa-multi-portal.healthcare {
+	--app-primary: #2196f3;
+	--app-secondary: #1976d2;
+	--app-accent: #ff4081;
+}
+
+.omnexa-multi-portal.education {
+	--app-primary: #4caf50;
+	--app-secondary: #388e3c;
+	--app-accent: #ffc107;
+}
+
+.omnexa-multi-portal.commerce {
+	--app-primary: #9c27b0;
+	--app-secondary: #7b1fa2;
+	--app-accent: #ff9800;
+}
+
+.omnexa-portal-sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding: 1rem;
+	background: var(--card-bg, #fff);
+	border-radius: 8px;
+	border: 1px solid var(--border-color, #e0e0e0);
+}
+
+.omnexa-portal-section-title {
+	font-size: 0.75rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: var(--text-muted, #757575);
+	margin: 0.75rem 0 0.25rem;
+}
+
+.omnexa-portal-sidebar-link {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 0.75rem;
+	border-radius: 6px;
+	color: var(--text-color, #212121);
+	text-decoration: none;
+}
+
+.omnexa-portal-sidebar-link:hover {
+	background: color-mix(in srgb, var(--app-primary) 12%, transparent);
+	color: var(--app-primary);
+}
+
+.omnexa-portal-dashboard {
+	padding: 1rem;
+}
+
+.omnexa-portal-kpi-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.omnexa-portal-kpi-card {
+	background: var(--card-bg, #fff);
+	border: 1px solid var(--border-color, #e0e0e0);
+	border-radius: 8px;
+	padding: 1rem;
+	border-top: 3px solid var(--app-primary);
+}
+
+.omnexa-portal-kpi-title {
+	font-size: 0.875rem;
+	color: var(--text-muted, #757575);
+}
+
+.omnexa-portal-kpi-value {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--app-primary);
+}
+
+.omnexa-portal-quick-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+}
+
+.omnexa-portal-panels {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.omnexa-portal-panel {
+	background: var(--card-bg, #fff);
+	border: 1px solid var(--border-color, #e0e0e0);
+	border-radius: 8px;
+	padding: 0.75rem 1rem;
+}
+
+.omnexa-portal-panel h5 {
+	margin: 0 0 0.5rem;
+	font-size: 0.9rem;
+}
+
+.omnexa-portal-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.omnexa-portal-list li {
+	padding: 0.25rem 0;
+	border-bottom: 1px solid var(--border-color, #eee);
+	font-size: 0.85rem;
+}
+
+.omnexa-portal-chart-placeholder {
+	background: var(--bg-light-gray, #f5f5f5);
+	border-radius: 8px;
+	padding: 1rem;
+	margin-bottom: 0.5rem;
+	font-size: 0.85rem;
+	color: var(--text-muted, #757575);
+}
+
+.omnexa-pharma-dashboard {
+	margin-bottom: 1.5rem;
+}
+
+.oj-pharma-ops-menu {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 0.5rem;
+	margin-top: 1rem;
+}
+
+.oj-pharma-ops-link {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.65rem 0.85rem;
+	border-radius: 8px;
+	border: 1px solid var(--border-color, #e0e0e0);
+	background: var(--card-bg, #fff);
+	color: var(--text-color, #212121);
+	text-decoration: none;
+	transition: background 0.15s ease;
+}
+
+.oj-pharma-ops-link:hover {
+	background: color-mix(in srgb, var(--app-primary, #9c27b0) 10%, transparent);
+	color: var(--app-primary, #9c27b0);
+}

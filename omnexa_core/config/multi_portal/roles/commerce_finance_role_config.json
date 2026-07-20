@@ -1,0 +1,228 @@
+{
+  "role_id": "commerce_finance",
+  "role_name": "Finance",
+  "application": "commerce",
+  "portal": "commerce_finance",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "total_revenue",
+        "title": "Total Revenue",
+        "value": "sum",
+        "source": "sales_invoice",
+        "filter": "current_month"
+      },
+      {
+        "id": "total_expenses",
+        "title": "Total Expenses",
+        "value": "sum",
+        "source": "purchase_invoice",
+        "filter": "current_month"
+      },
+      {
+        "id": "pending_payments",
+        "title": "Pending Payments",
+        "value": "count",
+        "source": "payment_entry",
+        "filter": "pending"
+      },
+      {
+        "id": "cash_flow",
+        "title": "Cash Flow",
+        "value": "sum",
+        "source": "payment_entry",
+        "filter": "current_month"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "create_invoice",
+        "title": "Create Invoice",
+        "action": "create",
+        "doctype": "sales_invoice"
+      },
+      {
+        "id": "record_payment",
+        "title": "Record Payment",
+        "action": "create",
+        "doctype": "payment_entry"
+      },
+      {
+        "id": "journal_entry",
+        "title": "Journal Entry",
+        "action": "create",
+        "doctype": "journal_entry"
+      },
+      {
+        "id": "create_budget",
+        "title": "Create Budget",
+        "action": "create",
+        "doctype": "budget"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_invoices",
+        "title": "Pending Invoices",
+        "type": "list",
+        "source": "sales_invoice"
+      },
+      {
+        "id": "recent_payments",
+        "title": "Recent Payments",
+        "type": "list",
+        "source": "payment_entry"
+      },
+      {
+        "id": "budget_status",
+        "title": "Budget Status",
+        "type": "list",
+        "source": "budget"
+      }
+    ],
+    "charts": [
+      {
+        "id": "revenue_expense",
+        "title": "Revenue vs Expense",
+        "type": "bar",
+        "source": "sales_invoice"
+      },
+      {
+        "id": "cash_flow_trend",
+        "title": "Cash Flow Trend",
+        "type": "line",
+        "source": "payment_entry"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Invoicing",
+        "items": [
+          {
+            "id": "sales_invoices",
+            "title": "Sales Invoices",
+            "icon": "receipt",
+            "route": "/app/commerce/finance/sales-invoices"
+          },
+          {
+            "id": "purchase_invoices",
+            "title": "Purchase Invoices",
+            "icon": "receipt_long",
+            "route": "/app/commerce/finance/purchase-invoices"
+          },
+          {
+            "id": "credit_notes",
+            "title": "Credit Notes",
+            "icon": "note",
+            "route": "/app/commerce/finance/credit-notes"
+          }
+        ]
+      },
+      {
+        "title": "Payments",
+        "items": [
+          {
+            "id": "payment_entries",
+            "title": "Payment Entries",
+            "icon": "payments",
+            "route": "/app/commerce/finance/payment-entries"
+          },
+          {
+            "id": "payment_reconciliation",
+            "title": "Payment Reconciliation",
+            "icon": "reconcile",
+            "route": "/app/commerce/finance/payment-reconciliation"
+          }
+        ]
+      },
+      {
+        "title": "Accounting",
+        "items": [
+          {
+            "id": "journal_entries",
+            "title": "Journal Entries",
+            "icon": "book",
+            "route": "/app/commerce/finance/journal-entries"
+          },
+          {
+            "id": "accounts",
+            "title": "Chart of Accounts",
+            "icon": "account_balance",
+            "route": "/app/commerce/finance/accounts"
+          },
+          {
+            "id": "budgets",
+            "title": "Budgets",
+            "icon": "account_balance_wallet",
+            "route": "/app/commerce/finance/budgets"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "profit_loss",
+            "title": "Profit & Loss",
+            "icon": "trending_up",
+            "route": "/app/commerce/finance/reports/profit-loss"
+          },
+          {
+            "id": "balance_sheet",
+            "title": "Balance Sheet",
+            "icon": "balance",
+            "route": "/app/commerce/finance/reports/balance-sheet"
+          },
+          {
+            "id": "cash_flow",
+            "title": "Cash Flow",
+            "icon": "payments",
+            "route": "/app/commerce/finance/reports/cash-flow"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "sales_invoice",
+      "purchase_invoice",
+      "payment_entry",
+      "journal_entry",
+      "account",
+      "budget",
+      "credit_note"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "sales_order",
+      "purchase_order",
+      "warehouse_management",
+      "hr_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "profit_loss_report",
+      "title": "Profit & Loss Report",
+      "route": "/app/commerce/finance/reports/profit-loss"
+    },
+    {
+      "id": "balance_sheet_report",
+      "title": "Balance Sheet Report",
+      "route": "/app/commerce/finance/reports/balance-sheet"
+    }
+  ],
+  "notifications": [
+    "invoice_due",
+    "payment_received",
+    "budget_alert",
+    "reconciliation_required"
+  ]
+}

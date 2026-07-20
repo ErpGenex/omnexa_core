@@ -1,0 +1,156 @@
+{% extends "templates/base.html" %}
+
+{% block title %}{{ _("App Organizer") }}{% endblock %}
+
+{% block content %}
+<div class="app-organizer-container">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 class="text-center mb-4">{{ _("ERPGenex Applications") }}</h1>
+				<p class="text-center text-muted mb-5">{{ _("Organized by Business Category") }}</p>
+			</div>
+		</div>
+
+		<div id="app-categories-container" class="row">
+			<div class="col-md-12 text-center">
+				<div class="spinner-border text-primary" role="status">
+					<span class="sr-only">{{ _("Loading...") }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+.app-organizer-container {
+	padding: 40px 20px;
+	min-height: calc(100vh - 200px);
+}
+
+.category-card {
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+	padding: 20px;
+	margin-bottom: 20px;
+	height: 100%;
+}
+
+.category-header {
+	border-bottom: 2px solid #f0f0f0;
+	padding-bottom: 10px;
+	margin-bottom: 15px;
+}
+
+.category-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #333;
+	margin: 0;
+}
+
+.category-purpose {
+	font-size: 0.875rem;
+	color: #666;
+	margin-top: 5px;
+}
+
+.app-item {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	border-radius: 4px;
+	transition: background-color 0.2s;
+	text-decoration: none;
+	color: inherit;
+}
+
+.app-item:hover {
+	background-color: #f8f9fa;
+}
+
+.app-icon {
+	width: 32px;
+	height: 32px;
+	margin-right: 12px;
+	border-radius: 4px;
+}
+
+.app-name {
+	font-weight: 500;
+	color: #333;
+}
+
+.app-status {
+	margin-left: auto;
+	font-size: 0.75rem;
+	padding: 2px 8px;
+	border-radius: 10px;
+}
+
+.app-status.installed {
+	background-color: #d4edda;
+	color: #155724;
+}
+
+.app-status.not-installed {
+	background-color: #f8d7da;
+	color: #721c24;
+}
+</style>
+
+<script>
+frappe.ready(function() {
+	loadBusinessCategories();
+});
+
+function loadBusinessCategories() {
+	frappe.call({
+		method: 'omnexa_core.omnexa_core.business_categories.get_business_categories',
+		callback: function(r) {
+			if (r.message) {
+				renderCategories(r.message);
+			}
+		}
+	});
+}
+
+function renderCategories(categories) {
+	const container = document.getElementById('app-categories-container');
+	const sortedCategories = Object.values(categories).sort((a, b) => a.order - b.order);
+	
+	let html = '';
+	
+	sortedCategories.forEach(category => {
+		html += `
+			<div class="col-md-4 col-sm-6">
+				<div class="category-card">
+					<div class="category-header">
+						<h3 class="category-title">${frappe.utils.escape_html(category.label)}</h3>
+						<p class="category-purpose">${frappe.utils.escape_html(category.purpose)}</p>
+					</div>
+					<div class="category-apps">
+		`;
+		
+		category.apps.forEach(app => {
+			html += `
+				<a href="/app" class="app-item">
+					<img src="/assets/omnexa_core/images/app-icon.png" class="app-icon" alt="${frappe.utils.escape_html(app)}">
+					<span class="app-name">${frappe.utils.escape_html(app)}</span>
+					<span class="app-status installed">{{ _("Installed") }}</span>
+				</a>
+			`;
+		});
+		
+		html += `
+					</div>
+				</div>
+			</div>
+		`;
+	});
+	
+	container.innerHTML = html;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,207 @@
+{
+  "role_id": "healthcare_radiology",
+  "role_name": "Radiology",
+  "application": "healthcare",
+  "portal": "healthcare_radiology",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "pending_scans",
+        "title": "Pending Scans",
+        "value": "count",
+        "source": "radiology_order",
+        "filter": "pending"
+      },
+      {
+        "id": "scans_completed_today",
+        "title": "Scans Completed Today",
+        "value": "count",
+        "source": "radiology_report",
+        "filter": "today"
+      },
+      {
+        "id": "urgent_scans",
+        "title": "Urgent Scans",
+        "value": "count",
+        "source": "radiology_order",
+        "filter": "urgent"
+      },
+      {
+        "id": "reports_pending",
+        "title": "Reports Pending",
+        "value": "count",
+        "source": "radiology_report",
+        "filter": "pending"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "create_radiology_order",
+        "title": "Create Radiology Order",
+        "action": "create",
+        "doctype": "radiology_order"
+      },
+      {
+        "id": "perform_scan",
+        "title": "Perform Scan",
+        "action": "update",
+        "doctype": "radiology_order"
+      },
+      {
+        "id": "create_report",
+        "title": "Create Report",
+        "action": "create",
+        "doctype": "radiology_report"
+      },
+      {
+        "id": "view_images",
+        "title": "View Images",
+        "action": "read",
+        "doctype": "radiology_image"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_orders",
+        "title": "Pending Orders",
+        "type": "list",
+        "source": "radiology_order"
+      },
+      {
+        "id": "scan_schedule",
+        "title": "Scan Schedule",
+        "type": "schedule",
+        "source": "radiology_order"
+      },
+      {
+        "id": "recent_reports",
+        "title": "Recent Reports",
+        "type": "list",
+        "source": "radiology_report"
+      }
+    ],
+    "charts": [
+      {
+        "id": "scan_volume",
+        "title": "Scan Volume",
+        "type": "line",
+        "source": "radiology_order"
+      },
+      {
+        "id": "scan_types",
+        "title": "Scan Types Distribution",
+        "type": "pie",
+        "source": "radiology_order"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Radiology Orders",
+        "items": [
+          {
+            "id": "radiology_orders",
+            "title": "Radiology Orders",
+            "icon": "radiology",
+            "route": "/app/healthcare/radiology/radiology-orders"
+          },
+          {
+            "id": "order_templates",
+            "title": "Order Templates",
+            "icon": "description",
+            "route": "/app/healthcare/radiology/order-templates"
+          }
+        ]
+      },
+      {
+        "title": "Scans",
+        "items": [
+          {
+            "id": "scan_schedule",
+            "title": "Scan Schedule",
+            "icon": "schedule",
+            "route": "/app/healthcare/radiology/scan-schedule"
+          },
+          {
+            "id": "scan_history",
+            "title": "Scan History",
+            "icon": "history",
+            "route": "/app/healthcare/radiology/scan-history"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "radiology_reports",
+            "title": "Radiology Reports",
+            "icon": "assessment",
+            "route": "/app/healthcare/radiology/radiology-reports"
+          },
+          {
+            "id": "report_approval",
+            "title": "Report Approval",
+            "icon": "verified",
+            "route": "/app/healthcare/radiology/report-approval"
+          }
+        ]
+      },
+      {
+        "title": "Images",
+        "items": [
+          {
+            "id": "image_viewer",
+            "title": "Image Viewer",
+            "icon": "image",
+            "route": "/app/healthcare/radiology/image-viewer"
+          },
+          {
+            "id": "image_archive",
+            "title": "Image Archive",
+            "icon": "archive",
+            "route": "/app/healthcare/radiology/image-archive"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "radiology_order",
+      "radiology_report",
+      "radiology_image",
+      "scan_template"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "patient",
+      "healthcare_encounter",
+      "prescription",
+      "billing"
+    ]
+  },
+  "reports": [
+    {
+      "id": "radiology_report",
+      "title": "Radiology Report",
+      "route": "/app/healthcare/radiology/reports/radiology"
+    },
+    {
+      "id": "scan_report",
+      "title": "Scan Report",
+      "route": "/app/healthcare/radiology/reports/scan"
+    }
+  ],
+  "notifications": [
+    "new_scan_order",
+    "scan_completed",
+    "report_ready",
+    "image_available"
+  ]
+}

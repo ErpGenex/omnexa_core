@@ -1,0 +1,117 @@
+{
+ "item_code": "industry_solutions",
+ "item_name": "Industry Solutions",
+ "item_group": "Omnexa Core",
+ "module": "Omnexa Core",
+ "workspace_name": "Industry Solutions",
+ "creation": "2026-07-20 01:31:00.000000",
+ "docstatus": 0,
+ "idx": 0,
+ "modified": "2026-07-20 01:31:00.000000",
+ "modified_by": "Administrator",
+ "owner": "Administrator",
+ "onboarding": "",
+ "extends_another_page": 0,
+ "extends": "",
+ "forbidden_doctypes": "",
+ "is_standard": 1,
+ "label": "Industry Solutions",
+ "links": [
+  {
+   "label": "Education",
+   "type": "Link",
+   "link_to": "education-workcenter",
+   "link_type": "Page",
+   "onboard": 0,
+   "is_query_report": 0,
+   "hidden": 0
+  },
+  {
+   "label": "Nursery",
+   "type": "Link",
+   "link_to": "nursery-workcenter",
+   "link_type": "Page",
+   "onboard": 0,
+   "is_query_report": 0,
+   "hidden": 0
+  },
+  {
+   "label": "Car Rental",
+   "type": "Link",
+   "link_to": "car-rental-workcenter",
+   "link_type": "Page",
+   "onboard": 0,
+   "is_query_report": 0,
+   "hidden": 0
+  },
+  {
+   "label": "Agriculture",
+   "type": "Link",
+   "link_to": "agriculture-workcenter",
+   "link_type": "Page",
+   "onboard": 0,
+   "is_query_report": 0,
+   "hidden": 0
+  },
+  {
+   "label": "Healthcare",
+   "type": "Link",
+   "link_to": "healthcare-workcenter",
+   "link_type": "Page",
+   "onboard": 0,
+   "is_query_report": 0,
+   "hidden": 0
+  },
+  {
+   "label": "Restaurant",
+   "type": "Link",
+   "link_to": "restaurant-workcenter",
+   "link_type": "Page",
+   "onboard": 0,
+   "is_query_report": 0,
+   "hidden": 0
+  },
+  {
+   "label": "Tourism",
+   "type": "Link",
+   "link_to": "tourism-workcenter",
+   "link_type": "Page",
+   "onboard": 0,
+   "is_query_report": 0,
+   "hidden": 0
+  }
+ ],
+ "icon": "industry",
+ "indicator_color": "green",
+ "shortcuts": [
+  {
+   "type": "Page",
+   "link_to": "education-workcenter",
+   "label": "Education",
+   "color": "Blue"
+  },
+  {
+   "type": "Page",
+   "link_to": "healthcare-workcenter",
+   "label": "Healthcare",
+   "color": "Green"
+  },
+  {
+   "type": "Page",
+   "link_to": "tourism-workcenter",
+   "label": "Tourism",
+   "color": "Orange"
+  }
+ ],
+ "title": "Industry Solutions",
+ "roles": [
+  {
+   "role": "System User",
+   "read": 1
+  },
+  {
+   "role": "Administrator",
+   "read": 1
+  }
+ ]
+}

@@ -1,0 +1,213 @@
+{
+  "role_id": "healthcare_branch_manager",
+  "role_name": "Branch Manager",
+  "application": "healthcare",
+  "portal": "healthcare_branch_manager",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "branch_patients",
+        "title": "Branch Patients",
+        "value": "count",
+        "source": "patient",
+        "filter": "branch"
+      },
+      {
+        "id": "branch_staff",
+        "title": "Branch Staff",
+        "value": "count",
+        "source": "healthcare_practitioner",
+        "filter": "branch"
+      },
+      {
+        "id": "branch_revenue",
+        "title": "Branch Revenue",
+        "value": "sum",
+        "source": "payment",
+        "filter": "branch_month"
+      },
+      {
+        "id": "branch_occupancy",
+        "title": "Branch Occupancy",
+        "value": "percentage",
+        "source": "healthcare_bed",
+        "filter": "branch"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "view_branch_reports",
+        "title": "View Branch Reports",
+        "action": "read",
+        "doctype": "report"
+      },
+      {
+        "id": "manage_branch_staff",
+        "title": "Manage Branch Staff",
+        "action": "update",
+        "doctype": "healthcare_practitioner"
+      },
+      {
+        "id": "approve_branch_requests",
+        "title": "Approve Branch Requests",
+        "action": "update",
+        "doctype": "request"
+      },
+      {
+        "id": "send_branch_announcement",
+        "title": "Send Branch Announcement",
+        "action": "create",
+        "doctype": "announcement"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "branch_overview",
+        "title": "Branch Overview",
+        "type": "overview",
+        "source": "branch"
+      },
+      {
+        "id": "branch_pending_approvals",
+        "title": "Branch Pending Approvals",
+        "type": "list",
+        "source": "request"
+      },
+      {
+        "id": "branch_activities",
+        "title": "Branch Activities",
+        "type": "list",
+        "source": "activity_log"
+      }
+    ],
+    "charts": [
+      {
+        "id": "branch_patient_volume",
+        "title": "Branch Patient Volume",
+        "type": "line",
+        "source": "patient"
+      },
+      {
+        "id": "branch_revenue_trend",
+        "title": "Branch Revenue Trend",
+        "type": "bar",
+        "source": "payment"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Branch Overview",
+        "items": [
+          {
+            "id": "branch_dashboard",
+            "title": "Branch Dashboard",
+            "icon": "dashboard",
+            "route": "/app/healthcare/branch-manager/branch-dashboard"
+          },
+          {
+            "id": "branch_overview",
+            "title": "Branch Overview",
+            "icon": "business",
+            "route": "/app/healthcare/branch-manager/branch-overview"
+          }
+        ]
+      },
+      {
+        "title": "Branch Management",
+        "items": [
+          {
+            "id": "branch_staff",
+            "title": "Branch Staff",
+            "icon": "people",
+            "route": "/app/healthcare/branch-manager/branch-staff"
+          },
+          {
+            "id": "branch_departments",
+            "title": "Branch Departments",
+            "icon": "business",
+            "route": "/app/healthcare/branch-manager/branch-departments"
+          },
+          {
+            "id": "branch_resources",
+            "title": "Branch Resources",
+            "icon": "inventory",
+            "route": "/app/healthcare/branch-manager/branch-resources"
+          }
+        ]
+      },
+      {
+        "title": "Branch Approvals",
+        "items": [
+          {
+            "id": "branch_pending_approvals",
+            "title": "Branch Pending Approvals",
+            "icon": "assignment",
+            "route": "/app/healthcare/branch-manager/branch-pending-approvals"
+          },
+          {
+            "id": "branch_approval_history",
+            "title": "Branch Approval History",
+            "icon": "history",
+            "route": "/app/healthcare/branch-manager/branch-approval-history"
+          }
+        ]
+      },
+      {
+        "title": "Branch Reports",
+        "items": [
+          {
+            "id": "branch_report",
+            "title": "Branch Report",
+            "icon": "assessment",
+            "route": "/app/healthcare/branch-manager/reports/branch"
+          },
+          {
+            "id": "branch_performance",
+            "title": "Branch Performance",
+            "icon": "trending_up",
+            "route": "/app/healthcare/branch-manager/reports/performance"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "patient",
+      "healthcare_practitioner",
+      "department",
+      "request",
+      "announcement",
+      "report"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "hospital_level_settings",
+      "other_branches"
+    ]
+  },
+  "reports": [
+    {
+      "id": "branch_report",
+      "title": "Branch Report",
+      "route": "/app/healthcare/branch-manager/reports/branch"
+    },
+    {
+      "id": "branch_performance",
+      "title": "Branch Performance",
+      "route": "/app/healthcare/branch-manager/reports/performance"
+    }
+  ],
+  "notifications": [
+    "branch_approval_request",
+    "branch_staff_alert",
+    "branch_patient_alert",
+    "branch_system_alert"
+  ]
+}

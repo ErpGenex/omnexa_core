@@ -1,0 +1,251 @@
+{
+  "role_id": "healthcare_doctor",
+  "role_name": "Doctor",
+  "application": "healthcare",
+  "portal": "healthcare_doctor",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "today_patients",
+        "title": "Today's Patients",
+        "value": "count",
+        "source": "healthcare_encounter",
+        "filter": "today"
+      },
+      {
+        "id": "pending_followups",
+        "title": "Pending Follow-ups",
+        "value": "count",
+        "source": "healthcare_encounter",
+        "filter": "followup_pending"
+      },
+      {
+        "id": "pending_prescriptions",
+        "title": "Pending Prescriptions",
+        "value": "count",
+        "source": "prescription",
+        "filter": "pending"
+      },
+      {
+        "id": "lab_results_pending",
+        "title": "Lab Results Pending",
+        "value": "count",
+        "source": "lab_result",
+        "filter": "pending"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "start_consultation",
+        "title": "Start Consultation",
+        "action": "create",
+        "doctype": "healthcare_encounter"
+      },
+      {
+        "id": "create_prescription",
+        "title": "Create Prescription",
+        "action": "create",
+        "doctype": "prescription"
+      },
+      {
+        "id": "order_lab",
+        "title": "Order Lab Test",
+        "action": "create",
+        "doctype": "lab_order"
+      },
+      {
+        "id": "order_radiology",
+        "title": "Order Radiology",
+        "action": "create",
+        "doctype": "radiology_order"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "my_schedule",
+        "title": "My Schedule",
+        "type": "schedule",
+        "source": "healthcare_appointment"
+      },
+      {
+        "id": "today_patients",
+        "title": "Today's Patients",
+        "type": "list",
+        "source": "healthcare_encounter"
+      },
+      {
+        "id": "lab_results",
+        "title": "Lab Results",
+        "type": "list",
+        "source": "lab_result"
+      }
+    ],
+    "charts": [
+      {
+        "id": "patient_volume_chart",
+        "title": "Patient Volume",
+        "type": "line",
+        "source": "healthcare_encounter"
+      },
+      {
+        "id": "diagnosis_distribution",
+        "title": "Diagnosis Distribution",
+        "type": "pie",
+        "source": "healthcare_encounter"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Patients",
+        "items": [
+          {
+            "id": "my_patients",
+            "title": "My Patients",
+            "icon": "people",
+            "route": "/app/healthcare/doctor/my-patients"
+          },
+          {
+            "id": "patient_search",
+            "title": "Patient Search",
+            "icon": "search",
+            "route": "/app/healthcare/doctor/patient-search"
+          }
+        ]
+      },
+      {
+        "title": "Consultations",
+        "items": [
+          {
+            "id": "my_schedule",
+            "title": "My Schedule",
+            "icon": "schedule",
+            "route": "/app/healthcare/doctor/my-schedule"
+          },
+          {
+            "id": "today_consultations",
+            "title": "Today's Consultations",
+            "icon": "today",
+            "route": "/app/healthcare/doctor/today-consultations"
+          },
+          {
+            "id": "consultation_history",
+            "title": "Consultation History",
+            "icon": "history",
+            "route": "/app/healthcare/doctor/consultation-history"
+          }
+        ]
+      },
+      {
+        "title": "Clinical",
+        "items": [
+          {
+            "id": "soap_notes",
+            "title": "SOAP Notes",
+            "icon": "note",
+            "route": "/app/healthcare/doctor/soap-notes"
+          },
+          {
+            "id": "clinical_notes",
+            "title": "Clinical Notes",
+            "icon": "description",
+            "route": "/app/healthcare/doctor/clinical-notes"
+          },
+          {
+            "id": "diagnosis",
+            "title": "Diagnosis",
+            "icon": "medical_services",
+            "route": "/app/healthcare/doctor/diagnosis"
+          },
+          {
+            "id": "prescription",
+            "title": "Prescription",
+            "icon": "medication",
+            "route": "/app/healthcare/doctor/prescription"
+          }
+        ]
+      },
+      {
+        "title": "Orders",
+        "items": [
+          {
+            "id": "lab_orders",
+            "title": "Lab Orders",
+            "icon": "science",
+            "route": "/app/healthcare/doctor/lab-orders"
+          },
+          {
+            "id": "radiology_orders",
+            "title": "Radiology Orders",
+            "icon": "radiology",
+            "route": "/app/healthcare/doctor/radiology-orders"
+          }
+        ]
+      },
+      {
+        "title": "Results",
+        "items": [
+          {
+            "id": "lab_results",
+            "title": "Lab Results",
+            "icon": "biotech",
+            "route": "/app/healthcare/doctor/lab-results"
+          },
+          {
+            "id": "radiology_results",
+            "title": "Radiology Results",
+            "icon": "image",
+            "route": "/app/healthcare/doctor/radiology-results"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "patient",
+      "healthcare_encounter",
+      "prescription",
+      "lab_order",
+      "radiology_order",
+      "lab_result",
+      "radiology_report",
+      "medical_record"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "payment",
+      "accounting_entry",
+      "inventory",
+      "hr_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "patient_report",
+      "title": "Patient Report",
+      "route": "/app/healthcare/doctor/reports/patient"
+    },
+    {
+      "id": "consultation_report",
+      "title": "Consultation Report",
+      "route": "/app/healthcare/doctor/reports/consultation"
+    },
+    {
+      "id": "prescription_report",
+      "title": "Prescription Report",
+      "route": "/app/healthcare/doctor/reports/prescription"
+    }
+  ],
+  "notifications": [
+    "new_appointment",
+    "lab_result_ready",
+    "radiology_result_ready",
+    "patient_followup"
+  ]
+}

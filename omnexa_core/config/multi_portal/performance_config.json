@@ -1,0 +1,121 @@
+{
+  "performance": {
+    "lazy_loading": {
+      "enabled": true,
+      "strategy": "route_based",
+      "preload_critical": true,
+      "preload_on_hover": true,
+      "preload_on_idle": true
+    },
+    "code_splitting": {
+      "enabled": true,
+      "strategy": "application_based",
+      "chunk_size": "200KB",
+      "max_chunks": 50
+    },
+    "caching": {
+      "enabled": true,
+      "strategy": "aggressive",
+      "ttl": 3600,
+      "cache_size": "50MB",
+      "cache_keys": [
+        "portal_config",
+        "role_config",
+        "theme_config",
+        "user_permissions"
+      ]
+    },
+    "bundle_optimization": {
+      "enabled": true,
+      "tree_shaking": true,
+      "minification": true,
+      "compression": true,
+      "source_maps": false
+    },
+    "resource_optimization": {
+      "images": {
+        "compression": true,
+        "lazy_loading": true,
+        "webp": true,
+        "responsive_images": true,
+        "max_width": 1920,
+        "quality": 85
+      },
+      "fonts": {
+        "subsetting": true,
+        "loading": "swap",
+        "preload": true,
+        "formats": ["woff2", "woff"]
+      },
+      "css": {
+        "minification": true,
+        "purge_unused": true,
+        "critical_css": true
+      },
+      "javascript": {
+        "minification": true,
+        "dead_code_elimination": true,
+        "async_loading": true
+      }
+    },
+    "network_optimization": {
+      "http2": true,
+      "http3": false,
+      "cdn": true,
+      "gzip": true,
+      "brotli": true,
+      "keep_alive": true
+    },
+    "rendering_optimization": {
+      "server_side_rendering": true,
+      "client_side_rendering": true,
+      "static_site_generation": false,
+      "hydration": true
+    },
+    "memory_management": {
+      "max_memory_per_session": "100MB",
+      "garbage_collection_interval": 300,
+      "cache_eviction_policy": "lru"
+    },
+    "performance_monitoring": {
+      "enabled": true,
+      "track_load_times": true,
+      "track_render_times": true,
+      "track_api_times": true,
+      "track_errors": true
+    },
+    "performance_targets": {
+      "first_contentful_paint": 1.5,
+      "largest_contentful_paint": 2.5,
+      "first_input_delay": 100,
+      "time_to_interactive": 3.5,
+      "cumulative_layout_shift": 0.1,
+      "total_blocking_time": 200
+    },
+    "optimization_strategies": {
+      "portal_specific_loading": true,
+      "role_specific_loading": true,
+      "widget_specific_loading": true,
+      "report_specific_loading": true,
+      "module_specific_loading": true
+    },
+    "preload_strategies": {
+      "critical_resources": [
+        "theme_css",
+        "application_js",
+        "portal_config"
+      ],
+      "deferred_resources": [
+        "non_critical_css",
+        "analytics",
+        "tracking"
+      ]
+    },
+    "bundle_analysis": {
+      "enabled": true,
+      "analyze_on_build": true,
+      "max_bundle_size": "500KB",
+      "warn_on_size": "300KB"
+    }
+  }
+}

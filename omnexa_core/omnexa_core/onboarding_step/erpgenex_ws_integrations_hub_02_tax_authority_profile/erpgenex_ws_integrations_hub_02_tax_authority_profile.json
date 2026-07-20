@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create",
+ "creation": "2026-05-01 22:46:17.679315",
+ "description": "Create or review your first **Tax Authority Profile** record from this workspace.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-07-11 14:37:29.884406",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-integrations_hub-02-tax_authority_profile",
+ "owner": "Administrator",
+ "reference_document": "Tax Authority Profile",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Get started with Tax Authority Profile",
+ "validate_action": 1
+}

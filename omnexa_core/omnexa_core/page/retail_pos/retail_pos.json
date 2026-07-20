@@ -1,0 +1,14 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Core",
+	"name": "retail-pos",
+	"page_name": "retail-pos",
+	"standard": "Yes",
+	"title": "نقطة البيع",
+	"roles": [
+		{"role": "System Manager"},
+		{"role": "Accounts Manager"},
+		{"role": "Accounts User"},
+		{"role": "Sales User"}
+	]
+}

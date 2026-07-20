@@ -1,0 +1,205 @@
+{
+  "role_id": "healthcare_system_administrator",
+  "role_name": "System Administrator",
+  "application": "healthcare",
+  "portal": "healthcare_admin",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "system_health",
+        "title": "System Health",
+        "value": "percentage",
+        "source": "system_monitor",
+        "filter": "current"
+      },
+      {
+        "id": "active_users",
+        "title": "Active Users",
+        "value": "count",
+        "source": "user",
+        "filter": "active"
+      },
+      {
+        "id": "system_errors",
+        "title": "System Errors",
+        "value": "count",
+        "source": "error_log",
+        "filter": "today"
+      },
+      {
+        "id": "storage_usage",
+        "title": "Storage Usage",
+        "value": "percentage",
+        "source": "storage",
+        "filter": "current"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "manage_users",
+        "title": "Manage Users",
+        "action": "update",
+        "doctype": "user"
+      },
+      {
+        "id": "system_settings",
+        "title": "System Settings",
+        "action": "update",
+        "doctype": "system_settings"
+      },
+      {
+        "id": "view_logs",
+        "title": "View Logs",
+        "action": "read",
+        "doctype": "log"
+      },
+      {
+        "id": "backup_system",
+        "title": "Backup System",
+        "action": "create",
+        "doctype": "backup"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "system_status",
+        "title": "System Status",
+        "type": "status",
+        "source": "system_monitor"
+      },
+      {
+        "id": "recent_errors",
+        "title": "Recent Errors",
+        "type": "list",
+        "source": "error_log"
+      },
+      {
+        "id": "system_alerts",
+        "title": "System Alerts",
+        "type": "list",
+        "source": "system_alert"
+      }
+    ],
+    "charts": [
+      {
+        "id": "system_performance",
+        "title": "System Performance",
+        "type": "line",
+        "source": "system_monitor"
+      },
+      {
+        "id": "user_activity",
+        "title": "User Activity",
+        "type": "bar",
+        "source": "user_activity"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "System",
+        "items": [
+          {
+            "id": "system_dashboard",
+            "title": "System Dashboard",
+            "icon": "dashboard",
+            "route": "/app/healthcare/admin/system-dashboard"
+          },
+          {
+            "id": "system_status",
+            "title": "System Status",
+            "icon": "monitor_heart",
+            "route": "/app/healthcare/admin/system-status"
+          }
+        ]
+      },
+      {
+        "title": "Users",
+        "items": [
+          {
+            "id": "user_management",
+            "title": "User Management",
+            "icon": "people",
+            "route": "/app/healthcare/admin/user-management"
+          },
+          {
+            "id": "role_management",
+            "title": "Role Management",
+            "icon": "admin_panel_settings",
+            "route": "/app/healthcare/admin/role-management"
+          }
+        ]
+      },
+      {
+        "title": "Settings",
+        "items": [
+          {
+            "id": "system_settings",
+            "title": "System Settings",
+            "icon": "settings",
+            "route": "/app/healthcare/admin/system-settings"
+          },
+          {
+            "id": "security_settings",
+            "title": "Security Settings",
+            "icon": "security",
+            "route": "/app/healthcare/admin/security-settings"
+          }
+        ]
+      },
+      {
+        "title": "Logs & Reports",
+        "items": [
+          {
+            "id": "error_logs",
+            "title": "Error Logs",
+            "icon": "error",
+            "route": "/app/healthcare/admin/error-logs"
+          },
+          {
+            "id": "activity_logs",
+            "title": "Activity Logs",
+            "icon": "list_alt",
+            "route": "/app/healthcare/admin/activity-logs"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "user",
+      "role",
+      "system_settings",
+      "log",
+      "backup",
+      "error_log"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update",
+      "delete"
+    ],
+    "restricted_doctypes": []
+  },
+  "reports": [
+    {
+      "id": "system_report",
+      "title": "System Report",
+      "route": "/app/healthcare/admin/reports/system"
+    },
+    {
+      "id": "security_report",
+      "title": "Security Report",
+      "route": "/app/healthcare/admin/reports/security"
+    }
+  ],
+  "notifications": [
+    "system_alert",
+    "security_alert",
+    "backup_complete",
+    "user_created"
+  ]
+}

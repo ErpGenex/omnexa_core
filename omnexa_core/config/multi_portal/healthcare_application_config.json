@@ -1,0 +1,181 @@
+{
+  "application_id": "healthcare",
+  "application_name": "ERPGenEx Healthcare",
+  "primary_color": "#2196F3",
+  "secondary_color": "#1976D2",
+  "accent_color": "#FF4081",
+  "base_url": "/app/healthcare",
+  "icon": "medical_services",
+  "logo": "/assets/healthcare/logo.png",
+  "roles": [
+    "healthcare_receptionist",
+    "healthcare_doctor",
+    "healthcare_nurse",
+    "healthcare_lab_technician",
+    "healthcare_radiology",
+    "healthcare_cashier",
+    "healthcare_pharmacist",
+    "healthcare_medical_records",
+    "healthcare_insurance",
+    "healthcare_hospital_manager",
+    "healthcare_branch_manager",
+    "healthcare_system_administrator"
+  ],
+  "portals": [
+    {
+      "portal_id": "healthcare_reception",
+      "portal_name": "Receptionist Portal",
+      "role": "healthcare_receptionist",
+      "url": "/app/healthcare/reception"
+    },
+    {
+      "portal_id": "healthcare_doctor",
+      "portal_name": "Doctor Portal",
+      "role": "healthcare_doctor",
+      "url": "/app/healthcare/doctor"
+    },
+    {
+      "portal_id": "healthcare_nurse",
+      "portal_name": "Nurse Portal",
+      "role": "healthcare_nurse",
+      "url": "/app/healthcare/nurse"
+    },
+    {
+      "portal_id": "healthcare_pharmacy",
+      "portal_name": "Pharmacy Portal",
+      "role": "healthcare_pharmacist",
+      "url": "/app/healthcare/pharmacy"
+    },
+    {
+      "portal_id": "healthcare_lab",
+      "portal_name": "Lab Portal",
+      "role": "healthcare_lab_technician",
+      "url": "/app/healthcare/lab"
+    },
+    {
+      "portal_id": "healthcare_radiology",
+      "portal_name": "Radiology Portal",
+      "role": "healthcare_radiology",
+      "url": "/app/healthcare/radiology"
+    },
+    {
+      "portal_id": "healthcare_cashier",
+      "portal_name": "Cashier Portal",
+      "role": "healthcare_cashier",
+      "url": "/app/healthcare/cashier"
+    },
+    {
+      "portal_id": "healthcare_medical_records",
+      "portal_name": "Medical Records Portal",
+      "role": "healthcare_medical_records",
+      "url": "/app/healthcare/medical-records"
+    },
+    {
+      "portal_id": "healthcare_insurance",
+      "portal_name": "Insurance Portal",
+      "role": "healthcare_insurance",
+      "url": "/app/healthcare/insurance"
+    },
+    {
+      "portal_id": "healthcare_manager",
+      "portal_name": "Hospital Manager Portal",
+      "role": "healthcare_hospital_manager",
+      "url": "/app/healthcare/manager"
+    },
+    {
+      "portal_id": "healthcare_branch_manager",
+      "portal_name": "Branch Manager Portal",
+      "role": "healthcare_branch_manager",
+      "url": "/app/healthcare/branch-manager"
+    },
+    {
+      "portal_id": "healthcare_admin",
+      "portal_name": "System Administrator Portal",
+      "role": "healthcare_system_administrator",
+      "url": "/app/healthcare/admin"
+    }
+  ],
+  "modules": [
+    "patients",
+    "appointments",
+    "encounters",
+    "admissions",
+    "medications",
+    "laboratory",
+    "radiology",
+    "pharmacy",
+    "billing",
+    "insurance"
+  ],
+  "isolation": {
+    "pages": true,
+    "menus": true,
+    "workspaces": true,
+    "dashboards": true,
+    "reports": true,
+    "permissions": true,
+    "shortcuts": true,
+    "navbar_items": true,
+    "modules": true
+  },
+  "navigation": {
+    "sidebar": {
+      "enabled": true,
+      "collapsible": true,
+      "position": "left"
+    },
+    "navbar": {
+      "enabled": true,
+      "position": "top",
+      "search_enabled": true,
+      "notifications_enabled": true,
+      "user_menu_enabled": true
+    },
+    "breadcrumb": {
+      "enabled": true,
+      "position": "top"
+    }
+  },
+  "dashboard": {
+    "layout": "grid",
+    "columns": 12,
+    "default_widgets": [
+      "kpis",
+      "quick_actions",
+      "today_tasks",
+      "charts",
+      "recent_activities",
+      "notifications"
+    ]
+  },
+  "features": {
+    "patient_management": true,
+    "appointment_scheduling": true,
+    "electronic_medical_records": true,
+    "prescription_management": true,
+    "laboratory_integration": true,
+    "radiology_integration": true,
+    "pharmacy_management": true,
+    "billing_integration": true,
+    "insurance_integration": true
+  },
+  "integrations": {
+    "lab_systems": ["lab_info", "quest_diagnostics"],
+    "radiology_systems": ["pacs", "dicom"],
+    "pharmacy_systems": ["epic", "cerner"],
+    "insurance_systems": ["blue_cross", "aetna"]
+  },
+  "security": {
+    "hipaa_compliant": true,
+    "data_encryption": true,
+    "audit_logging": true,
+    "role_based_access": true,
+    "session_timeout": 1800
+  },
+  "performance": {
+    "lazy_loading": true,
+    "caching_enabled": true,
+    "bundle_optimization": true,
+    "image_optimization": true
+  }
+}

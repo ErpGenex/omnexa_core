@@ -1,0 +1,23 @@
+{
+ "action": "View Report",
+ "action_label": "Open report",
+ "creation": "2026-06-19 21:34:44.133517",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-07-11 14:37:22.550529",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-COMM-05-O2C-Report",
+ "owner": "Administrator",
+ "reference_report": "Commerce Order-to-Cash Pipeline",
+ "report_description": "Slice web orders by segment, branch, and status for order-to-cash visibility.",
+ "report_reference_doctype": "Web Order",
+ "report_type": "Script Report",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Review order-to-cash pipeline",
+ "validate_action": 1
+}

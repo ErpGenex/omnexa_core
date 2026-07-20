@@ -1,0 +1,49 @@
+.omnexa-desk-context-switcher .omnexa-ctx-wrap {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-inline: 8px 4px;
+}
+
+.omnexa-desk-context-switcher .omnexa-ctx-company,
+.omnexa-desk-context-switcher .omnexa-ctx-branch {
+	min-width: 120px;
+	max-width: 180px;
+	height: 28px;
+	padding: 2px 8px;
+	font-size: 12px;
+	background: var(--fg-color);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+}
+
+@media (max-width: 991px) {
+	.omnexa-desk-context-switcher {
+		display: none !important;
+	}
+}
+
+.omnexa-navbar-activity {
+	margin-inline: 6px 2px;
+}
+
+.omnexa-navbar-activity.is-empty {
+	display: none !important;
+}
+
+.omnexa-activity-pill {
+	display: inline-flex;
+	align-items: center;
+	max-width: 200px;
+	padding: 4px 10px;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.2;
+	color: var(--text-color);
+	background: var(--fg-color);
+	border: 1px solid var(--border-color);
+	border-radius: 999px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

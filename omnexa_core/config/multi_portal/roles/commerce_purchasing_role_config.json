@@ -1,0 +1,207 @@
+{
+  "role_id": "commerce_purchasing",
+  "role_name": "Purchasing",
+  "application": "commerce",
+  "portal": "commerce_purchasing",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "pending_orders",
+        "title": "Pending Orders",
+        "value": "count",
+        "source": "purchase_order",
+        "filter": "pending"
+      },
+      {
+        "id": "orders_today",
+        "title": "Orders Today",
+        "value": "count",
+        "source": "purchase_order",
+        "filter": "today"
+      },
+      {
+        "id": "total_spend",
+        "title": "Total Spend",
+        "value": "sum",
+        "source": "purchase_order",
+        "filter": "current_month"
+      },
+      {
+        "id": "supplier_performance",
+        "title": "Supplier Performance",
+        "value": "percentage",
+        "source": "supplier",
+        "filter": "performance"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "create_purchase_order",
+        "title": "Create Purchase Order",
+        "action": "create",
+        "doctype": "purchase_order"
+      },
+      {
+        "id": "request_quotation",
+        "title": "Request Quotation",
+        "action": "create",
+        "doctype": "quotation_request"
+      },
+      {
+        "id": "add_supplier",
+        "title": "Add Supplier",
+        "action": "create",
+        "doctype": "supplier"
+      },
+      {
+        "id": "receive_goods",
+        "title": "Receive Goods",
+        "action": "update",
+        "doctype": "purchase_receipt"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_orders",
+        "title": "Pending Orders",
+        "type": "list",
+        "source": "purchase_order"
+      },
+      {
+        "id": "suppliers",
+        "title": "Suppliers",
+        "type": "list",
+        "source": "supplier"
+      },
+      {
+        "id": "recent_receipts",
+        "title": "Recent Receipts",
+        "type": "list",
+        "source": "purchase_receipt"
+      }
+    ],
+    "charts": [
+      {
+        "id": "purchase_trend",
+        "title": "Purchase Trend",
+        "type": "line",
+        "source": "purchase_order"
+      },
+      {
+        "id": "supplier_performance",
+        "title": "Supplier Performance",
+        "type": "bar",
+        "source": "supplier"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Purchasing",
+        "items": [
+          {
+            "id": "purchase_orders",
+            "title": "Purchase Orders",
+            "icon": "shopping_bag",
+            "route": "/app/commerce/purchasing/purchase-orders"
+          },
+          {
+            "id": "quotation_requests",
+            "title": "Quotation Requests",
+            "icon": "description",
+            "route": "/app/commerce/purchasing/quotation-requests"
+          }
+        ]
+      },
+      {
+        "title": "Suppliers",
+        "items": [
+          {
+            "id": "suppliers",
+            "title": "Suppliers",
+            "icon": "business",
+            "route": "/app/commerce/purchasing/suppliers"
+          },
+          {
+            "id": "supplier_evaluations",
+            "title": "Supplier Evaluations",
+            "icon": "rate_review",
+            "route": "/app/commerce/purchasing/supplier-evaluations"
+          }
+        ]
+      },
+      {
+        "title": "Receipts",
+        "items": [
+          {
+            "id": "purchase_receipts",
+            "title": "Purchase Receipts",
+            "icon": "receipt_long",
+            "route": "/app/commerce/purchasing/purchase-receipts"
+          },
+          {
+            "id": "receipt_history",
+            "title": "Receipt History",
+            "icon": "history",
+            "route": "/app/commerce/purchasing/receipt-history"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "purchase_report",
+            "title": "Purchase Report",
+            "icon": "assessment",
+            "route": "/app/commerce/purchasing/reports/purchase"
+          },
+          {
+            "id": "supplier_report",
+            "title": "Supplier Report",
+            "icon": "business",
+            "route": "/app/commerce/purchasing/reports/supplier"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "purchase_order",
+      "quotation_request",
+      "supplier",
+      "purchase_receipt"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "sales_order",
+      "customer_management",
+      "financial_records",
+      "hr_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "purchase_report",
+      "title": "Purchase Report",
+      "route": "/app/commerce/purchasing/reports/purchase"
+    },
+    {
+      "id": "supplier_report",
+      "title": "Supplier Report",
+      "route": "/app/commerce/purchasing/reports/supplier"
+    }
+  ],
+  "notifications": [
+    "order_approved",
+    "quotation_received",
+    "goods_received",
+    "supplier_alert"
+  ]
+}

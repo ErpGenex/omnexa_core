@@ -1,0 +1,207 @@
+{
+  "role_id": "commerce_pos_cashier",
+  "role_name": "POS Cashier",
+  "application": "commerce",
+  "portal": "commerce_pos",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "today_sales",
+        "title": "Today's Sales",
+        "value": "sum",
+        "source": "pos_invoice",
+        "filter": "today"
+      },
+      {
+        "id": "transactions_today",
+        "title": "Transactions Today",
+        "value": "count",
+        "source": "pos_invoice",
+        "filter": "today"
+      },
+      {
+        "id": "cash_balance",
+        "title": "Cash Balance",
+        "value": "sum",
+        "source": "cash_register",
+        "filter": "current"
+      },
+      {
+        "id": "returns_today",
+        "title": "Returns Today",
+        "value": "count",
+        "source": "return",
+        "filter": "today"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "new_sale",
+        "title": "New Sale",
+        "action": "create",
+        "doctype": "pos_invoice"
+      },
+      {
+        "id": "process_return",
+        "title": "Process Return",
+        "action": "create",
+        "doctype": "return"
+      },
+      {
+        "id": "cash_in",
+        "title": "Cash In",
+        "action": "update",
+        "doctype": "cash_register"
+      },
+      {
+        "id": "cash_out",
+        "title": "Cash Out",
+        "action": "update",
+        "doctype": "cash_register"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "recent_transactions",
+        "title": "Recent Transactions",
+        "type": "list",
+        "source": "pos_invoice"
+      },
+      {
+        "id": "top_selling_items",
+        "title": "Top Selling Items",
+        "type": "list",
+        "source": "item"
+      },
+      {
+        "id": "pending_returns",
+        "title": "Pending Returns",
+        "type": "list",
+        "source": "return"
+      }
+    ],
+    "charts": [
+      {
+        "id": "sales_by_hour",
+        "title": "Sales by Hour",
+        "type": "bar",
+        "source": "pos_invoice"
+      },
+      {
+        "id": "payment_methods",
+        "title": "Payment Methods",
+        "type": "pie",
+        "source": "pos_invoice"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "POS",
+        "items": [
+          {
+            "id": "pos_terminal",
+            "title": "POS Terminal",
+            "icon": "point_of_sale",
+            "route": "/app/commerce/pos/pos-terminal"
+          },
+          {
+            "id": "pos_history",
+            "title": "POS History",
+            "icon": "history",
+            "route": "/app/commerce/pos/pos-history"
+          }
+        ]
+      },
+      {
+        "title": "Returns",
+        "items": [
+          {
+            "id": "returns",
+            "title": "Returns",
+            "icon": "refund",
+            "route": "/app/commerce/pos/returns"
+          },
+          {
+            "id": "return_history",
+            "title": "Return History",
+            "icon": "history",
+            "route": "/app/commerce/pos/return-history"
+          }
+        ]
+      },
+      {
+        "title": "Cash Management",
+        "items": [
+          {
+            "id": "cash_register",
+            "title": "Cash Register",
+            "icon": "payments",
+            "route": "/app/commerce/pos/cash-register"
+          },
+          {
+            "id": "cash_reconciliation",
+            "title": "Cash Reconciliation",
+            "icon": "balance",
+            "route": "/app/commerce/pos/cash-reconciliation"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "sales_report",
+            "title": "Sales Report",
+            "icon": "assessment",
+            "route": "/app/commerce/pos/reports/sales"
+          },
+          {
+            "id": "cash_report",
+            "title": "Cash Report",
+            "icon": "payments",
+            "route": "/app/commerce/pos/reports/cash"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "pos_invoice",
+      "return",
+      "cash_register",
+      "item"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "purchase_order",
+      "inventory_management",
+      "financial_reports",
+      "hr_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "pos_sales_report",
+      "title": "POS Sales Report",
+      "route": "/app/commerce/pos/reports/sales"
+    },
+    {
+      "id": "cash_report",
+      "title": "Cash Report",
+      "route": "/app/commerce/pos/reports/cash"
+    }
+  ],
+  "notifications": [
+    "low_stock_alert",
+    "cash_discrepancy",
+    "return_request",
+    "system_alert"
+  ]
+}

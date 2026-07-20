@@ -1,0 +1,215 @@
+{
+  "role_id": "education_parent",
+  "role_name": "Parent",
+  "application": "education",
+  "portal": "education_parent",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "children_count",
+        "title": "My Children",
+        "value": "count",
+        "source": "student",
+        "filter": "my_children"
+      },
+      {
+        "id": "fees_due",
+        "title": "Fees Due",
+        "value": "sum",
+        "source": "fee_payment",
+        "filter": "due"
+      },
+      {
+        "id": "attendance_rate",
+        "title": "Children's Attendance",
+        "value": "percentage",
+        "source": "attendance",
+        "filter": "my_children"
+      },
+      {
+        "id": "upcoming_events",
+        "title": "Upcoming Events",
+        "value": "count",
+        "source": "event",
+        "filter": "upcoming"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "view_children",
+        "title": "View My Children",
+        "action": "read",
+        "doctype": "student"
+      },
+      {
+        "id": "pay_fees",
+        "title": "Pay Fees",
+        "action": "update",
+        "doctype": "fee_payment"
+      },
+      {
+        "id": "view_attendance",
+        "title": "View Attendance",
+        "action": "read",
+        "doctype": "attendance"
+      },
+      {
+        "id": "contact_teacher",
+        "title": "Contact Teacher",
+        "action": "create",
+        "doctype": "message"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "my_children",
+        "title": "My Children",
+        "type": "list",
+        "source": "student"
+      },
+      {
+        "id": "children_attendance",
+        "title": "Children's Attendance",
+        "type": "list",
+        "source": "attendance"
+      },
+      {
+        "id": "children_grades",
+        "title": "Children's Grades",
+        "type": "list",
+        "source": "grade"
+      }
+    ],
+    "charts": [
+      {
+        "id": "attendance_trend",
+        "title": "Attendance Trend",
+        "type": "line",
+        "source": "attendance"
+      },
+      {
+        "id": "grade_progress",
+        "title": "Grade Progress",
+        "type": "bar",
+        "source": "grade"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "My Children",
+        "items": [
+          {
+            "id": "my_children",
+            "title": "My Children",
+            "icon": "family_restroom",
+            "route": "/app/education/parent/my-children"
+          },
+          {
+            "id": "children_profile",
+            "title": "Children's Profile",
+            "icon": "person",
+            "route": "/app/education/parent/children-profile"
+          }
+        ]
+      },
+      {
+        "title": "Academic",
+        "items": [
+          {
+            "id": "attendance",
+            "title": "Attendance",
+            "icon": "event_available",
+            "route": "/app/education/parent/attendance"
+          },
+          {
+            "id": "grades",
+            "title": "Grades",
+            "icon": "grade",
+            "route": "/app/education/parent/grades"
+          },
+          {
+            "id": "assignments",
+            "title": "Assignments",
+            "icon": "assignment",
+            "route": "/app/education/parent/assignments"
+          }
+        ]
+      },
+      {
+        "title": "Fees",
+        "items": [
+          {
+            "id": "my_fees",
+            "title": "My Fees",
+            "icon": "payments",
+            "route": "/app/education/parent/my-fees"
+          },
+          {
+            "id": "payment_history",
+            "title": "Payment History",
+            "icon": "history",
+            "route": "/app/education/parent/payment-history"
+          }
+        ]
+      },
+      {
+        "title": "Communication",
+        "items": [
+          {
+            "id": "messages",
+            "title": "Messages",
+            "icon": "message",
+            "route": "/app/education/parent/messages"
+          },
+          {
+            "id": "teacher_contacts",
+            "title": "Teacher Contacts",
+            "icon": "contacts",
+            "route": "/app/education/parent/teacher-contacts"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "student",
+      "attendance",
+      "grade",
+      "assignment",
+      "fee_payment",
+      "message"
+    ],
+    "allowed_actions": [
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "course_management",
+      "teacher_assignments",
+      "financial_records",
+      "administrative_functions"
+    ]
+  },
+  "reports": [
+    {
+      "id": "child_report",
+      "title": "Child Report",
+      "route": "/app/education/parent/reports/child"
+    },
+    {
+      "id": "attendance_report",
+      "title": "Attendance Report",
+      "route": "/app/education/parent/reports/attendance"
+    }
+  ],
+  "notifications": [
+    "attendance_alert",
+    "grade_posted",
+    "fee_due",
+    "assignment_due",
+    "teacher_message"
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "application_id": "commerce",
+  "application_name": "ERPGenEx Commerce",
+  "primary_color": "#9C27B0",
+  "secondary_color": "#7B1FA2",
+  "accent_color": "#FF9800",
+  "base_url": "/app/commerce",
+  "icon": "store",
+  "logo": "/assets/commerce/logo.png",
+  "roles": [
+    "commerce_sales",
+    "commerce_pos_cashier",
+    "commerce_warehouse",
+    "commerce_purchasing",
+    "commerce_inventory",
+    "commerce_customer_service",
+    "commerce_finance",
+    "commerce_hr",
+    "commerce_branch_manager",
+    "commerce_general_manager",
+    "commerce_system_administrator"
+  ],
+  "portals": [
+    {
+      "portal_id": "commerce_sales",
+      "portal_name": "Sales Portal",
+      "role": "commerce_sales",
+      "url": "/app/commerce/sales"
+    },
+    {
+      "portal_id": "commerce_pos",
+      "portal_name": "POS Cashier Portal",
+      "role": "commerce_pos_cashier",
+      "url": "/app/commerce/pos"
+    },
+    {
+      "portal_id": "commerce_warehouse",
+      "portal_name": "Warehouse Portal",
+      "role": "commerce_warehouse",
+      "url": "/app/commerce/warehouse"
+    },
+    {
+      "portal_id": "commerce_purchasing",
+      "portal_name": "Purchasing Portal",
+      "role": "commerce_purchasing",
+      "url": "/app/commerce/purchasing"
+    },
+    {
+      "portal_id": "commerce_inventory",
+      "portal_name": "Inventory Portal",
+      "role": "commerce_inventory",
+      "url": "/app/commerce/inventory"
+    },
+    {
+      "portal_id": "commerce_customer_service",
+      "portal_name": "Customer Service Portal",
+      "role": "commerce_customer_service",
+      "url": "/app/commerce/customer-service"
+    },
+    {
+      "portal_id": "commerce_finance",
+      "portal_name": "Finance Portal",
+      "role": "commerce_finance",
+      "url": "/app/commerce/finance"
+    },
+    {
+      "portal_id": "commerce_hr",
+      "portal_name": "HR Portal",
+      "role": "commerce_hr",
+      "url": "/app/commerce/hr"
+    },
+    {
+      "portal_id": "commerce_branch_manager",
+      "portal_name": "Branch Manager Portal",
+      "role": "commerce_branch_manager",
+      "url": "/app/commerce/branch-manager"
+    },
+    {
+      "portal_id": "commerce_general_manager",
+      "portal_name": "General Manager Portal",
+      "role": "commerce_general_manager",
+      "url": "/app/commerce/general-manager"
+    },
+    {
+      "portal_id": "commerce_admin",
+      "portal_name": "System Administrator Portal",
+      "role": "commerce_system_administrator",
+      "url": "/app/commerce/admin"
+    }
+  ],
+  "modules": [
+    "sales",
+    "pos",
+    "warehouse",
+    "purchasing",
+    "inventory",
+    "customer_service",
+    "finance",
+    "hr"
+  ],
+  "isolation": {
+    "pages": true,
+    "menus": true,
+    "workspaces": true,
+    "dashboards": true,
+    "reports": true,
+    "permissions": true,
+    "shortcuts": true,
+    "navbar_items": true,
+    "modules": true
+  },
+  "navigation": {
+    "sidebar": {
+      "enabled": true,
+      "collapsible": true,
+      "position": "left"
+    },
+    "navbar": {
+      "enabled": true,
+      "position": "top",
+      "search_enabled": true,
+      "notifications_enabled": true,
+      "user_menu_enabled": true
+    },
+    "breadcrumb": {
+      "enabled": true,
+      "position": "top"
+    }
+  },
+  "dashboard": {
+    "layout": "grid",
+    "columns": 12,
+    "default_widgets": [
+      "kpis",
+      "quick_actions",
+      "today_tasks",
+      "charts",
+      "recent_activities",
+      "notifications"
+    ]
+  },
+  "features": {
+    "sales_management": true,
+    "pos_system": true,
+    "warehouse_management": true,
+    "purchasing_management": true,
+    "inventory_management": true,
+    "customer_service": true,
+    "finance_management": true,
+    "hr_management": true,
+    "reporting": true,
+    "analytics": true
+  },
+  "integrations": {
+    "payment_gateways": ["stripe", "paypal", "square"],
+    "shipping_providers": ["fedex", "ups", "dhl"],
+    "accounting_systems": ["quickbooks", "xero"],
+    "crm_systems": ["salesforce", "hubspot"]
+  },
+  "security": {
+    "pci_compliant": true,
+    "data_encryption": true,
+    "audit_logging": true,
+    "role_based_access": true,
+    "session_timeout": 1800
+  },
+  "performance": {
+    "lazy_loading": true,
+    "caching_enabled": true,
+    "bundle_optimization": true,
+    "image_optimization": true
+  }
+}

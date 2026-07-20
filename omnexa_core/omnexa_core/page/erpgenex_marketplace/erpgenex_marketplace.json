@@ -1,0 +1,13 @@
+{
+ "doctype": "Page",
+ "name": "erpgenex-marketplace",
+ "module": "Omnexa Core",
+ "title": "ErpGenEx Marketplace",
+ "icon": "retail",
+ "restrict_to_domain": null,
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

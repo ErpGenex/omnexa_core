@@ -1,0 +1,92 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "autoname": "prompt",
+  "creation": "2026-05-01 02:30:00",
+  "custom": 1,
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "accounting_settings_section",
+    "require_approval_for_journal_entry",
+    "require_approval_for_payment_entry",
+    "banking_section",
+    "default_operating_bank_gl"
+  ],
+  "fields": [
+    {
+      "fieldname": "accounting_settings_section",
+      "fieldtype": "Section Break",
+      "label": "Accounting Settings"
+    },
+    {
+      "default": "0",
+      "description": "When enabled, Journal Entries should follow an approval workflow (best-effort; if workflow exists it will be used).",
+      "fieldname": "require_approval_for_journal_entry",
+      "fieldtype": "Check",
+      "label": "Require approval for Journal Entry"
+    },
+    {
+      "default": "0",
+      "description": "When enabled, Payment Entries should follow an approval workflow (best-effort; if workflow exists it will be used).",
+      "fieldname": "require_approval_for_payment_entry",
+      "fieldtype": "Check",
+      "label": "Require approval for Payment Entry"
+    },
+    {
+      "collapsible": 1,
+      "fieldname": "banking_section",
+      "fieldtype": "Section Break",
+      "label": "Banking"
+    },
+    {
+      "description": "Optional default operating bank GL for fast-entry screens (company policies may override).",
+      "fieldname": "default_operating_bank_gl",
+      "fieldtype": "Link",
+      "label": "Default Operating Bank GL",
+      "options": "GL Account"
+    }
+  ],
+  "grid_page_length": 50,
+  "index_web_pages_for_search": 1,
+  "istable": 0,
+  "issingle": 1,
+  "links": [],
+  "modified": "2026-05-01 02:30:00",
+  "modified_by": "Administrator",
+  "module": "Omnexa Core",
+  "name": "Omnexa Accounting Settings",
+  "naming_rule": "By fieldname",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 0,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Company Admin",
+      "share": 0,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "track_changes": 1
+}
+

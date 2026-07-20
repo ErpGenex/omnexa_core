@@ -1,0 +1,9 @@
+{
+	"doctype": "Page",
+	"module": "Omnexa Core",
+	"name": "industry_solutions",
+	"page_name": "industry_solutions",
+	"title": "Industry Solutions",
+	"standard": "Yes",
+	"roles": [{"role": "All"}]
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+	<meta charset="utf-8">
+	<title>فاتورة {{ invoice_number }}</title>
+	<style>
+		@page { size: 58mm auto; margin: 2mm; }
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+		body {
+			width: 58mm;
+			font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+			font-size: 11px;
+			color: #111;
+			background: #fff;
+			padding: 6px 4px 10px;
+		}
+		.brand { text-align: center; margin-bottom: 6px; }
+		.brand-icon { font-size: 26px; color: #2e7d32; }
+		.brand-ar { font-size: 16px; font-weight: 700; color: #2e7d32; }
+		.meta { text-align: center; font-size: 10px; line-height: 1.5; margin-bottom: 6px; }
+		.dashed, .solid { border: none; border-top: 1px dashed #333; margin: 6px 0; }
+		.solid { border-top-style: solid; }
+		.title { text-align: center; font-weight: 700; font-size: 12px; margin: 4px 0; }
+		.row { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 3px; }
+		table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 4px; }
+		th, td { padding: 3px 1px; text-align: center; }
+		th { border-bottom: 1px solid #333; font-weight: 700; }
+		td:first-child, th:first-child { text-align: right; }
+		.grand { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; color: #2e7d32; margin: 6px 0; }
+		.thanks { text-align: center; font-size: 10px; line-height: 1.6; margin: 8px 0; }
+		.barcode { text-align: center; margin: 8px 0; font-family: monospace; letter-spacing: 2px; font-size: 14px; }
+		.qr { display: flex; justify-content: center; margin: 6px 0; }
+		.qr img { width: 88px; height: 88px; }
+		.tear {
+			height: 8px; margin-top: 8px;
+			background: linear-gradient(135deg, transparent 6px, #fff 6px) 0 0 / 12px 12px, linear-gradient(225deg, transparent 6px, #fff 6px) 0 0 / 12px 12px;
+			background-color: #ddd;
+		}
+	</style>
+</head>
+<body>
+	<div class="brand">
+		<div class="brand-icon">🛒</div>
+		<div class="brand-ar">{{ store_name_ar }}</div>
+	</div>
+	<div class="meta">
+		<div>{{ address }}</div>
+		<div>{{ phone }}</div>
+		<div>سجل تجاري: {{ cr_number }}</div>
+		<div>بطاقة ضريبية: {{ tax_id }}</div>
+	</div>
+	<hr class="dashed">
+	<div class="title">فاتورة ضريبية مبسطة</div>
+	<div class="row"><span>رقم الفاتورة {{ invoice_number }}</span></div>
+	<div class="row"><span>التاريخ: {{ invoice_date }}</span><span>الوقت: {{ invoice_time }}</span></div>
+	<div class="row"><span>الكاشير: {{ cashier }}</span></div>
+	<hr class="solid">
+	<table>
+		<thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr></thead>
+		<tbody>
+			{% for item in items %}
+			<tr>
+				<td>{{ item.name }}</td>
+				<td>{{ "%.0f"|format(item.qty) }}</td>
+				<td>{{ "%.2f"|format(item.price) }}</td>
+				<td>{{ "%.2f"|format(item.total) }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<hr class="dashed">
+	<div class="row"><span>إجمالي قبل الخصم</span><span>{{ "%.2f"|format(subtotal_before_discount) }}</span></div>
+	{% if discount %}<div class="row"><span>إجمالي الخصم</span><span>{{ "%.2f"|format(discount) }}</span></div>{% endif %}
+	<div class="grand"><span>الإجمالي</span><span>{{ "%.2f"|format(grand_total) }}</span></div>
+	<div class="row"><span>شامل ضريبة القيمة المضافة</span><span>{{ "%.2f"|format(vat_included) }}</span></div>
+	<hr class="solid">
+	<div class="thanks">
+		<div>شكراً لتسوقكم معنا</div>
+		<div>نتمنى لكم يوماً سعيداً</div>
+	</div>
+	{% if qr_image_base64 %}<div class="qr"><img src="data:image/png;base64,{{ qr_image_base64 }}" alt="QR"></div>{% endif %}
+	<div class="barcode">||||| {{ invoice_number }} |||||</div>
+	<div class="tear"></div>
+</body>
+</html>

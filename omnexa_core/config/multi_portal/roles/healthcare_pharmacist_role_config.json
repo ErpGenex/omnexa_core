@@ -1,0 +1,190 @@
+{
+  "role_id": "healthcare_pharmacist",
+  "role_name": "Pharmacist",
+  "application": "healthcare",
+  "portal": "healthcare_pharmacy",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "prescriptions_pending",
+        "title": "Prescriptions Pending",
+        "value": "count",
+        "source": "prescription",
+        "filter": "pending"
+      },
+      {
+        "id": "prescriptions_filled",
+        "title": "Prescriptions Filled Today",
+        "value": "count",
+        "source": "prescription",
+        "filter": "filled_today"
+      },
+      {
+        "id": "low_stock_alerts",
+        "title": "Low Stock Alerts",
+        "value": "count",
+        "source": "drug_inventory",
+        "filter": "low_stock"
+      },
+      {
+        "id": "expiring_soon",
+        "title": "Expiring Soon",
+        "value": "count",
+        "source": "drug_inventory",
+        "filter": "expiring_soon"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "fill_prescription",
+        "title": "Fill Prescription",
+        "action": "update",
+        "doctype": "prescription"
+      },
+      {
+        "id": "dispense_medication",
+        "title": "Dispense Medication",
+        "action": "create",
+        "doctype": "medication_dispense"
+      },
+      {
+        "id": "check_drug_interactions",
+        "title": "Check Drug Interactions",
+        "action": "read",
+        "doctype": "drug_interaction"
+      },
+      {
+        "id": "update_inventory",
+        "title": "Update Inventory",
+        "action": "update",
+        "doctype": "drug_inventory"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_prescriptions",
+        "title": "Pending Prescriptions",
+        "type": "list",
+        "source": "prescription"
+      },
+      {
+        "id": "drug_inventory",
+        "title": "Drug Inventory",
+        "type": "list",
+        "source": "drug_inventory"
+      },
+      {
+        "id": "dispensing_queue",
+        "title": "Dispensing Queue",
+        "type": "queue",
+        "source": "medication_dispense"
+      }
+    ],
+    "charts": [
+      {
+        "id": "prescription_volume",
+        "title": "Prescription Volume",
+        "type": "line",
+        "source": "prescription"
+      },
+      {
+        "id": "inventory_status",
+        "title": "Inventory Status",
+        "type": "pie",
+        "source": "drug_inventory"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Prescriptions",
+        "items": [
+          {
+            "id": "pending_prescriptions",
+            "title": "Pending Prescriptions",
+            "icon": "assignment",
+            "route": "/app/healthcare/pharmacy/pending-prescriptions"
+          },
+          {
+            "id": "prescription_history",
+            "title": "Prescription History",
+            "icon": "history",
+            "route": "/app/healthcare/pharmacy/prescription-history"
+          }
+        ]
+      },
+      {
+        "title": "Dispensing",
+        "items": [
+          {
+            "id": "dispense_medication",
+            "title": "Dispense Medication",
+            "icon": "local_pharmacy",
+            "route": "/app/healthcare/pharmacy/dispense-medication"
+          },
+          {
+            "id": "dispensing_history",
+            "title": "Dispensing History",
+            "icon": "history",
+            "route": "/app/healthcare/pharmacy/dispensing-history"
+          }
+        ]
+      },
+      {
+        "title": "Inventory",
+        "items": [
+          {
+            "id": "drug_inventory",
+            "title": "Drug Inventory",
+            "icon": "inventory",
+            "route": "/app/healthcare/pharmacy/drug-inventory"
+          },
+          {
+            "id": "stock_alerts",
+            "title": "Stock Alerts",
+            "icon": "warning",
+            "route": "/app/healthcare/pharmacy/stock-alerts"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "prescription",
+      "medication_dispense",
+      "drug_inventory",
+      "drug_interaction"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "patient",
+      "healthcare_encounter",
+      "billing",
+      "accounting_entry"
+    ]
+  },
+  "reports": [
+    {
+      "id": "prescription_report",
+      "title": "Prescription Report",
+      "route": "/app/healthcare/pharmacy/reports/prescription"
+    },
+    {
+      "id": "inventory_report",
+      "title": "Inventory Report",
+      "route": "/app/healthcare/pharmacy/reports/inventory"
+    }
+  ],
+  "notifications": [
+    "new_prescription",
+    "low_stock_alert",
+    "expiration_alert",
+    "drug_interaction_warning"
+  ]
+}

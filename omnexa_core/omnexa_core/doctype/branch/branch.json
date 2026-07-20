@@ -1,0 +1,1525 @@
+{
+	"actions": [],
+	"allow_rename": 1,
+	"autoname": "format:{company}-{branch_code}",
+	"creation": "2026-04-14 21:30:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"tab_break_overview",
+		"branch_section",
+		"branch_name",
+		"branch_code",
+		"status",
+		"column_break_1",
+		"company",
+		"parent_branch",
+		"is_head_office",
+		"tab_break_1",
+		"tax_section",
+		"default_vat_rate",
+		"country_code",
+		"country_iso",
+		"column_break_tax_country",
+		"country_name",
+		"tax_provider",
+		"tab_break_zatca",
+		"zatca_setup_help",
+		"zatca_enabled",
+		"zatca_phase",
+		"zatca_environment",
+		"zatca_section_org",
+		"zatca_vat_registration_number",
+		"zatca_organization_name",
+		"zatca_organization_name_ar",
+		"zatca_column_org",
+		"zatca_street",
+		"zatca_building_number",
+		"zatca_city",
+		"zatca_district",
+		"zatca_postal_code",
+		"zatca_section_csr",
+		"zatca_csr_invoice_type",
+		"zatca_egs_serial_number",
+		"zatca_organization_unit_name",
+		"zatca_csr_common_name",
+		"zatca_industry_business_category",
+		"zatca_location_address",
+		"zatca_csr_pem",
+		"zatca_section_compliance",
+		"zatca_standard_invoice_validated",
+		"zatca_simplified_invoice_validated",
+		"zatca_compliance_validated",
+		"zatca_section_credentials",
+		"zatca_private_key",
+		"zatca_certificate_pem",
+		"zatca_public_key_pem",
+		"zatca_compliance_security_token",
+		"zatca_compliance_secret",
+		"zatca_compliance_request_id",
+		"zatca_production_security_token",
+		"zatca_production_secret",
+		"zatca_section_chain",
+		"zatca_icv_counter",
+		"zatca_last_invoice_hash",
+		"tab_break_country_tax",
+		"intl_tax_setup_help",
+		"intl_tax_enabled",
+		"intl_tax_live_production",
+		"intl_tax_auto_submit_on_si_submit",
+		"intl_tax_section_production",
+		"intl_tax_signing_mode",
+		"intl_tax_section_api",
+		"intl_tax_api_environment",
+		"intl_tax_api_base_url",
+		"intl_tax_registration_number",
+		"intl_tax_authority_name",
+		"intl_tax_section_uae",
+		"intl_uae_seller_tin",
+		"intl_uae_peppol_sender_id",
+		"intl_uae_peppol_receiver_id",
+		"intl_uae_legal_name_ar",
+		"intl_uae_invoice_type_code",
+		"intl_uae_asp_submit_path",
+		"intl_tax_section_credentials",
+		"intl_tax_client_id",
+		"intl_tax_client_secret",
+		"intl_tax_asp_api_key",
+		"intl_tax_section_config",
+		"intl_tax_configuration_json",
+		"intl_tax_remarks",
+		"tab_break_eta",
+		"eta_setup_help",
+		"eta_ereceipt_enabled",
+		"eta_receipt_connection_section",
+		"eta_receipt_environment",
+		"eta_receipt_base_url",
+		"eta_receipt_client_id",
+		"eta_receipt_client_secret",
+		"column_break_eta_receipt_conn",
+		"eta_receipt_rin",
+		"eta_activity_code",
+		"eta_ereceipt_section",
+		"eta_pos_device_serial",
+		"eta_company_trade_name",
+		"eta_pos_os_version",
+		"eta_pos_model_framework",
+		"eta_pos_preshared_key",
+		"column_break_eta_rcpt",
+		"eta_branch_code",
+		"eta_address_section",
+		"eta_address_country",
+		"eta_address_governate",
+		"eta_address_city",
+		"column_break_eta_addr",
+		"eta_address_street",
+		"eta_address_building_number",
+		"eta_address_postal_code",
+		"eta_address_floor",
+		"eta_address_room",
+		"eta_address_landmark",
+		"eta_address_additional",
+		"eta_einvoice_enabled",
+		"tax_authority_profile",
+		"signing_profile",
+		"eta_invoice_connection_section",
+		"eta_invoice_environment",
+		"eta_invoice_base_url",
+		"eta_invoice_client_id",
+		"eta_invoice_client_secret",
+		"column_break_eta_invoice_conn",
+		"eta_invoice_rin",
+		"eta_einvoice_sign_section",
+		"eta_signer_mode",
+		"eta_signing_secret",
+		"eta_signing_agent_url",
+		"eta_usb_token_type",
+		"eta_usb_signing_pin",
+		"eta_chilkat_unlock_code",
+		"eta_windows_signer_command",
+		"eta_certificate_reference",
+		"eta_einvoice_submission_section",
+		"eta_einvoice_submission_mode",
+		"eta_einvoice_batch_size",
+		"eta_einvoice_send_delay_hours",
+		"eta_policy_section",
+		"eta_require_einvoice_before_si_submit",
+		"tab_break_2",
+		"branch_financial_defaults_section",
+		"inherit_company_financial_defaults",
+		"branch_fiscal_reporting_unit_code",
+		"column_branch_fin_gl",
+		"branch_default_petty_cash_gl",
+		"branch_default_bank_gl",
+		"branch_default_receivable_gl",
+		"branch_default_trade_payable_gl",
+		"tab_break_branch_demo_data",
+		"branch_demo_data_help",
+		"branch_demo_options_section",
+		"branch_demo_activity",
+		"branch_demo_include_workspace_seed",
+		"branch_demo_daily_purchase_invoices",
+		"branch_demo_daily_sales_invoices",
+		"branch_demo_employees",
+		"branch_demo_customers",
+		"branch_demo_suppliers",
+		"branch_demo_items",
+		"branch_demo_actions_column",
+		"branch_demo_group_masters_label",
+		"branch_demo_btn_seed_masters",
+		"branch_demo_btn_seed_with_tx",
+		"branch_demo_group_simulation_label",
+		"branch_demo_btn_seed_6m",
+		"branch_demo_btn_seed_12m",
+		"branch_demo_group_construction_label",
+		"branch_demo_btn_construction_portfolio",
+		"branch_demo_group_healthcare_label",
+		"branch_demo_healthcare_patients",
+		"branch_demo_healthcare_financial",
+		"branch_demo_healthcare_force",
+		"branch_demo_group_finance_label",
+		"branch_demo_finance_customers",
+		"branch_demo_finance_sync_roles",
+		"branch_demo_finance_force",
+		"branch_demo_group_education_label",
+		"branch_demo_education_institution_type",
+		"branch_demo_education_seed_roles",
+		"branch_demo_education_sync_laravel",
+		"branch_demo_group_hotel_label",
+		"branch_demo_btn_hotel_assets",
+		"branch_demo_wizard_section",
+		"branch_demo_wizard_html",
+		"branch_demo_group_reset_label",
+		"branch_demo_btn_reset_dry",
+		"branch_demo_btn_reset_execute",
+		"branch_demo_group_danger_label",
+		"branch_demo_danger_confirm",
+		"branch_demo_btn_wipe_all"
+	],
+	"fields": [
+		{
+			"fieldname": "tab_break_overview",
+			"fieldtype": "Tab Break",
+			"label": "Overview"
+		},
+		{
+			"fieldname": "branch_section",
+			"fieldtype": "Section Break",
+			"label": "Branch"
+		},
+		{
+			"fieldname": "branch_name",
+			"fieldtype": "Data",
+			"in_list_view": 1,
+			"label": "Branch Name",
+			"reqd": 1
+		},
+		{
+			"fieldname": "branch_code",
+			"fieldtype": "Data",
+			"in_list_view": 1,
+			"label": "Branch Code",
+			"reqd": 1
+		},
+		{
+			"default": "Active",
+			"fieldname": "status",
+			"fieldtype": "Select",
+			"in_list_view": 1,
+			"label": "Status",
+			"options": "Active\nInactive",
+			"reqd": 1
+		},
+		{
+			"fieldname": "column_break_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "company",
+			"fieldtype": "Link",
+			"in_list_view": 1,
+			"label": "Company",
+			"options": "Company",
+			"reqd": 1
+		},
+		{
+			"fieldname": "parent_branch",
+			"fieldtype": "Link",
+			"label": "Parent Branch",
+			"options": "Branch"
+		},
+		{
+			"default": "0",
+			"fieldname": "is_head_office",
+			"fieldtype": "Check",
+			"label": "Is Head Office"
+		},
+		{
+			"fieldname": "tab_break_1",
+			"fieldtype": "Tab Break",
+			"label": "Details"
+		},
+		{
+			"collapsible": 1,
+			"fieldname": "tax_section",
+			"fieldtype": "Section Break",
+			"label": "Tax & e-invoicing"
+		},
+		{
+			"default": "0",
+			"description": "Branch default VAT rate (percentage).",
+			"fieldname": "default_vat_rate",
+			"fieldtype": "Float",
+			"label": "Default VAT Rate (%)"
+		},
+		{
+			"default": "EG",
+			"description": "Routes e-invoicing to the national authority (ETA, ZATCA, DIAN, etc.).",
+			"fieldname": "country_code",
+			"fieldtype": "Select",
+			"in_list_view": 1,
+			"label": "Country",
+			"options": "EG — Egypt\nSA — Saudi Arabia\nAE — United Arab Emirates\nDE — Germany\nFR — France",
+			"reqd": 1
+		},
+		{
+			"fieldname": "country_iso",
+			"fieldtype": "Data",
+			"hidden": 1,
+			"label": "Country ISO",
+			"read_only": 1
+		},
+		{
+			"fieldname": "column_break_tax_country",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "country_name",
+			"fieldtype": "Data",
+			"in_list_view": 1,
+			"label": "Country Name",
+			"read_only": 1
+		},
+		{
+			"default": "einvoice_eta",
+			"description": "Resolved from Country Code (read-only).",
+			"fieldname": "tax_provider",
+			"fieldtype": "Data",
+			"label": "Tax Provider",
+			"read_only": 1
+		},
+		{
+			"depends_on": "eval:doc.country_iso=='SA'",
+			"fieldname": "tab_break_zatca",
+			"fieldtype": "Tab Break",
+			"label": "Saudi ZATCA"
+		},
+		{
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso)",
+			"fieldname": "tab_break_country_tax",
+			"fieldtype": "Tab Break",
+			"label": "Country Tax"
+		},
+		{
+			"depends_on": "eval:doc.country_iso=='EG'",
+			"fieldname": "tab_break_eta",
+			"fieldtype": "Tab Break",
+			"label": "Egypt ETA"
+		},
+		{
+			"fieldname": "eta_setup_help",
+			"fieldtype": "HTML",
+			"label": "Guide",
+			"options": "<div class=\"text-muted small\"><p>Enable <b>E-Receipt</b> and/or <b>E-Invoice</b>, then fill each channel Client ID / Secret.</p></div>"
+		},
+		{
+			"fieldname": "eta_ereceipt_enabled",
+			"fieldtype": "Check",
+			"label": "Enable E-Receipt (POS)",
+			"default": "0"
+		},
+		{
+			"fieldname": "eta_receipt_connection_section",
+			"fieldtype": "Section Break",
+			"label": "1. E-Receipt — ETA connection",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"fieldname": "eta_receipt_environment",
+			"fieldtype": "Select",
+			"label": "E-Receipt Environment",
+			"options": "preprod\nprod",
+			"default": "prod",
+			"description": "prod = live ETA (id.eta.gov.eg). Use production POS Client ID/Secret from invoicing.eta.gov.eg only.",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"fieldname": "eta_receipt_base_url",
+			"fieldtype": "Data",
+			"label": "E-Receipt API Base URL",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"fieldname": "eta_receipt_client_id",
+			"fieldtype": "Data",
+			"label": "E-Receipt Client ID",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"fieldname": "eta_receipt_client_secret",
+			"fieldtype": "Password",
+			"label": "E-Receipt Client Secret",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"fieldname": "column_break_eta_receipt_conn",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "eta_receipt_rin",
+			"fieldtype": "Data",
+			"label": "E-Receipt Taxpayer RIN",
+			"depends_on": "eval:doc.eta_ereceipt_enabled"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_activity_code",
+			"fieldtype": "Data",
+			"label": "E-Receipt Activity Code"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_ereceipt_section",
+			"fieldtype": "Section Break",
+			"label": "2. E-Receipt — POS & seller"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"description": "Sent as posserial to ETA.",
+			"fieldname": "eta_pos_device_serial",
+			"fieldtype": "Data",
+			"label": "POS Device Serial"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_company_trade_name",
+			"fieldtype": "Data",
+			"label": "Company Trade Name"
+		},
+		{
+			"default": "windows",
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_pos_os_version",
+			"fieldtype": "Select",
+			"label": "POS OS Version Header",
+			"options": "os\nwindows",
+			"description": "Production (prod): use windows. Preprod: use os."
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"description": "ETA header posmodelframework (usually 1).",
+			"fieldname": "eta_pos_model_framework",
+			"fieldtype": "Data",
+			"label": "POS Model Framework"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"description": "From ETA portal when POS device is registered (if provided). Sent as presharedkey header.",
+			"fieldname": "eta_pos_preshared_key",
+			"fieldtype": "Password",
+			"label": "POS Pre-Shared Key"
+		},
+		{
+			"fieldname": "column_break_eta_rcpt",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"description": "ETA branch code in receipt JSON (defaults to Branch Code).",
+			"fieldname": "eta_branch_code",
+			"fieldtype": "Data",
+			"label": "ETA Branch Code"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_section",
+			"fieldtype": "Section Break",
+			"label": "Seller address (e-Receipt)"
+		},
+		{
+			"default": "EG",
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_country",
+			"fieldtype": "Data",
+			"label": "Country"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_governate",
+			"fieldtype": "Data",
+			"label": "Governate"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_city",
+			"fieldtype": "Data",
+			"label": "City"
+		},
+		{
+			"fieldname": "column_break_eta_addr",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_street",
+			"fieldtype": "Data",
+			"label": "Street"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_building_number",
+			"fieldtype": "Data",
+			"label": "Building No."
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_postal_code",
+			"fieldtype": "Data",
+			"label": "Postal Code"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_floor",
+			"fieldtype": "Data",
+			"label": "Floor"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_room",
+			"fieldtype": "Data",
+			"label": "Room"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_landmark",
+			"fieldtype": "Data",
+			"label": "Landmark"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_address_additional",
+			"fieldtype": "Data",
+			"label": "Additional Info"
+		},
+		{
+			"default": "0",
+			"fieldname": "eta_einvoice_enabled",
+			"fieldtype": "Check",
+			"label": "Enable E-Invoice"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "tax_authority_profile",
+			"fieldtype": "Link",
+			"label": "Tax Authority Profile",
+			"options": "Tax Authority Profile"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "signing_profile",
+			"fieldtype": "Link",
+			"label": "Signing Profile",
+			"options": "Signing Profile"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_invoice_connection_section",
+			"fieldtype": "Section Break",
+			"label": "3. E-Invoice — ETA connection"
+		},
+		{
+			"default": "preprod",
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_invoice_environment",
+			"fieldtype": "Select",
+			"label": "E-Invoice Environment",
+			"options": "preprod\nprod"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_invoice_base_url",
+			"fieldtype": "Data",
+			"label": "E-Invoice API Base URL"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_invoice_client_id",
+			"fieldtype": "Data",
+			"label": "E-Invoice Client ID"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_invoice_client_secret",
+			"fieldtype": "Password",
+			"label": "E-Invoice Client Secret"
+		},
+		{
+			"fieldname": "column_break_eta_invoice_conn",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_invoice_rin",
+			"fieldtype": "Data",
+			"label": "E-Invoice Taxpayer RIN"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_einvoice_sign_section",
+			"fieldtype": "Section Break",
+			"label": "4. E-Invoice — signing (USB)"
+		},
+		{
+			"default": "remote",
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"description": "remote = test HMAC · signing_agent = HTTP agent on PC with USB token · windows_app = CLI signer",
+			"fieldname": "eta_signer_mode",
+			"fieldtype": "Select",
+			"label": "Signer Mode",
+			"options": "remote\nsigning_agent\nwindows_app"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"remote\"",
+			"fieldname": "eta_signing_secret",
+			"fieldtype": "Password",
+			"label": "Signing Secret (test)"
+		},
+		{
+			"default": "http://127.0.0.1:5002",
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"signing_agent\"",
+			"description": "Temp-ETR default http://127.0.0.1:5002 — called from your browser on the PC with the USB token (not from the Linux server). Start epass2003_agent on that PC.",
+			"fieldname": "eta_signing_agent_url",
+			"fieldtype": "Data",
+			"label": "Signing Agent URL"
+		},
+		{
+			"default": "epass2003",
+			"depends_on": "eval:doc.eta_einvoice_enabled && (doc.eta_signer_mode==\"signing_agent\" || doc.eta_signer_mode==\"windows_app\")",
+			"description": "USB token driver type (Temp-ETR usb_token_type).",
+			"fieldname": "eta_usb_token_type",
+			"fieldtype": "Select",
+			"label": "USB Token Type",
+			"options": "epass2003\nwd_proxkey\nfeitian\nsafenet\naladdin"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled && (doc.eta_signer_mode==\"signing_agent\" || doc.eta_signer_mode==\"windows_app\")",
+			"description": "Set once here before your first Sign/Send. Stored encrypted (Temp-ETR USB PIN). Re-enter and Save after changing. Not required when saving Branch for other settings.",
+			"fieldname": "eta_usb_signing_pin",
+			"fieldtype": "Password",
+			"label": "USB Token PIN"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"signing_agent\"",
+			"description": "Chilkat UnlockBundle key for v10 (e.g. HALA4A.CBX082025_…). Sent once to the Windows agent via sign_session (like PIN). Optional if you set CHILKAT_UNLOCK_CODE or chilkat_config.json on the PC.",
+			"fieldname": "eta_chilkat_unlock_code",
+			"fieldtype": "Password",
+			"label": "Chilkat Unlock Code"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"windows_app\"",
+			"fieldname": "eta_windows_signer_command",
+			"fieldtype": "Data",
+			"label": "Windows Signer Command"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_signer_mode==\"windows_app\"",
+			"fieldname": "eta_certificate_reference",
+			"fieldtype": "Data",
+			"label": "Certificate / Token Reference"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_einvoice_submission_section",
+			"fieldtype": "Section Break",
+			"label": "4b. E-Invoice — submission to ETA"
+		},
+		{
+			"default": "Manual",
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"description": "Manual = user clicks Send · Live = send right after sign · Batch = hourly job sends Signed submissions (remote/HMAC only; USB agent still uses Live in browser)",
+			"fieldname": "eta_einvoice_submission_mode",
+			"fieldtype": "Select",
+			"label": "Submission Mode",
+			"options": "Manual\nLive\nBatch"
+		},
+		{
+			"default": "10",
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_einvoice_submission_mode==\"Batch\"",
+			"fieldname": "eta_einvoice_batch_size",
+			"fieldtype": "Int",
+			"label": "Batch Size"
+		},
+		{
+			"default": "0",
+			"depends_on": "eval:doc.eta_einvoice_enabled && doc.eta_einvoice_submission_mode==\"Batch\"",
+			"description": "Wait this many hours after sign before batch send (0 = immediately).",
+			"fieldname": "eta_einvoice_send_delay_hours",
+			"fieldtype": "Float",
+			"label": "Delay After Sign (hours)"
+		},
+		{
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"fieldname": "eta_policy_section",
+			"fieldtype": "Section Break",
+			"label": "5. Policy"
+		},
+		{
+			"default": "0",
+			"depends_on": "eval:doc.eta_einvoice_enabled",
+			"description": "Block Sales Invoice submit until e-Invoice is sent for this branch.",
+			"fieldname": "eta_require_einvoice_before_si_submit",
+			"fieldtype": "Check",
+			"label": "Require e-Invoice before Sales Invoice Submit"
+		},
+		{
+			"fieldname": "tab_break_2",
+			"fieldtype": "Tab Break",
+			"label": "Financial"
+		},
+		{
+			"collapsible": 1,
+			"depends_on": "eval:!doc.__islocal",
+			"fieldname": "branch_financial_defaults_section",
+			"fieldtype": "Section Break",
+			"label": "Financial defaults (branch)"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:!doc.__islocal",
+			"fieldname": "inherit_company_financial_defaults",
+			"fieldtype": "Check",
+			"label": "Inherit company default GL accounts"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal",
+			"fieldname": "branch_fiscal_reporting_unit_code",
+			"fieldtype": "Data",
+			"label": "Fiscal reporting unit code"
+		},
+		{
+			"fieldname": "column_branch_fin_gl",
+			"fieldtype": "Column Break"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
+			"fieldname": "branch_default_petty_cash_gl",
+			"fieldtype": "Link",
+			"label": "Branch petty cash GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
+			"fieldname": "branch_default_bank_gl",
+			"fieldtype": "Link",
+			"label": "Branch bank (operating) GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
+			"fieldname": "branch_default_receivable_gl",
+			"fieldtype": "Link",
+			"label": "Branch trade receivable GL",
+			"options": "GL Account"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && !doc.inherit_company_financial_defaults",
+			"fieldname": "branch_default_trade_payable_gl",
+			"fieldtype": "Link",
+			"label": "Branch trade payables GL",
+			"options": "GL Account"
+		},
+		{
+			"fieldname": "tab_break_branch_demo_data",
+			"fieldtype": "Tab Break",
+			"label": "Demo data"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_data_help",
+			"fieldtype": "HTML",
+			"label": "Demo data actions",
+			"options": "<div class=\"text-muted small\">All demo data is scoped to <b>this branch</b>. Set options on the left, then use the buttons on the right. Company chart of accounts is on <b>Company → Chart of accounts</b>.</div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_options_section",
+			"fieldtype": "Section Break",
+			"label": "Demo options"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"description": "Used for branch demo seeding labels. If empty, the company Industry Sector is used.",
+			"fieldname": "branch_demo_activity",
+			"fieldtype": "Select",
+			"label": "Demo activity",
+			"options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nHotel Assets (إدارة أصول الفنادق)\nTrading\nPharmaceutical Trading (تجارة وتوزيع الأدوية)\nServices\nFinancial Services\nStatutory Audit"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"description": "Creates aligned SO→DN→SI and PO→PR→PI chains plus stock and journal entries.",
+			"fieldname": "branch_demo_include_workspace_seed",
+			"fieldtype": "Check",
+			"label": "Include full document chains"
+		},
+		{
+			"default": "10",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_daily_purchase_invoices",
+			"fieldtype": "Int",
+			"label": "Daily purchase invoices"
+		},
+		{
+			"default": "10",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_daily_sales_invoices",
+			"fieldtype": "Int",
+			"label": "Daily sales invoices"
+		},
+		{
+			"default": "5",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_employees",
+			"fieldtype": "Int",
+			"label": "Employees"
+		},
+		{
+			"default": "5",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_customers",
+			"fieldtype": "Int",
+			"label": "Customers / patients"
+		},
+		{
+			"default": "5",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_suppliers",
+			"fieldtype": "Int",
+			"label": "Suppliers"
+		},
+		{
+			"default": "10",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_items",
+			"fieldtype": "Int",
+			"label": "Items"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_actions_column",
+			"fieldtype": "Column Break",
+			"label": "Demo actions"
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_group_masters_label",
+			"fieldtype": "HTML",
+			"label": "Masters demo",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>Branch masters demo</b></div>"
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_btn_seed_masters",
+			"fieldtype": "Button",
+			"label": "Seed demo data (masters)",
+			"options": "branch_demo_action_seed_masters",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_btn_seed_with_tx",
+			"fieldtype": "Button",
+			"label": "Seed demo data + transactions",
+			"options": "branch_demo_action_seed_with_tx"
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_group_simulation_label",
+			"fieldtype": "HTML",
+			"label": "Business simulation",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>Full business simulation</b></div>"
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_btn_seed_6m",
+			"fieldtype": "Button",
+			"label": "Seed 6-Month Full Business Simulation",
+			"options": "branch_demo_action_seed_6m",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_btn_seed_12m",
+			"fieldtype": "Button",
+			"label": "Seed 12-Month Full Business Simulation",
+			"options": "branch_demo_action_seed_12m",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_group_construction_label",
+			"fieldtype": "HTML",
+			"label": "Construction demo",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>Construction demo</b></div>"
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_btn_construction_portfolio",
+			"fieldtype": "Button",
+			"label": "Seed 20 projects (full construction portfolio demo)",
+			"options": "branch_demo_action_construction_portfolio",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Healthcare' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_healthcare')>=0))",
+			"fieldname": "branch_demo_group_healthcare_label",
+			"fieldtype": "HTML",
+			"label": "Healthcare demo",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>ديمو العيادات والمستشفى — Healthcare</b><br><span class=\"text-muted\">يظهر تلقائياً عند تثبيت تطبيق omnexa_healthcare</span></div>"
+		},
+		{
+			"default": "20",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Healthcare' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_healthcare')>=0))",
+			"fieldname": "branch_demo_healthcare_patients",
+			"fieldtype": "Int",
+			"label": "Healthcare demo patients"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Healthcare' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_healthcare')>=0))",
+			"fieldname": "branch_demo_healthcare_financial",
+			"fieldtype": "Check",
+			"label": "Include pharmacy inventory and billing"
+		},
+		{
+			"default": "0",
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager') && (doc.branch_demo_activity=='Healthcare' || ((frappe.boot.erpgenex_installed_apps||[]).indexOf('omnexa_healthcare')>=0))",
+			"description": "Delete existing DEMO-HC data for this branch before seeding again.",
+			"fieldname": "branch_demo_healthcare_force",
+			"fieldtype": "Check",
+			"label": "Rebuild demo (force)"
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_group_finance_label",
+			"fieldtype": "HTML",
+			"label": "Finance group demo",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>المجموعة المالية البنكية — Finance Group</b><br><span class=\"text-muted\">محاكاة العمل الطبيعي: 50 عميل/حالة لكل تطبيق مالي مثبت على هذا الفرع</span></div>"
+		},
+		{
+			"default": "50",
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_finance_customers",
+			"fieldtype": "Int",
+			"label": "Finance demo clients per app"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_finance_sync_roles",
+			"fieldtype": "Check",
+			"label": "Seed Workcenter role accounts"
+		},
+		{
+			"default": "0",
+			"depends_on": "eval:0",
+			"description": "Delete existing DEMO-FG finance data for this branch before seeding again.",
+			"fieldname": "branch_demo_finance_force",
+			"fieldtype": "Check",
+			"label": "Rebuild finance demo (force)"
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_group_education_label",
+			"fieldtype": "HTML",
+			"label": "Education demo",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>EduSphere — التعليم</b><br><span class=\"text-muted\">5 أنواع مؤسسات · 8 بوابات أدوار · كلمة المرور: Education@Demo2026</span></div>"
+		},
+		{
+			"default": "All 5 Types",
+			"depends_on": "eval:0",
+			"description": "University, International School, Academy, Institute, or Training Center — or all five.",
+			"fieldname": "branch_demo_education_institution_type",
+			"fieldtype": "Select",
+			"label": "Institution type to seed",
+			"options": "All 5 Types\nUniversity\nInstitute\nInternational School\nAcademy\nTraining Center"
+		},
+		{
+			"default": "1",
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_education_seed_roles",
+			"fieldtype": "Check",
+			"label": "Seed role portal users (8 accounts)"
+		},
+		{
+			"default": "0",
+			"depends_on": "eval:0",
+			"description": "Queue Laravel program sync if TLMS is enabled in Education Settings.",
+			"fieldname": "branch_demo_education_sync_laravel",
+			"fieldtype": "Check",
+			"label": "Queue Laravel TLMS sync"
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_group_hotel_label",
+			"fieldtype": "HTML",
+			"label": "Hotel assets demo",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>أصول الفنادق — تجريبي</b></div>"
+		},
+		{
+			"depends_on": "eval:0",
+			"fieldname": "branch_demo_btn_hotel_assets",
+			"fieldtype": "Button",
+			"label": "إنشاء 50 أصلًا (غرف + مناطق إدارية + حركات)",
+			"options": "branch_demo_action_hotel_assets",
+			"primary": 1
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_wizard_section",
+			"fieldtype": "Section Break",
+			"label": "Demo Execution Wizard"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_wizard_html",
+			"fieldtype": "HTML",
+			"label": "Demo Wizard",
+			"options": "<div id='demo-wizard-mount-point'></div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_group_reset_label",
+			"fieldtype": "HTML",
+			"label": "Reset branch data",
+			"options": "<div class=\"erpgenex-demo-group-title text-muted small\"><b>Reset branch data</b></div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_btn_reset_dry",
+			"fieldtype": "Button",
+			"label": "Reset branch transactions (dry run)",
+			"options": "branch_demo_action_reset_dry"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.user.has_role('System Manager')",
+			"fieldname": "branch_demo_btn_reset_execute",
+			"fieldtype": "Button",
+			"label": "Reset branch transactions (execute)",
+			"options": "branch_demo_action_reset_execute"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.session.user==='Administrator'",
+			"fieldname": "branch_demo_group_danger_label",
+			"fieldtype": "HTML",
+			"label": "Danger Zone",
+			"options": "<div class=\"erpgenex-demo-group-title text-danger small\"><b>Danger Zone</b></div>"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.session.user==='Administrator'",
+			"description": "Type DELETE BRANCH before using the wipe button below.",
+			"fieldname": "branch_demo_danger_confirm",
+			"fieldtype": "Data",
+			"label": "Confirm branch wipe"
+		},
+		{
+			"depends_on": "eval:!doc.__islocal && frappe.session.user==='Administrator'",
+			"fieldname": "branch_demo_btn_wipe_all",
+			"fieldtype": "Button",
+			"label": "Delete ALL branch data (DANGER)",
+			"options": "branch_demo_action_wipe_all"
+		},
+		{
+			"depends_on": "eval:doc.eta_ereceipt_enabled",
+			"fieldname": "eta_connection_section",
+			"fieldtype": "Section Break",
+			"label": "1. ETA connection (shared)"
+		},
+		{
+			"fieldname": "column_break_eta_conn",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "zatca_setup_help",
+			"fieldtype": "HTML",
+			"label": "Guide",
+			"depends_on": "eval:doc.country_iso=='SA'",
+			"options": "<div class=\"text-muted small\"><p>Configure ZATCA for this <b>branch</b> (like Egypt ETA). Each SA branch can have its own EGS unit and credentials.</p></div>"
+		},
+		{
+			"fieldname": "zatca_enabled",
+			"fieldtype": "Check",
+			"label": "Enable ZATCA E-Invoicing",
+			"default": "0",
+			"depends_on": "eval:doc.country_iso=='SA'"
+		},
+		{
+			"fieldname": "zatca_phase",
+			"fieldtype": "Select",
+			"label": "ZATCA Phase",
+			"options": "Phase 1\nPhase 2",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled",
+			"default": "Phase 1"
+		},
+		{
+			"fieldname": "zatca_environment",
+			"fieldtype": "Select",
+			"label": "ZATCA Environment",
+			"options": "sandbox\nsimulation\nproduction",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled",
+			"default": "sandbox"
+		},
+		{
+			"fieldname": "zatca_section_org",
+			"fieldtype": "Section Break",
+			"label": "Organization",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_vat_registration_number",
+			"fieldtype": "Data",
+			"label": "VAT Registration Number",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled",
+			"reqd": 0
+		},
+		{
+			"fieldname": "zatca_organization_name",
+			"fieldtype": "Data",
+			"label": "Organization Name (EN)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_organization_name_ar",
+			"fieldtype": "Data",
+			"label": "Organization Name (AR)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_column_org",
+			"fieldtype": "Column Break",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_street",
+			"fieldtype": "Data",
+			"label": "Street",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_building_number",
+			"fieldtype": "Data",
+			"label": "Building Number",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_city",
+			"fieldtype": "Data",
+			"label": "City",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_district",
+			"fieldtype": "Data",
+			"label": "District",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_postal_code",
+			"fieldtype": "Data",
+			"label": "Postal Code",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_section_csr",
+			"fieldtype": "Section Break",
+			"label": "CSR / Invoice profile",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_csr_invoice_type",
+			"fieldtype": "Select",
+			"label": "CSR Invoice Type",
+			"options": "1100\n1000\n0100",
+			"default": "1100",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_egs_serial_number",
+			"fieldtype": "Data",
+			"label": "EGS Serial Number",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_organization_unit_name",
+			"fieldtype": "Data",
+			"label": "Organization Unit (EGS branch)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_csr_common_name",
+			"fieldtype": "Data",
+			"label": "CSR Common Name",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_industry_business_category",
+			"fieldtype": "Data",
+			"label": "Industry / Business Category",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_location_address",
+			"fieldtype": "Small Text",
+			"label": "CSR Location Address",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_csr_pem",
+			"fieldtype": "Long Text",
+			"label": "CSR (PEM)",
+			"read_only": 1,
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_section_compliance",
+			"fieldtype": "Section Break",
+			"label": "Compliance validation",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_standard_invoice_validated",
+			"fieldtype": "Check",
+			"label": "Standard invoice validated",
+			"read_only": 1,
+			"default": "0",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_simplified_invoice_validated",
+			"fieldtype": "Check",
+			"label": "Simplified invoice validated",
+			"read_only": 1,
+			"default": "0",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_compliance_validated",
+			"fieldtype": "Check",
+			"label": "Compliance checks complete",
+			"read_only": 1,
+			"default": "0",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_section_credentials",
+			"fieldtype": "Section Break",
+			"label": "Certificates (encrypted)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_private_key",
+			"fieldtype": "Password",
+			"label": "EC Private Key (PEM)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_certificate_pem",
+			"fieldtype": "Long Text",
+			"label": "Certificate (PEM)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_public_key_pem",
+			"fieldtype": "Long Text",
+			"label": "Public Key (base64)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_compliance_security_token",
+			"fieldtype": "Password",
+			"label": "Compliance CSID Token",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_compliance_secret",
+			"fieldtype": "Password",
+			"label": "Compliance CSID Secret",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_production_security_token",
+			"fieldtype": "Password",
+			"label": "Production CSID Token",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_production_secret",
+			"fieldtype": "Password",
+			"label": "Production CSID Secret",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_compliance_request_id",
+			"fieldtype": "Data",
+			"label": "Compliance Request ID",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_section_chain",
+			"fieldtype": "Section Break",
+			"label": "Invoice chain (PIH / ICV)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_icv_counter",
+			"fieldtype": "Int",
+			"label": "ICV Counter",
+			"default": "0",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "zatca_last_invoice_hash",
+			"fieldtype": "Small Text",
+			"label": "Previous Invoice Hash (PIH)",
+			"depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
+		},
+		{
+			"fieldname": "intl_tax_setup_help",
+			"fieldtype": "HTML",
+			"label": "Guide",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso)",
+			"options": "<div class=\"text-muted small\"><p>International e-invoice settings for this <b>branch</b> (same idea as Egypt ETA on Branch).</p></div>"
+		},
+		{
+			"fieldname": "intl_tax_enabled",
+			"fieldtype": "Check",
+			"label": "Enable E-Invoice",
+			"default": "0",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso)"
+		},
+		{
+			"fieldname": "intl_tax_live_production",
+			"fieldtype": "Check",
+			"label": "Live Production",
+			"default": "0",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_auto_submit_on_si_submit",
+			"fieldtype": "Check",
+			"label": "Auto-submit on Sales Invoice Submit",
+			"default": "0",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_section_production",
+			"fieldtype": "Section Break",
+			"label": "Production",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_signing_mode",
+			"fieldtype": "Select",
+			"label": "Signing Mode",
+			"options": "scaffold\ncertificate",
+			"default": "scaffold",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_section_api",
+			"fieldtype": "Section Break",
+			"label": "API",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_api_environment",
+			"fieldtype": "Select",
+			"label": "Environment",
+			"options": "sandbox\nsimulation\nproduction",
+			"default": "sandbox",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_api_base_url",
+			"fieldtype": "Data",
+			"label": "API Base URL",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_registration_number",
+			"fieldtype": "Data",
+			"label": "Tax Registration Number (TRN)",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_authority_name",
+			"fieldtype": "Data",
+			"label": "Tax Authority Name",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_section_uae",
+			"fieldtype": "Section Break",
+			"label": "UAE (PINT AE)",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_seller_tin",
+			"fieldtype": "Data",
+			"label": "Seller TRN (15 digits)",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_peppol_sender_id",
+			"fieldtype": "Data",
+			"label": "Peppol Sender Participant ID",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_peppol_receiver_id",
+			"fieldtype": "Data",
+			"label": "Default Peppol Receiver ID",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_legal_name_ar",
+			"fieldtype": "Data",
+			"label": "Seller Legal Name (Arabic)",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_invoice_type_code",
+			"fieldtype": "Select",
+			"label": "Invoice Type Code",
+			"options": "380\n381\n480",
+			"default": "380",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_uae_asp_submit_path",
+			"fieldtype": "Data",
+			"label": "ASP Submit Path",
+			"default": "/einvoice/v1/submit",
+			"depends_on": "eval:doc.country_iso=='AE' && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_section_credentials",
+			"fieldtype": "Section Break",
+			"label": "Credentials",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_client_id",
+			"fieldtype": "Data",
+			"label": "Client ID",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_client_secret",
+			"fieldtype": "Password",
+			"label": "Client Secret",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_asp_api_key",
+			"fieldtype": "Password",
+			"label": "ASP API Key (Bearer)",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_section_config",
+			"fieldtype": "Section Break",
+			"label": "Configuration",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_configuration_json",
+			"fieldtype": "Long Text",
+			"label": "Configuration JSON",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		},
+		{
+			"fieldname": "intl_tax_remarks",
+			"fieldtype": "Small Text",
+			"label": "Remarks",
+			"depends_on": "eval:doc.country_iso && !['EG','SA'].includes(doc.country_iso) && doc.intl_tax_enabled"
+		}
+	],
+	"grid_page_length": 50,
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-05-16 18:00:00",
+	"modified_by": "Administrator",
+	"module": "Omnexa Core",
+	"name": "Branch",
+	"naming_rule": "Expression",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"create": 1,
+			"delete": 1,
+			"email": 1,
+			"export": 1,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "System Manager",
+			"share": 1,
+			"write": 1
+		},
+		{
+			"create": 1,
+			"delete": 1,
+			"email": 1,
+			"export": 1,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "Administrator",
+			"share": 1,
+			"write": 1
+		},
+		{
+			"create": 1,
+			"delete": 0,
+			"email": 1,
+			"export": 1,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "Company Admin",
+			"share": 0,
+			"write": 1
+		},
+		{
+			"create": 0,
+			"delete": 0,
+			"email": 0,
+			"export": 0,
+			"print": 0,
+			"read": 1,
+			"report": 1,
+			"role": "Desk User",
+			"share": 0,
+			"write": 0
+		}
+	],
+	"row_format": "Dynamic",
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 1
+}

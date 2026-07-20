@@ -1,0 +1,207 @@
+{
+  "role_id": "healthcare_insurance",
+  "role_name": "Insurance",
+  "application": "healthcare",
+  "portal": "healthcare_insurance",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "claims_pending",
+        "title": "Claims Pending",
+        "value": "count",
+        "source": "insurance_claim",
+        "filter": "pending"
+      },
+      {
+        "id": "claims_approved_today",
+        "title": "Claims Approved Today",
+        "value": "count",
+        "source": "insurance_claim",
+        "filter": "approved_today"
+      },
+      {
+        "id": "claims_rejected",
+        "title": "Claims Rejected",
+        "value": "count",
+        "source": "insurance_claim",
+        "filter": "rejected"
+      },
+      {
+        "id": "verification_pending",
+        "title": "Verification Pending",
+        "value": "count",
+        "source": "insurance_verification",
+        "filter": "pending"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "create_claim",
+        "title": "Create Claim",
+        "action": "create",
+        "doctype": "insurance_claim"
+      },
+      {
+        "id": "verify_insurance",
+        "title": "Verify Insurance",
+        "action": "create",
+        "doctype": "insurance_verification"
+      },
+      {
+        "id": "process_claim",
+        "title": "Process Claim",
+        "action": "update",
+        "doctype": "insurance_claim"
+      },
+      {
+        "id": "pre_authorization",
+        "title": "Pre-authorization",
+        "action": "create",
+        "doctype": "pre_authorization"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_claims",
+        "title": "Pending Claims",
+        "type": "list",
+        "source": "insurance_claim"
+      },
+      {
+        "id": "verification_queue",
+        "title": "Verification Queue",
+        "type": "list",
+        "source": "insurance_verification"
+      },
+      {
+        "id": "recent_approvals",
+        "title": "Recent Approvals",
+        "type": "list",
+        "source": "insurance_claim"
+      }
+    ],
+    "charts": [
+      {
+        "id": "claim_volume",
+        "title": "Claim Volume",
+        "type": "line",
+        "source": "insurance_claim"
+      },
+      {
+        "id": "claim_status",
+        "title": "Claim Status",
+        "type": "pie",
+        "source": "insurance_claim"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Claims",
+        "items": [
+          {
+            "id": "insurance_claims",
+            "title": "Insurance Claims",
+            "icon": "claim",
+            "route": "/app/healthcare/insurance/insurance-claims"
+          },
+          {
+            "id": "claim_history",
+            "title": "Claim History",
+            "icon": "history",
+            "route": "/app/healthcare/insurance/claim-history"
+          }
+        ]
+      },
+      {
+        "title": "Verification",
+        "items": [
+          {
+            "id": "insurance_verification",
+            "title": "Insurance Verification",
+            "icon": "verified",
+            "route": "/app/healthcare/insurance/insurance-verification"
+          },
+          {
+            "id": "eligibility_check",
+            "title": "Eligibility Check",
+            "icon": "check_circle",
+            "route": "/app/healthcare/insurance/eligibility-check"
+          }
+        ]
+      },
+      {
+        "title": "Authorizations",
+        "items": [
+          {
+            "id": "pre_authorizations",
+            "title": "Pre-authorizations",
+            "icon": "assignment",
+            "route": "/app/healthcare/insurance/pre-authorizations"
+          },
+          {
+            "id": "authorization_history",
+            "title": "Authorization History",
+            "icon": "history",
+            "route": "/app/healthcare/insurance/authorization-history"
+          }
+        ]
+      },
+      {
+        "title": "Policies",
+        "items": [
+          {
+            "id": "insurance_policies",
+            "title": "Insurance Policies",
+            "icon": "policy",
+            "route": "/app/healthcare/insurance/insurance-policies"
+          },
+          {
+            "id": "policy_templates",
+            "title": "Policy Templates",
+            "icon": "description",
+            "route": "/app/healthcare/insurance/policy-templates"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "insurance_claim",
+      "insurance_verification",
+      "pre_authorization",
+      "insurance_policy"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "patient",
+      "healthcare_encounter",
+      "prescription",
+      "medical_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "claim_report",
+      "title": "Claim Report",
+      "route": "/app/healthcare/insurance/reports/claim"
+    },
+    {
+      "id": "reimbursement_report",
+      "title": "Reimbursement Report",
+      "route": "/app/healthcare/insurance/reports/reimbursement"
+    }
+  ],
+  "notifications": [
+    "new_claim",
+    "claim_approved",
+    "claim_rejected",
+    "verification_required"
+  ]
+}

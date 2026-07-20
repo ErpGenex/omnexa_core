@@ -1,0 +1,213 @@
+{
+  "role_id": "commerce_branch_manager",
+  "role_name": "Branch Manager",
+  "application": "commerce",
+  "portal": "commerce_branch_manager",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "branch_sales",
+        "title": "Branch Sales",
+        "value": "sum",
+        "source": "sales_order",
+        "filter": "branch_month"
+      },
+      {
+        "id": "branch_staff",
+        "title": "Branch Staff",
+        "value": "count",
+        "source": "employee",
+        "filter": "branch"
+      },
+      {
+        "id": "branch_inventory",
+        "title": "Branch Inventory",
+        "value": "count",
+        "source": "item",
+        "filter": "branch"
+      },
+      {
+        "id": "branch_performance",
+        "title": "Branch Performance",
+        "value": "percentage",
+        "source": "sales_target",
+        "filter": "branch"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "view_branch_reports",
+        "title": "View Branch Reports",
+        "action": "read",
+        "doctype": "report"
+      },
+      {
+        "id": "manage_branch_staff",
+        "title": "Manage Branch Staff",
+        "action": "update",
+        "doctype": "employee"
+      },
+      {
+        "id": "approve_branch_requests",
+        "title": "Approve Branch Requests",
+        "action": "update",
+        "doctype": "request"
+      },
+      {
+        "id": "send_branch_announcement",
+        "title": "Send Branch Announcement",
+        "action": "create",
+        "doctype": "announcement"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "branch_overview",
+        "title": "Branch Overview",
+        "type": "overview",
+        "source": "branch"
+      },
+      {
+        "id": "branch_pending_approvals",
+        "title": "Branch Pending Approvals",
+        "type": "list",
+        "source": "request"
+      },
+      {
+        "id": "branch_activities",
+        "title": "Branch Activities",
+        "type": "list",
+        "source": "activity_log"
+      }
+    ],
+    "charts": [
+      {
+        "id": "branch_sales_trend",
+        "title": "Branch Sales Trend",
+        "type": "line",
+        "source": "sales_order"
+      },
+      {
+        "id": "branch_performance",
+        "title": "Branch Performance",
+        "type": "bar",
+        "source": "sales_target"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Branch Overview",
+        "items": [
+          {
+            "id": "branch_dashboard",
+            "title": "Branch Dashboard",
+            "icon": "dashboard",
+            "route": "/app/commerce/branch-manager/branch-dashboard"
+          },
+          {
+            "id": "branch_overview",
+            "title": "Branch Overview",
+            "icon": "business",
+            "route": "/app/commerce/branch-manager/branch-overview"
+          }
+        ]
+      },
+      {
+        "title": "Branch Management",
+        "items": [
+          {
+            "id": "branch_staff",
+            "title": "Branch Staff",
+            "icon": "people",
+            "route": "/app/commerce/branch-manager/branch-staff"
+          },
+          {
+            "id": "branch_inventory",
+            "title": "Branch Inventory",
+            "icon": "inventory",
+            "route": "/app/commerce/branch-manager/branch-inventory"
+          },
+          {
+            "id": "branch_sales",
+            "title": "Branch Sales",
+            "icon": "trending_up",
+            "route": "/app/commerce/branch-manager/branch-sales"
+          }
+        ]
+      },
+      {
+        "title": "Branch Approvals",
+        "items": [
+          {
+            "id": "branch_pending_approvals",
+            "title": "Branch Pending Approvals",
+            "icon": "assignment",
+            "route": "/app/commerce/branch-manager/branch-pending-approvals"
+          },
+          {
+            "id": "branch_approval_history",
+            "title": "Branch Approval History",
+            "icon": "history",
+            "route": "/app/commerce/branch-manager/branch-approval-history"
+          }
+        ]
+      },
+      {
+        "title": "Branch Reports",
+        "items": [
+          {
+            "id": "branch_report",
+            "title": "Branch Report",
+            "icon": "assessment",
+            "route": "/app/commerce/branch-manager/reports/branch"
+          },
+          {
+            "id": "branch_performance",
+            "title": "Branch Performance",
+            "icon": "trending_up",
+            "route": "/app/commerce/branch-manager/reports/performance"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "employee",
+      "item",
+      "sales_order",
+      "request",
+      "announcement",
+      "report"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "company_level_settings",
+      "other_branches"
+    ]
+  },
+  "reports": [
+    {
+      "id": "branch_report",
+      "title": "Branch Report",
+      "route": "/app/commerce/branch-manager/reports/branch"
+    },
+    {
+      "id": "branch_performance",
+      "title": "Branch Performance",
+      "route": "/app/commerce/branch-manager/reports/performance"
+    }
+  ],
+  "notifications": [
+    "branch_approval_request",
+    "branch_staff_alert",
+    "branch_sales_alert",
+    "branch_system_alert"
+  ]
+}

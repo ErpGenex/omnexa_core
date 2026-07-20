@@ -1,0 +1,52 @@
+{
+    "name": "Omnexa Core",
+    "module": "omnexa_core",
+    "is_standard": 1,
+    "shortcuts": [],
+    "links": [
+        {
+            "label": "Omnexa Core List",
+            "name": "omnexa_core",
+            "type": "List",
+            "link_to": "omnexa_core",
+            "onboard": 1
+        }
+    ],
+    "onboarding": [],
+    "charts": [
+        {
+            "label": "Activity Chart",
+            "chart_name": "omnexa_core_activity",
+            "chart_type": "Line",
+            "is_standard": 1
+        }
+    ],
+    "number_cards": [
+        {
+            "label": "Total Records",
+            "number_card_name": "omnexa_core_total",
+            "number_card_doc_type": "Number Card",
+            "is_standard": 1
+        }
+    ],
+    "reports": [
+        {
+            "label": "Omnexa Core Report",
+            "name": "omnexa_core_report",
+            "type": "Report",
+            "is_standard": 1
+        }
+    ],
+    "operations": [
+        {
+            "label": "Create Omnexa Core",
+            "name": "create_omnexa_core",
+            "type": "Action",
+            "is_standard": 1
+        }
+    ],
+    "card": {
+        "card_name": "omnexa_core",
+        "card_style": "Default"
+    }
+}

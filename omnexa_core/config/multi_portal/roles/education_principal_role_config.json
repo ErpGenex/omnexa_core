@@ -1,0 +1,211 @@
+{
+  "role_id": "education_principal",
+  "role_name": "Principal",
+  "application": "education",
+  "portal": "education_principal",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "total_students",
+        "title": "Total Students",
+        "value": "count",
+        "source": "student_enrollment",
+        "filter": "active"
+      },
+      {
+        "id": "total_teachers",
+        "title": "Total Teachers",
+        "value": "count",
+        "source": "teacher",
+        "filter": "active"
+      },
+      {
+        "id": "attendance_rate",
+        "title": "Overall Attendance",
+        "value": "percentage",
+        "source": "attendance",
+        "filter": "overall"
+      },
+      {
+        "id": "revenue",
+        "title": "Monthly Revenue",
+        "value": "sum",
+        "source": "fee_payment",
+        "filter": "current_month"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "view_reports",
+        "title": "View Reports",
+        "action": "read",
+        "doctype": "report"
+      },
+      {
+        "id": "manage_staff",
+        "title": "Manage Staff",
+        "action": "update",
+        "doctype": "teacher"
+      },
+      {
+        "id": "approve_requests",
+        "title": "Approve Requests",
+        "action": "update",
+        "doctype": "request"
+      },
+      {
+        "id": "send_announcement",
+        "title": "Send Announcement",
+        "action": "create",
+        "doctype": "announcement"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "institution_overview",
+        "title": "Institution Overview",
+        "type": "overview",
+        "source": "institution"
+      },
+      {
+        "id": "pending_approvals",
+        "title": "Pending Approvals",
+        "type": "list",
+        "source": "request"
+      },
+      {
+        "id": "recent_activities",
+        "title": "Recent Activities",
+        "type": "list",
+        "source": "activity_log"
+      }
+    ],
+    "charts": [
+      {
+        "id": "enrollment_trend",
+        "title": "Enrollment Trend",
+        "type": "line",
+        "source": "student_enrollment"
+      },
+      {
+        "id": "revenue_trend",
+        "title": "Revenue Trend",
+        "type": "bar",
+        "source": "fee_payment"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Overview",
+        "items": [
+          {
+            "id": "dashboard",
+            "title": "Dashboard",
+            "icon": "dashboard",
+            "route": "/app/education/principal/dashboard"
+          },
+          {
+            "id": "institution_overview",
+            "title": "Institution Overview",
+            "icon": "business",
+            "route": "/app/education/principal/institution-overview"
+          }
+        ]
+      },
+      {
+        "title": "Management",
+        "items": [
+          {
+            "id": "staff_management",
+            "title": "Staff Management",
+            "icon": "people",
+            "route": "/app/education/principal/staff-management"
+          },
+          {
+            "id": "student_management",
+            "title": "Student Management",
+            "icon": "school",
+            "route": "/app/education/principal/student-management"
+          },
+          {
+            "id": "course_management",
+            "title": "Course Management",
+            "icon": "class",
+            "route": "/app/education/principal/course-management"
+          }
+        ]
+      },
+      {
+        "title": "Approvals",
+        "items": [
+          {
+            "id": "pending_approvals",
+            "title": "Pending Approvals",
+            "icon": "assignment",
+            "route": "/app/education/principal/pending-approvals"
+          },
+          {
+            "id": "approval_history",
+            "title": "Approval History",
+            "icon": "history",
+            "route": "/app/education/principal/approval-history"
+          }
+        ]
+      },
+      {
+        "title": "Reports",
+        "items": [
+          {
+            "id": "institution_report",
+            "title": "Institution Report",
+            "icon": "assessment",
+            "route": "/app/education/principal/reports/institution"
+          },
+          {
+            "id": "performance_report",
+            "title": "Performance Report",
+            "icon": "trending_up",
+            "route": "/app/education/principal/reports/performance"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "student",
+      "teacher",
+      "course",
+      "request",
+      "announcement",
+      "report"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update",
+      "delete"
+    ],
+    "restricted_doctypes": []
+  },
+  "reports": [
+    {
+      "id": "institution_report",
+      "title": "Institution Report",
+      "route": "/app/education/principal/reports/institution"
+    },
+    {
+      "id": "performance_report",
+      "title": "Performance Report",
+      "route": "/app/education/principal/reports/performance"
+    }
+  ],
+  "notifications": [
+    "approval_request",
+    "staff_alert",
+    "student_alert",
+    "system_alert"
+  ]
+}

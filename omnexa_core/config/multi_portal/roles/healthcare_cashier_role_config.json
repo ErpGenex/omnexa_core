@@ -1,0 +1,208 @@
+{
+  "role_id": "healthcare_cashier",
+  "role_name": "Cashier",
+  "application": "healthcare",
+  "portal": "healthcare_cashier",
+  "dashboard": {
+    "kpis": [
+      {
+        "id": "today_collections",
+        "title": "Today's Collections",
+        "value": "sum",
+        "source": "payment",
+        "filter": "today"
+      },
+      {
+        "id": "pending_invoices",
+        "title": "Pending Invoices",
+        "value": "count",
+        "source": "invoice",
+        "filter": "pending"
+      },
+      {
+        "id": "refunds_today",
+        "title": "Refunds Today",
+        "value": "count",
+        "source": "refund",
+        "filter": "today"
+      },
+      {
+        "id": "cash_balance",
+        "title": "Cash Balance",
+        "value": "sum",
+        "source": "cash_register",
+        "filter": "current"
+      }
+    ],
+    "quick_actions": [
+      {
+        "id": "receive_payment",
+        "title": "Receive Payment",
+        "action": "create",
+        "doctype": "payment"
+      },
+      {
+        "id": "create_invoice",
+        "title": "Create Invoice",
+        "action": "create",
+        "doctype": "invoice"
+      },
+      {
+        "id": "process_refund",
+        "title": "Process Refund",
+        "action": "create",
+        "doctype": "refund"
+      },
+      {
+        "id": "cash_register",
+        "title": "Cash Register",
+        "action": "read",
+        "doctype": "cash_register"
+      }
+    ],
+    "widgets": [
+      {
+        "id": "pending_payments",
+        "title": "Pending Payments",
+        "type": "list",
+        "source": "invoice"
+      },
+      {
+        "id": "recent_transactions",
+        "title": "Recent Transactions",
+        "type": "list",
+        "source": "payment"
+      },
+      {
+        "id": "insurance_claims",
+        "title": "Insurance Claims",
+        "type": "list",
+        "source": "insurance_claim"
+      }
+    ],
+    "charts": [
+      {
+        "id": "collection_trend",
+        "title": "Collection Trend",
+        "type": "line",
+        "source": "payment"
+      },
+      {
+        "id": "payment_methods",
+        "title": "Payment Methods",
+        "type": "pie",
+        "source": "payment"
+      }
+    ]
+  },
+  "sidebar": {
+    "sections": [
+      {
+        "title": "Payments",
+        "items": [
+          {
+            "id": "payments",
+            "title": "Payments",
+            "icon": "payments",
+            "route": "/app/healthcare/cashier/payments"
+          },
+          {
+            "id": "payment_history",
+            "title": "Payment History",
+            "icon": "history",
+            "route": "/app/healthcare/cashier/payment-history"
+          }
+        ]
+      },
+      {
+        "title": "Invoicing",
+        "items": [
+          {
+            "id": "invoices",
+            "title": "Invoices",
+            "icon": "receipt",
+            "route": "/app/healthcare/cashier/invoices"
+          },
+          {
+            "id": "invoice_templates",
+            "title": "Invoice Templates",
+            "icon": "description",
+            "route": "/app/healthcare/cashier/invoice-templates"
+          }
+        ]
+      },
+      {
+        "title": "Insurance",
+        "items": [
+          {
+            "id": "insurance_claims",
+            "title": "Insurance Claims",
+            "icon": "verified",
+            "route": "/app/healthcare/cashier/insurance-claims"
+          },
+          {
+            "id": "claim_processing",
+            "title": "Claim Processing",
+            "icon": "assignment",
+            "route": "/app/healthcare/cashier/claim-processing"
+          }
+        ]
+      },
+      {
+        "title": "Cash Management",
+        "items": [
+          {
+            "id": "cash_register",
+            "title": "Cash Register",
+            "icon": "point_of_sale",
+            "route": "/app/healthcare/cashier/cash-register"
+          },
+          {
+            "id": "cash_reconciliation",
+            "title": "Cash Reconciliation",
+            "icon": "balance",
+            "route": "/app/healthcare/cashier/cash-reconciliation"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allowed_doctypes": [
+      "payment",
+      "invoice",
+      "refund",
+      "cash_register",
+      "insurance_claim"
+    ],
+    "allowed_actions": [
+      "create",
+      "read",
+      "update"
+    ],
+    "restricted_doctypes": [
+      "patient",
+      "healthcare_encounter",
+      "prescription",
+      "medical_records"
+    ]
+  },
+  "reports": [
+    {
+      "id": "collection_report",
+      "title": "Collection Report",
+      "route": "/app/healthcare/cashier/reports/collection"
+    },
+    {
+      "id": "cash_report",
+      "title": "Cash Report",
+      "route": "/app/healthcare/cashier/reports/cash"
+    }
+  ],
+  "notifications": [
+    "payment_received",
+    "invoice_due",
+    "refund_request",
+    "claim_approved"
+  ]
+}

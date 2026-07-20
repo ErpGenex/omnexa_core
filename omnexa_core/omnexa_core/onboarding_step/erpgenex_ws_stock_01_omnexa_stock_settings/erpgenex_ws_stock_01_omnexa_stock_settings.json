@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create",
+ "creation": "2026-05-08 03:35:29.049112",
+ "description": "Create or review your first **Omnexa Stock Settings** record from this workspace.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 1,
+ "is_skipped": 0,
+ "modified": "2026-07-11 14:37:34.263246",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-stock-01-omnexa_stock_settings",
+ "owner": "Administrator",
+ "reference_document": "Omnexa Stock Settings",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Get started with Omnexa Stock Settings",
+ "validate_action": 1
+}
