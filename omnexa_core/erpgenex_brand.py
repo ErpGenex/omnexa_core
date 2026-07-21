@@ -92,3 +92,11 @@ def boot_session(bootinfo):
 	except Exception:
 		bootinfo.multi_portal = {"enabled": False, "applications": [], "user_applications": []
 	}
+
+	try:
+		from omnexa_core.omnexa_core.sector_sidebar_sync import inject_sector_sidebar_boot
+
+		inject_sector_sidebar_boot(bootinfo)
+	except Exception:
+		bootinfo.omnexa_sector_parents = []
+		bootinfo.omnexa_sector_definitions = {}

@@ -85,7 +85,8 @@ def sync_finance_group_sidebar(*, save: bool = True) -> dict:
 		if not frappe.db.exists("Workspace", ws_name):
 			continue
 		current = frappe.db.get_value("Workspace", ws_name, "parent_page") or ""
-		if current:
+		# Only lift when incorrectly nested under Finance Group (sector sync may place under Core ERP).
+		if current == parent:
 			frappe.db.set_value("Workspace", ws_name, "parent_page", "", update_modified=False)
 			stats["lifted_to_core"].append(ws_name)
 		icon = FINANCE_WORKSPACE_ICONS.get(ws_name) or (

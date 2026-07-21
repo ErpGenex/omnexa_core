@@ -35,6 +35,7 @@ omnexa_core.patches.ensure_branch_education_demo_fields
 omnexa_core.patches.ensure_tier1_vertical_workcenters
 omnexa_core.patches.ensure_vertical_workcenter_pages
 omnexa_core.patches.ensure_vertical_journey_portals
+omnexa_core.patches.sync_sector_sidebar
 omnexa_core.patches.sync_supporting_attachment_schema
 omnexa_core.patches.v1_0.repair_empty_workspace_shortcuts
 omnexa_core.patches.v1_0.close_all_audit_gaps

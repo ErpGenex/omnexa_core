@@ -171,9 +171,17 @@ def _pos_discount_key(invoice_name: str) -> str:
 
 
 def _item_selling_rate(item_code: str) -> float:
-	std = frappe.db.get_value("Item", item_code, "standard_selling_rate")
-	if std and flt(std) > 0:
-		return flt(std)
+	"""Get selling price from Item Price (standard selling price list)."""
+	if not item_code:
+		return 0.0
+	rate = frappe.db.get_value(
+		"Item Price",
+		{"item_code": item_code, "price_list": "Standard Selling"},
+		"price_list_rate"
+	)
+	if rate and flt(rate) > 0:
+		return flt(rate)
+	# Fallback to last used rate from Sales Invoice
 	rate = frappe.db.sql(
 		"""
 		SELECT rate FROM `tabSales Invoice Item`

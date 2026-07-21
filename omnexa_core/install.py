@@ -855,6 +855,12 @@ def run_site_hardening_after_app_changes():
 
 		sync_finance_group_sidebar()
 		try:
+			from omnexa_core.omnexa_core.sector_sidebar_sync import sync_sector_sidebar
+
+			sync_sector_sidebar(save=False)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), "Omnexa: sync_sector_sidebar")
+		try:
 			from omnexa_core.omnexa_core.finance_demo.finance_vertical_bpe import sync_all_finance_vertical_bpe
 
 			sync_all_finance_vertical_bpe()

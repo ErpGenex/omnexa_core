@@ -1,11 +1,63 @@
-/* Business Category Headers in Sidebar */
+/* ERPGENEX Sector Sidebar — styling for sector parent workspaces */
+
+.omnexa-sector-parent > .standard-sidebar-item {
+	padding-top: 10px;
+	padding-bottom: 6px;
+	border-top: 1px solid var(--border-color, #e2e8f0);
+	margin-top: 4px;
+}
+
+.omnexa-sector-parent > .standard-sidebar-item .sidebar-item-icon {
+	min-width: 22px;
+	margin-right: 10px;
+}
+
+.omnexa-sector-parent > .standard-sidebar-item .sidebar-item-icon svg {
+	width: 20px;
+	height: 20px;
+}
+
+.omnexa-sector-parent > .standard-sidebar-item .sidebar-item-label {
+	display: block;
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	color: var(--text-color, #1e293b);
+	line-height: 1.4;
+}
+
+.omnexa-sector-purpose {
+	display: block;
+	font-size: 12px;
+	font-weight: 400;
+	color: var(--text-muted, #64748b);
+	margin-top: 2px;
+	padding-left: 28px;
+	line-height: 1.35;
+}
+
+.omnexa-sector-parent .sidebar-child-item .sidebar-item-container {
+	padding-left: 4px;
+}
+
+.omnexa-sector-parent .sidebar-child-item .sidebar-item-label {
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 1.5;
+}
+
+.omnexa-sector-parent.omnexa-sector-collapsed > .standard-sidebar-item .sidebar-item-label {
+	color: var(--text-muted, #64748b);
+}
+
+/* Legacy category header support (if injected) */
 .sidebar-category-header {
 	padding: 12px 16px;
-	background: #f8f9fa;
-	border-left: 4px solid #007bff;
+	background: #f8fafc;
+	border-left: 4px solid #1e40af;
 	font-weight: 600;
-	font-size: 0.875rem;
-	color: #333;
+	font-size: 14px;
+	color: #1e293b;
 	margin-top: 8px;
 	margin-bottom: 4px;
 	border-radius: 4px;
@@ -13,23 +65,42 @@
 
 .sidebar-category-header .category-label {
 	display: block;
-	font-size: 0.95rem;
+	font-size: 14px;
+	font-weight: 600;
 }
 
 .sidebar-category-header .category-purpose {
 	display: block;
-	font-size: 0.75rem;
-	color: #666;
+	font-size: 12px;
+	color: #64748b;
 	margin-top: 2px;
 	font-weight: 400;
 }
 
-/* Hide empty categories */
 .sidebar-category-header:empty {
 	display: none;
 }
 
-/* Style for category items */
-.sidebar-category-item {
-	padding-left: 24px;
+[data-theme-mode="dark"] .omnexa-sector-parent > .standard-sidebar-item {
+	border-top-color: #334155;
+}
+
+[data-theme-mode="dark"] .omnexa-sector-parent > .standard-sidebar-item .sidebar-item-label {
+	color: #e2e8f0;
+}
+
+[data-theme-mode="dark"] .omnexa-sector-purpose {
+	color: #94a3b8;
+}
+
+[data-theme-mode="dark"] .sidebar-category-header {
+	background: #1e293b;
+	border-left-color: #3b82f6;
+	color: #e2e8f0;
+}
+
+@media (max-width: 767px) {
+	.omnexa-sector-purpose {
+		padding-left: 20px;
+	}
 }

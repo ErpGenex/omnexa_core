@@ -25,7 +25,6 @@ ITEM_FIELDS = [
 	"disabled",
 	"is_sales_item",
 	"show_in_retail_pos",
-	"standard_selling_rate",
 	"default_sales_account",
 	"is_purchase_item",
 	"standard_purchase_rate",
@@ -48,6 +47,18 @@ ITEM_FIELDS = [
 ]
 
 
+def _get_item_selling_rate(item_code: str) -> float:
+	"""Get selling price from Item Price (standard selling price list)."""
+	if not item_code:
+		return 0.0
+	rate = frappe.db.get_value(
+		"Item Price",
+		{"item_code": item_code, "price_list": "Standard Selling"},
+		"price_list_rate"
+	)
+	return flt(rate) if rate else 0.0
+
+
 def _item_row(doc) -> dict[str, Any]:
 	return {
 		"name": doc.name,
@@ -56,7 +67,7 @@ def _item_row(doc) -> dict[str, Any]:
 		"item_name_ar": getattr(doc, "item_name_ar", None),
 		"product_type": doc.product_type,
 		"barcode": getattr(doc, "barcode", None),
-		"standard_selling_rate": flt(getattr(doc, "standard_selling_rate", 0)),
+		"standard_selling_rate": _get_item_selling_rate(doc.item_code),
 		"is_sales_item": cint(doc.is_sales_item),
 		"show_in_retail_pos": cint(getattr(doc, "show_in_retail_pos", 0)),
 		"disabled": cint(doc.disabled),
@@ -81,10 +92,13 @@ def get_retail_items_for_manager(product_type: str | None = None, search: str | 
 	rows = frappe.get_all(
 		"Item",
 		filters=filters,
-		fields=["name", "item_code", "item_name", "item_name_ar", "product_type", "barcode", "standard_selling_rate", "is_sales_item", "disabled", "default_warehouse"],
+		fields=["name", "item_code", "item_name", "item_name_ar", "product_type", "barcode", "is_sales_item", "disabled", "default_warehouse"],
 		order_by="item_name asc",
 		limit_page_length=500,
 	)
+	# Add selling rate from Item Price for each row
+	for row in rows:
+		row["standard_selling_rate"] = _get_item_selling_rate(row.item_code)
 	if search:
 		term = search.strip().lower()
 		rows = [
