@@ -342,9 +342,11 @@ def _repair_empty_registered_workspaces() -> list[str]:
 def run_full_workspace_sync() -> dict[str, Any]:
 	"""Sync all control-tower desks, then app-owned vertical workspace menus."""
 	from omnexa_core.install import run_workspace_desk_sync, sync_vertical_app_workspace_menus
+	from omnexa_core.omnexa_core.sector_sidebar_sync import sync_sector_sidebar
 
 	run_workspace_desk_sync()
 	vertical_stats = sync_vertical_app_workspace_menus()
+	sector_stats = sync_sector_sidebar(save=True)
 
 	repaired = _repair_empty_registered_workspaces()
 	from omnexa_core.omnexa_core.workspace_icon_enricher import enrich_all_workspace_visual_icons
@@ -355,6 +357,7 @@ def run_full_workspace_sync() -> dict[str, Any]:
 	return {
 		"vertical_workspaces": vertical_stats,
 		"repaired_empty": repaired,
+		"sector_sidebar": sector_stats,
 		"icon_enrichment": icon_stats,
 		"audit": audit["summary"],
 		"gaps": [w for w in audit["workspaces"] if w.get("status") != "ok"]

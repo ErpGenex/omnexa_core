@@ -8,9 +8,11 @@ class TestSectorSidebarSync(unittest.TestCase):
 	def setUp(self):
 		from omnexa_core.omnexa_core.finance_demo.finance_group_sidebar import sync_finance_group_sidebar
 		from omnexa_core.omnexa_core.sector_sidebar_sync import sync_sector_sidebar
+		from omnexa_nursery.workspace.nurs_workspace import sync_nurs_workspace_menu
 
 		sync_finance_group_sidebar()
 		sync_sector_sidebar()
+		sync_nurs_workspace_menu(save=True, rebuild=True)
 		frappe.db.commit()
 
 	def test_accounting_not_under_finance_group(self):
@@ -24,6 +26,12 @@ class TestSectorSidebarSync(unittest.TestCase):
 	def test_finance_vertical_under_group(self):
 		parent = frappe.db.get_value("Workspace", "SME Microfinance", "parent_page") or ""
 		self.assertEqual(parent, "Finance Group")
+
+	def test_nursery_content_and_parent(self):
+		parent = frappe.db.get_value("Workspace", "Nursery", "parent_page") or ""
+		self.assertEqual(parent, "Industries")
+		content = frappe.db.get_value("Workspace", "Nursery", "content") or "[]"
+		self.assertIn("Nursery Settings", content)
 
 	def test_no_workspace_removed_from_db(self):
 		"""Sector sync must not delete or hide app workspaces."""
