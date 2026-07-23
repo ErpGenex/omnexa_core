@@ -193,6 +193,7 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 		"icon": "setting-gear",
 		"parent_workspace": "Platform & Administration",
 		"workspaces": [
+			"Demo Studio",
 			"ERPGenex SaaS",
 			"Experience",
 			"Omnexa Experience",
