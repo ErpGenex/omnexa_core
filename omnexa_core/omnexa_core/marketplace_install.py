@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from contextlib import contextmanager
+
 import frappe
 from frappe.installer import (
 	add_module_defs,
@@ -17,6 +19,39 @@ from omnexa_core.omnexa_core.install_pkg.constants import BASIC_PLATFORM_APPS
 
 def _is_truthy(value) -> bool:
 	return value in (1, True, "1", "true", "True", "yes", "on")
+
+
+def _install_stack() -> set[str]:
+	"""Track in-flight marketplace installs to avoid circular prerequisite recursion."""
+	stack = getattr(frappe.flags, "omnexa_marketplace_install_stack", None)
+	if isinstance(stack, set):
+		return stack
+	if stack is None:
+		stack = set()
+	elif isinstance(stack, (list, tuple, set)):
+		stack = set(stack)
+	else:
+		stack = set()
+	frappe.flags.omnexa_marketplace_install_stack = stack
+	return stack
+
+
+@contextmanager
+def _push_install_stack(app_slug: str):
+	stack = _install_stack()
+	if app_slug in stack:
+		yield False
+		return
+	stack.add(app_slug)
+	try:
+		yield True
+	finally:
+		stack.discard(app_slug)
+		if not stack:
+			try:
+				delattr(frappe.flags, "omnexa_marketplace_install_stack")
+			except Exception:
+				pass
 
 
 def marketplace_basic_deps_only_enabled() -> bool:
@@ -85,74 +120,78 @@ def install_app_on_site(app_slug: str, *, force: bool = False, verbose: bool = F
 	from frappe.modules.utils import sync_customizations
 	from frappe.utils.fixtures import sync_fixtures
 
-	installed = list(frappe.get_installed_apps() or [])
-
-	if marketplace_basic_deps_only_enabled():
-		for basic in basic_platform_apps():
-			if basic == app_slug:
-				continue
-			if basic not in installed and _app_on_bench(basic):
-				install_app_on_site(basic, force=force, verbose=verbose)
-				installed = list(frappe.get_installed_apps() or [])
-	elif not force:
-		from frappe.installer import install_app
-
-		app_hooks = frappe.get_hooks(app_name=app_slug)
-		for app in app_hooks.get("required_apps") or []:
-			required_app = parse_app_name(app)
-			if required_app not in (frappe.get_installed_apps() or []):
-				install_app(required_app, verbose=verbose, force=force)
-
-	if not _app_on_bench(app_slug):
-		raise frappe.ValidationError(frappe._("App {0} is not available on this bench.").format(app_slug))
-
-	installed = list(frappe.get_installed_apps() or [])
-	if not force and app_slug in installed:
-		return
-
-	frappe.flags.in_install = app_slug
-	frappe.flags.ignore_in_install = False
-	frappe.clear_cache()
-	app_hooks = frappe.get_hooks(app_name=app_slug)
-
-	if app_slug != "frappe":
-		frappe.only_for("System Manager")
-
-	for before_install in app_hooks.before_install or []:
-		out = frappe.get_attr(before_install)()
-		if out is False:
-			frappe.flags.in_install = False
+	with _push_install_stack(app_slug) as entered:
+		if not entered:
 			return
 
-	for fn in frappe.get_hooks("before_app_install"):
-		frappe.get_attr(fn)(app_slug)
+		if not _app_on_bench(app_slug):
+			raise frappe.ValidationError(frappe._("App {0} is not available on this bench.").format(app_slug))
 
-	if app_slug != "frappe":
-		add_module_defs(app_slug, ignore_if_duplicate=force)
+		installed = list(frappe.get_installed_apps() or [])
 
-	sync_for(app_slug, force=force, reset_permissions=True)
-	add_to_installed_apps(app_slug)
+		if marketplace_basic_deps_only_enabled():
+			for basic in basic_platform_apps():
+				if basic == app_slug or basic in installed or not _app_on_bench(basic):
+					continue
+				install_app_on_site(basic, force=force, verbose=verbose)
+				installed = list(frappe.get_installed_apps() or [])
+		elif not force:
+			from frappe.installer import install_app
 
-	try:
-		frappe.get_doc("Portal Settings", "Portal Settings").sync_menu()
-	except Exception:
-		pass
+			app_hooks = frappe.get_hooks(app_name=app_slug)
+			for app in app_hooks.get("required_apps") or []:
+				required_app = parse_app_name(app)
+				if required_app not in (frappe.get_installed_apps() or []):
+					install_app(required_app, verbose=verbose, force=force)
 
-	set_all_patches_as_completed(app_slug)
+		installed = list(frappe.get_installed_apps() or [])
+		if not force and app_slug in installed:
+			return
 
-	for after_install in app_hooks.after_install or []:
-		frappe.get_attr(after_install)()
+		frappe.flags.in_install = app_slug
+		frappe.flags.ignore_in_install = False
+		try:
+			frappe.clear_cache()
+			app_hooks = frappe.get_hooks(app_name=app_slug)
 
-	for fn in frappe.get_hooks("after_app_install"):
-		frappe.get_attr(fn)(app_slug)
+			if app_slug != "frappe":
+				frappe.only_for("System Manager")
 
-	sync_jobs()
-	sync_fixtures(app_slug)
-	sync_customizations(app_slug)
-	sync_dashboards(app_slug)
+			for before_install in app_hooks.before_install or []:
+				out = frappe.get_attr(before_install)()
+				if out is False:
+					return
 
-	for after_sync in app_hooks.after_sync or []:
-		frappe.get_attr(after_sync)()
+			for fn in frappe.get_hooks("before_app_install"):
+				frappe.get_attr(fn)(app_slug)
 
-	frappe.clear_cache()
-	frappe.flags.in_install = False
+			if app_slug != "frappe":
+				add_module_defs(app_slug, ignore_if_duplicate=force)
+
+			sync_for(app_slug, force=force, reset_permissions=True)
+			add_to_installed_apps(app_slug)
+
+			try:
+				frappe.get_doc("Portal Settings", "Portal Settings").sync_menu()
+			except Exception:
+				pass
+
+			set_all_patches_as_completed(app_slug)
+
+			for after_install in app_hooks.after_install or []:
+				frappe.get_attr(after_install)()
+
+			for fn in frappe.get_hooks("after_app_install"):
+				frappe.get_attr(fn)(app_slug)
+
+			sync_jobs()
+			sync_fixtures(app_slug)
+			sync_customizations(app_slug)
+			sync_dashboards(app_slug)
+
+			for after_sync in app_hooks.after_sync or []:
+				frappe.get_attr(after_sync)()
+
+			frappe.clear_cache()
+		finally:
+			frappe.flags.in_install = False

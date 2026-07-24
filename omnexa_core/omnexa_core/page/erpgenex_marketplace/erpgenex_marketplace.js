@@ -107,8 +107,14 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="bulk-select-group" title="${__("Select all installed apps in the chosen group")}">${__("Select group")}</button>
 				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="group-hide-desk" title="${__("Hide installed group apps from Desk sidebar")}">${__("Hide group")}</button>
 				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="group-show-desk" title="${__("Show group apps on Desk again")}">${__("Show group")}</button>
-				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="bulk-select-visible">${__("Select visible uninstallable")}</button>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="bulk-select-visible">${__("Select visible")}</button>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="bulk-select-installable">${__("Select installable")}</button>
+				<button type="button" class="btn btn-sm btn-outline-secondary" data-action="bulk-select-updateable">${__("Select updateable")}</button>
 				<button type="button" class="btn btn-sm btn-light" data-action="bulk-clear">${__("Clear selection")}</button>
+				<button type="button" class="btn btn-sm btn-outline-primary" data-action="bulk-install-preview">${__("Preview install")}</button>
+				<button type="button" class="btn btn-sm btn-primary" data-action="bulk-install">${__("Install selected")}</button>
+				<button type="button" class="btn btn-sm btn-outline-primary" data-action="bulk-update-preview">${__("Preview update")}</button>
+				<button type="button" class="btn btn-sm btn-primary" data-action="bulk-update">${__("Update selected")}</button>
 				<button type="button" class="btn btn-sm btn-outline-primary" data-action="bulk-preview">${__("Preview uninstall")}</button>
 				<button type="button" class="btn btn-sm btn-danger" data-action="bulk-uninstall">${__("Uninstall selected")}</button>
 			</div>
@@ -149,9 +155,14 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		</div>
 	`);
 	$(page.body).append($container);
-	if (!frappe.user.has_role("System Manager")) {
-		$container.find('[data-action="bulk-select-all"]').closest("th").addClass("d-none");
-		$container.find('[data-section="bulk-bar"]').remove();
+	const canBulkUninstall = frappe.user.has_role("System Manager");
+	if (!canBulkUninstall) {
+		$container.find('[data-action="group-select"]').hide();
+		$container.find('[data-action="bulk-select-group"]').hide();
+		$container.find('[data-action="group-hide-desk"]').hide();
+		$container.find('[data-action="group-show-desk"]').hide();
+		$container.find('[data-action="bulk-preview"]').hide();
+		$container.find('[data-action="bulk-uninstall"]').hide();
 	}
 	let allItems = [];
 	let lastTrialDays = 7;
@@ -160,7 +171,6 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	let catalogAutoRefreshTimer = null;
 	let lastScopePlan = null;
 	const selectedSlugs = new Set();
-	const bulkUninstallEnabled = frappe.user.has_role("System Manager");
 	let uninstallGroups = [];
 
 	function ensureMarketplaceSession() {
@@ -200,7 +210,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	}
 
 	async function loadUninstallGroups() {
-		if (!bulkUninstallEnabled) return;
+		if (!canBulkUninstall) return;
 		try {
 			const r = await frappe.call("omnexa_core.omnexa_core.marketplace.get_uninstall_groups");
 			uninstallGroups = ((r && r.message) || {}).groups || [];
@@ -430,24 +440,51 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		});
 	}
 
-	function canBulkSelect(item) {
-		return bulkUninstallEnabled && item.is_installed && item.uninstall_allowed !== false;
+	function canBulkSelect(_item) {
+		return true;
+	}
+
+	function canBulkInstall(item) {
+		return !item.is_installed && (item.is_free || is_license_gate_passed(item.license_status));
+	}
+
+	function canBulkUpdate(item) {
+		return item.is_installed && item.app_slug !== "frappe" && (item.is_free || is_license_gate_passed(item.license_status));
+	}
+
+	function canBulkUninstallItem(item) {
+		return canBulkUninstall && item.is_installed && item.uninstall_allowed !== false;
+	}
+
+	function getSelectedItems() {
+		return (allItems || []).filter((item) => selectedSlugs.has(String(item.app_slug || "")));
 	}
 
 	function updateBulkBar() {
 		const $bar = $container.find('[data-section="bulk-bar"]');
-		if (!bulkUninstallEnabled) {
-			$bar.addClass("d-none");
-			return;
-		}
-		const n = selectedSlugs.size;
+		const selectedItems = getSelectedItems();
+		const n = selectedItems.length;
+		const installCount = selectedItems.filter(canBulkInstall).length;
+		const updateCount = selectedItems.filter(canBulkUpdate).length;
+		const uninstallCount = selectedItems.filter(canBulkUninstallItem).length;
 		if (!n) {
 			$bar.addClass("d-none");
 			$bar.find("[data-bulk-count]").text("");
 			return;
 		}
 		$bar.removeClass("d-none");
-		$bar.find("[data-bulk-count]").text(__("{0} app(s) selected", [String(n)]));
+		$bar.find("[data-bulk-count]").text(
+			__(
+				"{0} selected · {1} installable · {2} updatable · {3} uninstallable",
+				[ String(n), String(installCount), String(updateCount), String(uninstallCount) ]
+			)
+		);
+		$bar.find('[data-action="bulk-install-preview"]').prop("disabled", !installCount);
+		$bar.find('[data-action="bulk-install"]').prop("disabled", !installCount);
+		$bar.find('[data-action="bulk-update-preview"]').prop("disabled", !updateCount);
+		$bar.find('[data-action="bulk-update"]').prop("disabled", !updateCount);
+		$bar.find('[data-action="bulk-preview"]').prop("disabled", !uninstallCount);
+		$bar.find('[data-action="bulk-uninstall"]').prop("disabled", !uninstallCount);
 	}
 
 	function syncBulkSelectAllCheckbox(visibleRows) {
@@ -1127,6 +1164,373 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		await loadCatalog();
 	}
 
+	function selectedRowsBy(filterFn) {
+		return getFilteredRows().filter((item) => selectedSlugs.has(String(item.app_slug || "")) && filterFn(item));
+	}
+
+	function selectRows(rows) {
+		(rows || []).forEach((item) => selectedSlugs.add(String(item.app_slug || "")));
+		applyFiltersAndRender();
+	}
+
+	function bulkListSummaryHtml(titleLabel, items, emptyLabel) {
+		const list = (items || []).map((item) => frappe.utils.escape_html(String(item.app_slug || ""))).join(", ") || "—";
+		return `<b>${frappe.utils.escape_html(titleLabel)} (${(items || []).length}):</b><br>` +
+			`<span class="small font-monospace">${list}</span>` +
+			`<p class="text-muted small mt-2">${frappe.utils.escape_html(emptyLabel || "")}</p>`;
+	}
+
+	function bulkInstallPlanSummaryHtml(plan) {
+		const eligible = plan.eligible || [];
+		const skipped = plan.already_installed || [];
+		const blocked = plan.blocked || [];
+		let extra = "";
+		if (skipped.length) {
+			extra += `<p class="text-muted small"><b>${__("Already installed")}:</b> ${frappe.utils.escape_html(skipped.join(", "))}</p>`;
+		}
+		if (blocked.length) {
+			extra += `<p class="text-warning small"><b>${__("Blocked")}:</b><br><pre class="small mb-0">${frappe.utils.escape_html(
+				JSON.stringify(blocked, null, 2)
+			)}</pre></p>`;
+		}
+		return (
+			`<b>${__("Will install")} (${eligible.length}):</b><br>` +
+			`<span class="small font-monospace">${frappe.utils.escape_html(eligible.join(", ") || "—")}</span>` +
+			extra +
+			`<p class="text-muted small mt-2">${frappe.utils.escape_html(plan.warning || "")}</p>`
+		);
+	}
+
+	function bulkUpdatePlanSummaryHtml(plan) {
+		const eligible = plan.eligible || [];
+		const skipped = plan.not_installed || [];
+		const blocked = plan.blocked || [];
+		let extra = "";
+		if (skipped.length) {
+			extra += `<p class="text-muted small"><b>${__("Not installed")}:</b> ${frappe.utils.escape_html(skipped.join(", "))}</p>`;
+		}
+		if (blocked.length) {
+			extra += `<p class="text-warning small"><b>${__("Blocked")}:</b><br><pre class="small mb-0">${frappe.utils.escape_html(
+				JSON.stringify(blocked, null, 2)
+			)}</pre></p>`;
+		}
+		return (
+			`<b>${__("Will update")} (${eligible.length}):</b><br>` +
+			`<span class="small font-monospace">${frappe.utils.escape_html(eligible.join(", ") || "—")}</span>` +
+			extra +
+			`<p class="text-muted small mt-2">${frappe.utils.escape_html(plan.warning || "")}</p>`
+		);
+	}
+
+	async function fetchBulkInstallPlan() {
+		const slugs = selectedRowsBy(canBulkInstall).map((item) => String(item.app_slug || ""));
+		if (!slugs.length) {
+			frappe.msgprint(__("Select at least one app that can be installed."));
+			return null;
+		}
+		const r = await frappe.call({
+			method: "omnexa_core.omnexa_core.marketplace.get_bulk_install_plan",
+			args: { app_slugs: JSON.stringify(slugs) },
+		});
+		return (r && r.message) || null;
+	}
+
+	async function fetchBulkUpdatePlan() {
+		const slugs = selectedRowsBy(canBulkUpdate).map((item) => String(item.app_slug || ""));
+		if (!slugs.length) {
+			frappe.msgprint(__("Select at least one installed app that can be updated."));
+			return null;
+		}
+		const r = await frappe.call({
+			method: "omnexa_core.omnexa_core.marketplace.get_bulk_update_plan",
+			args: { app_slugs: JSON.stringify(slugs) },
+		});
+		return (r && r.message) || null;
+	}
+
+	function promptBulkInstallOptions(plan) {
+		return new Promise((resolve) => {
+			const d = new frappe.ui.Dialog({
+				title: __("Bulk install"),
+				fields: [
+					{
+						fieldname: "bulk_install_source",
+						fieldtype: "Select",
+						label: __("Install source"),
+						options: [
+							`${__("Auto (recommended)")}|auto`,
+							`${__("Local server copy")}|local`,
+							`${__("GitHub approved repo")}|github`,
+						].join("\n"),
+						default: "auto",
+						description: __("Auto uses the local bench copy when present, otherwise GitHub."),
+					},
+					{
+						fieldname: "bulk_install_ref",
+						fieldtype: "Data",
+						label: __("Version / branch / tag"),
+						description: __("Optional. Used when source is GitHub."),
+					},
+				],
+				primary_action_label: __("Continue"),
+				primary_action() {
+					const source = d.get_value("bulk_install_source") || "auto";
+					const ref = String(d.get_value("bulk_install_ref") || "").trim();
+					d.hide();
+					resolve({ source, ref });
+				},
+				secondary_action_label: __("Cancel"),
+				secondary_action() {
+					d.hide();
+					resolve(null);
+				},
+			});
+			d.set_value("bulk_install_source", "auto");
+			d.show();
+		});
+	}
+
+	function promptBulkUpdateOptions(plan) {
+		return new Promise((resolve) => {
+			const d = new frappe.ui.Dialog({
+				title: __("Bulk update"),
+				fields: [
+					{
+						fieldname: "bulk_update_source",
+						fieldtype: "Select",
+						label: __("Update source"),
+						options: [
+							`${__("GitHub (recommended)")}|github`,
+							`${__("Local server copy")}|local`,
+						].join("\n"),
+						default: "github",
+						description: __("GitHub pulls a ref for each selected app, then migrates and rebuilds."),
+					},
+					{
+						fieldname: "bulk_update_ref",
+						fieldtype: "Data",
+						label: __("Version / branch / tag"),
+						description: __("Optional. Used when source is GitHub."),
+					},
+				],
+				primary_action_label: __("Continue"),
+				primary_action() {
+					const source = d.get_value("bulk_update_source") || "github";
+					const ref = String(d.get_value("bulk_update_ref") || "").trim();
+					d.hide();
+					resolve({ source, ref });
+				},
+				secondary_action_label: __("Cancel"),
+				secondary_action() {
+					d.hide();
+					resolve(null);
+				},
+			});
+			d.set_value("bulk_update_source", "github");
+			d.show();
+		});
+	}
+
+	async function onBulkInstallPreview() {
+		const plan = await fetchBulkInstallPlan();
+		if (!plan) return;
+		frappe.msgprint({
+			title: __("Bulk install preview"),
+			indicator: plan.can_install ? "blue" : "orange",
+			message: bulkInstallPlanSummaryHtml(plan),
+		});
+	}
+
+	async function onBulkUpdatePreview() {
+		const plan = await fetchBulkUpdatePlan();
+		if (!plan) return;
+		frappe.msgprint({
+			title: __("Bulk update preview"),
+			indicator: plan.can_update ? "blue" : "orange",
+			message: bulkUpdatePlanSummaryHtml(plan),
+		});
+	}
+
+	async function onBulkInstall() {
+		const plan = await fetchBulkInstallPlan();
+		if (!plan) return;
+		if (!plan.can_install) {
+			frappe.msgprint({
+				title: __("Cannot install selection"),
+				indicator: "orange",
+				message: bulkInstallPlanSummaryHtml(plan),
+			});
+			return;
+		}
+		const opts = await promptBulkInstallOptions(plan);
+		if (!opts) return;
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				`<b>${__("Install {0} app(s) now?", [(plan.eligible || []).length])}</b><br><br>` +
+					bulkInstallPlanSummaryHtml(plan) +
+					`<b>${__("Source")}:</b> ${frappe.utils.escape_html(opts.source)}<br>` +
+					(opts.ref ? `<b>${__("Ref")}:</b> ${frappe.utils.escape_html(opts.ref)}<br>` : "") +
+					`<span class="text-danger">${__("A backup will run before the batch.")}</span>`,
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) return;
+		const stopTick = startMarketplaceProgress(
+			__("Bulk install"),
+			__("Backup, fetch, install, migrate, and rebuild may take several minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.bulk_install_apps_now",
+				args: {
+					app_slugs: JSON.stringify(plan.eligible || []),
+					confirm_install: 1,
+					install_source: opts.source || "auto",
+					install_ref: opts.ref || "",
+				},
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		await completeMarketplaceProgress(__("Bulk install"));
+		if (!ensureMarketplaceSession()) return;
+		const result = (r && r.message) || {};
+		const done = result.installed_now || [];
+		const failed = result.failed || [];
+		const skipped = result.skipped || [];
+		selectedSlugs.clear();
+		updateBulkBar();
+		if (done.length) {
+			frappe.show_alert({
+				message: __("Installed {0} app(s)", [done.length]),
+				indicator: failed.length ? "orange" : "green",
+			});
+		}
+		if (failed.length || skipped.length) {
+			frappe.msgprint({
+				title: __("Bulk install completed"),
+				indicator: failed.length ? "orange" : "green",
+				message:
+					(done.length ? `<b>${__("Installed")}:</b> ${frappe.utils.escape_html(done.join(", "))}<br>` : "") +
+					(skipped.length
+						? `<b>${__("Skipped")}:</b><pre class="small mb-0">${frappe.utils.escape_html(
+								JSON.stringify(skipped, null, 2)
+						  )}</pre>`
+						: "") +
+					(failed.length
+						? `<b>${__("Failed")}:</b><pre class="small mb-0">${frappe.utils.escape_html(
+								JSON.stringify(failed, null, 2)
+						  )}</pre>`
+						: ""),
+			});
+		} else if (done.length) {
+			frappe.msgprint({
+				title: __("Bulk install completed"),
+				indicator: "green",
+				message: `<span class="font-monospace small">${frappe.utils.escape_html(done.join(", "))}</span>`,
+			});
+		} else {
+			frappe.msgprint(__("Bulk install status: {0}", [result.message || "unknown"]));
+		}
+		await loadCatalog();
+	}
+
+	async function onBulkUpdate() {
+		const plan = await fetchBulkUpdatePlan();
+		if (!plan) return;
+		if (!plan.can_update) {
+			frappe.msgprint({
+				title: __("Cannot update selection"),
+				indicator: "orange",
+				message: bulkUpdatePlanSummaryHtml(plan),
+			});
+			return;
+		}
+		const opts = await promptBulkUpdateOptions(plan);
+		if (!opts) return;
+		const confirmed = await new Promise((resolve) => {
+			frappe.confirm(
+				`<b>${__("Update {0} app(s) now?", [(plan.eligible || []).length])}</b><br><br>` +
+					bulkUpdatePlanSummaryHtml(plan) +
+					`<b>${__("Source")}:</b> ${frappe.utils.escape_html(opts.source)}<br>` +
+					(opts.ref ? `<b>${__("Ref")}:</b> ${frappe.utils.escape_html(opts.ref)}<br>` : "") +
+					`<span class="text-danger">${__("A backup will run before the batch.")}</span>`,
+				() => resolve(true),
+				() => resolve(false)
+			);
+		});
+		if (!confirmed) return;
+		const stopTick = startMarketplaceProgress(
+			__("Bulk update"),
+			__("Backup, pull, migrate, and rebuild may take several minutes…")
+		);
+		let r;
+		try {
+			r = await frappe.call({
+				method: "omnexa_core.omnexa_core.marketplace.bulk_update_apps_now",
+				args: {
+					app_slugs: JSON.stringify(plan.eligible || []),
+					confirm_update: 1,
+					update_source: opts.source || "github",
+					target_ref: opts.ref || "",
+				},
+				freeze: false,
+			});
+		} catch (e) {
+			frappe.hide_progress();
+			return;
+		} finally {
+			stopTick();
+		}
+		await completeMarketplaceProgress(__("Bulk update"));
+		if (!ensureMarketplaceSession()) return;
+		const result = (r && r.message) || {};
+		const done = result.updated_now || [];
+		const failed = result.failed || [];
+		const skipped = result.skipped || [];
+		selectedSlugs.clear();
+		updateBulkBar();
+		if (done.length) {
+			frappe.show_alert({
+				message: __("Updated {0} app(s)", [done.length]),
+				indicator: failed.length ? "orange" : "green",
+			});
+		}
+		if (failed.length || skipped.length) {
+			frappe.msgprint({
+				title: __("Bulk update completed"),
+				indicator: failed.length ? "orange" : "green",
+				message:
+					(done.length ? `<b>${__("Updated")}:</b> ${frappe.utils.escape_html(done.join(", "))}<br>` : "") +
+					(skipped.length
+						? `<b>${__("Skipped")}:</b><pre class="small mb-0">${frappe.utils.escape_html(
+								JSON.stringify(skipped, null, 2)
+						  )}</pre>`
+						: "") +
+					(failed.length
+						? `<b>${__("Failed")}:</b><pre class="small mb-0">${frappe.utils.escape_html(
+								JSON.stringify(failed, null, 2)
+						  )}</pre>`
+						: ""),
+			});
+		} else if (done.length) {
+			frappe.msgprint({
+				title: __("Bulk update completed"),
+				indicator: "green",
+				message: `<span class="font-monospace small">${frappe.utils.escape_html(done.join(", "))}</span>`,
+			});
+		} else {
+			frappe.msgprint(__("Bulk update status: {0}", [result.message || "unknown"]));
+		}
+		await loadCatalog();
+	}
+
 	function getFilteredRows() {
 		const q = String($container.find('[data-filter="search"]').val() || "").trim().toLowerCase();
 		const activity = String($container.find('[data-filter="activity"]').val() || "").trim();
@@ -1598,13 +2002,36 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	});
 	$container.on("click", '[data-action="bulk-select-visible"]', function () {
 		getFilteredRows()
-			.filter(canBulkSelect)
+			.forEach((item) => selectedSlugs.add(String(item.app_slug || "")));
+		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="bulk-select-installable"]', function () {
+		getFilteredRows()
+			.filter(canBulkInstall)
+			.forEach((item) => selectedSlugs.add(String(item.app_slug || "")));
+		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="bulk-select-updateable"]', function () {
+		getFilteredRows()
+			.filter(canBulkUpdate)
 			.forEach((item) => selectedSlugs.add(String(item.app_slug || "")));
 		applyFiltersAndRender();
 	});
 	$container.on("click", '[data-action="bulk-clear"]', function () {
 		selectedSlugs.clear();
 		applyFiltersAndRender();
+	});
+	$container.on("click", '[data-action="bulk-install-preview"]', async function () {
+		await onBulkInstallPreview();
+	});
+	$container.on("click", '[data-action="bulk-install"]', async function () {
+		await onBulkInstall();
+	});
+	$container.on("click", '[data-action="bulk-update-preview"]', async function () {
+		await onBulkUpdatePreview();
+	});
+	$container.on("click", '[data-action="bulk-update"]', async function () {
+		await onBulkUpdate();
 	});
 	$container.on("click", '[data-action="bulk-preview"]', async function () {
 		await onBulkPreview();

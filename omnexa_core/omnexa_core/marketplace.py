@@ -829,6 +829,99 @@ def _bulk_uninstall_plan(app_slugs: list[str]) -> dict:
 	}
 
 
+def _bulk_install_warning() -> str:
+	return frappe._(
+		"This installs selected apps on the current site. "
+		"A database backup runs once before the batch (unless disabled in site config). "
+		"Apps already installed or missing from the bench are skipped."
+	)
+
+
+def _bulk_update_warning() -> str:
+	return frappe._(
+		"This updates selected installed apps on the current site. "
+		"A database backup runs once before the batch (unless disabled in site config). "
+		"Updates are applied sequentially, then the site is migrated and Desk is refreshed."
+	)
+
+
+def _bulk_action_repo_url(app_slug: str) -> str:
+	return _approved_repo_for_app(app_slug)
+
+
+def _bulk_install_plan(app_slugs) -> dict:
+	frappe.only_for("System Manager")
+	requested = _parse_app_slug_list(app_slugs)
+	installed = set(frappe.get_installed_apps() or [])
+	eligible: list[str] = []
+	already_installed: list[str] = []
+	blocked: list[dict] = []
+
+	for slug in requested:
+		try:
+			_assert_marketplace_app_slug(slug)
+		except Exception:
+			blocked.append({"app": slug, "reason": "invalid_slug"})
+			continue
+		if slug in installed:
+			already_installed.append(slug)
+			continue
+		if not _can_install_on_this_site(slug):
+			blocked.append({"app": slug, "reason": "app_not_present_on_server"})
+			continue
+		try:
+			_license_allows_marketplace_action(slug)
+		except Exception as exc:
+			blocked.append({"app": slug, "reason": "license", "error": str(exc)})
+			continue
+		eligible.append(slug)
+
+	return {
+		"requested": requested,
+		"eligible": eligible,
+		"already_installed": already_installed,
+		"blocked": blocked,
+		"can_install": bool(eligible),
+		"warning": _bulk_install_warning(),
+		"repo_urls": {slug: _bulk_action_repo_url(slug) for slug in eligible},
+	}
+
+
+def _bulk_update_plan(app_slugs) -> dict:
+	frappe.only_for("System Manager")
+	requested = _parse_app_slug_list(app_slugs)
+	installed = set(frappe.get_installed_apps() or [])
+	eligible: list[str] = []
+	not_installed: list[str] = []
+	blocked: list[dict] = []
+
+	for slug in requested:
+		try:
+			_assert_marketplace_app_slug(slug)
+		except Exception:
+			blocked.append({"app": slug, "reason": "invalid_slug"})
+			continue
+		if slug not in installed:
+			not_installed.append(slug)
+			continue
+		try:
+			_license_allows_marketplace_action(slug)
+		except Exception as exc:
+			blocked.append({"app": slug, "reason": "license", "error": str(exc)})
+			continue
+		eligible.append(slug)
+
+	return {
+		"requested": requested,
+		"eligible": eligible,
+		"not_installed": not_installed,
+		"blocked": blocked,
+		"can_update": bool(eligible),
+		"warning": _bulk_update_warning(),
+		"repo_urls": {slug: _bulk_action_repo_url(slug) for slug in eligible},
+	}
+
+
 def _installed_apps_that_require(app_slug: str) -> list[str]:
 	"""
 	Mirror ``frappe.installer.remove_app`` dependency rule: another installed app
@@ -1220,6 +1313,12 @@ def get_install_plan(app_slug: str):
 
 
 @frappe.whitelist()
+def get_bulk_install_plan(app_slugs):
+	"""Preview for bulk installation."""
+	return _bulk_install_plan(app_slugs)
+
+
+@frappe.whitelist()
 def get_update_plan(app_slug: str):
 	"""Return metadata for updating an already-installed app from its Git remote."""
 	_assert_marketplace_app_slug(app_slug)
@@ -1249,6 +1348,12 @@ def get_update_plan(app_slug: str):
 		"warning": "A full backup will be created, then git pull, migrate this site, and build assets for this app.",
 		"git_meta": git_meta,
 		"update_refs": _build_update_ref_choices(app_slug, git_meta)}
+
+
+@frappe.whitelist()
+def get_bulk_update_plan(app_slugs):
+	"""Preview for bulk updates."""
+	return _bulk_update_plan(app_slugs)
 
 
 @frappe.whitelist()
@@ -1320,6 +1425,199 @@ def update_app_now(
 		"sync_ok": bool(post_state.get("sync_ok")),
 		"sync_log_tail": post_state.get("sync_log_tail", ""),
 		"applied_ref": (target_ref or "").strip() or ("pull" if update_source_norm == "github" else "local")
+	}
+
+
+def _run_post_bulk_app_change_hardening(site: str) -> dict:
+	"""Finalize a bulk install/update batch with one migration and one Desk rebuild."""
+	ok_mig, out_mig = _run_bench_cmd(["--site", site, "migrate"])
+	if not ok_mig:
+		return {"ok": False, "message": "migrate_failed", "output": out_mig[-3000:] if out_mig else ""}
+
+	ok_build, out_build = _run_bench_cmd(["build"])
+	ok_sync, out_sync = _run_bench_cmd(["--site", site, "execute", "omnexa_core.install.run_workspace_desk_sync"])
+
+	return {
+		"ok": True,
+		"message": "post_bulk_hardening_done",
+		"build_ok": bool(ok_build),
+		"build_log_tail": out_build[-1500:] if out_build else "",
+		"sync_ok": bool(ok_sync),
+		"sync_log_tail": out_sync[-1500:] if out_sync else "",
+	}
+
+
+@frappe.whitelist()
+def bulk_install_apps_now(
+	app_slugs,
+	confirm_install: int = 0,
+	install_source: str = "auto",
+	install_ref: str = "",
+):
+	"""Install many marketplace apps in one batch."""
+	frappe.only_for("System Manager")
+	if not _is_truthy(confirm_install):
+		return {"installed": False, "message": "confirmation_required"}
+
+	requested = _parse_app_slug_list(app_slugs)
+	plan = _bulk_install_plan(requested)
+	eligible = plan.get("eligible") or []
+	if not eligible:
+		return {
+			"installed": False,
+			"message": "nothing_to_install",
+			"requested": requested,
+			"plan": plan,
+		}
+
+	backup_state = _backup_before_install()
+	if not backup_state.get("ok"):
+		return {"installed": False, "message": "backup_failed", "plan": plan}
+
+	source_raw = (install_source or "auto").strip().lower()
+	source_norm = "local" if source_raw in ("local", "server", "on_server", "existing") else "github"
+	auto_source = source_raw in ("", "auto")
+	ref = _normalize_install_ref(install_ref)
+	from omnexa_core.omnexa_core.marketplace_install import install_app_on_site
+
+	installed_now: list[str] = []
+	skipped: list[dict] = []
+	failed: list[dict] = []
+	site = getattr(frappe.local, "site", None) or getattr(frappe.conf, "site_name", None)
+	if not site:
+		return {"installed": False, "message": "missing_site_context", "backup": backup_state, "plan": plan}
+
+	for app_slug in eligible:
+		try:
+			chosen_source = source_norm
+			if auto_source:
+				chosen_source = "local" if _can_install_on_this_site(app_slug) else "github"
+			if chosen_source == "local" and not _can_install_on_this_site(app_slug):
+				skipped.append({"app": app_slug, "reason": "app_not_present_on_server"})
+				continue
+			if chosen_source == "github":
+				fetch_state = _ensure_app_present_from_repo(app_slug, _approved_repo_for_app(app_slug), branch=ref or None)
+				if fetch_state.get("message") == "get_app_failed":
+					failed.append({"app": app_slug, "reason": fetch_state.get("message"), "output": fetch_state.get("output", "")})
+					continue
+			install_app_on_site(app_slug, force=False, verbose=False)
+			installed_now.append(app_slug)
+		except Exception as exc:
+			failed.append({"app": app_slug, "reason": "install_failed", "error": str(exc)})
+
+	post_state = _run_post_bulk_app_change_hardening(site)
+	if not post_state.get("ok"):
+		return {
+			"installed": bool(installed_now),
+			"message": post_state.get("message") or "post_install_hardening_failed",
+			"output": post_state.get("output", ""),
+			"backup": backup_state,
+			"plan": plan,
+			"installed_now": installed_now,
+			"skipped": skipped,
+			"failed": failed,
+			"install_source": source_raw or "auto",
+			"install_ref": ref,
+		}
+
+	frappe.clear_cache()
+	return {
+		"installed": bool(installed_now),
+		"message": "bulk_install_done" if installed_now else "bulk_install_failed",
+		"backup": backup_state,
+		"plan": plan,
+		"installed_now": installed_now,
+		"skipped": skipped,
+		"failed": failed,
+		"install_source": source_raw or "auto",
+		"install_ref": ref,
+		"build_ok": bool(post_state.get("build_ok")),
+		"build_log_tail": post_state.get("build_log_tail", ""),
+		"sync_ok": bool(post_state.get("sync_ok")),
+		"sync_log_tail": post_state.get("sync_log_tail", ""),
+	}
+
+
+@frappe.whitelist()
+def bulk_update_apps_now(
+	app_slugs,
+	confirm_update: int = 0,
+	update_source: str = "github",
+	target_ref: str = "",
+):
+	"""Update many installed marketplace apps in one batch."""
+	frappe.only_for("System Manager")
+	if not _is_truthy(confirm_update):
+		return {"updated": False, "message": "confirmation_required"}
+
+	requested = _parse_app_slug_list(app_slugs)
+	plan = _bulk_update_plan(requested)
+	eligible = plan.get("eligible") or []
+	if not eligible:
+		return {
+			"updated": False,
+			"message": "nothing_to_update",
+			"requested": requested,
+			"plan": plan,
+		}
+
+	backup_state = _backup_before_install()
+	if not backup_state.get("ok"):
+		return {"updated": False, "message": "backup_failed", "plan": plan}
+
+	source_norm = _normalize_update_source(update_source)
+	ref = _normalize_install_ref(target_ref)
+	site = getattr(frappe.local, "site", None) or getattr(frappe.conf, "site_name", None)
+	if not site:
+		return {"updated": False, "message": "missing_site_context", "backup": backup_state, "plan": plan}
+
+	updated_now: list[str] = []
+	skipped: list[dict] = []
+	failed: list[dict] = []
+	for app_slug in eligible:
+		try:
+			if source_norm == "github":
+				ok_pull, out_pull = _git_update_app_to_ref(app_slug, ref or "")
+				if not ok_pull:
+					failed.append({"app": app_slug, "reason": "git_pull_failed", "output": out_pull})
+					continue
+			updated_now.append(app_slug)
+		except Exception as exc:
+			failed.append({"app": app_slug, "reason": "update_failed", "error": str(exc)})
+
+	for app_slug in updated_now:
+		_invalidate_git_meta_cache(app_slug)
+
+	post_state = _run_post_bulk_app_change_hardening(site)
+	if not post_state.get("ok"):
+		return {
+			"updated": bool(updated_now),
+			"message": post_state.get("message") or "post_update_hardening_failed",
+			"output": post_state.get("output", ""),
+			"backup": backup_state,
+			"plan": plan,
+			"updated_now": updated_now,
+			"skipped": skipped,
+			"failed": failed,
+			"update_source": source_norm,
+			"target_ref": ref,
+		}
+
+	frappe.clear_cache()
+	return {
+		"updated": bool(updated_now),
+		"message": "bulk_update_done" if updated_now else "bulk_update_failed",
+		"backup": backup_state,
+		"plan": plan,
+		"updated_now": updated_now,
+		"skipped": skipped,
+		"failed": failed,
+		"update_source": source_norm,
+		"target_ref": ref,
+		"build_ok": bool(post_state.get("build_ok")),
+		"build_log_tail": post_state.get("build_log_tail", ""),
+		"sync_ok": bool(post_state.get("sync_ok")),
+		"sync_log_tail": post_state.get("sync_log_tail", ""),
 	}
 
 
