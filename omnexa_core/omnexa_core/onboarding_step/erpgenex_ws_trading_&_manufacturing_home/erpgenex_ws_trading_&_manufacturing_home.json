@@ -1,0 +1,21 @@
+{
+ "action": "Go to Page",
+ "action_label": "Open workspace",
+ "creation": "2026-07-21 20:35:09.164132",
+ "description": "Return here for shortcuts, charts, and lists for **Mfg-Trade**.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-07-25 15:05:10.120896",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-trading_&_manufacturing-home",
+ "owner": "Administrator",
+ "path": "Workspaces/Mfg-Trade",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Explore this workspace",
+ "validate_action": 1
+}

@@ -4,12 +4,17 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import frappe
 from frappe.utils import get_bench_path, now_datetime
 
 MASTER_DOCS = Path(get_bench_path()) / "Docs/ERPGENEX_BANKING_FINANCIAL_GROUP_MASTER"
+
+
+def _site_name() -> str:
+	return os.environ.get("ERPGENEX_SITE_NAME") or getattr(frappe.local, "site", None) or "site1.local"
 
 
 def _verify_all_gaps() -> dict:
@@ -181,7 +186,7 @@ def _write_closure_final(closure: dict) -> None:
 	report = f"""# تقرير الإغلاق النهائي — المجموعة المالية البنكية
 
 **التاريخ:** {closure.get("finished_at", "")[:10]}
-**الموقع:** erpgenex.local.site
+**الموقع:** {_site_name()}
 **الحالة:** {"✅ ALL CLOSED" if closure.get("all_closed") else "⚠️ Pending"}
 
 | المؤشر | النتيجة |
@@ -195,7 +200,7 @@ def _write_closure_final(closure: dict) -> None:
 
 ## الأمر
 ```bash
-bench --site erpgenex.local.site execute omnexa_core.omnexa_core.finance_demo.finance_group_master.run_full_finance_group_closure
+bench --site {_site_name()} execute omnexa_core.omnexa_core.finance_demo.finance_group_master.run_full_finance_group_closure
 ```
 """
 	(MASTER_DOCS / "CLOSURE_FINAL_REPORT_AR.md").write_text(report.strip() + "\n", encoding="utf-8")

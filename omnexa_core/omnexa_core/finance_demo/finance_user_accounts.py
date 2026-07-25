@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import frappe
@@ -17,6 +18,10 @@ from omnexa_core.omnexa_core.finance_demo.finance_stage_gate import (
 from omnexa_core.omnexa_core.finance_demo.finance_vertical_specs import VERTICAL_BPE_SPECS
 
 MASTER_DOCS = Path(get_bench_path()) / "Docs/ERPGENEX_BANKING_FINANCIAL_GROUP_MASTER"
+
+
+def _site_name() -> str:
+	return os.environ.get("ERPGENEX_SITE_NAME") or getattr(frappe.local, "site", None) or "site1.local"
 
 BPE_ROLE_SUFFIXES = (
 	"Field Officer",
@@ -222,7 +227,7 @@ def _render_accounts_md(data: dict) -> str:
 			"",
 			"### زرع الحسابات",
 			"```bash",
-			"bench --site erpgenex.local.site execute omnexa_core.omnexa_core.finance_demo.finance_role_demo.seed_finance_role_demo",
+			f"bench --site {_site_name()} execute omnexa_core.omnexa_core.finance_demo.finance_role_demo.seed_finance_role_demo",
 			"```",
 			"",
 			"---",
@@ -252,7 +257,7 @@ def _render_accounts_md(data: dict) -> str:
 			"## 6. تحديث هذا الملف",
 			"",
 			"```bash",
-			"bench --site erpgenex.local.site execute omnexa_core.omnexa_core.finance_demo.finance_user_accounts.export_finance_user_accounts",
+			f"bench --site {_site_name()} execute omnexa_core.omnexa_core.finance_demo.finance_user_accounts.export_finance_user_accounts",
 			"```",
 			"",
 		]

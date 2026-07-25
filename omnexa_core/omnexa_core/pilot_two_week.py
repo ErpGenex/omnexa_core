@@ -703,7 +703,7 @@ def export_prefilled_pilot_kit_file(
 	lines.append("")
 	lines.append("## 5) روابط الأدلة (Artifacts)")
 	lines.append("")
-	lines.append(f"- حزمة أدلة G3 (آخر تشغيل): `logs/g3_evidence_bundle/erpgenex.local.site_20260424T010949Z/`")
+	lines.append(f"- حزمة أدلة G3 (آخر تشغيل): `logs/g3_evidence_bundle/{getattr(frappe.local, 'site', 'site1.local')}_20260424T010949Z/`")
 	lines.append(f"- تقرير Pilot (الرمز نفسه): `logs/pilot_two_week/{pilot_code}/` (لقطات + report_*.md)")
 	lines.append("")
 	lines.append("## 6) التوقيعات (للاعتماد)")

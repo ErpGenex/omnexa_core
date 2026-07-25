@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import date
 from pathlib import Path
 
@@ -15,6 +16,10 @@ from omnexa_core.omnexa_core.finance_demo.finance_app_registry import FINANCE_AP
 from omnexa_core.omnexa_core.finance_demo.finance_vertical_specs import VERTICAL_BPE_SPECS
 
 MASTER_DOCS = Path(get_bench_path()) / "Docs/ERPGENEX_BANKING_FINANCIAL_GROUP_MASTER"
+
+
+def _site_name() -> str:
+	return os.environ.get("ERPGENEX_SITE_NAME") or getattr(frappe.local, "site", None) or "site1.local"
 
 # Wave 6 — production-grade gaps (closed at platform level; live bank credentials optional)
 WAVE6_STRATEGIC_GAPS: list[dict] = [
@@ -293,7 +298,7 @@ def _write_program_docs(audit: dict, audit_date: str) -> None:
 | [WAVE6_GAP_REGISTER.json](./WAVE6_GAP_REGISTER.json) | فجوات استراتيجية |
 
 ```bash
-bench --site erpgenex.local.site execute omnexa_core.omnexa_core.finance_demo.finance_global_leader_audit.run_global_leader_audit
+bench --site {_site_name()} execute omnexa_core.omnexa_core.finance_demo.finance_global_leader_audit.run_global_leader_audit
 ```
 """
 	(prog / "README.md").write_text(readme, encoding="utf-8")
@@ -376,8 +381,8 @@ def _build_checklist_md(audit: dict) -> str:
 		"",
 		"## E — فحص أسبوعي",
 		"```bash",
-		"bench --site erpgenex.local.site execute omnexa_core.omnexa_core.finance_demo.finance_global_leader_audit.run_global_leader_audit",
-		"bench --site erpgenex.local.site execute omnexa_core.omnexa_core.finance_demo.finance_group_smoke.run_finance_portal_access_audit_api",
+		f"bench --site {_site_name()} execute omnexa_core.omnexa_core.finance_demo.finance_global_leader_audit.run_global_leader_audit",
+		f"bench --site {_site_name()} execute omnexa_core.omnexa_core.finance_demo.finance_group_smoke.run_finance_portal_access_audit_api",
 		"```",
 	]
 	return "\n".join(lines) + "\n"

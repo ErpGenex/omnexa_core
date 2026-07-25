@@ -1,0 +1,29 @@
+{
+ "allow_roles": [
+  {
+   "role": "Desk User"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "creation": "2026-07-21 20:35:07.204437",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "documentation_url": "https://frappe.io/framework",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-07-25 15:05:08.071069",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "ERPGENEX \u2014 Real Estate",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "step": "ERPGENEX-WS-real_estate-home"
+  }
+ ],
+ "subtitle": "Guided setup for this workspace.",
+ "success_message": "You are ready to work in Real Estate.",
+ "title": "Real Estate"
+}

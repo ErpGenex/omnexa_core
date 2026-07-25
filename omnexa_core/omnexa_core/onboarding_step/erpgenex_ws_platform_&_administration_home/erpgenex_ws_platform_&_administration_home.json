@@ -1,0 +1,21 @@
+{
+ "action": "Go to Page",
+ "action_label": "Open workspace",
+ "creation": "2026-07-21 20:35:06.438606",
+ "description": "Return here for shortcuts, charts, and lists for **Platform**.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-07-25 15:05:07.229163",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-platform_&_administration-home",
+ "owner": "Administrator",
+ "path": "Workspaces/Platform",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Explore this workspace",
+ "validate_action": 1
+}

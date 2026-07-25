@@ -13,24 +13,12 @@
  "documentation_url": "https://frappe.io/framework",
  "idx": 0,
  "is_complete": 0,
- "modified": "2026-07-11 14:37:30.933134",
+ "modified": "2026-07-25 15:05:06.497170",
  "modified_by": "Administrator",
  "module": "Omnexa Core",
  "name": "ERPGENEX \u2014 Marketplace",
  "owner": "Administrator",
  "steps": [
-  {
-   "step": "ERPGENEX-WS-marketplace-01-page-erpgenex_marketplace"
-  },
-  {
-   "step": "ERPGENEX-WS-marketplace-02-branch"
-  },
-  {
-   "step": "ERPGENEX-WS-marketplace-03-company"
-  },
-  {
-   "step": "ERPGENEX-WS-marketplace-04-e_document_submission"
-  },
   {
    "step": "ERPGENEX-WS-marketplace-home"
   }

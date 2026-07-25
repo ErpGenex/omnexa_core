@@ -138,8 +138,7 @@ def _ensure_customer_profile(
 			"branch": branch,
 			"mobile_no": f"+20 10{idx:08d
 	}"[:15],
-			"email": f"demo.fg.{idx:03d
-	}@erpgenex.local",
+			"email": f"demo.fg.{idx:03d}@example.invalid",
 			"credit_limit": _principal_for_index(idx) * 1.2,
 			"risk_score": 40 + (idx % 55),
 			"status": "Active"

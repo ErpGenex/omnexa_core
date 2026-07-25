@@ -1,0 +1,29 @@
+{
+ "allow_roles": [
+  {
+   "role": "Desk User"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "creation": "2026-07-21 20:35:06.444461",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "documentation_url": "https://frappe.io/framework",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-07-25 15:05:07.239209",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "ERPGENEX \u2014 Platform & Administration",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "step": "ERPGENEX-WS-platform_&_administration-home"
+  }
+ ],
+ "subtitle": "Guided setup for this workspace.",
+ "success_message": "You are ready to work in Platform & Administration.",
+ "title": "Platform & Administration"
+}

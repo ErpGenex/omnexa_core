@@ -2,12 +2,12 @@
 # Mirror local ErpGenEx bench on an external server (pull all apps + migrate + post-hooks).
 #
 # Run ON THE EXTERNAL SERVER (any path — finds bench root automatically):
-#   SITE=erpgenex.local.kml bash apps/omnexa_core/omnexa_core/scripts/ops/deploy_external_mirror_local.sh
+#   SITE=<site_name> bash apps/omnexa_core/omnexa_core/scripts/ops/deploy_external_mirror_local.sh
 #
-# Site names: local dev = erpgenex.local.site · external server = erpgenex.local.kml
+# Site names: use any valid bench site name
 #
 # Or from bench root:
-#   SITE=erpgenex.local.kml bash scripts/ops/deploy_external_mirror_local.sh
+#   SITE=<site_name> bash scripts/ops/deploy_external_mirror_local.sh
 #
 # Options:
 #   SKIP_PULL=1     — skip bench update (already pulled)
@@ -37,7 +37,9 @@ if [[ -z "$BENCH_ROOT" ]]; then
 fi
 cd "$BENCH_ROOT"
 
-SITE="${SITE:-erpgenex.local.kml}"
+if [[ -z "${SITE:-}" ]]; then
+	SITE="$(find sites -mindepth 1 -maxdepth 1 -type d | head -n 1 | xargs -n1 basename)"
+fi
 
 if [[ ! -d "sites/$SITE" ]]; then
 	echo "ERROR: sites/$SITE not found. Available sites:"
