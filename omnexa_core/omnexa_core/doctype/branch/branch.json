@@ -15,6 +15,18 @@
     "company",
     "parent_branch",
     "is_head_office",
+    "tab_break_demo",
+    "branch_demo_section",
+    "branch_demo_activity",
+    "branch_demo_healthcare_patients",
+    "branch_demo_healthcare_force",
+    "branch_demo_healthcare_financial",
+    "branch_demo_finance_customers",
+    "branch_demo_finance_sync_roles",
+    "branch_demo_finance_force",
+    "branch_demo_education_institution_type",
+    "branch_demo_education_seed_roles",
+    "branch_demo_education_sync_laravel",
     "tab_break_1",
     "tax_section",
     "default_vat_rate",
@@ -213,6 +225,88 @@
       "fieldname": "is_head_office",
       "fieldtype": "Check",
       "label": "Is Head Office"
+    },
+    {
+      "fieldname": "tab_break_demo",
+      "fieldtype": "Tab Break",
+      "label": "Demo Data"
+    },
+    {
+      "fieldname": "branch_demo_section",
+      "fieldtype": "Section Break",
+      "label": "Branch Demo"
+    },
+    {
+      "default": "General",
+      "fieldname": "branch_demo_activity",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Branch Demo Activity",
+      "options": "General\nHealthcare\nEducation\nFinancial Services\nConstruction"
+    },
+    {
+      "default": "20",
+      "depends_on": "eval:doc.branch_demo_activity=='Healthcare'",
+      "fieldname": "branch_demo_healthcare_patients",
+      "fieldtype": "Int",
+      "label": "Healthcare Patients"
+    },
+    {
+      "default": "0",
+      "depends_on": "eval:doc.branch_demo_activity=='Healthcare'",
+      "fieldname": "branch_demo_healthcare_force",
+      "fieldtype": "Check",
+      "label": "Force Healthcare Seed"
+    },
+    {
+      "default": "1",
+      "depends_on": "eval:doc.branch_demo_activity=='Healthcare'",
+      "fieldname": "branch_demo_healthcare_financial",
+      "fieldtype": "Check",
+      "label": "Include Healthcare Financials"
+    },
+    {
+      "default": "50",
+      "depends_on": "eval:doc.branch_demo_activity=='Financial Services'",
+      "fieldname": "branch_demo_finance_customers",
+      "fieldtype": "Int",
+      "label": "Finance Customers"
+    },
+    {
+      "default": "1",
+      "depends_on": "eval:doc.branch_demo_activity=='Financial Services'",
+      "fieldname": "branch_demo_finance_sync_roles",
+      "fieldtype": "Check",
+      "label": "Sync Finance Roles"
+    },
+    {
+      "default": "0",
+      "depends_on": "eval:doc.branch_demo_activity=='Financial Services'",
+      "fieldname": "branch_demo_finance_force",
+      "fieldtype": "Check",
+      "label": "Force Finance Seed"
+    },
+    {
+      "default": "All 5 Types",
+      "depends_on": "eval:doc.branch_demo_activity=='Education'",
+      "fieldname": "branch_demo_education_institution_type",
+      "fieldtype": "Select",
+      "label": "Education Institution Type",
+      "options": "All 5 Types\nSchool\nUniversity\nTraining Center\nPreschool"
+    },
+    {
+      "default": "1",
+      "depends_on": "eval:doc.branch_demo_activity=='Education'",
+      "fieldname": "branch_demo_education_seed_roles",
+      "fieldtype": "Check",
+      "label": "Seed Education Roles"
+    },
+    {
+      "default": "0",
+      "depends_on": "eval:doc.branch_demo_activity=='Education'",
+      "fieldname": "branch_demo_education_sync_laravel",
+      "fieldtype": "Check",
+      "label": "Sync Education Laravel Hooks"
     },
     {
       "fieldname": "tab_break_1",
