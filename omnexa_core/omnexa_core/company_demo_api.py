@@ -5,6 +5,8 @@ from __future__ import annotations
 import frappe
 from frappe import _
 
+from omnexa_core.omnexa_core.company_activity_utils import first_company_activity_value
+
 
 def _assert_system_manager() -> None:
 	if "System Manager" not in (frappe.get_roles() or []) and frappe.session.user != "Administrator":
@@ -52,7 +54,7 @@ def run_coa_action_for_company(company: str, action_key: str, activity: str | No
 	key = (action_key or "").strip()
 	activity = (activity or "").strip() or None
 	if not activity:
-		activity = frappe.db.get_value("Company", company, "industry_sector") or "General"
+		activity = first_company_activity_value(company)
 
 	if key == "coa_generate":
 		from omnexa_accounting.utils.production_readiness import generate_professional_chart_of_accounts

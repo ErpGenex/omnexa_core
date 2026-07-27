@@ -8,6 +8,7 @@ import json
 import frappe
 
 from omnexa_core.omnexa_core.app_activity import activity_for_app
+from omnexa_core.omnexa_core.company_activity_utils import first_company_activity_value
 
 SETTINGS_DOCTYPE = "Omnexa Marketplace Settings"
 MANUAL_CACHE_KEY = "omnexa_desk_hidden_apps"
@@ -111,19 +112,7 @@ def get_user_company_activity() -> str:
 		company = frappe.db.get_single_value("Global Defaults", "default_company")
 	if not company or not frappe.db.exists("Company", company):
 		return "General"
-	row = frappe.db.get_value(
-		"Company",
-		company,
-		["business_activity", "industry_sector", "production_demo_activity"],
-		as_dict=True,
-	)
-	if not row:
-		return "General"
-	for key in ("business_activity", "industry_sector", "production_demo_activity"):
-		val = (row.get(key) or "").strip()
-		if val and val.lower() not in ("", "general"):
-			return _normalize_company_activity(val)
-	return "General"
+	return _normalize_company_activity(first_company_activity_value(company))
 
 
 def _allowed_labels_for_company(company_activity: str) -> frozenset[str]:

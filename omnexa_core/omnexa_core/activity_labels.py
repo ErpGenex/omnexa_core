@@ -6,6 +6,7 @@ from __future__ import annotations
 import frappe
 
 from omnexa_core.omnexa_core.app_visibility import _normalize_company_activity
+from omnexa_core.omnexa_core.company_activity_utils import first_company_activity_value
 
 # Normalized activity key → (English, Arabic)
 ACTIVITY_I18N: dict[str, tuple[str, str]] = {
@@ -40,19 +41,7 @@ def get_activity_display_label(activity: str | None, lang: str | None = None) ->
 def resolve_company_activity_raw(company: str | None) -> str:
 	if not company or not frappe.db.exists("Company", company):
 		return "General"
-	row = frappe.db.get_value(
-		"Company",
-		company,
-		["business_activity", "industry_sector", "production_demo_activity"],
-		as_dict=True,
-	)
-	if not row:
-		return "General"
-	for key in ("business_activity", "industry_sector", "production_demo_activity"):
-		val = (row.get(key) or "").strip()
-		if val and val.lower() not in ("", "general"):
-			return val
-	return "General"
+	return first_company_activity_value(company)
 
 
 def get_company_activity_info(company: str | None, lang: str | None = None) -> dict:

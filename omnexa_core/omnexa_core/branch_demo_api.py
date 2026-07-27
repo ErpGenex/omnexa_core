@@ -6,6 +6,8 @@ import frappe
 from frappe import _
 from frappe.utils import cint
 
+from omnexa_core.omnexa_core.company_activity_utils import first_company_activity_value
+
 
 def _assert_system_manager() -> None:
 	if "System Manager" not in (frappe.get_roles() or []) and frappe.session.user != "Administrator":
@@ -16,7 +18,7 @@ def _resolve_branch_demo_activity(branch_doc) -> str:
 	activity = (branch_doc.get("branch_demo_activity") or "").strip()
 	if activity:
 		return activity
-	return frappe.db.get_value("Company", branch_doc.company, "industry_sector") or "General"
+	return first_company_activity_value(branch_doc.company)
 
 
 def run_demo_action_for_branch(branch_doc, action_key: str, **kwargs) -> dict:
