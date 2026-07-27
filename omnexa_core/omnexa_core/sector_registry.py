@@ -24,9 +24,16 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 		"workspaces": [
 			"Accounting",
 			"Sell",
+			"Sales",
 			"Buy",
+			"Purchase",
+			"Purchasing",
 			"Stock",
+			"Inventory",
+			"Warehouse",
 			"HR",
+			"Employee",
+			"Employees",
 			"Fixed Assets",
 			"Fixed assets",
 			"CRM",
@@ -179,7 +186,6 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 			"Omnexa N8N Bridge",
 			"Omnexa Edms",
 			"Omnexa EDMS",
-			"Integrations",
 			"Integrations Hub",
 			"Tax Countries",
 		],
@@ -327,6 +333,22 @@ def build_workspace_sector_map() -> dict[str, str]:
 			resolved = resolve_workspace_name(ws)
 			if resolved and resolved not in mapping:
 				mapping[resolved] = parent
+	return mapping
+
+
+def build_workspace_sector_order_map() -> dict[str, tuple[str, float]]:
+	"""Map resolved Workspace.name → (sector parent sidebar title, child order index)."""
+	mapping: dict[str, tuple[str, float]] = {}
+	for sector_id, spec in sorted(SECTOR_DEFINITIONS.items(), key=lambda s: s[1]["order"]):
+		if spec.get("managed_by"):
+			continue
+		parent = get_sector_sidebar_title(spec)
+		if not parent:
+			continue
+		for idx, ws in enumerate(spec.get("workspaces") or [], start=1):
+			resolved = resolve_workspace_name(ws)
+			if resolved and resolved not in mapping:
+				mapping[resolved] = (parent, float(idx))
 	return mapping
 
 

@@ -13,6 +13,7 @@ from omnexa_core.omnexa_core.sector_registry import (
 	SECTOR_DEFINITIONS,
 	SIDEBAR_HIDDEN_WORKSPACES,
 	build_workspace_sector_map,
+	build_workspace_sector_order_map,
 	get_sector_legacy_titles,
 	get_sector_parent_titles,
 	get_sector_sidebar_title,
@@ -264,6 +265,7 @@ def sync_sector_sidebar(*, save: bool = True) -> dict:
 
 	# 5) Order sector parents in sidebar (low sequence = higher position).
 	base_seq = 2.0
+	child_order_map = build_workspace_sector_order_map()
 	for sector_id, spec in sorted(SECTOR_DEFINITIONS.items(), key=lambda s: s[1]["order"]):
 		parent_title = spec.get("parent_workspace") or ""
 		if parent_title and frappe.db.exists("Workspace", parent_title):
@@ -274,6 +276,25 @@ def sync_sector_sidebar(*, save: bool = True) -> dict:
 				base_seq,
 				update_modified=False,
 			)
+			for ws_name in spec.get("workspaces") or []:
+				resolved = resolve_workspace_name(ws_name)
+				if not resolved:
+					continue
+				order_info = child_order_map.get(resolved)
+				if not order_info:
+					continue
+				child_parent, child_seq = order_info
+				if child_parent != get_sector_sidebar_title(spec):
+					continue
+				if not frappe.db.exists("Workspace", resolved):
+					continue
+				frappe.db.set_value(
+					"Workspace",
+					resolved,
+					"sequence_id",
+					base_seq + (child_seq / 100.0),
+					update_modified=False,
+				)
 			base_seq += 1.0
 
 	if save:

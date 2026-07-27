@@ -55,6 +55,18 @@ class TestSectorSidebarSync(unittest.TestCase):
 			if frappe.db.exists("Workspace", ws):
 				self.assertEqual(get_workspace_sector(ws), "core_erp")
 
+	def test_ordered_sector_groups_stay_nested(self):
+		from omnexa_core.omnexa_core.sector_registry import build_workspace_sector_order_map
+
+		order_map = build_workspace_sector_order_map()
+
+		if frappe.db.exists("Workspace", "Fixed Assets"):
+			self.assertEqual(order_map.get("Fixed Assets")[0], "ERP")
+		if frappe.db.exists("Workspace", "Nursery"):
+			self.assertEqual(order_map.get("Nursery")[0], "Industries")
+		if frappe.db.exists("Workspace", "Theme Manager"):
+			self.assertEqual(order_map.get("Theme Manager")[0], "Platform")
+
 	def test_sync_idempotent(self):
 		from omnexa_core.omnexa_core.sector_sidebar_sync import sync_sector_sidebar
 

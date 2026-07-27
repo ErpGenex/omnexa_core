@@ -38,7 +38,6 @@ FINANCE_WORKSPACE_ICONS: dict[str, str] = {
 	"Vehicle Finance Governance": "quality",
 	"Mortgage Finance Governance": "quality",
 	"Operational Risk Governance": "quality",
-	"Factoring Governance": "quality",
 	"Leasing Finance Governance": "quality"
 	}
 
@@ -105,6 +104,11 @@ def sync_finance_group_sidebar(*, save: bool = True) -> dict:
 		icon = FINANCE_WORKSPACE_ICONS.get(ws_name, "loan")
 		frappe.db.set_value("Workspace", ws_name, "icon", icon, update_modified=False)
 		stats["icons_fixed"].append(ws_name)
+
+	if frappe.db.exists("Workspace", "Factoring Governance"):
+		frappe.db.set_value("Workspace", "Factoring Governance", "is_hidden", 1, update_modified=False)
+		frappe.db.set_value("Workspace", "Factoring Governance", "parent_page", "", update_modified=False)
+		stats.setdefault("hidden_workspaces", []).append("Factoring Governance")
 
 	if save:
 		frappe.db.commit()

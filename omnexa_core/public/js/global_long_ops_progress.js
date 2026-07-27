@@ -48,15 +48,22 @@
 		return el;
 	}
 
+	function getToggleSlot() {
+		return document.querySelector(".omnexa-rq-jobs-toggle-slot");
+	}
+
 	function ensureToggleButton() {
-		if (document.getElementById(TOGGLE_ID)) return document.getElementById(TOGGLE_ID);
+		const existing = document.getElementById(TOGGLE_ID);
+		const slot = getToggleSlot();
+		if (existing) {
+			if (slot && existing.parentElement !== slot) {
+				slot.appendChild(existing);
+			}
+			return existing;
+		}
 		const btn = document.createElement("button");
 		btn.id = TOGGLE_ID;
 		btn.className = "btn btn-xs btn-default";
-		btn.style.position = "fixed";
-		btn.style.top = "6px";
-		btn.style.right = "10px";
-		btn.style.zIndex = "1041";
 		btn.style.height = "24px";
 		btn.style.display = "none";
 		btn.addEventListener("click", () => {
@@ -65,7 +72,11 @@
 			// نحدّث الحالة فورًا بدون الاعتماد على lastStatus (قد يكون null عند أول تحميل).
 			poll();
 		});
-		document.body.appendChild(btn);
+		if (slot) {
+			slot.appendChild(btn);
+		} else {
+			document.body.appendChild(btn);
+		}
 		return btn;
 	}
 
@@ -169,5 +180,11 @@
 	frappe.ready(() => {
 		boot();
 	});
-})();
 
+	$(document).on("toolbar_setup", () => {
+		ensureToggleButton();
+		if (lastStatus) {
+			applyVisibility(lastStatus);
+		}
+	});
+})();

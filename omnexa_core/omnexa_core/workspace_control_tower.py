@@ -512,37 +512,6 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 				],
 			),
 		]},
-	"omnexa_factoring_governance": {
-		"_requires_app": "omnexa_factoring",
-		"workspace": "Factoring Governance",
-		"module": "Omnexa Factoring",
-		"icon": "retail",
-		"parent_page": "Factoring",
-		"onboarding_name": "ERPGENEX — Factoring Governance",
-		"headline": "Factoring Governance",
-		"tagline": "Policy versions, audit snapshots, and compliance readiness.",
-		"trend_doctypes": ["Factoring Policy Version", "Factoring Audit Snapshot"],
-		"status_doctypes": ["Factoring Policy Version"],
-		"kpis": [
-			("Policy Versions", "Factoring Policy Version", []),
-			("Audit Snapshots", "Factoring Audit Snapshot", []),
-		],
-		"shortcuts": [
-			("Policy Versions", "DocType", "Factoring Policy Version"),
-			("Audit Snapshots", "DocType", "Factoring Audit Snapshot"),
-		],
-		"kpi_trends": [
-			{"type": "Pie", "doctype": "Factoring Policy Version", "group_by": "status", "label": "Policies by status"
-	},
-		],
-		"extra_sections": [
-			(
-				"Governance reports",
-				[
-					("Governance Overview", "Report", "Governance Overview", "shield"),
-				],
-			),
-		]},
 	"omnexa_sme_retail_finance": {
 		"workspace": "SME Retail Finance",
 		"module": "Omnexa SME Retail Finance",
@@ -1142,7 +1111,8 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"module": "Theme Manager",
 		"icon": "es-line-colour",
 		"headline": "Theme Manager",
-		"parent_page": "",
+		# Keep Theme Manager nested under the Platform sidebar group.
+		"parent_page": "Platform & Administration",
 		"is_hidden": 0,
 		"tagline": "Company Desk themes — presets, colors, typography, logos; activate per company without code.",
 		"trend_doctypes": ["Experience Tenant Theme"],
@@ -1448,7 +1418,8 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"module": "Omnexa Fixed Assets",
 		"icon": "folder-normal",
 		"headline": "Fixed Assets",
-		"parent_page": "",
+		# Keep the workspace under ERP; Asset Insurance remains nested beneath Fixed Assets.
+		"parent_page": "Core ERP",
 		"is_hidden": 0,
 		"tagline": "Asset lifecycle workspace — acquisition, capitalization, depreciation, transfer, disposal, maintenance, valuation.",
 		"trend_doctypes": [
@@ -1711,7 +1682,8 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		"module": "Nursery Setup",
 		"icon": "heart",
 		"headline": "Nursery",
-		"parent_page": "",
+		# Keep Nursery nested under the Industries sidebar group.
+		"parent_page": "Industry Solutions",
 		"is_hidden": 0,
 		"tagline": "Early-years operations — families, programs, attendance, transport, and billing.",
 		"trend_doctypes": ["Nursery Student", "Nursery Attendance"],

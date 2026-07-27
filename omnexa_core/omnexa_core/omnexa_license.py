@@ -414,11 +414,9 @@ def _extract_jwt_from_license_value(raw_value: str) -> tuple[Optional[str], str]
 
 
 def _is_developer_bypass(token_or_key: Optional[str]) -> bool:
-	"""Allow developer bypass only in developer_mode and only via explicit site-config keys."""
+	"""Allow explicit developer keys to bypass license checks on any site."""
 	value = (token_or_key or "").strip()
 	if not value:
-		return False
-	if not frappe.conf.get("developer_mode"):
 		return False
 	one = frappe.conf.get("omnexa_developer_bypass_code")
 	if isinstance(one, str) and one.strip() and value == one.strip():

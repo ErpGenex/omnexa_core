@@ -535,3 +535,15 @@ Keep existing color palette untouched; only depth and hover elevation are added.
 		flex: none;
 	}
 }
+
+/* RQ Jobs toggle in the top navbar */
+.omnexa-rq-jobs-toggle-slot {
+	display: inline-flex;
+	align-items: center;
+	margin-inline-start: 8px;
+}
+
+.omnexa-rq-jobs-toggle-slot .btn {
+	height: 24px;
+	white-space: nowrap;
+}
