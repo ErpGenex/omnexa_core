@@ -24,7 +24,7 @@
 7. NEC4 & Disputes,7. NEC4 & Disputes
 8. Billing & Payment,8. فوترة & دفعة
 9. Procurement,9. Procurement
-"<a href=""{0}"">Open Marketplace</a>","< a href = "" { 0 } "" > مفتوح Marketplace < a >"
+"<a href=""{0}"">Open Marketplace</a>","< a href = "" {0} "" > مفتوح Marketplace < a >"
 A full backup will run before install to avoid data loss.,A full نسخ احتياطي will run before install إلى avoid بيانات loss.
 A valid license or trial is required for this action.,A valid license or trial is required لـ this إجراء.
 Abbreviation,Abbreviation
@@ -64,7 +64,7 @@ Action,إجراء
 Actions,إجراءات
 Activate Key,Activate مفتاح
 Activate license,Activate license
-Activation received but key is invalid: {0},Activation received but مفتاح is invalid: { 0 }
+Activation received but key is invalid: {0},Activation received but مفتاح is invalid: {0}
 Active,نشط
 Active Controls,الضوابط النشطة
 Active Playbooks,أدلة التشغيل النشطة
@@ -83,11 +83,11 @@ Activity Logs,نشاط Logs
 Activity scope blocked,نشاط scope blocked
 Activity scope preview,نشاط scope preview
 Activity website demo,نشاط website demo
-"Activity website demo ready for <b>{0}</b>.<br><a href=\""{1}\"" target=\""_blank\"">{1}</a>","نشاط website demo ready لـ < b > { 0 } < b >. < br > < a href = \ "" { 1 } \ "" target = \ "" blank \ "" > { 1 } < a >"
+"Activity website demo ready for <b>{0}</b>.<br><a href=\""{1}\"" target=\""_blank\"">{1}</a>","نشاط website demo ready لـ < b > {0} < b >. < br > < a href = \ "" {1} \ "" target = \ "" blank \ "" > {1} < a >"
 Activity websites,نشاط websites
 Adapter,Adapter
 Adapter must define a name.,Adapter must define a اسم.
-Adapter {0} is not registered.,Adapter { 0 } is not registered.
+Adapter {0} is not registered.,Adapter {0} is not registered.
 Add,إضافة
 Add Book,إضافة Book
 Add Column,إضافة Column
@@ -190,12 +190,12 @@ App must be installed before it can be updated from here.,App must be installed 
 App slug is required.,App slug is required.
 App version,App إصدار
 App Visibility,App Visibility
-App {0} is not available on this bench.,App { 0 } is not متاح on this bench.
-App {0} is not installed,App { 0 } is not installed
-App {0} is not licensed ({1}). Configure omnexa_licenses and omnexa_license_public_key_pem.,App { 0 } is not licensed ({ 1 }). Configure omnexa licenses و omnexa license public مفتاح pem.
+App {0} is not available on this bench.,App {0} is not متاح on this bench.
+App {0} is not installed,App {0} is not installed
+App {0} is not licensed ({1}). Configure omnexa_licenses and omnexa_license_public_key_pem.,App {0} is not licensed ({1}). Configure omnexa licenses و omnexa license public مفتاح pem.
 Append New Data,Append جديد بيانات
 Application Review,طلب Review
-Application {0} is not licensed ({1}). Open ErpGenEx Marketplace to add a license or developer key.,طلب { 0 } is not licensed ({ 1 }). مفتوح Erp Gen Ex Marketplace إلى إضافة a license or developer مفتاح.
+Application {0} is not licensed ({1}). Open ErpGenEx Marketplace to add a license or developer key.,طلب {0} is not licensed ({1}). مفتوح Erp Gen Ex Marketplace إلى إضافة a license or developer مفتاح.
 Applications,طلبات
 Applied on new Sales Invoices when Tax Category is empty (before default tax rule resolution).,Applied on جديد مبيعات Invoices when Tax فئة is empty (before افتراضي tax rule resolution).
 Apply,Apply
@@ -225,7 +225,7 @@ Appointments Today,Appointments Today
 Appraisals,Appraisals
 Approval,موافقة
 Approval History,موافقة History
-Approval required: role '{0}' must approve this document.,موافقة required: دور ' { 0 } ' must approve this مستند.
+Approval required: role '{0}' must approve this document.,موافقة required: دور ' {0} ' must approve this مستند.
 Approval Workflows,سير عمل الاعتمادات
 Approvals,موافقات
 Approve Branch Requests,Approve فرع طلبات
@@ -317,7 +317,7 @@ Authority Operation,Authority Operation
 Authority Status,Authority حالة
 Authority submissions (invoice & receipt),قائمة إرسال المستندات للمصلحة (فاتورة وإيصال)
 Authority UUID,Authority UUID
-Authority UUID {0} is already linked to {1},Authority UUID { 0 } is already linked إلى { 1 }
+Authority UUID {0} is already linked to {1},Authority UUID {0} is already linked إلى {1}
 Authorization History,Authorization History
 Authorizations,Authorizations
 Authorize Release,Authorize Release
@@ -354,7 +354,7 @@ Balances,الأرصدة
 Bank Account,حساب بنكي
 Bank Account is required for bank-mode payments.,بنك حساب is required لـ بنك - mode payments.
 Bank Balance Summary,ملخص الرصيد البنكي
-Bank CSV amount must be greater than zero in row {0}.,بنك CSV مبلغ must be greater than zero in row { 0 }.
+Bank CSV amount must be greater than zero in row {0}.,بنك CSV مبلغ must be greater than zero in row {0}.
 Bank CSV content is required.,بنك CSV content is required.
 Bank CSV must contain at least one data row.,بنك CSV must contain at least one بيانات row.
 Bank Reconciliation,تسوية بنكية
@@ -458,7 +458,7 @@ Branch is required,فرع is required
 Branch Management,فرع إدارة
 Branch must belong to the same company.,فرع must belong إلى the same شركة.
 Branch Name,فرع اسم
-Branch not found: {0},فرع not found: { 0 }
+Branch not found: {0},فرع not found: {0}
 Branch Occupancy,فرع Occupancy
 Branch Overview,فرع نظرة عامة
 Branch Patient Volume,فرع Patient Volume
@@ -477,21 +477,21 @@ Branch Staff,فرع Staff
 Branch Tax ID,فرع Tax معرف
 Branch trade payables GL,فرع trade payables GL
 Branch trade receivable GL,فرع trade receivable GL
-Branch transaction reset queued. Job: {0},فرع معاملة reset queued. Job: { 0 }
+Branch transaction reset queued. Job: {0},فرع معاملة reset queued. Job: {0}
 Branch used for healthcare bookings and branch-scoped demo data.,فرع used لـ رعاية صحية bookings و فرع - scoped demo بيانات.
 Branch Website,فرع Website
-Branch {0} does not belong to company {1}.,فرع { 0 } does not belong إلى شركة { 1 }.
-Branch {0} does not belong to Company {1}.,فرع { 0 } does not belong إلى شركة { 1 }.
-Branch {0} not found,فرع { 0 } not found
-Branch {0} was not found.,فرع { 0 } was not found.
-Branch {0} — match tracked remote (checkout + pull),فرع { 0 } — match tracked remote (checkout + pull)
+Branch {0} does not belong to company {1}.,فرع {0} does not belong إلى شركة {1}.
+Branch {0} does not belong to Company {1}.,فرع {0} does not belong إلى شركة {1}.
+Branch {0} not found,فرع {0} not found
+Branch {0} was not found.,فرع {0} was not found.
+Branch {0} — match tracked remote (checkout + pull),فرع {0} — match tracked remote (checkout + pull)
 Branch → Demo data → set activity → run simulation for this vertical,فرع → Demo بيانات → set نشاط → run simulation لـ this vertical
 Branches,الفروع
 Browser JS is missing cloud signing. On the server run:,Browser JS is missing cloud signing. On the server run:
 Budget,ميزانية
 Budget & cost control,الميزانية وضبط التكلفة
 Budget & inventory (financial view),Budget & المخزون (financial view)
-"Budget control: document amount exceeds remaining budget. Remaining={0}, Amount={1}","Budget تحكم: مستند مبلغ exceeds remaining budget. Remaining = { 0 }, مبلغ = { 1 }"
+"Budget control: document amount exceeds remaining budget. Remaining={0}, Amount={1}","Budget تحكم: مستند مبلغ exceeds remaining budget. Remaining = {0}, مبلغ = {1}"
 Budget Status,Budget حالة
 Budget vs Actual,الموازنة مقابل الفعلي
 Budget vs Actual Report,تقرير الموازنة مقابل الفعلي
@@ -544,7 +544,7 @@ Case,حالة
 Case / Borrower File,حالة Borrower File
 Case DocType,حالة Doc نوع
 Case DocType and Case are required.,حالة Doc نوع و حالة are required.
-Case DocType not configured for {0},حالة Doc نوع not configured لـ { 0 }
+Case DocType not configured for {0},حالة Doc نوع not configured لـ {0}
 Case lifecycle Pie,دورة الحالة (دائري)
 Case not found.,حالة not found.
 Case SLA compliance,حالة SLA امتثال
@@ -725,7 +725,7 @@ Company is mandatory for compliance.,شركة is mandatory لـ امتثال.
 Company is required,شركة is required
 Company is required.,شركة is required.
 Company Legal Name,شركة Legal اسم
-Company not found: {0},شركة not found: { 0 }
+Company not found: {0},شركة not found: {0}
 Company Overview,نظرة عامة على الشركة
 Company Performance,شركة أداء
 Company Profile,شركة ملف
@@ -733,12 +733,12 @@ Company Report,شركة تقرير
 Company Settings,Company إعدادات
 Company setup,Company تهيئة
 Company Trade Name,شركة Trade اسم
-Company wipe queued. Job: {0}. Check Production Seed Log when complete.,شركة wipe queued. Job: { 0 }. فحص Production Seed سجل when complete.
-Company {0} not found,شركة { 0 } not found
-Company-wide transaction reset queued. Job: {0},شركة - wide معاملة reset queued. Job: { 0 }
+Company wipe queued. Job: {0}. Check Production Seed Log when complete.,شركة wipe queued. Job: {0}. فحص Production Seed سجل when complete.
+Company {0} not found,شركة {0} not found
+Company-wide transaction reset queued. Job: {0},شركة - wide معاملة reset queued. Job: {0}
 Compensation Event,Compensation Event
 Compensation Rules,Compensation Rules
-Complete file for {0} — {1} · Generated {2},Complete file لـ { 0 } — { 1 } · Generated { 2 }
+Complete file for {0} — {1} · Generated {2},Complete file لـ {0} — {1} · Generated {2}
 Completed,مكتمل
 Compliance,الامتثال
 Compliance & e-invoice,الامتثال & e-invoice
@@ -1016,7 +1016,7 @@ Create Report,Create تقرير
 Create Sales Order,Create مبيعات Order
 Create starter Chart of Accounts,Create starter مخطط of حسابات
 Create Ticket,Create Ticket
-Created {0} hotel demo assets for this branch.,Created { 0 } hotel demo أصول لـ this فرع.
+Created {0} hotel demo assets for this branch.,Created {0} hotel demo أصول لـ this فرع.
 Credentials,Credentials
 Credit Audit Snapshot,ائتمان تدقيق لقطة
 Credit Connector Request Trend,اتجاه طلبات موصل الائتمان
@@ -1097,7 +1097,7 @@ Currency Exchange Rate,سعر صرف العملة
 Currency exchange rates,أسعار صرف العملات
 Currency Exposure,Currency Exposure
 Currency is mandatory for compliance.,Currency is mandatory لـ امتثال.
-Currency {0} does not exist.,Currency { 0 } does not exist.
+Currency {0} does not exist.,Currency {0} does not exist.
 Current,Current
 Current Courses,Current Courses
 current record,current سجل
@@ -1222,7 +1222,7 @@ Delivery Zone,منطقة التوصيل
 Demo,Demo
 Demo Action,Demo إجراء
 Demo Action Key,Demo إجراء مفتاح
-Demo action not found: {0},Demo إجراء not found: { 0 }
+Demo action not found: {0},Demo إجراء not found: {0}
 Demo actions,Demo إجراءات
 Demo activity,Demo نشاط
 Demo branch,Demo فرع
@@ -1313,7 +1313,7 @@ Do not open automatically when I enter a workspace,Do not مفتوح automatical
 Do you want to continue?,Do you want إلى continue ?
 Doctor Availability,Doctor Availability
 DocType,نوع المستند
-DocType {0} is not a Finance Group case document.,Doc نوع { 0 } is not a مالية Group حالة مستند.
+DocType {0} is not a Finance Group case document.,Doc نوع {0} is not a مالية Group حالة مستند.
 Document,المستند
 Document Code,مستند كود
 Document Metadata,مستند Metadata
@@ -1326,7 +1326,7 @@ Document Share Report,Document Share تقرير
 Document Transmittal,مستند Transmittal
 Document Type,مستند نوع
 Document versions,إصدارات المستندات
-Document {0} {1} not found.,مستند { 0 } { 1 } not found.
+Document {0} {1} not found.,مستند {0} {1} not found.
 Documents,المستندات
 Domain setup (tax · FX),تهيئة النطاق (الضريبة · العملات)
 Domain setup · UOM,تهيئة النطاق · وحدات القياس
@@ -1402,7 +1402,7 @@ Education Workcenter,مركز عمل التعليم
 Education · Education Campus Mix,التعليم · توزيع الأحرام
 Education · Education Institution Mix,التعليم · توزيع المؤسسات
 Education · Status Bar,التعليم · شريط الحالة
-EduSphere demo seeded: {0} institution(s) on branch {1}. Open Education Workcenter for role portals.,Edu Sphere demo seeded: { 0 } institution (s) on فرع { 1 }. مفتوح تعليم Workcenter لـ دور portals.
+EduSphere demo seeded: {0} institution(s) on branch {1}. Open Education Workcenter for role portals.,Edu Sphere demo seeded: {0} institution (s) on فرع {1}. مفتوح تعليم Workcenter لـ دور portals.
 EduSphere Education Demo,Edu Sphere تعليم Demo
 EGS Serial Number,EGS Serial رقم
 Egypt ETA,Egypt ETA
@@ -1412,7 +1412,7 @@ Electronic Approved On,Electronic معتمد On
 Eligibility Check,Eligibility فحص
 Email,البريد
 Email Account,حساب البريد
-Email Account {0} not found,بريد إلكتروني حساب { 0 } not found
+Email Account {0} not found,بريد إلكتروني حساب {0} not found
 Email Domain,نطاق البريد
 Email Group,مجموعة البريد
 Email Template,قالب البريد
@@ -1518,8 +1518,8 @@ ERPGENEX — Stock,ERPGENEX — المخازن
 ERPNext,ERPGENEX
 ErpNext,ERPGENEX
 Error,خطأ
-Error creating healthcare masters demo: {0},خطأ creating رعاية صحية masters demo: { 0 }
-Error creating healthcare procedures and consumables demo: {0},خطأ creating رعاية صحية procedures و consumables demo: { 0 }
+Error creating healthcare masters demo: {0},خطأ creating رعاية صحية masters demo: {0}
+Error creating healthcare procedures and consumables demo: {0},خطأ creating رعاية صحية procedures و consumables demo: {0}
 Error Details,خطأ تفاصيل
 Error loading demo registry,خطأ loading demo registry
 Error Log,خطأ سجل
@@ -1702,7 +1702,7 @@ Finance Controls,المالية الضوابط
 Finance Credit Origination,مالية ائتمان Origination
 Finance Credit Risk,مالية ائتمان مخاطر
 Finance demo already exists for this branch.,مالية demo already exists لـ this فرع.
-Finance demo already exists for {0} on this branch ({1} records). Enable Rebuild to re-seed.,مالية demo already exists لـ { 0 } on this فرع ({ 1 } records). Enable Rebuild إلى re - seed.
+Finance demo already exists for {0} on this branch ({1} records). Enable Rebuild to re-seed.,مالية demo already exists لـ {0} on this فرع ({1} records). Enable Rebuild إلى re - seed.
 Finance demo clients per app,مالية demo clients per app
 Finance Demo Hub,مركز عمل المجموعة المالية
 Finance Desk,مالية Desk
@@ -1717,7 +1717,7 @@ Finance GRC,مالية GRC
 Finance Group,المجموعة المالية
 Finance group demo,مالية group demo
 Finance Group demo,مالية Group demo
-Finance group demo seeded: {0} cases across {1} apps ({2} clients per app). Open Finance Workcenter to explore portals.,مالية group demo seeded: { 0 } حالات across { 1 } apps ({ 2 } clients per app). مفتوح مالية Workcenter إلى explore portals.
+Finance group demo seeded: {0} cases across {1} apps ({2} clients per app). Open Finance Workcenter to explore portals.,مالية group demo seeded: {0} حالات across {1} apps ({2} clients per app). مفتوح مالية Workcenter إلى explore portals.
 Finance Group Use the sidebar to open each finance workspace. Governance desks are nested under their main app.,استخدم الشريط الجانبي لفتح كل workspace مالي. مكاتب الحوكمة متداخلة تحت تطبيقها الرئيسي.
 "Finance Journey assets did not load. Press Ctrl+Shift+R to hard-refresh, or ask your admin to run: bench build --app omnexa_core && bench clear-cache","مالية Journey أصول did not load. Press Ctrl + Shift + R إلى hard - refresh, or ask your إدارة إلى run: bench build - - app omnexa أساسي & & bench clear - cache"
 Finance Leasing,مالية Leasing
@@ -1731,10 +1731,10 @@ Finance Product Mix,المالية Product (مزيج)
 Finance Products,المالية Products
 Finance Rate Plan,مالية معدل خطة
 Finance role demo ready. Each user sees only their workspace.,الديمو المالي جاهز — كل مستخدم يرى workspace الخاص بدوره فقط.
-Finance rule {0}: Cost Center is required for all lines.,مالية rule { 0 }: تكلفة Center is required لـ all lines.
-Finance rule {0}: Cost Center is required.,مالية rule { 0 }: تكلفة Center is required.
-Finance rule {0}: Project is required for all lines.,مالية rule { 0 }: مشروع is required لـ all lines.
-Finance rule {0}: Reference or External Reference is required.,مالية rule { 0 }: Reference or External Reference is required.
+Finance rule {0}: Cost Center is required for all lines.,مالية rule {0}: تكلفة Center is required لـ all lines.
+Finance rule {0}: Cost Center is required.,مالية rule {0}: تكلفة Center is required.
+Finance rule {0}: Project is required for all lines.,مالية rule {0}: مشروع is required لـ all lines.
+Finance rule {0}: Reference or External Reference is required.,مالية rule {0}: Reference or External Reference is required.
 Finance SME,مالية منشآت صغيرة ومتوسطة
 Finance SoD Blocks,المالية SoD Blocks
 Finance Treasury,مالية Treasury
@@ -1992,16 +1992,16 @@ Healthcare demo patients,رعاية صحية demo patients
 Healthcare Encounter Mix,Healthcare زيارة طبية (مزيج)
 Healthcare Executive,رعاية صحية تنفيذي
 Healthcare Finance,رعاية صحية مالية
-"Healthcare hospital demo seeded: {0} patients, {1} web services, {2} online bookings.","رعاية صحية hospital demo seeded: { 0 } patients, { 1 } web خدمات, { 2 } online bookings."
+"Healthcare hospital demo seeded: {0} patients, {1} web services, {2} online bookings.","رعاية صحية hospital demo seeded: {0} patients, {1} web خدمات, {2} online bookings."
 Healthcare Manager,رعاية صحية مدير
 Healthcare Masters Demo,رعاية صحية Masters Demo
-"Healthcare masters demo seeded: specialties, procedures, and equipment created for branch {0}.","رعاية صحية masters demo seeded: specialties, procedures, و equipment created لـ فرع { 0 }."
+"Healthcare masters demo seeded: specialties, procedures, and equipment created for branch {0}.","رعاية صحية masters demo seeded: specialties, procedures, و equipment created لـ فرع {0}."
 Healthcare Nursing,رعاية صحية Nursing
 Healthcare Patient Hub,رعاية صحية Patient Hub
 Healthcare Pharmacy,رعاية صحية Pharmacy
 Healthcare Physician,رعاية صحية Physician
 Healthcare Procedures & Consumables Demo,رعاية صحية Procedures & Consumables Demo
-Healthcare procedures and consumables demo seeded for branch {0}.,رعاية صحية procedures و consumables demo seeded لـ فرع { 0 }.
+Healthcare procedures and consumables demo seeded for branch {0}.,رعاية صحية procedures و consumables demo seeded لـ فرع {0}.
 Healthcare Reception,رعاية صحية Reception
 Healthcare Settings,رعاية صحية إعدادات
 Healthcare · Healthcare Appointment Mix,الرعاية الصحية · Healthcare موعد (مزيج)
@@ -2035,7 +2035,7 @@ Hotel,فندق
 Hotel Asset Depreciation,Hotel Asset Depreciation
 Hotel Asset Inspection,Hotel Asset Inspection
 Hotel Asset Transfer,Hotel Asset Transfer
-Hotel Assets by Floor,Hotel أصول حسب Floor
+Hotel Assets by Floor,أصول الفنادق حسب الطابق
 Hotel assets demo,Hotel أصول demo
 Hotel Floor,فندق Floor
 Hotel Front Office,مكتب استقبال الفندق
@@ -2169,7 +2169,7 @@ Insurance Renewal,Insurance Renewal
 Insurance Verification,Insurance Verification
 Integrated counter sales — scan,cart
 "Integrated counter sales — scan, cart, pay, thermal receipt","Integrated counter مبيعات — scan, cart, pay, thermal receipt"
-"Integrated demo queued (document chains when enabled + daily invoices, stock, payroll path). Job: {0}<br>Open Production Seed Log for summary when the job completes.","Integrated demo queued (مستند chains when enabled + يومي invoices, stock, payroll path). Job: { 0 } < br > مفتوح Production Seed سجل لـ ملخص when the job completes."
+"Integrated demo queued (document chains when enabled + daily invoices, stock, payroll path). Job: {0}<br>Open Production Seed Log for summary when the job completes.","Integrated demo queued (مستند chains when enabled + يومي invoices, stock, payroll path). Job: {0} < br > مفتوح Production Seed سجل لـ ملخص when the job completes."
 Integration Settings,تكامل إعدادات
 Integrations,التكاملات
 Integrations Hub,Integrations Hub
@@ -2179,7 +2179,7 @@ Internal stock requests,Internal stock طلبات
 International Summary,International ملخص
 International Tax Console,International Tax Console
 Interviews,Interviews
-Invalid amount in bank CSV row {0}.,Invalid مبلغ in بنك CSV row { 0 }.
+Invalid amount in bank CSV row {0}.,Invalid مبلغ in بنك CSV row {0}.
 Invalid app slug.,Invalid app slug.
 Invalid bank CSV row format.,Invalid بنك CSV row format.
 Invalid Branch,Invalid فرع
@@ -2253,7 +2253,7 @@ Item saved,تم حفظ الصنف
 Item Stock Balance,الصنف Stock Balance
 Item Trend,الصنف (اتجاه)
 Item types Bar,الصنف types (عمودي)
-Item {0} belongs to a different company than this invoice.,صنف { 0 } belongs إلى a different شركة than this فاتورة.
+Item {0} belongs to a different company than this invoice.,الصنف {0} تابع لشركة مختلفة عن هذه الفاتورة.
 Items,الأصناف
 Items (product master),الأصناف (product master)
 ITP,ITP
@@ -2363,9 +2363,9 @@ Library Loan,Library قرض
 License,License
 License activated,License activated
 License activation is only supported for ErpGenEx marketplace apps.,License activation is only supported لـ Erp Gen Ex marketplace apps.
-License for {0} expires in {1}. Renew before lock.,License لـ { 0 } expires in { 1 }. Renew before lock.
+License for {0} expires in {1}. Renew before lock.,License لـ {0} expires in {1}. Renew before lock.
 License key is required.,License مفتاح is required.
-License key was not accepted: {0},License مفتاح was not accepted: { 0 }
+License key was not accepted: {0},License مفتاح was not accepted: {0}
 License months must be between 1 and 36.,License months must be between 1 و 36.
 License Notice,License Notice
 License or developer key,License or developer مفتاح
@@ -2397,7 +2397,7 @@ Local Sales Reports,تقارير المبيعات المحلية
 Local sales reports,Local sales التقارير
 Local sales reports (workspace only),Local sales التقارير (workspace only)
 Location,Location
-"Lock at (UTC ts): {0}. "", [lockAt]) : ""","Lock at (UTC ts): { 0 }. "", [ lock At ]): """
+"Lock at (UTC ts): {0}. "", [lockAt]) : ""","Lock at (UTC ts): {0}. "", [ lock At ]): """
 Login required,Login required
 Logistics & fulfillment,اللوجستيات والتنفيذ
 Logout,Logout
@@ -2563,7 +2563,7 @@ Navbar Settings,Navbar إعدادات
 NBV by Category,NBV حسب فئة
 NCR,NCR
 NCR Aging,NCR Aging
-"Negative stock prevented for item {0}. Available={1}, Required={2}","Negative stock prevented لـ صنف { 0 }. متاح = { 1 }, Required = { 2 }"
+"Negative stock prevented for item {0}. Available={1}, Required={2}","Negative stock prevented لـ صنف {0}. متاح = {1}, Required = {2}"
 New Applications,جديد طلبات
 New Arrivals,جديد Arrivals
 New booking,حجز جديد
@@ -2585,7 +2585,7 @@ No apps match current filters.,No apps match current filters.
 No attachments,No attachments
 No Branch found for {0}. Create a Branch or set your user Branch default.,لا يوجد فرع لـ {0}. أنشئ فرعاً أو عيّن الفرع الافتراضي للمستخدم.
 No branch is assigned to your user. Ask an administrator to set up User Branch Access.,No فرع is assigned إلى your مستخدم. Ask an administrator إلى set up مستخدم فرع وصول.
-No branch is available for company {0}. Create a Branch or assign User Branch Access.,No فرع is متاح لـ شركة { 0 }. Create a فرع or assign مستخدم فرع وصول.
+No branch is available for company {0}. Create a Branch or assign User Branch Access.,No فرع is متاح لـ شركة {0}. Create a فرع or assign مستخدم فرع وصول.
 No Company found. Create a Company first,or set Global Defaults → default company.
 "No Company found. Create a Company first, or set Global Defaults → default company.","No شركة found. Create a شركة first, or set Global Defaults → افتراضي شركة."
 No company is available for your user. Set a default Company in Settings,or ask an administrator to configure User Branch Access.
@@ -2661,7 +2661,7 @@ Online,متصل بالإنترنت
 Online Application,Online طلب
 Online Booking Desk,Online Booking Desk
 Online Booking Request,عبر الإنترنت حجز Request
-Online booking: {0},Online booking: { 0 }
+Online booking: {0},Online booking: {0}
 Only Administrator can run full branch wipe.,Only Administrator can run full فرع wipe.
 Only Administrator can seed activity website demos.,Only Administrator can seed نشاط website demos.
 Only administrators can change company/branch view.,Only administrators can change شركة فرع view.
@@ -3317,7 +3317,7 @@ Require Sales Order on Sales Invoice,Require مبيعات Order on مبيعات 
 Require supplier terms for credit purchases,Require مورد terms لـ ائتمان purchases
 Required before Sign/Send (not when saving Branch for other changes). Same as Temp-ETR USB PIN. E-Invoice only. Re-enter and Save when changing.,Required before Sign Send (not when saving فرع لـ other changes). Same as Temp - ETR USB PIN. E - فاتورة only. Re - enter و Save when changing.
 Required Modules,Required Modules
-Required modules not installed: {0},Required modules not installed: { 0 }
+Required modules not installed: {0},Required modules not installed: {0}
 Requires Dynamic Composition,Requires Dynamic Composition
 Reservation register,سجل الحجوزات
 Reservations & contracts,Reservations & العقود
@@ -3467,8 +3467,8 @@ Route Plan,خطة المسار
 "Routes e-invoicing to the national authority (ETA, ZATCA, DIAN, etc.).","Routes e - invoicing إلى the national authority (ETA, ZATCA, DIAN, etc.)."
 Routing,Routing
 Row Type,Row نوع
-Row {0},Row { 0 }
-Row {0}: Cost Center is required by global policy.,Row { 0 }: تكلفة Center is required حسب global سياسة.
+Row {0},Row {0}
+Row {0}: Cost Center is required by global policy.,Row {0}: تكلفة Center is required حسب global سياسة.
 RPM Readings,RPM Readings
 RQ Jobs,RQ Jobs
 Rule,Rule
@@ -3596,7 +3596,7 @@ Seed Role Demo,زرع أدوار الديمو
 Seed role portal users (8 accounts),Seed دور بوابة users (8 حسابات)
 Seed Workcenter role accounts,Seed Workcenter دور حسابات
 Segments Pie,الشرائح (دائري)
-Segregation of Duties: you cannot {0} a record you created.,Segregation of Duties: you cannot { 0 } a سجل you created.
+Segregation of Duties: you cannot {0} a record you created.,Segregation of Duties: you cannot {0} a سجل you created.
 Select a case from the table first.,Select a حالة from the table first.
 Select a company or choose All companies.,Select a شركة or choose All companies.
 Select a demo action...,Select a demo إجراء...
@@ -3607,7 +3607,7 @@ Select at least one dead letter row.,Select at least one dead letter row.
 Select at least one installed app to uninstall.,Select at least one installed app إلى uninstall.
 Select Bank Statement Import first.,Select بنك Statement Import first.
 Select Case DocType and Case to generate the complete borrower file.,Select حالة Doc نوع و حالة إلى generate the complete borrower file.
-Select Company before choosing Branch ({0}).,Select شركة before choosing فرع ({ 0 }).
+Select Company before choosing Branch ({0}).,Select شركة before choosing فرع ({0}).
 Select Customer,Select عميل
 Select for bulk uninstall,Select لـ bulk uninstall
 Select group,Select group
@@ -3791,7 +3791,7 @@ Stock Settings,Stock إعدادات
 Stock settings,Stock إعدادات
 Stock Summary,Stock ملخص
 Stock Summary Report,تقرير ملخص المخزون
-Stock traceability control: tracked item requires batch or serial in row {0}.,Stock traceability تحكم: tracked صنف requires batch or serial in row { 0 }.
+Stock traceability control: tracked item requires batch or serial in row {0}.,Stock traceability تحكم: tracked صنف requires batch or serial in row {0}.
 Stock Transfer,Stock Transfer
 Stock Transfer Request,طلب تحويل مخزون
 Stock Transfer Request must be submitted before execution.,Stock Transfer طلب must be submitted before execution.
@@ -3893,7 +3893,7 @@ System Settings,System إعدادات
 System settings,System إعدادات
 System Status,النظام حالة
 Table,Table
-Tag {0} (commit {1}),Tag { 0 } (commit { 1 })
+Tag {0} (commit {1}),Tag {0} (commit {1})
 Take Attendance,Take Attendance
 Task History,مهمة History
 Tasks,Tasks
@@ -3945,11 +3945,11 @@ Test Types Distribution,Test Types Distribution
 Test Volume,Test Volume
 Tests Completed Today,Tests مكتمل Today
 The app was removed from this site. Restart bench or clear cache if Desk still shows old menus.,The app was removed from this موقع. Restart bench or clear cache if Desk still shows old menus.
-The application {0} is not licensed (status: {1}). {2}{3}Open ErpGenEx Marketplace and enter a valid license or developer key.,The طلب { 0 } is not licensed (حالة: { 1 }). { 2 } { 3 } مفتوح Erp Gen Ex Marketplace و enter a valid license or developer مفتاح.
+The application {0} is not licensed (status: {1}). {2}{3}Open ErpGenEx Marketplace and enter a valid license or developer key.,The طلب {0} is not licensed (حالة: {1}). {2} {3} مفتوح Erp Gen Ex Marketplace و enter a valid license or developer مفتاح.
 "The catalog checks Git in the background. When you are ready, use Update on a row and choose branch or tag.","The catalog checks Git in the background. When you are ready, use تحديث on a row و choose فرع or tag."
 Theme Manager,إدارة السمات
 Then Ctrl+Shift+R on the Windows PC.,Then Ctrl + Shift + R on the Windows PC.
-"These apps list {0} as a required dependency: {1}. Uninstall those apps first (or change their hooks), then try again.","These apps قائمة { 0 } as a required dependency: { 1 }. Uninstall those apps first (or change their hooks), then try again."
+"These apps list {0} as a required dependency: {1}. Uninstall those apps first (or change their hooks), then try again.","These apps قائمة {0} as a required dependency: {1}. Uninstall those apps first (or change their hooks), then try again."
 this activity,this نشاط
 This app cannot be hidden from the desk.,This app cannot be hidden from the desk.
 This app cannot be uninstalled from here (protected platform app).,This app cannot be uninstalled from here (protected platform app).
@@ -4082,7 +4082,7 @@ Trial Balance,ميزان المراجعة
 Trial balance,ميزان المراجعة
 Trial balance & primary statements,ميزان المراجعة & primary statements
 Trial Balance (periodic — primary),ميزان المراجعة (دوري — أساسي)
-Trial length: {0} days without a key (paid apps). Help: {1},Trial length: { 0 } days without a مفتاح (مدفوع apps). مساعدة: { 1 }
+Trial length: {0} days without a key (paid apps). Help: {1},Trial length: {0} days without a مفتاح (مدفوع apps). مساعدة: {1}
 Type,النوع
 "Type <b>DELETE ALL</b> in the confirm field, then click the button again.","نوع < b > حذف ALL < b > in the confirm field, then click the button again."
 "Type DELETE ALL to wipe transactions, masters, construction demo, chart of accounts, and all branches for this company.","نوع حذف ALL إلى wipe transactions, masters, construction demo, مخطط of حسابات, و all branches لـ this شركة."
@@ -4098,7 +4098,7 @@ Uninstall blocked,Uninstall blocked
 Uninstall blocked — other apps depend on this one,Uninstall blocked — other apps depend on this one
 Uninstall blocked — resolve these dependencies first,Uninstall blocked — resolve these dependencies first
 Uninstall completed,Uninstall مكتمل
-Uninstall failed: {0}. Check Error Log for details.,Uninstall فشل: { 0 }. فحص خطأ سجل لـ تفاصيل.
+Uninstall failed: {0}. Check Error Log for details.,Uninstall فشل: {0}. فحص خطأ سجل لـ تفاصيل.
 Uninstall is not available for this app right now.,Uninstall is not متاح لـ this app right now.
 Uninstall selected,Uninstall selected
 Uninstalling app,Uninstalling app
@@ -4110,14 +4110,14 @@ Unit inventory overview,نظرة عامة على مخزون الوحدات
 Unit Reservation,حجز وحدة
 Unit Reservation Register,سجل حجز الوحدات
 Units of measure,وحدات القياس
-Unknown app group: {0},Unknown app group: { 0 }
-Unknown branch demo action: {0},Unknown فرع demo إجراء: { 0 }
-Unknown business activity: {0},Unknown أعمال نشاط: { 0 }
-Unknown CoA action: {0},Unknown Co A إجراء: { 0 }
+Unknown app group: {0},Unknown app group: {0}
+Unknown branch demo action: {0},Unknown فرع demo إجراء: {0}
+Unknown business activity: {0},Unknown أعمال نشاط: {0}
+Unknown CoA action: {0},Unknown Co A إجراء: {0}
 Unknown error,Unknown خطأ
 Unknown error occurred,Unknown خطأ occurred
-Unknown vertical app: {0},Unknown vertical app: { 0 }
-Unknown workflow stage: {0},Unknown سير العمل stage: { 0 }
+Unknown vertical app: {0},Unknown vertical app: {0}
+Unknown workflow stage: {0},Unknown سير العمل stage: {0}
 Unnamed Account,Unnamed حساب
 Unpaid Booking Fees,Unpaid Booking Fees
 Unscanned Assets,Unscanned أصول
@@ -4256,7 +4256,7 @@ View Logs,View Logs
 View My Children,View My Children
 View Reports,View تقارير
 View Schedule,View Schedule
-"View scope: {0}"", [res.message.label || __(""Updated","View scope: { 0 } "", [ res. message. label ("" Updated"
+"View scope: {0}"", [res.message.label || __(""Updated","View scope: {0} "", [ res. message. label ("" Updated"
 View Timetable,View Timetable
 Views,العروض
 Visual Bed Map,Visual Bed Map
@@ -4356,8 +4356,8 @@ Yesterday,Yesterday
 You are about to execute:,You are حول إلى execute:
 You are not allowed to access this branch.,You are not allowed إلى وصول this فرع.
 You are not allowed to change item price.,غير مسموح لك بتعديل سعر الصنف.
-You are viewing branch {0} only.,You are viewing فرع { 0 } only.
-You are viewing company {0} only.,You are viewing شركة { 0 } only.
+You are viewing branch {0} only.,You are viewing فرع {0} only.
+You are viewing company {0} only.,You are viewing شركة {0} only.
 You don't have permission to execute this demo action,You don ' t have permission إلى execute this demo إجراء
 Your browser,Your browser
 Your Shortcuts,اختصاراتك
@@ -4367,8 +4367,8 @@ ZATCA Console,ZATCA Console
 ZATCA Environment,ZATCA Environment
 ZATCA Phase,ZATCA Phase
 ZATCA Submission Log,ZATCA Submission سجل
-{0} must belong to the same company as the branch.,{ 0 } must belong إلى the same شركة as the فرع.
-{0} row(s),{ 0 } row (s)
+{0} must belong to the same company as the branch.,{0} must belong إلى the same شركة as the فرع.
+{0} row(s),{0} row (s)
 "{entry[""title_en""]} Workcenter","{ قيد [ "" عنوان en "" ] } Workcenter"
 {escaped},{ escaped }
 {page_name},{ page اسم }
@@ -4379,7 +4379,7 @@ ZATCA Submission Log,ZATCA Submission سجل
 المقترض / الحالة,المقترض / الحالة
 رأس الملف,رأس الملف
 سجل التغييرات,سجل التغييرات
-صف {0},{ 0 }
+صف {0},{0}
 لا توجد مرفقات,لا توجد مرفقات
 لا يوجد سجل,لا يوجد سجل
 مسار التمويل,مسار التمويل

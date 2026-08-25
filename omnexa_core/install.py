@@ -808,6 +808,12 @@ def after_install():
 def after_migrate():
 	enforce_supported_frappe_version()
 	try:
+		from omnexa_core.omnexa_core.scoped_website_assets import clear_scoped_website_assets_cache
+
+		clear_scoped_website_assets_cache()
+	except Exception:
+		pass
+	try:
 		from omnexa_core.omnexa_core.session_guard import apply_session_guard, purge_corrupt_sessions
 
 		apply_session_guard()
@@ -840,7 +846,14 @@ def run_site_hardening_after_app_changes():
 	remove_legacy_finance_group_stub_workspaces()
 	run_workspace_desk_sync()
 	ensure_default_sidebar_workspace_order()
+	_run_isolation_maintenance()
 	ensure_unified_list_view_columns()
+	try:
+		from omnexa_core.omnexa_core.navbar_scope_fields import ensure_navbar_scope_fields_hidden
+
+		ensure_navbar_scope_fields_hidden()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: hide navbar scope form fields")
 	ensure_default_workspace_dashboard()
 	ensure_dashboard_compliance_cards()
 	ensure_dashboard_inventory_cards()
@@ -3223,3 +3236,50 @@ def ensure_global_supporting_attachment_fields():
 			_sync_doctype_database_schema(dt)
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Omnexa: ensure_global_supporting_attachment_fields")
+
+
+def _run_isolation_maintenance():
+	"""Branch field sweep + HR workspace sync when enabled in Omnexa Core Settings."""
+	try:
+		from omnexa_core.omnexa_core.isolation_settings import get_isolation_settings
+
+		settings = get_isolation_settings()
+		if settings.get("auto_branch_field_sweep"):
+			from omnexa_core.omnexa_core.branch_field_sweep import sweep_branch_fields
+
+			sweep_branch_fields(dry_run=0, backfill=1)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Omnexa: branch field sweep")
+
+	try:
+		from omnexa_hr.workspace.hr_workspace import sync_hr_workspace_menu
+
+		sync_hr_workspace_menu()
+	except Exception:
+		pass
+
+	try:
+		from omnexa_healthcare.workspace.healthcare_workspace import sync_healthcare_workspace_menu
+
+		if frappe.db.exists("DocType", "Healthcare Facility Profile"):
+			sync_healthcare_workspace_menu(save=True, rebuild=True)
+	except Exception:
+		pass
+
+
+def before_tests():
+	from omnexa_core.omnexa_core.test_data import prepare_test_suite
+
+	prepare_test_suite()
+	try:
+		if not frappe.db.exists("User", "executive@demo.finance"):
+			from omnexa_core.omnexa_core.finance_demo.finance_role_demo import seed_finance_role_demo
+
+			seed_finance_role_demo()
+		if frappe.db.count("Consumer Finance Case") < 1:
+			from omnexa_core.omnexa_core.finance_demo.finance_vertical_bpe import seed_all_finance_vertical_demos
+
+			seed_all_finance_vertical_demos()
+		frappe.db.commit()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "omnexa_core before_tests: finance demo seed")

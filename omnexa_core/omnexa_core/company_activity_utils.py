@@ -46,3 +46,14 @@ def company_activity_matches(company: str | None, expected: str) -> bool:
 		if (row.get(field) or "").strip() == expected:
 			return True
 	return False
+
+
+def company_strict_activity_filtering_enabled(company: str | None) -> bool:
+	"""Per-company switch: strict Desk menu isolation by business activity."""
+	if not company or not frappe.db.exists("Company", company):
+		return True
+	if frappe.db.has_column("Company", "strict_activity_menu_filtering"):
+		value = frappe.db.get_value("Company", company, "strict_activity_menu_filtering")
+		if value is not None:
+			return bool(int(value))
+	return True

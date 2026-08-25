@@ -1,0 +1,94 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"finance_accounting-title\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\\ud83d\\udcd2 Accounting</b></span>\",\"col\":12}},{\"id\":\"finance_accounting-sec-0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>\\ud83d\\udcd2 GL</b></span>\",\"col\":12}},{\"id\":\"finance_accounting-lnk-0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Accounting Executive\",\"col\":4}},{\"id\":\"finance_accounting-lnk-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Finance Control Center\",\"col\":4}},{\"id\":\"finance_accounting-lnk-2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Close Dashboard\",\"col\":4}}]",
+ "creation": "2026-08-24 23:35:35.276541",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "es-line-book",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 1,
+ "label": "\ud83d\udcd2 Accounting",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\ud83d\udcd2 GL",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Accounting Executive",
+   "link_count": 0,
+   "link_to": "acct-executive-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Finance Control Center",
+   "link_count": 0,
+   "link_to": "finance-control-center",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Close Dashboard",
+   "link_count": 0,
+   "link_to": "accounting-close-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-08-24 23:35:35.327370",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "\ud83d\udcd2 Accounting",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Finance Accounting Controller"
+  }
+ ],
+ "sequence_id": 2.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "label": "Accounting Executive",
+   "link_to": "acct-executive-dashboard",
+   "type": "Page"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "Finance Control Center",
+   "link_to": "finance-control-center",
+   "type": "Page"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "",
+   "label": "Close Dashboard",
+   "link_to": "accounting-close-dashboard",
+   "type": "Page"
+  }
+ ],
+ "title": "\ud83d\udcd2 Accounting"
+}

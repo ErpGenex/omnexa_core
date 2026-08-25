@@ -40,6 +40,14 @@ GLOBAL_MIN_LINKS = 50
 _REPORTS_PER_SECTION = 6
 _DOCTYPES_PER_SECTION = 8
 
+# Vertical apps with a curated HR-only (or domain-only) desk — never pad with ERP GL masters.
+_APPS_WITHOUT_ERP_SUPPLEMENT = frozenset(
+	{
+		"omnexa_hr",
+		"omnexa_healthcare",
+	}
+)
+
 _DOMAIN_SECTIONS: dict[str, str] = {
 	"digital": "📊 Dashboards & portals",
 	"organization": "🏢 Organization",
@@ -384,7 +392,7 @@ def get_effective_workspace_sections(app_name: str, base_sections: WorkspaceSect
 	sections = _merge_sections(sections, extra)
 
 	seen = {(lt, lto) for _s, items in sections for lt, lto, _lbl in items}
-	if _count_links(sections) < GLOBAL_MIN_LINKS:
+	if _count_links(sections) < GLOBAL_MIN_LINKS and app_name not in _APPS_WITHOUT_ERP_SUPPLEMENT:
 		sections = _merge_sections(sections, _supplement_standard_erp_catalog(seen))
 
 	return sections

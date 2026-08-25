@@ -19,6 +19,7 @@ VIEW_ALL_BRANCHES = "__ALL__"
 _COMPANY_KEY = "omnexa_view_company"
 _BRANCH_KEY = "omnexa_view_branch"
 _VIEW_ALL_KEY = "omnexa_view_all_branches"
+_ADMIN_ACTIVITY_SCOPE_KEY = "omnexa_admin_activity_scope"
 
 
 def _set_user_default(key: str, value: str | None, user: str) -> None:
@@ -52,6 +53,8 @@ def get_view_context(user: str | None = None) -> dict:
 		view_all = 1
 
 	activity_info = get_company_activity_info(company)
+	from omnexa_core.omnexa_core.company_activity_utils import company_strict_activity_filtering_enabled
+
 	return {
 		"can_switch": can_switch,
 		"company": company,
@@ -60,7 +63,10 @@ def get_view_context(user: str | None = None) -> dict:
 		"label": _context_label(company, branch, view_all),
 		"activity": activity_info.get("activity"),
 		"activity_raw": activity_info.get("activity_raw"),
-		"activity_label": activity_info.get("label")
+		"activity_label": activity_info.get("label"),
+		"strict_activity_menu_filtering": company_strict_activity_filtering_enabled(company),
+		"can_set_activity_menu_scope": user_can_set_activity_menu_scope(user),
+		"activity_menu_scope": get_activity_menu_scope(user),
 	}
 
 
@@ -131,6 +137,47 @@ def get_effective_company(user: str | None = None) -> str | None:
 	return get_default_company(user)
 
 
+def user_can_set_activity_menu_scope(user: str | None = None) -> bool:
+	"""Desk users may choose company-activity vs all-activities menu filtering."""
+	user = user or frappe.session.user
+	return bool(user and user != "Guest")
+
+
+def get_activity_menu_scope(user: str | None = None) -> str:
+	"""Menu filter mode: company = current company activity, all = every vertical."""
+	user = user or frappe.session.user
+	if not user_can_set_activity_menu_scope(user):
+		return "company"
+	value = (frappe.defaults.get_user_default(_ADMIN_ACTIVITY_SCOPE_KEY, user) or "company").strip().lower()
+	return value if value in ("company", "all") else "company"
+
+
+def get_admin_activity_scope(user: str | None = None) -> str:
+	"""Backward-compatible alias for get_activity_menu_scope."""
+	return get_activity_menu_scope(user)
+
+
+def set_activity_menu_scope(scope: str, user: str | None = None) -> str:
+	user = user or frappe.session.user
+	if not user_can_set_activity_menu_scope(user):
+		frappe.throw(_("Sign in to change activity menu scope."), frappe.PermissionError)
+	normalized = (scope or "company").strip().lower()
+	if normalized not in ("company", "all"):
+		frappe.throw(_("Activity menu scope must be company or all."))
+	frappe.defaults.set_user_default(_ADMIN_ACTIVITY_SCOPE_KEY, normalized, user)
+	try:
+		from omnexa_core.omnexa_core.app_visibility import clear_desk_visibility_cache
+
+		clear_desk_visibility_cache()
+	except Exception:
+		pass
+	return normalized
+
+
+def set_admin_activity_scope(scope: str, user: str | None = None) -> str:
+	return set_activity_menu_scope(scope, user=user)
+
+
 def get_effective_branch_list(user: str | None = None, company: str | None = None) -> list[str] | None:
 	"""Branches allowed for list queries: None = unrestricted (all branches in scope)."""
 	user = user or frappe.session.user
@@ -152,6 +199,9 @@ def get_effective_branch_list(user: str | None = None, company: str | None = Non
 	}, pluck="name") or []
 			return None
 		if stored_branch and stored_branch not in ("__ALL__", ""):
+			branch_company = frappe.db.get_value("Branch", stored_branch, "company")
+			if company and branch_company and branch_company != company:
+				return frappe.get_all("Branch", filters={"company": company}, pluck="name") or []
 			return [stored_branch]
 		return None
 
@@ -175,22 +225,59 @@ def get_view_context_options() -> dict:
 	user = frappe.session.user
 	can_switch = user_can_access_all_branches(user)
 	companies = frappe.get_all("Company", pluck="name", order_by="name asc")
+	active_company = get_effective_company(user) or (companies[0] if companies else None)
 	branches_by_company: dict[str, list[dict]] = {}
-	for company in companies:
-		branches_by_company[company] = frappe.get_all(
-			"Branch",
-			filters={"company": company
-	},
-			fields=["name", "branch_name", "branch_code", "is_head_office"],
-			order_by="is_head_office desc, branch_name asc",
-		)
+	if active_company:
+		branches_by_company[active_company] = _branches_for_company(active_company)
 	return {
 		"can_switch": can_switch,
 		"context": get_view_context(user),
 		"companies": companies,
 		"branches_by_company": branches_by_company,
-		"company_activities": get_companies_activity_map()
+		"company_activities": get_companies_activity_map(),
 	}
+
+
+def _branches_for_company(company: str) -> list[dict]:
+	if not company or not frappe.db.exists("Company", company):
+		return []
+	return frappe.get_all(
+		"Branch",
+		filters={"company": company},
+		fields=["name", "branch_name", "branch_code", "is_head_office"],
+		order_by="is_head_office desc, branch_name asc",
+	)
+
+
+@frappe.whitelist()
+def get_branches_for_company(company: str | None = None) -> list[dict]:
+	company = (company or "").strip()
+	if not company:
+		return []
+	if not user_can_access_all_branches():
+		company = get_default_company() or company
+	return _branches_for_company(company)
+
+
+def get_boot_filter_options(user: str | None = None) -> dict:
+	"""Lightweight company/activity list for desk navbar (no all-branches preload)."""
+	user = user or frappe.session.user
+	companies = frappe.get_all("Company", pluck="name", order_by="name asc")
+	return {
+		"companies": companies,
+		"company_activities": get_companies_activity_map(),
+		"context": get_view_context(user),
+	}
+
+
+@frappe.whitelist(methods=["POST"])
+def set_desk_activity_menu_scope(scope: str) -> dict:
+	"""company = filter menus to current company activity; all = show every vertical."""
+	normalized = set_activity_menu_scope(scope)
+	ctx = get_view_context()
+	ctx["activity_menu_scope"] = normalized
+	frappe.response["message"] = ctx
+	return ctx
 
 
 @frappe.whitelist(methods=["POST"])

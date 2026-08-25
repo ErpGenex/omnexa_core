@@ -8,11 +8,16 @@ import json
 import frappe
 
 from omnexa_core.omnexa_core.app_activity import activity_for_app
-from omnexa_core.omnexa_core.company_activity_utils import first_company_activity_value
+from omnexa_core.omnexa_core.company_activity_utils import (
+	company_strict_activity_filtering_enabled,
+	first_company_activity_value,
+)
 
 SETTINGS_DOCTYPE = "Omnexa Marketplace Settings"
 MANUAL_CACHE_KEY = "omnexa_desk_hidden_apps"
 USER_CACHE_HASH = "omnexa_desk_hidden_by_user"
+# Platform shell — never activity-filtered (sector parents, desk chrome).
+INFRA_DESK_APPS = frozenset({"frappe", "omnexa_core"})
 
 # Cross-industry apps always visible on Desk (if installed and on apps screen).
 PLATFORM_APP_SLUGS = frozenset(
@@ -106,10 +111,15 @@ def _normalize_company_activity(raw: str | None) -> str:
 	return raw.split("(")[0].strip() or "General"
 
 
-def get_user_company_activity() -> str:
-	company = frappe.defaults.get_user_default("Company")
-	if not company:
-		company = frappe.db.get_single_value("Global Defaults", "default_company")
+def get_effective_company_for_activity(user: str | None = None) -> str | None:
+	"""Company used for activity filtering (navbar scope, then user default)."""
+	from omnexa_core.omnexa_core.session_context import get_effective_company
+
+	return get_effective_company(user)
+
+
+def get_user_company_activity(user: str | None = None) -> str:
+	company = get_effective_company_for_activity(user)
 	if not company or not frappe.db.exists("Company", company):
 		return "General"
 	return _normalize_company_activity(first_company_activity_value(company))
@@ -141,12 +151,45 @@ def _activity_filter_exempt_roles() -> set[str]:
 	return roles or default
 
 
-def _activity_filter_applies_to_user() -> bool:
+def _activity_filter_applies_to_user(user: str | None = None) -> bool:
+	"""True when desk menus should follow the current company's business activity."""
 	if not _activity_filter_enabled():
 		return False
-	if set(frappe.get_roles()) & _activity_filter_exempt_roles():
+
+	user = user or frappe.session.user
+	company = get_effective_company_for_activity(user)
+	if not company:
 		return False
-	return True
+	if not company_strict_activity_filtering_enabled(company):
+		return False
+
+	from omnexa_core.omnexa_core.session_context import get_activity_menu_scope
+
+	# Scope drives filtering for every company: company = filter by activity, all = show everything.
+	return get_activity_menu_scope(user) == "company"
+
+
+def _finance_activity_workspace_keys() -> frozenset[str]:
+	"""All finance desk workspace keys (names, titles, emoji shortcuts)."""
+	keys: set[str] = set(_finance_workspace_aliases().keys())
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_group_sidebar import WORKSPACE_APP_LOGO
+
+		keys.update(WORKSPACE_APP_LOGO.keys())
+	except Exception:
+		pass
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_role_demo import ROLE_DEMO_WORKSPACE_NAMES, ROLE_SPECS
+
+		keys.update(ROLE_DEMO_WORKSPACE_NAMES)
+		for spec in ROLE_SPECS:
+			if spec.get("workspace"):
+				keys.add(spec["workspace"])
+			if spec.get("title"):
+				keys.add(spec["title"])
+	except Exception:
+		pass
+	return frozenset(k for k in keys if k)
 
 
 def get_activity_hidden_apps(company_activity: str | None = None) -> set[str]:
@@ -162,20 +205,67 @@ def get_activity_hidden_apps(company_activity: str | None = None) -> set[str]:
 				continue
 			if app not in allowed_slugs:
 				hidden.add(app)
-		return hidden
+		return hidden - INFRA_DESK_APPS
 
 	hidden = set()
 	for app in frappe.get_installed_apps() or []:
-		if app in PLATFORM_APP_SLUGS or app == "frappe":
+		if app in PLATFORM_APP_SLUGS or app in INFRA_DESK_APPS:
 			continue
 		if activity_for_app(app) not in allowed:
 			hidden.add(app)
-	return hidden
+	return hidden - INFRA_DESK_APPS
 
 
-def _user_cache_key() -> str:
-	company = frappe.defaults.get_user_default("Company") or ""
-	return f"{frappe.session.user}::{company}"
+def _finance_workspace_aliases() -> dict[str, str]:
+	"""Map finance shortcut desks (module Omnexa Core) → owning app."""
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_group_sidebar import WORKSPACE_APP_LOGO
+	except Exception:
+		WORKSPACE_APP_LOGO = {}
+
+	aliases: dict[str, str] = dict(WORKSPACE_APP_LOGO)
+	pairs = [
+		("Finance Leasing", "Leasing Finance"),
+		("Finance Mortgage", "Mortgage Finance"),
+		("Finance Factoring", "Factoring"),
+		("Finance SME", "SME Retail Finance"),
+		("Finance Treasury", "ALM"),
+		("Finance Auto", "Vehicle Finance"),
+		("Finance Consumer", "Consumer Finance"),
+		("Finance Credit Risk", "Credit Risk"),
+		("Finance GRC", "Operational Risk"),
+		("Finance Microfinance", "SME Microfinance"),
+		("📦 Leasing", "Leasing Finance"),
+		("🏠 Mortgage", "Mortgage Finance"),
+		("📄 Factoring", "Factoring"),
+		("🏪 SME Finance", "SME Retail Finance"),
+		("💹 Treasury ALM", "ALM"),
+		("🚗 Auto Finance", "Vehicle Finance"),
+		("🛒 Consumer Lending", "Consumer Finance"),
+		("📈 Credit Risk", "Credit Risk"),
+		("🛡️ Operational Risk", "Operational Risk"),
+		("🤝 Microfinance Field", "SME Microfinance"),
+		("🛡️ Credit Origination", "Credit Engine"),
+		("Finance Credit Origination", "Credit Engine"),
+		("Finance Executive", "Finance Engine"),
+		("📊 Group Executive", "Finance Engine"),
+	]
+	for alias, canonical in pairs:
+		app = aliases.get(canonical)
+		if app:
+			aliases[alias] = app
+	return aliases
+
+
+def _user_cache_key(user: str | None = None) -> str:
+	user = user or frappe.session.user
+	company = get_effective_company_for_activity(user) or ""
+	from omnexa_core.omnexa_core.session_context import get_activity_menu_scope
+
+	scope = get_activity_menu_scope(user)
+	strict = int(company_strict_activity_filtering_enabled(company)) if company else 1
+	site_on = int(_activity_filter_enabled())
+	return f"{user}::{company}::{scope}::{strict}::{site_on}"
 
 
 def clear_desk_visibility_cache():
@@ -212,16 +302,17 @@ def get_hidden_desk_apps() -> set[str]:
 	return set(apps)
 
 
-def get_desk_hidden_for_user() -> set[str]:
+def get_desk_hidden_for_user(user: str | None = None) -> set[str]:
 	"""Manual + activity-based hidden apps for the current session user."""
-	bucket = _user_cache_key()
+	user = user or frappe.session.user
+	bucket = _user_cache_key(user)
 	cached = frappe.cache.hget(USER_CACHE_HASH, bucket)
 	if cached is not None:
 		return set(cached)
 
 	hidden = set(get_hidden_desk_apps())
-	if _activity_filter_applies_to_user():
-		hidden |= get_activity_hidden_apps()
+	if _activity_filter_applies_to_user(user):
+		hidden |= get_activity_hidden_apps(get_user_company_activity(user))
 
 	frappe.cache.hset(USER_CACHE_HASH, bucket, list(hidden))
 	return hidden
@@ -363,19 +454,163 @@ def _module_app_name(module: str | None) -> str | None:
 		return None
 	if not hasattr(frappe.local, "module_app") or not frappe.local.module_app:
 		frappe.setup_module_map()
-	return frappe.local.module_app.get(module)
+	app = frappe.local.module_app.get(module)
+	if app:
+		return app
+	# Fallback: "Omnexa ALM" → omnexa_alm, "ErpGenEx Property Mgmt" → erpgenex_property_mgmt
+	installed = set(frappe.get_installed_apps() or [])
+	for prefix, slug_prefix in (("Omnexa ", "omnexa_"), ("ErpGenEx ", "erpgenex_")):
+		if module.startswith(prefix):
+			slug = slug_prefix + module[len(prefix) :].strip().lower().replace(" ", "_").replace("-", "_")
+			if slug in installed:
+				return slug
+	return None
+
+
+def _workspace_app_slug(page: dict) -> str | None:
+	name = (page.get("name") or "").strip()
+	title = (page.get("title") or name).strip()
+	for key in (name, title):
+		if not key:
+			continue
+		alias_app = _finance_workspace_aliases().get(key)
+		if alias_app:
+			return alias_app
+	try:
+		from omnexa_core.omnexa_core.workspace_control_tower import _vertical_app_owns_workspace
+
+		for key in (name, title):
+			if not key:
+				continue
+			owner = _vertical_app_owns_workspace(key)
+			if owner:
+				return owner
+	except Exception:
+		pass
+	module = page.get("module") or page.get("module_name") or ""
+	return _module_app_name(module)
 
 
 def _workspace_owned_by_hidden_app(page: dict, hidden: set[str]) -> bool:
-	module = page.get("module") or page.get("module_name") or ""
-	app = _module_app_name(module)
-	return bool(app and app in hidden)
+	app = _workspace_app_slug(page)
+	if app and app in hidden:
+		return True
+	if not hidden:
+		return False
+	finance_keys = _finance_activity_workspace_keys()
+	name = (page.get("name") or "").strip()
+	title = (page.get("title") or name).strip()
+	if name in finance_keys or title in finance_keys:
+		for key in (name, title):
+			owner = _finance_workspace_aliases().get(key) or _workspace_app_slug({"name": key, "title": key, "module": ""})
+			if owner and owner in hidden:
+				return True
+	return False
+
+
+def _workspace_page_keys(page: dict) -> set[str]:
+	name = (page.get("name") or "").strip()
+	title = (page.get("title") or name).strip()
+	return {k for k in (name, title) if k}
+
+
+def _denied_workspace_keys(pages: list[dict], hidden: set[str]) -> list[str]:
+	"""Explicit denylist for client-side sidebar — only out-of-activity workspaces."""
+	if not pages or not hidden:
+		return []
+	denied: set[str] = set()
+	for page in pages:
+		if _workspace_owned_by_hidden_app(page, hidden):
+			denied.update(_workspace_page_keys(page))
+	return sorted(denied)
+
+
+def _sector_parent_titles() -> set[str]:
+	try:
+		from omnexa_core.omnexa_core.sector_registry import get_sector_parent_titles
+
+		return set(get_sector_parent_titles())
+	except Exception:
+		return set()
+
+
+def _filter_workspace_pages(pages: list[dict], hidden: set[str]) -> list[dict]:
+	if not pages or not hidden:
+		return pages
+	hidden = set(hidden) - INFRA_DESK_APPS
+	if not hidden:
+		return pages
+
+	kept: list[dict] = []
+	for page in pages:
+		if _workspace_owned_by_hidden_app(page, hidden):
+			continue
+		kept.append(page)
+
+	child_counts: dict[str, int] = {}
+	for page in kept:
+		parent = (page.get("parent_page") or "").strip()
+		if parent:
+			child_counts[parent] = child_counts.get(parent, 0) + 1
+
+	sector_titles = _sector_parent_titles()
+	if not sector_titles:
+		return kept
+
+	final: list[dict] = []
+	for page in kept:
+		title = (page.get("title") or page.get("name") or "").strip()
+		if title in sector_titles and child_counts.get(title, 0) == 0:
+			continue
+		final.append(page)
+	return final
+
+
+def filter_workspace_sidebar_by_activity(result: dict) -> dict:
+	"""Remove workspaces owned by apps outside the company activity scope."""
+	if not _activity_filter_applies_to_user():
+		return result
+	hidden = get_desk_hidden_for_user()
+	pages = result.get("pages") or []
+	filtered = _filter_workspace_pages(pages, hidden)
+	if len(filtered) != len(pages):
+		result = {**result, "pages": filtered}
+	return result
 
 
 def inject_desk_visibility_boot(bootinfo) -> None:
 	"""Apply manual + activity app hiding to boot apps list and workspace sidebar."""
-	hidden = get_desk_hidden_for_user()
-	if not hidden:
+	if isinstance(bootinfo, dict) and not isinstance(bootinfo, frappe._dict):
+		bootinfo = frappe._dict(bootinfo)
+	user = frappe.session.user
+	hidden = get_desk_hidden_for_user(user)
+	company = get_effective_company_for_activity(user)
+	from omnexa_core.omnexa_core.session_context import get_activity_menu_scope, user_can_set_activity_menu_scope
+
+	strict_filtering = company_strict_activity_filtering_enabled(company)
+	filter_active = _activity_filter_applies_to_user(user)
+	menu_scope = get_activity_menu_scope(user)
+	if filter_active and not hidden:
+		hidden = get_activity_hidden_apps(get_user_company_activity(user))
+
+	bootinfo.omnexa_activity_filter = {
+		"active": filter_active,
+		"company": company,
+		"company_activity": get_user_company_activity(user),
+		"strict_company_filtering": strict_filtering,
+		"can_set_activity_menu_scope": user_can_set_activity_menu_scope(user),
+		"activity_menu_scope": menu_scope,
+		"hidden_apps": sorted(set(hidden) - INFRA_DESK_APPS) if filter_active else [],
+	}
+	try:
+		from omnexa_core.omnexa_core.isolation_middleware import isolation_context_for_boot
+
+		bootinfo.omnexa_isolation_context = isolation_context_for_boot()
+	except Exception:
+		pass
+
+	if not filter_active:
+		bootinfo["omnexa_denied_workspace_keys"] = []
 		return
 
 	apps_data = bootinfo.get("apps_data") or {}
@@ -389,4 +624,22 @@ def inject_desk_visibility_boot(bootinfo) -> None:
 
 	pages = bootinfo.get("allowed_workspaces") or []
 	if pages:
-		bootinfo["allowed_workspaces"] = [p for p in pages if not _workspace_owned_by_hidden_app(p, hidden)]
+		filtered_pages = _filter_workspace_pages(pages, hidden)
+		bootinfo["allowed_workspaces"] = filtered_pages
+		bootinfo["omnexa_allowed_workspace_names"] = sorted(
+			{(p.get("name") or "").strip() for p in filtered_pages if (p.get("name") or "").strip()}
+		)
+		bootinfo["omnexa_allowed_workspace_titles"] = sorted(
+			{(p.get("title") or p.get("name") or "").strip() for p in filtered_pages if (p.get("title") or p.get("name") or "").strip()}
+		)
+		bootinfo["omnexa_denied_workspace_keys"] = _denied_workspace_keys(pages, hidden)
+
+	page_info = bootinfo.get("page_info") or {}
+	if page_info:
+		filtered_pages_meta = {}
+		for name, meta in page_info.items():
+			page_row = {"name": name, "title": (meta or {}).get("title") or name, "module": (meta or {}).get("module") or ""}
+			if _workspace_owned_by_hidden_app(page_row, hidden):
+				continue
+			filtered_pages_meta[name] = meta
+		bootinfo["page_info"] = filtered_pages_meta

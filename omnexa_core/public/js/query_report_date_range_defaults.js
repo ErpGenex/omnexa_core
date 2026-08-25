@@ -8,7 +8,11 @@
 	}
 
 	function default_company() {
+		if (frappe.omnexa_core?.view_scope?.default_company) {
+			return frappe.omnexa_core.view_scope.default_company();
+		}
 		return (
+			frappe.defaults.get_user_default("omnexa_view_company") ||
 			frappe.defaults.get_user_default("company") ||
 			frappe.defaults.get_user_default("Company") ||
 			(frappe.boot?.user?.defaults?.company || "")
@@ -16,7 +20,11 @@
 	}
 
 	function default_branch() {
+		if (frappe.omnexa_core?.view_scope?.default_branch) {
+			return frappe.omnexa_core.view_scope.default_branch();
+		}
 		return (
+			frappe.defaults.get_user_default("omnexa_view_branch") ||
 			frappe.defaults.get_user_default("branch") ||
 			frappe.defaults.get_user_default("Branch") ||
 			(frappe.boot?.user?.defaults?.branch || "")
@@ -65,8 +73,7 @@
 	function _branch_filter_query(report) {
 		const c =
 			report.get_filter_value?.("company", false) ||
-			frappe.defaults.get_user_default("company") ||
-			frappe.defaults.get_user_default("Company") ||
+			default_company() ||
 			"";
 		return c ? { filters: { company: c } } : _EMPTY_BRANCH_QUERY;
 	}
@@ -210,8 +217,18 @@
 			}
 		}
 
-		set_if_empty("company", comp);
-		set_if_empty("branch", br);
+		const scope = frappe.omnexa_core?.view_scope?.get?.() || {};
+		if (scope.has_scope && report.set_filter_value) {
+			if (scope.company) report.set_filter_value("company", scope.company);
+			if (scope.branch && !scope.view_all_branches) {
+				report.set_filter_value("branch", scope.branch);
+			} else if (scope.view_all_branches) {
+				report.set_filter_value("branch", "");
+			}
+		} else {
+			set_if_empty("company", comp);
+			set_if_empty("branch", br);
+		}
 		set_if_empty("from_date", t);
 		set_if_empty("to_date", t);
 
@@ -250,7 +267,11 @@
 		const out = originalSetupFilters.apply(this, arguments);
 		try {
 			_set_values_if_empty(this);
-			frappe.after_ajax(() => _set_values_if_empty(this));
+			frappe.after_ajax(() => {
+				_set_values_if_empty(this);
+				frappe.omnexa_core?.view_scope?.apply_to_report?.(this);
+			});
+			frappe.omnexa_core?.view_scope?.apply_to_report?.(this);
 		} catch (e) {
 			/* ignore */
 		}
@@ -262,6 +283,7 @@
 		proto.refresh = function () {
 			try {
 				_set_values_if_empty(this);
+				frappe.omnexa_core?.view_scope?.apply_to_report?.(this);
 			} catch (e) {
 				/* ignore */
 			}

@@ -1,0 +1,77 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"finance_auto-title\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\\ud83d\\ude97 Auto Finance</b></span>\",\"col\":12}},{\"id\":\"finance_auto-sec-0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>\\ud83d\\ude97 Auto</b></span>\",\"col\":12}},{\"id\":\"finance_auto-lnk-0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Auto Portal\",\"col\":4}},{\"id\":\"finance_auto-lnk-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Auto Executive\",\"col\":4}}]",
+ "creation": "2026-08-24 23:35:33.702272",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "es-line-truck",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 1,
+ "label": "\ud83d\ude97 Auto Finance",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\ud83d\ude97 Auto",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Auto Portal",
+   "link_count": 0,
+   "link_to": "vf-servicing-portal",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Auto Executive",
+   "link_count": 0,
+   "link_to": "vf-executive-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-08-24 23:35:33.734033",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "\ud83d\ude97 Auto Finance",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Finance Auto Officer"
+  }
+ ],
+ "sequence_id": 2.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "label": "Auto Portal",
+   "link_to": "vf-servicing-portal",
+   "type": "Page"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "Auto Executive",
+   "link_to": "vf-executive-dashboard",
+   "type": "Page"
+  }
+ ],
+ "title": "\ud83d\ude97 Auto Finance"
+}

@@ -1,0 +1,77 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"finance_consumer-title\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\\ud83d\\uded2 Consumer Lending</b></span>\",\"col\":12}},{\"id\":\"finance_consumer-sec-0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>\\ud83d\\uded2 Consumer</b></span>\",\"col\":12}},{\"id\":\"finance_consumer-lnk-0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Consumer Portal\",\"col\":4}},{\"id\":\"finance_consumer-lnk-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Consumer Executive\",\"col\":4}}]",
+ "creation": "2026-08-24 23:35:33.415501",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "es-line-shopping-cart",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 1,
+ "label": "\ud83d\uded2 Consumer Lending",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\ud83d\uded2 Consumer",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Consumer Portal",
+   "link_count": 0,
+   "link_to": "cf-servicing-portal",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Consumer Executive",
+   "link_count": 0,
+   "link_to": "cf-executive-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-08-24 23:35:33.446097",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "\ud83d\uded2 Consumer Lending",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Finance Consumer Officer"
+  }
+ ],
+ "sequence_id": 2.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "label": "Consumer Portal",
+   "link_to": "cf-servicing-portal",
+   "type": "Page"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "Consumer Executive",
+   "link_to": "cf-executive-dashboard",
+   "type": "Page"
+  }
+ ],
+ "title": "\ud83d\uded2 Consumer Lending"
+}

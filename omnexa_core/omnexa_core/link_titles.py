@@ -42,7 +42,31 @@ def _pick_existing_value(doc, fieldnames):
 def _dynamic_code_name_title(doctype, docname):
 	"""Auto-discover code/name fields for any doctype and format as CODE - NAME."""
 	meta = frappe.get_meta(doctype)
-	fieldnames = {df.fieldname for df in (meta.fields or []) if getattr(df, "fieldname", None)}
+	# Only DB-backed field types — exclude Section/Column/Tab/HTML/Button/etc.
+	db_fieldtypes = {
+		"Data",
+		"Link",
+		"Select",
+		"Read Only",
+		"Int",
+		"Float",
+		"Currency",
+		"Percent",
+		"Small Text",
+		"Text",
+		"Long Text",
+		"Code",
+		"Barcode",
+		"Phone",
+		"Email",
+		"Dynamic Link",
+		"Autocomplete",
+	}
+	fieldnames = {
+		df.fieldname
+		for df in (meta.fields or [])
+		if getattr(df, "fieldname", None) and getattr(df, "fieldtype", None) in db_fieldtypes
+	}
 
 	common_code_candidates = [
 		"code",
@@ -65,33 +89,42 @@ def _dynamic_code_name_title(doctype, docname):
 		"asset_name",
 		"project_name",
 		"bank_name",
+		"full_name",
+		"facility_name",
+		"specialty_name",
 	]
 
-	code_candidates = [f for f in common_code_candidates if f in fieldnames]
-	name_candidates = [f for f in common_name_candidates if f in fieldnames]
+	code_candidates = [f for f in common_code_candidates if f in fieldnames and frappe.db.has_column(doctype, f)]
+	name_candidates = [f for f in common_name_candidates if f in fieldnames and frappe.db.has_column(doctype, f)]
 
 	# Generic heuristic for any custom model using *_code / *_name.
 	code_candidates.extend(
 		sorted(
-			f for f in fieldnames if f.endswith("_code") and f not in code_candidates and f != "workflow_state"
+			f
+			for f in fieldnames
+			if f.endswith("_code")
+			and f not in code_candidates
+			and f != "workflow_state"
+			and frappe.db.has_column(doctype, f)
 		)
 	)
 	name_candidates.extend(
 		sorted(
 			f
 			for f in fieldnames
-			if f.endswith("_name") and f not in name_candidates and f != "naming_series"
+			if f.endswith("_name")
+			and f not in name_candidates
+			and f != "naming_series"
+			and frappe.db.has_column(doctype, f)
 		)
 	)
-	# `name` is usually the internal ID; use it only as a last fallback.
-	if "name" in fieldnames:
-		name_candidates.append("name")
 
 	# Avoid unnecessary query for doctypes with neither code nor name candidates.
 	if not code_candidates and not name_candidates:
 		return ""
 
-	row = frappe.db.get_value(doctype, docname, code_candidates + name_candidates, as_dict=True) or {}
+	fields = list(dict.fromkeys(code_candidates + name_candidates))
+	row = frappe.db.get_value(doctype, docname, fields, as_dict=True) or {}
 	code = _pick_existing_value(row, code_candidates)
 	name = _pick_existing_value(row, name_candidates)
 	return _format_code_name(code, name, "")
@@ -139,6 +172,18 @@ def get_link_title(doctype, docname):
 	if doctype == "Bank Account":
 		row = frappe.db.get_value("Bank Account", docname, ["account_number", "account_name"], as_dict=True)
 		return _format_code_name(getattr(row, "account_number", ""), getattr(row, "account_name", ""), docname)
+
+	if doctype == "Healthcare Patient":
+		row = frappe.db.get_value(
+			"Healthcare Patient",
+			docname,
+			[f for f in ("full_name", "given_name", "family_name") if frappe.db.has_column("Healthcare Patient", f)],
+			as_dict=True,
+		) or {}
+		display = (getattr(row, "full_name", None) or "").strip()
+		if not display:
+			display = f"{getattr(row, 'given_name', '') or ''} {getattr(row, 'family_name', '') or ''}".strip()
+		return _format_code_name(docname, display, docname)
 
 	dynamic_title = _dynamic_code_name_title(doctype, docname)
 	if dynamic_title:

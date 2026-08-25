@@ -1,0 +1,27 @@
+/* Company / branch are chosen in the desk navbar — never on individual screens. */
+
+body.omnexa-navbar-scope-active .layout-main-section
+	.frappe-control[data-fieldname="company"],
+body.omnexa-navbar-scope-active .layout-main-section
+	.frappe-control[data-fieldname="branch"],
+body.omnexa-navbar-scope-active .standard-filter-section
+	.frappe-control[data-fieldname="company"],
+body.omnexa-navbar-scope-active .standard-filter-section
+	.frappe-control[data-fieldname="branch"],
+body.omnexa-navbar-scope-active .filter-section
+	.frappe-control[data-fieldname="company"],
+body.omnexa-navbar-scope-active .filter-section
+	.frappe-control[data-fieldname="branch"],
+body.omnexa-navbar-scope-active .report-filter-section
+	.frappe-control[data-fieldname="company"],
+body.omnexa-navbar-scope-active .report-filter-section
+	.frappe-control[data-fieldname="branch"] {
+	display: none !important;
+}
+
+body.omnexa-navbar-scope-active .grid-field[data-fieldname="company"],
+body.omnexa-navbar-scope-active .grid-field[data-fieldname="branch"],
+body.omnexa-navbar-scope-active .grid-row .col[data-fieldname="company"],
+body.omnexa-navbar-scope-active .grid-row .col[data-fieldname="branch"] {
+	display: none !important;
+}

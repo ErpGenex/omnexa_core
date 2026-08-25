@@ -11,10 +11,34 @@ from omnexa_core.omnexa_core.branch_access import get_default_branch, get_defaul
 from omnexa_core.omnexa_core.session_context import get_effective_company, get_view_context
 
 
+def _merge_navbar_scope_into_report_filters(filters: dict) -> dict:
+	"""Apply desk navbar company/branch to report filters (navbar is source of truth)."""
+	if not isinstance(filters, dict):
+		filters = {}
+
+	# Consolidated / multi-company reports use `companies`, not `company`.
+	if "companies" in filters and not filters.get("company"):
+		return filters
+
+	ctx = get_view_context()
+	company = get_effective_company() or get_default_company()
+	if company:
+		filters["company"] = company
+
+	if ctx.get("view_all_branches"):
+		filters.pop("branch", None)
+	elif company:
+		branch = ctx.get("branch") or get_default_branch(company)
+		if branch:
+			filters["branch"] = branch
+
+	return filters
+
+
 def auto_apply_company_branch_report_filters():
 	"""Inject default company, branch, from_date, to_date for Query Report API if unset.
 
-	Keeps UX aligned with session context and avoids errors like 'Company filter is required.'
+	Company and branch always follow desk navbar context when set.
 	Dates default to today (`frappe.utils.today()`).
 	"""
 	if frappe.session.user == "Guest":
@@ -38,17 +62,7 @@ def auto_apply_company_branch_report_filters():
 	else:
 		filters = {}
 
-	if not filters.get("company"):
-		company = get_effective_company() or get_default_company()
-		if company:
-			filters["company"] = company
-
-	if not filters.get("branch") and filters.get("company"):
-		ctx = get_view_context()
-		if not ctx.get("view_all_branches"):
-			branch = get_default_branch(filters["company"])
-			if branch:
-				filters["branch"] = branch
+	filters = _merge_navbar_scope_into_report_filters(filters)
 
 	# Align with desk defaults: bounded date window defaults to Today when unset.
 	td = frappe.utils.today()
@@ -59,4 +73,3 @@ def auto_apply_company_branch_report_filters():
 
 	# Keep payload format stable for frappe.desk.query_report.run
 	frappe.form_dict["filters"] = json.dumps(filters, separators=(",", ":"))
-

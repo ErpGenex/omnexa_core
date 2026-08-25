@@ -147,12 +147,19 @@
 		if (!hasCompany && !hasBranch) return;
 
 		try {
-			const userCompany = frappe.defaults.get_user_default("Company");
-			const userBranch = frappe.defaults.get_user_default("Branch");
-			if (hasCompany && !frm.doc.company && userCompany) {
+			const scope = frappe.omnexa_core?.view_scope?.get?.() || {};
+			const userCompany =
+				scope.company ||
+				frappe.defaults.get_user_default("omnexa_view_company") ||
+				frappe.defaults.get_user_default("Company");
+			const userBranch =
+				(scope.view_all_branches ? "" : scope.branch) ||
+				frappe.defaults.get_user_default("omnexa_view_branch") ||
+				frappe.defaults.get_user_default("Branch");
+			if (hasCompany && userCompany && frm.doc.company !== userCompany) {
 				frm.set_value("company", userCompany);
 			}
-			if (hasBranch && !frm.doc.branch && userBranch) {
+			if (hasBranch && userBranch && frm.doc.branch !== userBranch) {
 				frm.set_value("branch", userBranch);
 			}
 		} catch (e) {

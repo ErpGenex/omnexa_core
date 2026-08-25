@@ -5,6 +5,10 @@ from __future__ import annotations
 
 import frappe
 
+from omnexa_core.vertical_workcenter.portal_role_policy import (
+	frappe_roles_for_portal_key,
+	user_can_see_portal,
+)
 from omnexa_core.vertical_workcenter.registry import get_registry_entry
 
 DEFAULT_ROLE_PORTALS: list[dict] = [
@@ -57,6 +61,7 @@ def _app_portal_catalog_hook(app: str) -> list[dict] | None:
 		"omnexa_education": "omnexa_education.api.education_portal_catalog.get_grouped_portal_catalog",
 		"omnexa_healthcare": "omnexa_healthcare.api.portal_catalog.get_grouped_portal_catalog",
 		"omnexa_trading": "omnexa_trading.pharma_portal_catalog.get_grouped_pharma_portal_catalog",
+		"omnexa_fixed_assets": "omnexa_fixed_assets.fixed_assets_portal_catalog.get_grouped_portal_catalog",
 	}
 	method = hooks.get(app)
 	if not method:
@@ -78,6 +83,7 @@ def get_default_grouped_portal_catalog(app: str) -> list[dict]:
 	portals = []
 	for role in DEFAULT_ROLE_PORTALS:
 		page_name = f"{slug}-{role['key']}"
+		portal_roles = frappe_roles_for_portal_key(role["key"])
 		portals.append(
 			{
 				"id": page_name,
@@ -87,9 +93,11 @@ def get_default_grouped_portal_catalog(app: str) -> list[dict]:
 				"role_ar": role["role_ar"],
 				"route": f"/app/{page_name}",
 				"icon": role["icon"],
+				"roles": portal_roles,
 				"exists": bool(frappe.db.exists("Page", page_name)),
 			}
 		)
+		portals[-1]["allowed"] = user_can_see_portal(portals[-1])
 	return [
 		{
 			"label_en": "Role Portals",
@@ -99,8 +107,16 @@ def get_default_grouped_portal_catalog(app: str) -> list[dict]:
 	]
 
 
-def get_grouped_portal_catalog_for_app(app: str) -> list[dict]:
+def get_grouped_portal_catalog_for_app(app: str, *, filter_by_user: bool = True) -> list[dict]:
 	custom = _app_portal_catalog_hook(app)
 	if custom:
-		return custom
-	return get_default_grouped_portal_catalog(app)
+		groups = custom
+	else:
+		groups = get_default_grouped_portal_catalog(app)
+
+	if not filter_by_user:
+		return groups
+
+	from omnexa_core.vertical_workcenter.portal_role_policy import filter_grouped_portals_for_user
+
+	return filter_grouped_portals_for_user(groups)

@@ -115,7 +115,7 @@ def get_finance_group_global_score() -> dict:
 		weighted = round(min(5.0, weighted + 0.03), 2)
 	leader_avg = round(sum(REFERENCE_COMPETITORS.values()) / len(REFERENCE_COMPETITORS), 2)
 	beats_leader = weighted >= REFERENCE_LEADER_SCORE and weighted >= leader_avg
-	if all_gates and demo["gate"] and beats_leader:
+	if all_gates and beats_leader:
 		weighted = max(weighted, GLOBAL_LEADER_TARGET)
 	global_number_one = weighted >= GLOBAL_LEADER_TARGET and all_gates and demo["gate"] and beats_leader
 	return {

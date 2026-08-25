@@ -1,0 +1,77 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"finance_credit_risk-title\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\\ud83d\\udcc8 Credit Risk</b></span>\",\"col\":12}},{\"id\":\"finance_credit_risk-sec-0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>\\ud83d\\udcc8 Risk</b></span>\",\"col\":12}},{\"id\":\"finance_credit_risk-lnk-0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Risk Portal\",\"col\":4}},{\"id\":\"finance_credit_risk-lnk-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Risk Executive\",\"col\":4}}]",
+ "creation": "2026-08-24 23:35:32.803961",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "es-line-trending-up",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 1,
+ "label": "\ud83d\udcc8 Credit Risk",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\ud83d\udcc8 Risk",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Risk Portal",
+   "link_count": 0,
+   "link_to": "rk-servicing-portal",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Risk Executive",
+   "link_count": 0,
+   "link_to": "rk-executive-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-08-24 23:35:32.835229",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "\ud83d\udcc8 Credit Risk",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Finance Risk Analyst"
+  }
+ ],
+ "sequence_id": 2.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "label": "Risk Portal",
+   "link_to": "rk-servicing-portal",
+   "type": "Page"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "Risk Executive",
+   "link_to": "rk-executive-dashboard",
+   "type": "Page"
+  }
+ ],
+ "title": "\ud83d\udcc8 Credit Risk"
+}

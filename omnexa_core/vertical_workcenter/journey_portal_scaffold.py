@@ -9,6 +9,7 @@ from pathlib import Path
 import frappe
 
 from omnexa_core.vertical_workcenter.default_portal_catalog import DEFAULT_ROLE_PORTALS
+from omnexa_core.vertical_workcenter.portal_role_policy import frappe_roles_for_portal_key
 from omnexa_core.vertical_workcenter.registry import VERTICAL_WORKCENTER_REGISTRY
 from omnexa_core.vertical_workcenter.scaffold import _app_module, _module_folder
 
@@ -27,6 +28,16 @@ def _page_js(page_name: str, app: str, role_key: str) -> str:
 	$(page.body).html("<p class=\\"text-muted\\">" + __("Load omnexa_core vertical portal desk") + "</p>");
 }};
 '''
+
+
+def _sync_page_roles(page_name: str, roles: list[str]) -> None:
+	if not frappe.db.exists("Page", page_name):
+		return
+	doc = frappe.get_doc("Page", page_name)
+	doc.roles = []
+	for role in roles:
+		doc.append("roles", {"role": role})
+	doc.save(ignore_permissions=True)
 
 
 def scaffold_journey_portals(app: str) -> list[dict]:
@@ -58,7 +69,7 @@ def scaffold_journey_portals(app: str) -> list[dict]:
 			"page_name": page_name,
 			"standard": "Yes",
 			"title": role["label_en"],
-			"roles": [{"role": "System Manager"}, {"role": "Company Admin"}],
+			"roles": [{"role": r} for r in frappe_roles_for_portal_key(role["key"])],
 		}
 		(page_dir / f"{folder}.json").write_text(json.dumps(page_json, indent="\t") + "\n")
 		(page_dir / f"{folder}.js").write_text(_page_js(page_name, app, role["key"]))
@@ -69,6 +80,7 @@ def scaffold_journey_portals(app: str) -> list[dict]:
 			import_file_by_path(str(page_dir / f"{folder}.json"), force=True, ignore_version=True)
 		else:
 			frappe.db.set_value("Page", page_name, "title", role["label_en"], update_modified=False)
+			_sync_page_roles(page_name, frappe_roles_for_portal_key(role["key"]))
 
 		out.append({"page": page_name, "app": app, "role": role["key"]})
 	return out

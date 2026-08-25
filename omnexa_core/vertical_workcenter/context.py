@@ -7,6 +7,7 @@ import frappe
 from frappe import _
 
 from omnexa_core.omnexa_core.app_logo_registry import get_logo_url
+from omnexa_core.vertical_workcenter.portal_role_policy import is_portal_admin
 from omnexa_core.vertical_workcenter.registry import VERTICAL_WORKCENTER_REGISTRY, get_registry_entry
 
 
@@ -144,6 +145,12 @@ def get_workcenter_context(app: str | None = None) -> dict:
 	branch = frappe.defaults.get_user_default("Branch") or ""
 	is_admin = frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles()
 
+	brand_en = entry["title_en"]
+	brand_ar = entry["title_ar"]
+	if app == "omnexa_healthcare":
+		brand_en = "Omnexa Healthcare"
+		brand_ar = "Omnexa Healthcare — الرعاية الصحية"
+
 	return {
 		"app": app,
 		"slug": slug,
@@ -152,6 +159,11 @@ def get_workcenter_context(app: str | None = None) -> dict:
 	}",
 		"title_en": entry["title_en"],
 		"title_ar": entry["title_ar"],
+		"brand_name_en": brand_en,
+		"brand_name_ar": brand_ar,
+		"portal_subtitle_en": "Outpatient portal" if app == "omnexa_healthcare" else "Role portal",
+		"portal_subtitle_ar": "بوابة خارجية" if app == "omnexa_healthcare" else "بوابة دور",
+		"use_clinic_portal_grid": app == "omnexa_healthcare",
 		"logo_url": get_logo_url(app),
 		"grouped_portals": groups,
 		"portal_count": len(portals),
@@ -159,6 +171,7 @@ def get_workcenter_context(app: str | None = None) -> dict:
 		"branch": branch,
 		"is_admin": is_admin,
 		"can_simulate": is_admin,
+		"is_portal_admin": is_portal_admin(),
 		"status": entry.get("status"),
 		"branch_demo_hint": _("Branch → Demo data → set activity → run simulation for this vertical")
 	}

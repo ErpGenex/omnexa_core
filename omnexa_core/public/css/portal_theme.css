@@ -162,3 +162,40 @@
 	background: color-mix(in srgb, var(--app-primary, #9c27b0) 10%, transparent);
 	color: var(--app-primary, #9c27b0);
 }
+
+.oj-portal-role-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 16px;
+	margin-top: 12px;
+}
+
+.oj-portal-role-card {
+	background: #fff;
+	border: 1px solid rgba(15, 23, 42, 0.08);
+	border-radius: 16px;
+	padding: 20px;
+	cursor: pointer;
+	transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.oj-portal-role-card:hover {
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+	transform: translateY(-2px);
+}
+
+.oj-portal-role-icon {
+	font-size: 1.75rem;
+	margin-bottom: 8px;
+}
+
+.oj-portal-role-card h4 {
+	margin: 0 0 6px;
+	font-size: 1rem;
+}
+
+.oj-portal-role-card .oj-muted {
+	margin: 0 0 12px;
+	font-size: 0.85rem;
+}
+

@@ -41,3 +41,6 @@ omnexa_core.patches.v1_0.repair_empty_workspace_shortcuts
 omnexa_core.patches.v1_0.close_all_audit_gaps
 omnexa_core.patches.delete_companies_except_mh_mlab
 omnexa_core.patches.delete_orphan_branches
+omnexa_core.patches.v1_0.run_isolation_branch_sweep
+omnexa_core.patches.hide_navbar_scope_form_fields
+omnexa_core.patches.v1_0.remove_frappe_erpgenex_onboarding_files

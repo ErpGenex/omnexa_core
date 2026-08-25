@@ -1,10 +1,11 @@
 # Copyright (c) 2026, ErpGenEx
-"""Ensure all registered workcenter pages exist in DB (idempotent)."""
+"""Ensure workcenter + journey portal pages exist for installed vertical apps."""
 
 from __future__ import annotations
 
 import frappe
 
+from omnexa_core.vertical_workcenter.journey_portal_scaffold import scaffold_all_journey_portals
 from omnexa_core.vertical_workcenter.registry import VERTICAL_WORKCENTER_REGISTRY
 from omnexa_core.vertical_workcenter.scaffold import scaffold_workcenter
 
@@ -14,8 +15,6 @@ def execute():
 	for entry in VERTICAL_WORKCENTER_REGISTRY:
 		if entry.get("reference") or entry.get("status") == "finance_group":
 			continue
-		if entry.get("tier", 99) > 2:
-			continue
 		app = entry["app"]
 		if app not in installed:
 			continue
@@ -23,4 +22,8 @@ def execute():
 			scaffold_workcenter(app, sync_hooks=False)
 		except Exception:
 			frappe.log_error(title=f"Workcenter ensure failed: {app}")
+	try:
+		scaffold_all_journey_portals()
+	except Exception:
+		frappe.log_error(title="Journey portal scaffold failed")
 	frappe.db.commit()

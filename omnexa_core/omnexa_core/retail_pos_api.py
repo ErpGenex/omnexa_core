@@ -12,6 +12,7 @@ import frappe
 from frappe import _
 from frappe.utils import cint, flt, get_fullname, nowdate, nowtime
 
+from omnexa_core.i18n_helpers import format_msg
 from omnexa_core.omnexa_core.retail_pos_invoicing import (
 	dispatch_einvoice_for_sales_invoice,
 	ensure_walkin_customer,
@@ -366,11 +367,11 @@ def get_retail_catalog(category: str | None = None, search: str | None = None):
 
 @frappe.whitelist()
 def get_open_retail_pos_invoices():
+	company, _branch = resolve_retail_pos_company_branch()
 	return frappe.get_all(
 		"Sales Invoice",
-		filters={"docstatus": 0, "is_pos": 1
-	},
-		fields=["name", "customer", "grand_total", "modified"],
+		filters={"docstatus": 0, "is_pos": 1, "company": company},
+		fields=["name", "customer", "grand_total", "modified", "company"],
 		order_by="modified desc",
 		limit_page_length=20,
 	)
@@ -384,6 +385,10 @@ def create_retail_pos_invoice(customer: str | None = None):
 	inv.company = company
 	inv.branch = branch
 	inv.customer = customer or ensure_walkin_customer(company)
+	comp_curr = frappe.db.get_value("Company", company, "default_currency")
+	if comp_curr:
+		inv.currency = comp_curr
+		inv.conversion_rate = 1.0
 	inv.posting_date = nowdate()
 	inv.due_date = nowdate()
 	inv.is_pos = 1
@@ -415,7 +420,7 @@ def add_item_to_retail_pos(invoice_name: str, item_code: str, qty: float | int =
 	item = frappe.get_doc("Item", code)
 	if item.company != invoice.company:
 		frappe.throw(
-			_("Item {0} belongs to a different company than this invoice.").format(item.item_code or code),
+			format_msg("Item {0} belongs to a different company than this invoice.", item.item_code or code),
 			title=_("Item"),
 		)
 	if _item_has_show_in_retail_pos_field() and not cint(item.show_in_retail_pos):

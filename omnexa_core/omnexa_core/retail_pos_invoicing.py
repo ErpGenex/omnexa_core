@@ -10,16 +10,48 @@ from typing import Any
 import frappe
 from frappe import _
 
+from omnexa_core.i18n_helpers import format_msg
+
 WALKIN_CUSTOMER_NAME = "Retail Walk-in Customer"
 
 
 def resolve_retail_pos_company_branch(user: str | None = None) -> tuple[str, str]:
-	"""Resolve company/branch for POS using the same fallbacks as desk branch access."""
-	from omnexa_core.omnexa_core.branch_access import get_default_branch, get_default_company
+	"""Resolve company/branch for POS using clinic context, view scope, and branch access."""
+	from frappe.utils import cint
+
+	from omnexa_core.omnexa_core.branch_access import (
+		get_default_branch,
+		get_default_company,
+		user_can_access_all_branches,
+	)
 
 	user = user or frappe.session.user
-	company = get_default_company(user)
-	branch = get_default_branch(company, user) if company else None
+	company = ""
+	branch = ""
+
+	if frappe.db.exists("Module Def", {"app_name": "omnexa_healthcare", "name": "Omnexa Healthcare"}):
+		try:
+			from omnexa_healthcare.api.clinic_context import get_reception_desk_context
+
+			ctx = get_reception_desk_context()
+			company = (ctx.get("company") or "").strip()
+			branch = (ctx.get("branch") or "").strip()
+		except Exception:
+			pass
+
+	if user_can_access_all_branches(user):
+		stored_company = (frappe.defaults.get_user_default("omnexa_view_company", user) or "").strip()
+		view_all = cint(frappe.defaults.get_user_default("omnexa_view_all_branches", user))
+		stored_branch = (frappe.defaults.get_user_default("omnexa_view_branch", user) or "").strip()
+		if stored_company:
+			company = stored_company
+		if not view_all and stored_branch and stored_branch not in ("__ALL__", ""):
+			branch = stored_branch
+
+	if not company:
+		company = get_default_company(user) or ""
+	if not branch and company:
+		branch = get_default_branch(company, user) or ""
 
 	if not company:
 		frappe.throw(
@@ -31,8 +63,9 @@ def resolve_retail_pos_company_branch(user: str | None = None) -> tuple[str, str
 		)
 	if not branch:
 		frappe.throw(
-			_("No branch is available for company {0}. Create a Branch or assign User Branch Access.").format(
-				frappe.bold(company)
+			format_msg(
+				"No branch is available for company {0}. Create a Branch or assign User Branch Access.",
+				frappe.bold(company),
 			),
 			title=_("Retail POS"),
 		)

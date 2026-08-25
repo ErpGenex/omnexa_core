@@ -39,6 +39,7 @@ from omnexa_core.omnexa_core.doctype_event_registry import build_global_doc_even
 
 # include js, css files in header of desk.html
 app_include_css = [
+	"/assets/omnexa_core/css/egx_desk_design_system.css",
 	"/assets/omnexa_core/css/portal_theme.css",
 	"/assets/omnexa_core/css/omnexa_core.css",
 	"/assets/omnexa_core/css/workspace_help_panel.css",
@@ -47,9 +48,12 @@ app_include_css = [
 	"/assets/omnexa_core/css/omnexa-finance-journey.css",
 	"/assets/omnexa_core/css/demo_wizard.css",
 	"/assets/omnexa_core/css/sidebar_categories.css",
+	"/assets/omnexa_core/css/omnexa_navbar_scope.css",
 ]
 app_include_js = [
 	"/assets/omnexa_core/js/frappe_ready_shim.js",
+	"/assets/omnexa_core/js/egx_desk_page_boot.js",
+	"/assets/omnexa_core/js/egx_desk_dashboard.js",
 	"/assets/omnexa_core/js/company_demo_data_hub.js",
 	"/assets/omnexa_core/js/model_with_doctype_guard.js",
 	"/assets/omnexa_core/js/workspace_shortcut_icons.js",
@@ -60,6 +64,8 @@ app_include_js = [
 	"/assets/omnexa_core/js/global_long_ops_progress.js",
 	"/assets/omnexa_core/js/sell_pos_quick_action.js",
 	"/assets/omnexa_core/js/company_branch_link_filters.js",
+	"/assets/omnexa_core/js/omnexa_view_scope.js",
+	"/assets/omnexa_core/js/desk_navbar_form_scope.js",
 	"/assets/omnexa_core/js/query_report_date_range_defaults.js",
 	"/assets/omnexa_core/js/query_report_ux_enhancements.js",
 	"/assets/omnexa_core/js/query_report_export_enhancements.js",
@@ -67,6 +73,9 @@ app_include_js = [
 	"/assets/omnexa_core/js/branch_eta_signing.js",
 	"/assets/omnexa_core/js/desk_navbar_lang_activity.js",
 	"/assets/omnexa_core/js/desk_context_switcher.js",
+	"/assets/omnexa_core/js/activity_menu_guard.js",
+	"/assets/omnexa_core/js/activity_sidebar_filter.js",
+	"/assets/omnexa_core/js/desk_clear_cache_logout.js",
 	"/assets/omnexa_core/js/sidebar_categories.js",
 	"/assets/omnexa_core/js/finance_sidebar_brand.js",
 	"/assets/omnexa_core/js/retail_pos.js",
@@ -215,6 +224,19 @@ after_app_install = "omnexa_core.install.after_any_app_install"
 # 	}
 # }
 doc_events = build_global_doc_event_handlers()
+doc_events.setdefault("*", {})
+if not doc_events["*"].get("before_validate"):
+	doc_events["*"]["before_validate"] = "omnexa_core.omnexa_core.user_context.apply_company_branch_defaults"
+elif isinstance(doc_events["*"]["before_validate"], list):
+	if "omnexa_core.omnexa_core.user_context.apply_company_branch_defaults" not in doc_events["*"]["before_validate"]:
+		doc_events["*"]["before_validate"].insert(
+			0, "omnexa_core.omnexa_core.user_context.apply_company_branch_defaults"
+		)
+elif doc_events["*"]["before_validate"] != "omnexa_core.omnexa_core.user_context.apply_company_branch_defaults":
+	doc_events["*"]["before_validate"] = [
+		"omnexa_core.omnexa_core.user_context.apply_company_branch_defaults",
+		doc_events["*"]["before_validate"],
+	]
 
 permission_query_conditions = {
 	"*": "omnexa_core.omnexa_core.permissions.global_branch_permission_query_conditions"
@@ -264,7 +286,8 @@ scheduler_events = {
 # Testing
 # -------
 
-# before_tests = "omnexa_core.install.before_tests"
+# Testing — global hook for all Omnexa apps on this site
+before_tests = "omnexa_core.install.before_tests"
 
 # Overriding Methods
 # ------------------------------
@@ -303,6 +326,10 @@ before_request = [
 	"omnexa_core.omnexa_core.report_defaults.auto_apply_company_branch_report_filters",
 ]
 # after_request = ["omnexa_core.utils.after_request"]
+
+update_website_context = [
+	"omnexa_core.omnexa_core.scoped_website_assets.update_website_context",
+]
 
 # Job Events
 # ----------

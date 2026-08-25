@@ -1,0 +1,77 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"finance_factoring-title\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\\ud83d\\udcc4 Factoring</b></span>\",\"col\":12}},{\"id\":\"finance_factoring-sec-0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>\\ud83d\\udcc4 Factoring</b></span>\",\"col\":12}},{\"id\":\"finance_factoring-lnk-0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Factoring Portal\",\"col\":4}},{\"id\":\"finance_factoring-lnk-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Factoring Executive\",\"col\":4}}]",
+ "creation": "2026-08-24 23:35:34.192774",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "es-line-file-text",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 1,
+ "label": "\ud83d\udcc4 Factoring",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\ud83d\udcc4 Factoring",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Factoring Portal",
+   "link_count": 0,
+   "link_to": "fc-servicing-portal",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Factoring Executive",
+   "link_count": 0,
+   "link_to": "fc-executive-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-08-24 23:35:34.223350",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "\ud83d\udcc4 Factoring",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Finance Factoring Officer"
+  }
+ ],
+ "sequence_id": 2.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "label": "Factoring Portal",
+   "link_to": "fc-servicing-portal",
+   "type": "Page"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "Factoring Executive",
+   "link_to": "fc-executive-dashboard",
+   "type": "Page"
+  }
+ ],
+ "title": "\ud83d\udcc4 Factoring"
+}

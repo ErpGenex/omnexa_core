@@ -21,13 +21,18 @@ class TestRolePermissions(FrappeTestCase):
 
 	def _ensure_user(self):
 		if not frappe.db.exists("User", self._email):
-			u = frappe.new_doc("User")
-			u.email = self._email
-			u.first_name = "Branch"
-			u.last_name = "Restricted"
-			u.enabled = 1
-			u.new_password = "test123"
-			u.insert(ignore_permissions=True)
+			prev_import = getattr(frappe.flags, "in_import", False)
+			frappe.flags.in_import = True
+			try:
+				u = frappe.new_doc("User")
+				u.email = self._email
+				u.first_name = "Branch"
+				u.last_name = "Restricted"
+				u.enabled = 1
+				u.new_password = "test123"
+				u.insert(ignore_permissions=True)
+			finally:
+				frappe.flags.in_import = prev_import
 		else:
 			u = frappe.get_doc("User", self._email)
 		# Strip privileged roles — keep a minimal desk role only.
@@ -63,23 +68,21 @@ class TestRolePermissions(FrappeTestCase):
 			{
 				"doctype": "Branch",
 				"company": co.name,
-				"branch_name": f"Branch A {abbr
-	}",
-				"branch_code": f"A{abbr[:2]
-	}",
-				"status": "Active"
-	}
+				"branch_name": f"Branch A {abbr}",
+				"branch_code": f"A{abbr[:2]}",
+				"status": "Active",
+				"country_code": "EG",
+			}
 		).insert(ignore_permissions=True)
 		b2 = frappe.get_doc(
 			{
 				"doctype": "Branch",
 				"company": co.name,
-				"branch_name": f"Branch B {abbr
-	}",
-				"branch_code": f"B{abbr[:2]
-	}",
-				"status": "Active"
-	}
+				"branch_name": f"Branch B {abbr}",
+				"branch_code": f"B{abbr[:2]}",
+				"status": "Active",
+				"country_code": "EG",
+			}
 		).insert(ignore_permissions=True)
 		return co.name, b1.name, b2.name
 

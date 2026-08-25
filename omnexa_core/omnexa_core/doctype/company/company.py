@@ -26,7 +26,7 @@ class Company(Document):
 		prev = self.get_doc_before_save()
 		if not prev:
 			return
-		keys = ("business_activity", "industry_sector")
+		keys = ("business_activity", "industry_sector", "strict_activity_menu_filtering")
 		if any((prev.get(k) or "") != (self.get(k) or "") for k in keys):
 			try:
 				from omnexa_core.omnexa_core.app_visibility import clear_desk_visibility_cache

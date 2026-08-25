@@ -1,0 +1,23 @@
+{
+ "action": "Go to Page",
+ "action_label": "Open",
+ "callback_message": "Use the journey sidebar and work scenarios on this page, then click Continue.",
+ "callback_title": "CreditPulse",
+ "creation": "2026-07-22 23:19:08.456210",
+ "description": "Jump to the **CreditPulse** page.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-08-25 14:00:29.699001",
+ "modified_by": "Administrator",
+ "name": "ERPGENEX-WS-finance_group-03-page-ce_executive_dashboard",
+ "owner": "Administrator",
+ "path": "ce-executive-dashboard",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Open CreditPulse",
+ "validate_action": 1
+}

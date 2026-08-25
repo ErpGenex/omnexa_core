@@ -51,6 +51,13 @@ def boot_session(bootinfo):
 	}
 
 	try:
+		from omnexa_core.omnexa_core.session_context import get_boot_filter_options
+
+		bootinfo.omnexa_filter_options = get_boot_filter_options()
+	except Exception:
+		bootinfo.omnexa_filter_options = {}
+
+	try:
 		from omnexa_core.omnexa_core.app_visibility import inject_desk_visibility_boot
 
 		inject_desk_visibility_boot(bootinfo)

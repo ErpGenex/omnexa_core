@@ -343,8 +343,7 @@ def hide_role_demo_workspaces() -> list[str]:
 		frappe.db.set_value(
 			"Workspace",
 			name,
-			{"is_hidden": 1, "public": 1, "parent_page": ""
-	},
+			{"is_hidden": 1, "public": 1, "parent_page": ""},
 			update_modified=False,
 		)
 		hidden.append(name)

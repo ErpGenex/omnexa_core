@@ -17,6 +17,9 @@
     "business_activity",
     "industry_sector",
     "enable_branches",
+    "activity_isolation_section",
+    "strict_activity_menu_filtering",
+    "activity_isolation_note",
     "tab_break_1",
     "tax_section",
     "tax_id",
@@ -162,6 +165,24 @@
       "fieldname": "enable_branches",
       "fieldtype": "Check",
       "label": "Enable Branches"
+    },
+    {
+      "fieldname": "activity_isolation_section",
+      "fieldtype": "Section Break",
+      "label": "Activity Menu Isolation"
+    },
+    {
+      "default": "1",
+      "description": "When enabled, Desk menus, workspaces, and pages are filtered to match this company's business activity. Regular users always see their company activity only. Administrators can switch between company activity or all activities from the navbar.",
+      "fieldname": "strict_activity_menu_filtering",
+      "fieldtype": "Check",
+      "label": "Strict activity menu filtering"
+    },
+    {
+      "fieldname": "activity_isolation_note",
+      "fieldtype": "HTML",
+      "label": "Activity isolation",
+      "options": "<div class=\"text-muted small\">Set <b>Business Activity</b> above, then enable strict filtering to hide menus from other verticals (Healthcare, Hotel Assets, Trading, etc.). Platform apps (Accounting, HR, Fixed Assets core) remain available.</div>"
     },
     {
       "collapsible": 1,

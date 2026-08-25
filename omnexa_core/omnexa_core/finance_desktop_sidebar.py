@@ -1,6 +1,5 @@
 # Copyright (c) 2026, ErpGenEx
-"""Filter desk sidebar — hide finance role-demo stubs; keep Finance Group verticals only.
-Also organize sidebar by business categories."""
+"""Filter desk sidebar — hide finance role-demo stubs; activity scope via app_visibility."""
 
 from __future__ import annotations
 
@@ -8,19 +7,30 @@ import frappe
 
 from .finance_demo.finance_role_demo import ROLE_DEMO_WORKSPACE_NAMES
 
-# Workspaces that belong to Finance Group vertical desk (control tower + group home).
-_FINANCE_GROUP_ROOT = frozenset({"Finance Group"})
-
 
 def filter_workspace_sidebar(result: dict) -> dict:
-	"""Remove role-demo stub workspaces from desk sidebar for all users."""
+	"""Remove role-demo stub workspaces and out-of-activity desks from sidebar."""
 	pages = result.get("pages") or []
 	filtered = [p for p in pages if (p.get("name") or "") not in ROLE_DEMO_WORKSPACE_NAMES]
 	if len(filtered) != len(pages):
-		result = {**result, "pages": filtered
-	}
-	
-	# Sidebar grouping uses native Frappe parent_page via sector_sidebar_sync (not flat headers).
+		result = {**result, "pages": filtered}
+
+	try:
+		from omnexa_core.omnexa_core.app_visibility import (
+			_activity_filter_applies_to_user,
+			_filter_workspace_pages,
+			get_desk_hidden_for_user,
+		)
+
+		if _activity_filter_applies_to_user():
+			hidden = get_desk_hidden_for_user()
+			pages = result.get("pages") or []
+			filtered = _filter_workspace_pages(pages, hidden)
+			if len(filtered) != len(pages):
+				result = {**result, "pages": filtered}
+	except Exception:
+		frappe.log_error(title="Omnexa: activity sidebar filter failed")
+
 	return result
 
 

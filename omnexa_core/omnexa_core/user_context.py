@@ -47,12 +47,16 @@ def _resolve_doc_branch(doc, company: str | None) -> str | None:
 
 
 def apply_company_branch_defaults(doc, method=None):
-	"""Populate company/branch from logged-in user context when missing (no manual entry)."""
+	"""Populate company/branch from desk navbar context (no manual entry on forms)."""
 	if frappe.flags.in_install:
 		return
 	if not getattr(frappe.local, "session", None):
 		return
 	if frappe.session.user == "Guest":
+		return
+	if doc.doctype in ("Company", "Branch", "User Branch Access"):
+		return
+	if doc.docstatus != 0:
 		return
 
 	try:
@@ -64,20 +68,49 @@ def apply_company_branch_defaults(doc, method=None):
 	if not has_company and not has_branch:
 		return
 
-	if has_company and not doc.get("company"):
-		doc.company = get_default_company()
+	from omnexa_core.omnexa_core.session_context import get_view_context
+
+	ctx = get_view_context()
+	navbar_company = ctx.get("company") or get_default_company()
+
+	if has_company and navbar_company and not (doc.get("company") or "").strip():
+		doc.company = navbar_company
 
 	company = doc.get("company") if has_company else None
 
+	if has_branch:
+		if not (doc.get("branch") or "").strip():
+			if ctx.get("branch") and not ctx.get("view_all_branches"):
+				doc.branch = ctx["branch"]
+			elif company:
+				resolved = _resolve_doc_branch(doc, company)
+				if resolved:
+					doc.branch = resolved
+
 	if has_branch and doc.get("branch") and not _branch_belongs_to_company(doc.branch, company):
-		# Mismatch is rejected in validate (enforce_branch_company_coherence).
 		_apply_company_currency_default(doc)
 		return
 
-	if has_branch and not doc.get("branch"):
-		doc.branch = _resolve_doc_branch(doc, company)
-
 	_apply_company_currency_default(doc)
+
+
+@frappe.whitelist()
+def get_navbar_form_defaults() -> dict:
+	"""Company/branch defaults for desk forms from navbar context."""
+	from omnexa_core.omnexa_core.session_context import get_view_context
+
+	ctx = get_view_context()
+	company = ctx.get("company") or get_default_company()
+	branch = None
+	if ctx.get("branch") and not ctx.get("view_all_branches"):
+		branch = ctx["branch"]
+	elif company:
+		branch = get_default_branch(company)
+	return {
+		"company": company,
+		"branch": branch,
+		"context": ctx,
+	}
 
 
 def _apply_company_currency_default(doc) -> None:

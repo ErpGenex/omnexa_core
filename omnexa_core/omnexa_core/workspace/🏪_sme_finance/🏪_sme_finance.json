@@ -1,0 +1,77 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"finance_sme-title\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\\ud83c\\udfea SME Finance</b></span>\",\"col\":12}},{\"id\":\"finance_sme-sec-0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>\\ud83c\\udfea SME</b></span>\",\"col\":12}},{\"id\":\"finance_sme-lnk-0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"SME Portal\",\"col\":4}},{\"id\":\"finance_sme-lnk-1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"SME Executive\",\"col\":4}}]",
+ "creation": "2026-08-24 23:35:34.504815",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "es-line-briefcase",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 1,
+ "label": "\ud83c\udfea SME Finance",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\ud83c\udfea SME",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "SME Portal",
+   "link_count": 0,
+   "link_to": "sr-servicing-portal",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "SME Executive",
+   "link_count": 0,
+   "link_to": "sr-executive-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-08-24 23:35:34.535876",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "\ud83c\udfea SME Finance",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Finance SME Officer"
+  }
+ ],
+ "sequence_id": 2.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "label": "SME Portal",
+   "link_to": "sr-servicing-portal",
+   "type": "Page"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "SME Executive",
+   "link_to": "sr-executive-dashboard",
+   "type": "Page"
+  }
+ ],
+ "title": "\ud83c\udfea SME Finance"
+}

@@ -1,0 +1,77 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"finance_mortgage-title\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>\\ud83c\\udfe0 Mortgage</b></span>\", \"col\": 12}}, {\"id\": \"finance_mortgage-sec-0\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h5\\\"><b>\\ud83c\\udfe0 Mortgage</b></span>\", \"col\": 12}}, {\"id\": \"finance_mortgage-lnk-0\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Mortgage Portal\", \"col\": 4}}, {\"id\": \"finance_mortgage-lnk-1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Mortgage Executive\", \"col\": 4}}]",
+ "creation": "2026-08-24 23:35:33.951397",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "es-line-home",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "\ud83c\udfe0 Mortgage",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\ud83c\udfe0 Mortgage",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Mortgage Portal",
+   "link_count": 0,
+   "link_to": "mg-servicing-portal",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Mortgage Executive",
+   "link_count": 0,
+   "link_to": "mg-executive-dashboard",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-08-25 19:48:38.924652",
+ "modified_by": "Administrator",
+ "module": "Omnexa Core",
+ "name": "\ud83c\udfe0 Mortgage",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Finance Mortgage Officer"
+  }
+ ],
+ "sequence_id": 2.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "label": "Mortgage Portal",
+   "link_to": "mg-servicing-portal",
+   "type": "Page"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "Mortgage Executive",
+   "link_to": "mg-executive-dashboard",
+   "type": "Page"
+  }
+ ],
+ "title": "\ud83c\udfe0 Mortgage"
+}

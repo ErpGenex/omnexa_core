@@ -109,8 +109,10 @@ APP_REGISTRY: dict[str, dict[str, str]] = {
 	},
 	"omnexa_sme_microfinance": {"family": "fs", "vertical": "sme_microfinance"
 	},
-	"omnexa_ai_employee": {"family": "infra", "vertical": "ai_employee"}
-	}
+	"omnexa_ai_employee": {"family": "infra", "vertical": "ai_employee"},
+	"erpgenex_saas": {"family": "infra", "vertical": "saas"},
+	"erpgenex_demo_studio": {"family": "infra", "vertical": "demo_studio"},
+}
 
 
 def parse_checklist_score(md_text: str) -> dict[str, Any]:

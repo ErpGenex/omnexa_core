@@ -52,3 +52,23 @@ def create_test_company(abbr: str, *, company_name: str | None = None) -> str:
 	)
 	doc.insert(ignore_permissions=True)
 	return doc.name
+
+
+def suppress_workflow_action_emails() -> None:
+	"""Disable workflow approval emails (PDF attach) during automated tests."""
+	try:
+		import frappe.workflow.doctype.workflow_action.workflow_action as workflow_action
+
+		workflow_action.send_workflow_action_email = lambda doc, transitions: None
+	except Exception:
+		pass
+
+
+def prepare_test_suite() -> None:
+	"""Global pre-test hygiene for all Omnexa apps (Wave 7 functional sweep)."""
+	import frappe.core.doctype.user.user as user_module
+
+	suppress_workflow_action_emails()
+	user_module.throttle_user_creation = lambda: None
+	frappe.conf["throttle_user_limit"] = 999999
+	frappe.set_user("Administrator")

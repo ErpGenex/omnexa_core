@@ -1,0 +1,61 @@
+{
+	"actions": [],
+	"creation": "2026-08-06 14:00:00",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"isolation_section",
+		"allow_shared_null_branch_masters",
+		"shared_master_doctypes",
+		"auto_branch_field_sweep",
+		"column_break_1",
+		"default_vat_rate"
+	],
+	"fields": [
+		{
+			"fieldname": "isolation_section",
+			"fieldtype": "Section Break",
+			"label": "Company / Branch Isolation"
+		},
+		{
+			"default": "1",
+			"description": "When enabled, master DocTypes (Customer, Item, etc.) may remain without branch; list filters use company scope only for null-branch rows.",
+			"fieldname": "allow_shared_null_branch_masters",
+			"fieldtype": "Check",
+			"label": "Allow Shared Null-Branch Masters"
+		},
+		{
+			"default": "Customer\nItem\nSupplier\nWarehouse",
+			"description": "One DocType per line. Used when shared null-branch masters is enabled.",
+			"fieldname": "shared_master_doctypes",
+			"fieldtype": "Small Text",
+			"label": "Shared Master DocTypes"
+		},
+		{
+			"default": "1",
+			"fieldname": "auto_branch_field_sweep",
+			"fieldtype": "Check",
+			"label": "Auto Branch Field Sweep on Migrate"
+		},
+		{
+			"fieldname": "column_break_1",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "default_vat_rate",
+			"fieldtype": "Float",
+			"label": "Default VAT Rate"
+		}
+	],
+	"issingle": 1,
+	"modified": "2026-08-06 14:00:00",
+	"modified_by": "Administrator",
+	"module": "Omnexa Core",
+	"name": "Omnexa Core Settings",
+	"permissions": [
+		{"role": "System Manager", "read": 1, "write": 1, "create": 1}
+	],
+	"sort_field": "modified",
+	"sort_order": "DESC",
+	"track_changes": 1
+}

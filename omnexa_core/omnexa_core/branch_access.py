@@ -106,7 +106,13 @@ def get_default_branch(company: str, user: str | None = None) -> str | None:
 	user = user or frappe.session.user
 	if user_can_access_all_branches(user):
 		if cint(frappe.defaults.get_user_default("omnexa_view_all_branches", user)):
-			pass
+			if company:
+				head_office = frappe.db.get_value(
+					"Branch", {"company": company, "is_head_office": 1}, "name"
+				)
+				if head_office:
+					return head_office
+				return frappe.db.get_value("Branch", {"company": company}, "name")
 		else:
 			branch = frappe.defaults.get_user_default("omnexa_view_branch", user)
 			if branch and branch not in ("__ALL__", ""):
@@ -262,9 +268,13 @@ def enforce_branch_access(doc, method=None, user: str | None = None):
 		if view_all or stored_branch in ("__ALL__", ""):
 			return
 		if stored_branch and stored_branch not in ("__ALL__", "") and branch != stored_branch:
-			frappe.throw(_("You are viewing branch {0} only.").format(stored_branch), title=_("Branch Access"))
+			from omnexa_core.i18n_helpers import format_msg
+
+			frappe.throw(format_msg("You are viewing branch {0} only.", stored_branch), title=_("Branch Access"))
 		if stored_company and company and company != stored_company:
-			frappe.throw(_("You are viewing company {0} only.").format(stored_company), title=_("Branch Access"))
+			from omnexa_core.i18n_helpers import format_msg
+
+			frappe.throw(format_msg("You are viewing company {0} only.", stored_company), title=_("Branch Access"))
 		return
 
 	allowed = set(get_allowed_branches(user, company) or [])

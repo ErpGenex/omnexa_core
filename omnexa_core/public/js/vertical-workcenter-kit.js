@@ -1,5 +1,5 @@
 /**
- * ErpGenEx — Generic Vertical Workcenter (Education / Healthcare / Trading parity)
+ * ErpGenEx — Generic Vertical Workcenter (isolated per app · dynamic role portals)
  */
 /* global frappe */
 frappe.provide("omnexa_core.vertical_workcenter");
@@ -22,19 +22,67 @@ frappe.provide("omnexa_core.vertical_workcenter");
 		frappe.set_route(route);
 	}
 
-	function portalGrid(groups) {
-		const $root = $('<div class="oj-portal-catalog oj-education-portals"></div>');
-		(groups || []).forEach((g) => {
-			const title = t(g.label_ar, g.label_en);
-			const $sec = $(`<div class="oj-portal-section"><h4 class="oj-portal-cat-title">${frappe.utils.escape_html(title)}</h4></div>`);
-			const $grid = $('<div class="oj-clinic-grid"></div>');
+	function labelFor(OJ, ar, en) {
+		return OJ ? OJ.t(ar, en) : t(ar, en);
+	}
+
+	function escFor(OJ, value) {
+		return OJ ? OJ.esc(value) : frappe.utils.escape_html(value == null ? "" : String(value));
+	}
+
+	/** Build sidebar from the active vertical's portal catalog — never healthcare defaults. */
+	VW.buildAppSidebar = function (ctx, currentPage, OJ) {
+		ctx = ctx || {};
+		const homeRoute = ctx.workcenter_route || (currentPage ? `/app/${currentPage}` : "/app");
+		const items = [
+			{
+				id: "workcenter",
+				label: labelFor(OJ, "مركز العمل", "Workcenter"),
+				icon: "🎯",
+				route: homeRoute,
+				active: !currentPage || currentPage === ctx.workcenter_page,
+			},
+		];
+		const seen = new Set([homeRoute]);
+		(ctx.grouped_portals || []).forEach((g) => {
 			(g.portals || []).forEach((p) => {
+				if (!p.route || p.exists === false || seen.has(p.route)) return;
+				seen.add(p.route);
+				const pageSlug = (p.route || "").split("/app/")[1] || "";
+				items.push({
+					id: p.id || pageSlug,
+					label: labelFor(OJ, p.label_ar, p.label_en),
+					icon: p.icon || "🌐",
+					route: p.route,
+					active: currentPage && (currentPage === pageSlug || p.route.indexOf(currentPage) >= 0),
+				});
+			});
+		});
+		return items.slice(0, 12);
+	};
+
+	function portalGrid(groups, OJ) {
+		const $root = $('<div class="oj-portal-catalog oj-vertical-portals"></div>');
+		(groups || []).forEach((g) => {
+			const title = labelFor(OJ, g.label_ar, g.label_en);
+			const $sec = $(`<div class="oj-portal-section"><h4 class="oj-portal-cat-title">${escFor(OJ, title)}</h4></div>`);
+			const $grid = $('<div class="oj-portal-role-grid"></div>');
+			(g.portals || []).forEach((p) => {
+				if (p.exists === false || !p.route) return;
+				const roleLabel = labelFor(OJ, p.role_ar || p.label_ar, p.role_en || p.label_en);
+				const portalLabel = labelFor(OJ, p.label_ar, p.label_en);
 				const $card = $(`
-					<div class="oj-clinic-card">
-						<div class="oj-clinic-icon">${p.icon || "🌐"}</div>
-						<h4>${frappe.utils.escape_html(t(p.label_ar, p.label_en))}</h4>
+					<div class="oj-portal-role-card">
+						<div class="oj-portal-role-icon">${p.icon || "🌐"}</div>
+						<h4>${escFor(OJ, portalLabel)}</h4>
+						<p class="oj-muted">${escFor(OJ, roleLabel)}</p>
+						<button type="button" class="oj-btn oj-btn-primary oj-btn-sm">${labelFor(OJ, "فتح", "Open")}</button>
 					</div>`);
 				$card.on("click", () => navigateRoute(p.route));
+				$card.find("button").on("click", (e) => {
+					e.stopPropagation();
+					navigateRoute(p.route);
+				});
 				$grid.append($card);
 			});
 			$sec.append($grid);
@@ -43,9 +91,14 @@ frappe.provide("omnexa_core.vertical_workcenter");
 		return $root;
 	}
 
-	/** Healthcare-parity portal grid using OmnexaJourney clinicGrid */
+	/** Healthcare-only clinic grid (doctors / waiting). */
 	VW.renderJourneyPortals = function ($container, groups, OJ, opts) {
 		opts = opts || {};
+		const useClinicGrid = opts.useClinicGrid === true;
+		if (!useClinicGrid) {
+			$container.append(portalGrid(groups, OJ));
+			return;
+		}
 		const subtitleAr = opts.portalSubtitleAr || "بوابة خارجية";
 		const subtitleEn = opts.portalSubtitleEn || "Outpatient portal";
 		const defaultIcon = opts.defaultIcon || "🌐";
@@ -57,8 +110,8 @@ frappe.provide("omnexa_core.vertical_workcenter");
 				name: OJ.lang() === "ar" ? p.label_ar : p.label_en,
 				subtitle: OJ.t(subtitleAr, subtitleEn),
 				icon: p.icon || defaultIcon,
-				doctor_count: 1,
-				waiting_count: 0,
+				doctor_count: p.doctor_count || 0,
+				waiting_count: p.waiting_count || 0,
 				route: p.route,
 				exists: p.exists,
 			}));
@@ -98,18 +151,30 @@ frappe.provide("omnexa_core.vertical_workcenter");
 						(creds.users || []).map((u) => ({ ...u, route: u.route || "—" }))
 					)
 				: "";
-		if (typeof tableHtml === "string") {
-			$panel.append(tableHtml);
-		} else {
-			$panel.append(tableHtml);
-		}
+		$panel.append(tableHtml);
 		$body.append($panel);
 	};
 
+	VW.resolveBrandName = function (data, cfg, OJ) {
+		if (cfg.brandName) return cfg.brandName;
+		if (data.brand_name_ar || data.brand_name_en) {
+			return OJ ? OJ.t(data.brand_name_ar, data.brand_name_en) : t(data.brand_name_ar, data.brand_name_en);
+		}
+		return OJ ? OJ.t(data.title_ar, data.title_en) : t(data.title_ar, data.title_en);
+	};
+
+	VW.resolvePortalOpts = function (data, cfg) {
+		const base = cfg.portalOpts || {};
+		return {
+			useClinicGrid: base.useClinicGrid === true || data.use_clinic_portal_grid === true || data.use_clinic_portal_grid === 1,
+			portalSubtitleAr: base.portalSubtitleAr || data.portal_subtitle_ar || "بوابة دور",
+			portalSubtitleEn: base.portalSubtitleEn || data.portal_subtitle_en || "Role portal",
+			defaultIcon: base.defaultIcon || "🌐",
+		};
+	};
+
 	/**
-	 * Mount healthcare-parity journey workcenter shell.
-	 * config: { pageTitle, shellTitle, shellSubtitle, shellRole, homeRoute, sidebarRole,
-	 *           brandLogoUrl, currentPage, portalOpts, load, renderExtra, bindActions }
+	 * Mount journey workcenter shell — app-isolated branding and sidebar.
 	 */
 	VW.mountJourney = function (wrapper, config) {
 		const OJ = window.OmnexaJourney;
@@ -128,6 +193,10 @@ frappe.provide("omnexa_core.vertical_workcenter");
 			const data = (await cfg.load()) || {};
 			const groups = data.groups || data.grouped_portals || [];
 			const creds = data.credentials || data.creds || null;
+			const currentPage = cfg.currentPage || data.workcenter_page || "";
+			const portalOpts = VW.resolvePortalOpts(data, cfg);
+			const brandName = VW.resolveBrandName(data, cfg, OJ);
+			const isHealthcare = (cfg.app || data.app) === "omnexa_healthcare";
 			const kpis = (data.kpis || []).map((k) => ({
 				value: k.value ?? "—",
 				label: OJ.t(k.label_ar, k.label_en),
@@ -148,7 +217,7 @@ frappe.provide("omnexa_core.vertical_workcenter");
 				$body.append(
 					`<div class="oj-panel oj-demo-portals-panel" style="margin-top:16px"><h4>${portalTitle}</h4></div>`
 				);
-				VW.renderJourneyPortals($body.find(".oj-demo-portals-panel"), groups, OJ, cfg.portalOpts || {});
+				VW.renderJourneyPortals($body.find(".oj-demo-portals-panel"), groups, OJ, portalOpts);
 			}
 			if (cfg.renderFooter) {
 				cfg.renderFooter($body, data, OJ);
@@ -157,17 +226,30 @@ frappe.provide("omnexa_core.vertical_workcenter");
 				cfg.bindActions($body, data, render);
 			}
 
+			let sidebar = cfg.sidebar;
+			if (!sidebar) {
+				if (isHealthcare && cfg.sidebarRole && OJ.defaultSidebar) {
+					sidebar = OJ.defaultSidebar(cfg.sidebarRole, currentPage);
+				} else {
+					sidebar = VW.buildAppSidebar(data, currentPage, OJ);
+				}
+			}
+
 			const shellOpts = {
-				title: cfg.shellTitle,
-				subtitle: cfg.shellSubtitle,
+				title:
+					cfg.shellTitle ||
+					`${OJ.t(data.title_ar, data.title_en)} — ${OJ.t("مركز العمل", "Workcenter")}`,
+				subtitle:
+					cfg.shellSubtitle ||
+					OJ.t("بوابات الأدوار · بدون تداخل", "Role portals · fully isolated"),
 				role: cfg.shellRole || OJ.t("مدير النظام", "System Manager"),
-				sidebar: cfg.sidebar || (OJ.defaultSidebar ? OJ.defaultSidebar(cfg.sidebarRole || "admin", cfg.currentPage) : []),
+				sidebar,
 				bodyEl: $body,
-				homeRoute: cfg.homeRoute,
+				homeRoute: cfg.homeRoute || data.workcenter_route,
+				brandName,
 				brandLogoUrl: data.logo_url || cfg.brandLogoUrl,
+				app: cfg.app || data.app,
 				kpis: kpis.length ? kpis : undefined,
-				sidebarRole: cfg.sidebarRole,
-				currentPage: cfg.currentPage,
 			};
 			const $shell = OJ.shell(shellOpts);
 			$mount.empty().append($shell);
@@ -177,102 +259,32 @@ frappe.provide("omnexa_core.vertical_workcenter");
 	};
 
 	VW.mount = function (wrapper, appName) {
-		const OJ = window.OmnexaJourney;
-		if (OJ && OJ.mountDeskPage && OJ.shell && OJ.clinicGrid) {
-			VW.mountJourney(wrapper, {
-				pageTitle: __("Workcenter"),
-				shellTitle: t("مركز عمل ErpGenEx", "ErpGenEx Workcenter"),
-				shellSubtitle: t("بوابات الأدوار · محاكاة من الفرع", "Role portals · branch simulation"),
-				shellRole: t("مدير النظام", "System Manager"),
-				homeRoute: `/app/${appName.replace("omnexa_", "")}-workcenter`,
-				sidebarRole: "admin",
-				currentPage: `${appName.replace("omnexa_", "")}-workcenter`,
-				portalOpts: { defaultIcon: "🌐" },
-				showDemoAccounts: false,
-				async load() {
-					return new Promise((resolve, reject) => {
-						frappe.call({
-							method: "omnexa_core.vertical_workcenter.context.get_workcenter_context",
-							args: { app: appName },
-							callback(r) {
-								const ctx = r.message || {};
-								resolve({
-									groups: ctx.grouped_portals || [],
-									logo_url: ctx.logo_url,
-									kpis: ctx.kpis || [],
-								});
-							},
-							error: reject,
-						});
-					});
-				},
-				renderIntro($body, data, OJ) {
-					$body.append(`<div class="oj-panel oj-phase-panel-intro">
-						<h4>${OJ.t("مركز العمل", "Workcenter")}</h4>
-						<p class="oj-muted">${OJ.t(
-							"بوابات الأدوار · محاكاة من الفرع",
-							"Role portals · branch simulation"
-						)}</p>
-					</div>`);
-				},
-			});
-			return;
-		}
-
-		const title = __("Workcenter");
-		let $mount;
-		if (OJ && OJ.mountDeskPage) {
-			$mount = OJ.mountDeskPage(wrapper, title);
-		} else {
-			const page = frappe.ui.make_app_page({ parent: wrapper, title, single_column: true });
-			$mount = $(page.body);
-		}
-
-		frappe.call({
-			method: "omnexa_core.vertical_workcenter.context.get_workcenter_context",
-			args: { app: appName },
-			callback(r) {
-				const ctx = r.message || {};
-				const groups = ctx.grouped_portals || [];
-				const $layout = $('<div class="oj-vertical-portal-layout"></div>');
-				const $sidebar = $('<aside class="oj-vertical-portal-aside"></aside>');
-				$sidebar.append(
-					`<div class="oj-vertical-portal-brand">
-						${ctx.logo_url ? `<img src="${ctx.logo_url}" alt="" />` : ""}
-						<strong>${frappe.utils.escape_html(t(ctx.title_ar, ctx.title_en))}</strong>
-					</div>`
-				);
-				(groups || []).forEach((g) => {
-					const gtitle = t(g.label_ar, g.label_en);
-					$sidebar.append(`<div class="oj-sidebar-section">${frappe.utils.escape_html(gtitle)}</div>`);
-					(g.portals || []).forEach((p) => {
-						const $link = $(`
-							<a class="oj-sidebar-link" href="${frappe.utils.escape_html(p.route)}">
-								<span class="oj-sidebar-icon">${p.icon || "🌐"}</span>
-								<span>${frappe.utils.escape_html(t(p.label_ar, p.label_en))}</span>
-							</a>`);
-						$link.on("click", (e) => {
-							e.preventDefault();
-							navigateRoute(p.route);
-						});
-						$sidebar.append($link);
+		const isHealthcare = appName === "omnexa_healthcare";
+		VW.mountJourney(wrapper, {
+			app: appName,
+			pageTitle: __("Workcenter"),
+			showDemoAccounts: false,
+			sidebarRole: isHealthcare ? "admin" : null,
+			async load() {
+				return new Promise((resolve, reject) => {
+					frappe.call({
+						method: "omnexa_core.vertical_workcenter.context.get_workcenter_context",
+						args: { app: appName },
+						callback(r) {
+							resolve(r.message || {});
+						},
+						error: reject,
 					});
 				});
-
-				const $main = $('<div class="oj-vertical-portal-main vertical-workcenter-journey"></div>');
-				$main.append(
-					`<p class="oj-muted">${t(
-						"مركز العمل — بوابات الأدوار · محاكاة من الفرع",
-						"Workcenter — role portals · branch simulation"
-					)}</p>`
-				);
-				if (ctx.can_simulate) {
-					$main.append(`<p class="oj-muted">${frappe.utils.escape_html(ctx.branch_demo_hint || "")}</p>`);
-				}
-				$main.append(portalGrid(groups));
-
-				$layout.append($sidebar).append($main);
-				$mount.empty().append($layout);
+			},
+			renderIntro($body, data, OJ) {
+				$body.append(`<div class="oj-panel oj-phase-panel-intro">
+					<h4>${OJ.esc(OJ.t(data.title_ar, data.title_en))} — ${OJ.t("مركز العمل", "Workcenter")}</h4>
+					<p class="oj-muted">${OJ.t(
+						"بوابات الأدوار الديناميكية · معزولة عن باقي القطاعات",
+						"Dynamic role portals · isolated from other verticals"
+					)}</p>
+				</div>`);
 			},
 		});
 	};
