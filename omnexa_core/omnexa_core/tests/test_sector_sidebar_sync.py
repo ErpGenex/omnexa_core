@@ -29,7 +29,7 @@ class TestSectorSidebarSync(unittest.TestCase):
 
 	def test_nursery_content_and_parent(self):
 		parent = frappe.db.get_value("Workspace", "Nursery", "parent_page") or ""
-		self.assertEqual(parent, "Industries")
+		self.assertEqual(parent, "Industry Solutions")
 		content = frappe.db.get_value("Workspace", "Nursery", "content") or "[]"
 		self.assertIn("Settings", content)
 
@@ -61,11 +61,11 @@ class TestSectorSidebarSync(unittest.TestCase):
 		order_map = build_workspace_sector_order_map()
 
 		if frappe.db.exists("Workspace", "Fixed Assets"):
-			self.assertEqual(order_map.get("Fixed Assets")[0], "ERP")
+			self.assertEqual(order_map.get("Fixed Assets")[0], "Core ERP")
 		if frappe.db.exists("Workspace", "Nursery"):
-			self.assertEqual(order_map.get("Nursery")[0], "Industries")
+			self.assertEqual(order_map.get("Nursery")[0], "Industry Solutions")
 		if frappe.db.exists("Workspace", "Theme Manager"):
-			self.assertEqual(order_map.get("Theme Manager")[0], "Platform")
+			self.assertEqual(order_map.get("Theme Manager")[0], "Platform & Administration")
 
 	def test_sync_idempotent(self):
 		from omnexa_core.omnexa_core.sector_sidebar_sync import sync_sector_sidebar

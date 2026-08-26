@@ -50,14 +50,15 @@ def _sidebar_parent_token(workspace_name: str) -> str:
 
 
 def _set_sector_parent_display(parent_name: str, sidebar_title: str, icon: str) -> None:
-	"""Update sidebar display fields only — never touch unique ``label``."""
+	"""Keep ``title`` aligned with ``name`` so desk routes match ``frappe.workspaces`` keys."""
+	_ = sidebar_title  # short label is applied in desk JS only
 	frappe.db.sql(
 		"""
 		UPDATE `tabWorkspace`
 		SET title = %s, icon = %s
 		WHERE name = %s
 		""",
-		(sidebar_title, icon, parent_name),
+		(parent_name, icon, parent_name),
 	)
 
 
@@ -75,7 +76,7 @@ def _ensure_sector_parent_workspace(sector_id: str, spec: dict) -> str | None:
 				"doctype": "Workspace",
 				"name": parent_name,
 				"label": parent_name,
-				"title": sidebar_title,
+				"title": parent_name,
 				"module": "Omnexa Core",
 				"public": 1,
 				"is_hidden": 0,
@@ -116,8 +117,9 @@ def _migrate_legacy_sector_titles() -> list[dict]:
 		if not parent_name or not frappe.db.exists("Workspace", parent_name):
 			continue
 
-		new_title = get_sector_sidebar_title(spec)
+		new_title = parent_name
 		legacy_titles = set(get_sector_legacy_titles(spec))
+		legacy_titles.add(get_sector_sidebar_title(spec))
 		current_title = (frappe.db.get_value("Workspace", parent_name, "title") or "").strip()
 		if current_title and current_title != new_title:
 			legacy_titles.add(current_title)
@@ -241,7 +243,7 @@ def sync_sector_sidebar(*, save: bool = True) -> dict:
 				and not frappe.db.get_value("Workspace", ws, "is_hidden")
 			)
 		else:
-			child_count = _count_sector_children(get_sector_sidebar_title(spec), workspace_map)
+			child_count = _count_sector_children(parent_title, workspace_map)
 
 		is_hidden = 0 if child_count > 0 else 1
 		frappe.db.set_value(
@@ -284,7 +286,7 @@ def sync_sector_sidebar(*, save: bool = True) -> dict:
 				if not order_info:
 					continue
 				child_parent, child_seq = order_info
-				if child_parent != get_sector_sidebar_title(spec):
+				if child_parent != parent_title:
 					continue
 				if not frappe.db.exists("Workspace", resolved):
 					continue

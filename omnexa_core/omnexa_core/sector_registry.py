@@ -17,7 +17,7 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 		"order": 10,
 		"label": "Core ERP",
 		"sidebar_label": "ERP",
-		"label_ar": "الأساسيات",
+		"label_ar": "أساسي",
 		"purpose": "Accounting, sales, stock, HR",
 		"icon": "accounting",
 		"parent_workspace": "Core ERP",
@@ -48,8 +48,8 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 	"projects_services": {
 		"order": 20,
 		"label": "Projects & Services",
-		"sidebar_label": "Proj-Svc",
-		"label_ar": "المشاريع",
+		"sidebar_label": "Projects",
+		"label_ar": "مشاريع",
 		"purpose": "Projects, services and maintenance",
 		"icon": "projects",
 		"parent_workspace": "Projects & Services",
@@ -64,7 +64,7 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 		"order": 30,
 		"label": "Finance Group",
 		"sidebar_label": "Finance",
-		"label_ar": "المالية",
+		"label_ar": "مالية",
 		"purpose": "Banking, lending and finance verticals",
 		"icon": "loan",
 		"parent_workspace": "Finance Group",
@@ -74,8 +74,8 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 	"audit_compliance": {
 		"order": 40,
 		"label": "Audit & Compliance",
-		"sidebar_label": "Compliance",
-		"label_ar": "الامتثال",
+		"sidebar_label": "Audit",
+		"label_ar": "تدقيق",
 		"purpose": "Audit, reporting and compliance",
 		"icon": "quality",
 		"parent_workspace": "Audit & Compliance",
@@ -91,7 +91,7 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 		"order": 50,
 		"label": "Real Estate",
 		"sidebar_label": "Realty",
-		"label_ar": "العقارات",
+		"label_ar": "عقارات",
 		"purpose": "Property, development and sales",
 		"icon": "assets",
 		"parent_workspace": "Real Estate",
@@ -104,8 +104,8 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 	"construction_engineering": {
 		"order": 60,
 		"label": "Construction & Engineering",
-		"sidebar_label": "Engineering",
-		"label_ar": "الهندسة",
+		"sidebar_label": "Eng",
+		"label_ar": "هندسة",
 		"purpose": "Construction and engineering tools",
 		"icon": "tool",
 		"parent_workspace": "Construction & Engineering",
@@ -124,8 +124,8 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 	"trading_manufacturing": {
 		"order": 70,
 		"label": "Trading & Manufacturing",
-		"sidebar_label": "Mfg-Trade",
-		"label_ar": "التجارة",
+		"sidebar_label": "Trade",
+		"label_ar": "تجارة",
 		"purpose": "Trading, manufacturing and agriculture",
 		"icon": "retail",
 		"parent_workspace": "Trading & Manufacturing",
@@ -138,8 +138,8 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 	"industry_solutions": {
 		"order": 80,
 		"label": "Industry Solutions",
-		"sidebar_label": "Industries",
-		"label_ar": "القطاعات",
+		"sidebar_label": "Sectors",
+		"label_ar": "قطاعات",
 		"purpose": "Healthcare, education, tourism and more",
 		"icon": "organization",
 		"parent_workspace": "Industry Solutions",
@@ -157,7 +157,7 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 		"order": 90,
 		"label": "AI & Intelligence",
 		"sidebar_label": "AI",
-		"label_ar": "الذكاء",
+		"label_ar": "ذكاء",
 		"purpose": "AI platform and setup intelligence",
 		"icon": "workflow",
 		"parent_workspace": "AI & Intelligence",
@@ -174,7 +174,7 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 		"order": 100,
 		"label": "Documents & Integration",
 		"sidebar_label": "Docs",
-		"label_ar": "المستندات",
+		"label_ar": "وثائق",
 		"purpose": "Documents, e-invoice and integrations",
 		"icon": "integration",
 		"parent_workspace": "Documents & Integration",
@@ -193,8 +193,8 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 	"platform_administration": {
 		"order": 110,
 		"label": "Platform & Administration",
-		"sidebar_label": "Platform",
-		"label_ar": "المنصة",
+		"sidebar_label": "Admin",
+		"label_ar": "منصة",
 		"purpose": "SaaS, marketplace and admin tools",
 		"icon": "setting-gear",
 		"parent_workspace": "Platform & Administration",
@@ -290,12 +290,18 @@ def get_sector_legacy_titles(spec: dict) -> list[str]:
 	return legacy
 
 
+def get_sector_parent_page_token(spec: dict) -> str:
+	"""Sidebar ``parent_page`` token — must match the parent workspace ``title`` (same as ``name``)."""
+	return (spec.get("parent_workspace") or "").strip()
+
+
 def get_sector_parent_titles() -> list[str]:
+	"""Workspace names used as sector parent headers in the desk sidebar."""
 	out: list[str] = []
 	for spec in sorted(SECTOR_DEFINITIONS.values(), key=lambda s: s["order"]):
-		title = get_sector_sidebar_title(spec)
-		if title and title not in out:
-			out.append(title)
+		parent = get_sector_parent_page_token(spec)
+		if parent and parent not in out:
+			out.append(parent)
 	return out
 
 
@@ -321,12 +327,12 @@ def get_workspace_sector(workspace_name: str) -> str | None:
 
 
 def build_workspace_sector_map() -> dict[str, str]:
-	"""Map resolved Workspace.name → sector parent sidebar title token."""
+	"""Map resolved Workspace.name → sector parent ``parent_page`` token."""
 	mapping: dict[str, str] = {}
 	for sector_id, spec in SECTOR_DEFINITIONS.items():
 		if spec.get("managed_by"):
 			continue
-		parent = get_sector_sidebar_title(spec)
+		parent = get_sector_parent_page_token(spec)
 		if not parent:
 			continue
 		for ws in spec.get("workspaces") or []:
@@ -337,12 +343,12 @@ def build_workspace_sector_map() -> dict[str, str]:
 
 
 def build_workspace_sector_order_map() -> dict[str, tuple[str, float]]:
-	"""Map resolved Workspace.name → (sector parent sidebar title, child order index)."""
+	"""Map resolved Workspace.name → (sector parent ``parent_page`` token, child order index)."""
 	mapping: dict[str, tuple[str, float]] = {}
 	for sector_id, spec in sorted(SECTOR_DEFINITIONS.items(), key=lambda s: s[1]["order"]):
 		if spec.get("managed_by"):
 			continue
-		parent = get_sector_sidebar_title(spec)
+		parent = get_sector_parent_page_token(spec)
 		if not parent:
 			continue
 		for idx, ws in enumerate(spec.get("workspaces") or [], start=1):
