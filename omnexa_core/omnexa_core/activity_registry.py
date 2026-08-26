@@ -184,6 +184,15 @@ ACTIVITIES: dict[str, ActivitySpec] = {
 		coa_extension_key="Services",
 		allowed_app_labels=COMPANY_ACTIVITY_ALLOWED["Services"],
 	),
+	"Legal": ActivitySpec(
+		id="Legal",
+		label_en="Legal",
+		label_ar="القانون",
+		vertical_apps=("erpgenex_legal",),
+		coa_extension_key="Legal",
+		saas_bundle_key="قانون",
+		allowed_app_labels=COMPANY_ACTIVITY_ALLOWED["Legal"],
+	),
 	"Real Estate": ActivitySpec(
 		id="Real Estate",
 		label_en="Real Estate",

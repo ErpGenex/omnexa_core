@@ -151,6 +151,7 @@ SECTOR_DEFINITIONS: dict[str, dict] = {
 			"Restaurant",
 			"Car Rental",
 			"Hotel Front Office",
+			"Legal",
 		],
 	},
 	"ai_intelligence": {

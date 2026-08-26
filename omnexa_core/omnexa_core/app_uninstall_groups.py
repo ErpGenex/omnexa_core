@@ -64,6 +64,10 @@ APP_UNINSTALL_GROUPS: dict[str, dict] = {
 		"label": "Audit & Compliance",
 		"description": "Statutory audit and reporting compliance extensions.",
 		"apps": ["omnexa_statutory_audit", "omnexa_reporting_compliance"]},
+	"legal": {
+		"label": "Legal Practice",
+		"description": "Law firms — clients, matters, cases, hearings and documents.",
+		"apps": ["erpgenex_legal"]},
 }
 
 

@@ -1195,6 +1195,33 @@ _APP_SPECS: dict[str, dict[str, Any]] = {
 		],
 		"extra_sections": []
 	},
+	"erpgenex_legal": {
+		"_requires_app": "erpgenex_legal",
+		"workspace": "Legal",
+		"module": "ErpGenEx Legal",
+		"icon": "file",
+		"headline": "Legal",
+		"parent_page": "",
+		"is_hidden": 0,
+		"tagline": "Legal practice management — clients, matters, cases, hearings, documents and compliance.",
+		"trend_doctypes": ["Legal Matter", "Legal Case", "Legal Hearing"],
+		"status_doctypes": ["Legal Matter", "Legal Task"],
+		"kpis": [
+			("Legal Clients", "Legal Client", []),
+			("Legal Matters", "Legal Matter", []),
+			("Legal Cases", "Legal Case", []),
+			("Hearings", "Legal Hearing", []),
+			("Tasks", "Legal Task", []),
+			("Conflict Checks", "Legal Conflict Check", []),
+		],
+		"shortcuts": [],
+		"kpi_trends": [
+			{"type": "Bar", "doctype": "Legal Matter", "group_by": "status", "label": "Matter status"},
+			{"type": "Pie", "doctype": "Legal Case", "group_by": "status", "label": "Case status"},
+			{"type": "Bar", "doctype": "Legal Task", "group_by": "status", "label": "Task status"},
+		],
+		"extra_sections": []
+	},
 	"omnexa_healthcare": {
 		"_requires_app": "omnexa_healthcare",
 		"workspace": "Healthcare",
@@ -3041,6 +3068,7 @@ _VERTICAL_APP_OWNED_WORKSPACES: dict[str, str] = {
 	"Maintenance Core": "erpgenex_maintenance_core",
 	"Operational Risk": "omnexa_operational_risk",
 	"E-Invoice": "omnexa_einvoice",
+	"Legal": "erpgenex_legal",
 	"Electronic Archive": "omnexa_edms"
 	}
 
@@ -3388,6 +3416,7 @@ def sync_workspace_for_app(app_name: str) -> None:
 		"omnexa_trading",
 		"omnexa_manufacturing",
 		"omnexa_tourism",
+		"erpgenex_legal",
 		"omnexa_engineering_consulting",
 		"omnexa_restaurant",
 		"omnexa_services",

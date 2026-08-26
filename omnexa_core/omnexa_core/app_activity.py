@@ -14,6 +14,8 @@ def activity_for_app(app_slug: str) -> str:
 		if isinstance(val, str) and val.strip():
 			return val.strip()
 
+	if app_slug == "erpgenex_legal":
+		return "Legal"
 	if app_slug.startswith("erpgenex_"):
 		return "ErpGenEx"
 	parts = [p for p in app_slug.replace("omnexa_", "").split("_") if p]

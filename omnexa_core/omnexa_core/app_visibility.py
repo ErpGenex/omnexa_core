@@ -78,6 +78,8 @@ COMPANY_ACTIVITY_ALLOWED: dict[str, frozenset[str]] = {
 	}),
 	"Services": _BASE_PLATFORM_LABELS | frozenset({"Services"
 	}),
+	"Legal": _BASE_PLATFORM_LABELS | frozenset({"Legal"
+	}),
 	"Statutory Audit": _BASE_PLATFORM_LABELS | frozenset({"Audit"})
 	}
 

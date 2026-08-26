@@ -152,13 +152,13 @@
       "fieldname": "business_activity",
       "fieldtype": "Select",
       "label": "Business Activity",
-      "options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nHotel Assets (إدارة أصول الفنادق)\nTrading\nPharmaceutical Trading (تجارة وتوزيع الأدوية)\nServices\nFinancial Services\nStatutory Audit"
+      "options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nHotel Assets (إدارة أصول الفنادق)\nTrading\nPharmaceutical Trading (تجارة وتوزيع الأدوية)\nServices\nLegal\nFinancial Services\nStatutory Audit"
     },
     {
       "fieldname": "industry_sector",
       "fieldtype": "Select",
       "label": "Industry Sector",
-      "options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nHotel Assets (إدارة أصول الفنادق)\nTrading\nPharmaceutical Trading (تجارة وتوزيع الأدوية)\nServices\nFinancial Services\nStatutory Audit"
+      "options": "\nGeneral\nBakeries (مخابز)\nConstruction\nEngineering Consulting\nHealthcare\nEducation\nManufacturing\nAgriculture\nTourism\nHotel Assets (إدارة أصول الفنادق)\nTrading\nPharmaceutical Trading (تجارة وتوزيع الأدوية)\nServices\nLegal\nFinancial Services\nStatutory Audit"
     },
     {
       "default": "1",
