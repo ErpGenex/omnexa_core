@@ -9,4 +9,5 @@ import frappe
 def execute():
 	from omnexa_core.vertical_workcenter.portal_page_bootstrap import sync_all_standard_portal_pages
 
-	sync_all_standard_portal_pages(import_db=True)
+	# Pages are created by ensure_vertical_journey_portals; this patch only rewrites JS.
+	sync_all_standard_portal_pages(import_db=False, files_only=True)

@@ -92,7 +92,11 @@ def scaffold_all_journey_portals() -> dict:
 			continue
 		try:
 			scaffolded.extend(scaffold_journey_portals(app))
+			frappe.db.commit()
 		except Exception as exc:
+			try:
+				frappe.db.rollback()
+			except Exception:
+				pass
 			scaffolded.append({"app": app, "error": str(exc)})
-	frappe.db.commit()
 	return {"scaffolded": scaffolded}

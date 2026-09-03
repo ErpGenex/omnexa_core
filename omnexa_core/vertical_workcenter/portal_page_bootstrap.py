@@ -101,24 +101,56 @@ def sync_trading_pharma_role_pages(*, import_db: bool = False) -> list[str]:
 
 
 @frappe.whitelist()
-def sync_all_standard_portal_pages(*, import_db: bool = True) -> dict:
+def sync_all_standard_portal_pages(*, import_db: bool = True, files_only: bool = False) -> dict:
 	"""Rewrite workcenter + default role desk page JS to Trading-style bootstrap."""
-	from omnexa_core.vertical_workcenter.journey_portal_scaffold import scaffold_all_journey_portals
-
 	result: dict = {"workcenters": [], "journey_portals": {}, "trading_pharma": [], "legal": []}
 
 	result["workcenters"] = sync_registry_workcenters(import_db=False)
-	result["journey_portals"] = scaffold_all_journey_portals()
+	if files_only:
+		result["journey_portals"] = sync_journey_portal_page_js()
+	else:
+		from omnexa_core.vertical_workcenter.journey_portal_scaffold import scaffold_all_journey_portals
+
+		result["journey_portals"] = scaffold_all_journey_portals()
 	result["trading_pharma"] = sync_trading_pharma_role_pages(import_db=False)
 
 	if "erpgenex_legal" in (frappe.get_installed_apps() or []):
 		try:
 			from erpgenex_legal.utils.legal_workcenter import sync_legal_desk_pages
 
-			result["legal"] = sync_legal_desk_pages(import_db=import_db)
+			result["legal"] = sync_legal_desk_pages(import_db=import_db and not files_only)
 		except Exception as exc:
 			result["legal"] = {"error": str(exc)}
 
-	if import_db:
+	if import_db and not files_only:
 		frappe.db.commit()
 	return result
+
+
+def sync_journey_portal_page_js() -> dict:
+	"""Rewrite journey role portal JS only — no DB import (migrate-safe)."""
+	from omnexa_core.vertical_workcenter.default_portal_catalog import DEFAULT_ROLE_PORTALS
+	from omnexa_core.vertical_workcenter.registry import VERTICAL_WORKCENTER_REGISTRY
+	from omnexa_core.vertical_workcenter.scaffold import _module_folder
+
+	installed = set(frappe.get_installed_apps() or [])
+	synced: list[str] = []
+	for entry in VERTICAL_WORKCENTER_REGISTRY:
+		if entry.get("reference") or entry.get("status") == "finance_group":
+			continue
+		if entry.get("tier", 99) > 2:
+			continue
+		app = entry["app"]
+		if app not in installed or app in ("omnexa_education", "omnexa_healthcare", "omnexa_core"):
+			continue
+		slug = entry["slug"]
+		module_root = _module_folder(app)
+		for role in DEFAULT_ROLE_PORTALS:
+			page_name = f"{slug}-{role['key']}"
+			folder = page_name.replace("-", "_")
+			page_dir = module_root / "page" / folder
+			if not page_dir.is_dir():
+				continue
+			_write_page_js(page_dir, folder, role_desk_page_js(page_name, app, role["key"]))
+			synced.append(page_name)
+	return {"synced": synced}
