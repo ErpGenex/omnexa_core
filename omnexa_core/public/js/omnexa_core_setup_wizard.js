@@ -1,3 +1,4 @@
+// i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 frappe.setup.on("before_load", function () {
 	const omnexaSlides = [
 		{

@@ -1,3 +1,4 @@
+# i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 # Copyright (c) 2026, ErpGenEx
 """Generic workcenter context — workspace links + portal pages."""
 
@@ -7,6 +8,7 @@ import frappe
 from frappe import _
 
 from omnexa_core.omnexa_core.app_logo_registry import get_logo_url
+from omnexa_core.vertical_workcenter.portal_icon_resolver import resolve_portal_icon
 from omnexa_core.vertical_workcenter.portal_role_policy import is_portal_admin
 from omnexa_core.vertical_workcenter.registry import VERTICAL_WORKCENTER_REGISTRY, get_registry_entry
 
@@ -43,7 +45,7 @@ def _workspace_page_portals(app: str) -> list[dict]:
 						"label_ar": label,
 						"route": f"/app/{link_to
 	}",
-						"icon": "🌐",
+						"icon": resolve_portal_icon(app, "Page", link_to, label),
 						"exists": bool(frappe.db.exists("Page", link_to))}
 				)
 		return portals
@@ -71,7 +73,7 @@ def _journey_pages(app: str, slug: str) -> list[dict]:
 				"label_ar": p.title or p.name,
 				"route": f"/app/{p.name
 	}",
-				"icon": "🌐",
+				"icon": resolve_portal_icon(app, "Page", p.name, p.title or p.name),
 				"exists": True
 	}
 		)
@@ -105,7 +107,7 @@ def _workspace_journey_links(app: str) -> list[dict]:
 							"label_ar": label,
 							"route": f"/app/{link_to
 	}",
-							"icon": "🌐",
+							"icon": resolve_portal_icon(app, "Page", link_to, label),
 							"exists": bool(frappe.db.exists("Page", link_to))}
 					)
 				return portals
@@ -150,13 +152,22 @@ def get_workcenter_context(app: str | None = None) -> dict:
 	if app == "omnexa_healthcare":
 		brand_en = "Omnexa Healthcare"
 		brand_ar = "Omnexa Healthcare — الرعاية الصحية"
+	if app == "erpgenex_legal":
+		brand_en = "Al-Mansoori Law Firm"
+		brand_ar = "مكتب المنصouri للمحاماة"
+
+	from omnexa_core.vertical_workcenter.role_portal_context import build_workcenter_menu_sections
+
+	menu_sections = build_workcenter_menu_sections(app, is_admin=is_admin)
+	quick_links: list[dict] = []
+	for section in menu_sections:
+		quick_links.extend(section.get("items") or [])
 
 	return {
 		"app": app,
 		"slug": slug,
 		"workcenter_page": wc_page,
-		"workcenter_route": f"/app/{wc_page
-	}",
+		"workcenter_route": f"/app/{wc_page}",
 		"title_en": entry["title_en"],
 		"title_ar": entry["title_ar"],
 		"brand_name_en": brand_en,
@@ -173,7 +184,28 @@ def get_workcenter_context(app: str | None = None) -> dict:
 		"can_simulate": is_admin,
 		"is_portal_admin": is_portal_admin(),
 		"status": entry.get("status"),
-		"branch_demo_hint": _("Branch → Demo data → set activity → run simulation for this vertical")
+		"branch_demo_hint": _("Branch → Demo data → set activity → run simulation for this vertical"),
+		"menu_sections": menu_sections,
+		"quick_links": quick_links[:24],
+		"dashboard": {
+			"kpis": [
+				{"title_en": "Role portals", "title_ar": "بوابات الأدوار", "value": len(portals), "icon": "🌐"},
+				{"title_en": "Menu items", "title_ar": "عناصر القائمة", "value": len(quick_links), "icon": "📋"},
+				{"title_en": "Workspace sections", "title_ar": "أقسام مساحة العمل", "value": len(menu_sections), "icon": "🏢"},
+			],
+			"quick_actions": quick_links[:8],
+			"work_queue": [],
+			"pending_tasks": [],
+			"approvals": [],
+			"charts": [
+				{"title_en": "Activity Trend", "title_ar": "اتجاه النشاط", "type": "line"},
+				{"title_en": "Operations", "title_ar": "العمليات", "type": "bar"},
+			],
+		},
+		"kpis": [
+			{"label_en": "Role portals", "label_ar": "بوابات الأدوار", "value": len(portals)},
+			{"label_en": "Menu items", "label_ar": "عناصر القائمة", "value": len(quick_links)},
+		],
 	}
 
 

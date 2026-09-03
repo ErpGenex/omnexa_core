@@ -1,3 +1,4 @@
+# i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 # Copyright (c) 2026, ErpGenEx and contributors
 # SPDX-License-Identifier: MIT
 """E6.1 / G3 — بادئة C2: تغطية **Workflow** ووجود **Version** كمسار تدقيق تقني.

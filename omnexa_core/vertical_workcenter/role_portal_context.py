@@ -9,16 +9,8 @@ from omnexa_core.omnexa_core.app_logo_registry import get_logo_url
 from omnexa_core.omnexa_core.workspace_site_sync import _VERTICAL_WORKSPACE_MODULES
 from omnexa_core.vertical_workcenter.context import get_workcenter_context
 from omnexa_core.vertical_workcenter.portal_role_policy import is_portal_admin
+from omnexa_core.vertical_workcenter.portal_menu_item import build_portal_menu_item
 from omnexa_core.vertical_workcenter.registry import get_registry_entry
-
-_LINK_ICONS = {
-	"Page": "📄",
-	"DocType": "📋",
-	"Report": "📊",
-	"Dashboard": "📈",
-	"Workspace": "🏢",
-	"URL": "🔗",
-}
 
 _ROLE_SECTION_HINTS: dict[str, tuple[str, ...]] = {
 	"executive-dashboard": ("dashboard", "executive", "📊", "overview"),
@@ -28,9 +20,18 @@ _ROLE_SECTION_HINTS: dict[str, tuple[str, ...]] = {
 	"analytics-dashboard": ("report", "analytics", "margin", "summary", "📈"),
 }
 
+_APP_ROLE_PORTAL_DELEGATES: dict[str, str] = {
+	"erpgenex_legal": "erpgenex_legal.api.legal_role_portal.get_role_portal_context",
+	"omnexa_trading": "omnexa_trading.pharma_portal_catalog.get_role_portal_context",
+	"omnexa_hr": "omnexa_hr.omnexa_hr.api.hr_role_portal.get_role_portal_context",
+}
 
-def _link_icon(link_type: str) -> str:
-	return _LINK_ICONS.get(link_type, "•")
+
+def _delegate_role_portal_context(app: str, role_key: str) -> dict | None:
+	handler = _APP_ROLE_PORTAL_DELEGATES.get(app)
+	if not handler:
+		return None
+	return frappe.get_attr(handler)(role_key=role_key)
 
 
 def _workspace_sections(app: str) -> list[tuple[str, list]]:
@@ -94,14 +95,7 @@ def _build_menu_sections(app: str, role_key: str, *, is_admin: bool) -> list[dic
 			if not _link_exists(link_type, link_to):
 				continue
 			items.append(
-				{
-					"label_en": label,
-					"label_ar": label,
-					"route": _route_for_link(link_type, link_to),
-					"icon": _link_icon(link_type),
-					"link_type": link_type,
-					"link_to": link_to,
-				}
+				build_portal_menu_item(app, link_type, link_to, label, _route_for_link(link_type, link_to))
 			)
 		if items:
 			out.append(
@@ -111,6 +105,29 @@ def _build_menu_sections(app: str, role_key: str, *, is_admin: bool) -> list[dic
 					"items": items,
 				}
 			)
+	return out
+
+
+def build_workcenter_menu_sections(app: str, *, is_admin: bool = True) -> list[dict]:
+	"""All workspace sections for workcenter operational menus."""
+	sections = _workspace_sections(app)
+	if not sections:
+		return []
+	out: list[dict] = []
+	for section_title, links in sections:
+		items: list[dict] = []
+		for link in links or []:
+			if not link or len(link) < 2:
+				continue
+			link_type, link_to = link[0], link[1]
+			label = link[2] if len(link) > 2 else link_to
+			if not _link_exists(link_type, link_to):
+				continue
+			items.append(
+				build_portal_menu_item(app, link_type, link_to, label, _route_for_link(link_type, link_to))
+			)
+		if items:
+			out.append({"title_en": section_title, "title_ar": section_title, "items": items})
 	return out
 
 
@@ -128,6 +145,11 @@ def get_role_portal_context(app: str, role_key: str) -> dict:
 	"""Desk payload for default vertical role portals."""
 	app = (app or "").strip()
 	role_key = (role_key or "").strip()
+
+	delegated = _delegate_role_portal_context(app, role_key)
+	if delegated:
+		return delegated
+
 	entry = get_registry_entry(app)
 	if not entry:
 		frappe.throw(frappe._("Unknown vertical app: {0}").format(app))
@@ -167,6 +189,21 @@ def get_role_portal_context(app: str, role_key: str) -> dict:
 		"sibling_portals": sibling_portals,
 		"menu_sections": menu_sections,
 		"quick_links": quick_links[:24],
+		"dashboard": {
+			"kpis": [
+				{"title_en": "Role portals", "title_ar": "بوابات الأدوار", "value": len(sibling_portals), "icon": "🌐"},
+				{"title_en": "Menu items", "title_ar": "عناصر القائمة", "value": len(quick_links), "icon": "📋"},
+				{"title_en": "Workspace sections", "title_ar": "أقسام مساحة العمل", "value": len(menu_sections), "icon": "🏢"},
+			],
+			"quick_actions": quick_links[:6],
+			"work_queue": [],
+			"pending_tasks": [],
+			"approvals": [],
+			"charts": [
+				{"title_en": "Activity Trend", "title_ar": "اتجاه النشاط", "type": "line"},
+				{"title_en": "Operations", "title_ar": "العمليات", "type": "bar"},
+			],
+		},
 		"kpis": [
 			{"label_en": "Role portals", "label_ar": "بوابات الأدوار", "value": len(sibling_portals)},
 			{"label_en": "Menu items", "label_ar": "عناصر القائمة", "value": len(quick_links)},

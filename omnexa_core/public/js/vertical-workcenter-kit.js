@@ -1,3 +1,4 @@
+// i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 /**
  * ErpGenEx — Generic Vertical Workcenter (isolated per app · dynamic role portals)
  */
@@ -259,33 +260,19 @@ frappe.provide("omnexa_core.vertical_workcenter");
 	};
 
 	VW.mount = function (wrapper, appName) {
-		const isHealthcare = appName === "omnexa_healthcare";
-		VW.mountJourney(wrapper, {
-			app: appName,
-			pageTitle: __("Workcenter"),
-			showDemoAccounts: false,
-			sidebarRole: isHealthcare ? "admin" : null,
-			async load() {
-				return new Promise((resolve, reject) => {
-					frappe.call({
-						method: "omnexa_core.vertical_workcenter.context.get_workcenter_context",
-						args: { app: appName },
-						callback(r) {
-							resolve(r.message || {});
-						},
-						error: reject,
-					});
+		const VP = window.omnexa_core && omnexa_core.vertical_portal;
+		if (VP && VP.mountWorkcenter) {
+			VP.mountWorkcenter(wrapper, appName, {
+				pageTitle: __("Workcenter"),
+			});
+			return;
+		}
+		frappe.require("/assets/omnexa_core/js/vertical-portal-desk.js", () => {
+			if (omnexa_core.vertical_portal && omnexa_core.vertical_portal.mountWorkcenter) {
+				omnexa_core.vertical_portal.mountWorkcenter(wrapper, appName, {
+					pageTitle: __("Workcenter"),
 				});
-			},
-			renderIntro($body, data, OJ) {
-				$body.append(`<div class="oj-panel oj-phase-panel-intro">
-					<h4>${OJ.esc(OJ.t(data.title_ar, data.title_en))} — ${OJ.t("مركز العمل", "Workcenter")}</h4>
-					<p class="oj-muted">${OJ.t(
-						"بوابات الأدوار الديناميكية · معزولة عن باقي القطاعات",
-						"Dynamic role portals · isolated from other verticals"
-					)}</p>
-				</div>`);
-			},
+			}
 		});
 	};
 })();

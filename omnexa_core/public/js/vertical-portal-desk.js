@@ -1,5 +1,5 @@
 /**
- * ErpGenEx — Generic vertical role portal desk (sidebar + main)
+ * ErpGenEx — Standard role portal desk (Trading / Pharma layout for all verticals)
  */
 /* global frappe */
 frappe.provide("omnexa_core.vertical_portal");
@@ -7,31 +7,112 @@ frappe.provide("omnexa_core.vertical_portal");
 (function () {
 	"use strict";
 
+	const APP_PORTAL_CONTEXT = {
+		omnexa_trading: {
+			method: "omnexa_trading.pharma_portal_catalog.get_role_portal_context",
+			args: (roleKey) => ({ role_key: roleKey }),
+		},
+		erpgenex_legal: {
+			method: "erpgenex_legal.api.legal_role_portal.get_role_portal_context",
+			args: (roleKey) => ({ role_key: roleKey }),
+		},
+		omnexa_hr: {
+			method: "omnexa_hr.omnexa_hr.api.hr_role_portal.get_role_portal_context",
+			args: (roleKey) => ({ role_key: roleKey }),
+		},
+	};
+
+	const APP_WORKCENTER_CONTEXT = {
+		erpgenex_legal: {
+			method: "erpgenex_legal.api.legal_workcenter.get_workcenter_context_api",
+			args: () => ({}),
+		},
+		omnexa_trading: {
+			method: "omnexa_trading.trading_portal_catalog.get_workcenter_context",
+			args: () => ({}),
+		},
+		omnexa_education: {
+			method: "omnexa_education.api.education_portal_catalog.get_workcenter_context",
+			args: () => ({}),
+		},
+		omnexa_hr: {
+			method: "omnexa_hr.omnexa_hr.api.hr_role_portal.get_workcenter_context_api",
+			args: () => ({}),
+		},
+	};
+
 	function t(ar, en) {
 		return frappe.boot.lang === "ar" ? ar : en;
 	}
 
+	function isRtl() {
+		return (frappe.boot.lang || "").startsWith("ar");
+	}
+
+	function applyPortalDirection($el) {
+		if (!$el || !$el.length) return;
+		const rtl = isRtl();
+		$el.attr("dir", rtl ? "rtl" : "ltr");
+		$el.toggleClass("oj-rtl", rtl).toggleClass("oj-ltr", !rtl);
+	}
+
+	function esc(v) {
+		return frappe.utils.escape_html(String(v ?? ""));
+	}
+
+	function renderPortalIcon(item, cssClass) {
+		cssClass = cssClass || "oj-pharma-ops-icon";
+		const svg = item && item.icon_svg;
+		const color = (item && item.icon_color) || "#6366f1";
+		if (svg && frappe.utils && frappe.utils.icon) {
+			return `<span class="${cssClass} oj-portal-icon-badge" style="--portal-icon-bg:${esc(color)}">${frappe.utils.icon(svg, "md")}</span>`;
+		}
+		return `<span class="${cssClass}">${(item && item.icon) || "▫️"}</span>`;
+	}
+
 	function navigateRoute(route) {
 		if (!route) return;
-		if (route.startsWith("/app/") || route.startsWith("/education/")) {
+		if (route.startsWith("/app/") || route.startsWith("/legal") || route.startsWith("/education/")) {
 			window.location.href = route;
 			return;
 		}
 		frappe.set_route(route);
 	}
 
+	function scrubLegacySidebars(wrapper) {
+		document.body.classList.remove("legal-desk-active");
+		document.body.classList.add("no-sidebar");
+		document.body.setAttribute("data-sidebar", "0");
+		const $scope = $(wrapper).closest(".page-container");
+		$scope.find(".oj-shell > .oj-sidebar, aside.oj-sidebar").remove();
+		$scope.find(".legal-desk-shell > .legal-desk-aside").remove();
+		$(".desk-sidebar, .list-sidebar, .layout-side-section").hide();
+	}
+
+	function prepareMount(wrapper, title) {
+		document.body.classList.add("omnexa-role-portal-active");
+		$(wrapper).closest(".page-container").addClass("omnexa-role-portal-page");
+		scrubLegacySidebars(wrapper);
+		const page = frappe.ui.make_app_page({
+			parent: wrapper,
+			title: title || __("Role Portal"),
+			single_column: true,
+		});
+		$(wrapper).find(".page-head").hide();
+		return $(page.main);
+	}
+
 	function renderSidebar(groups, activeRoute) {
 		const $nav = $('<nav class="oj-vertical-portal-sidebar"></nav>');
 		(groups || []).forEach((g) => {
-			const title = t(g.label_ar, g.label_en);
-			$nav.append(`<div class="oj-sidebar-section">${frappe.utils.escape_html(title)}</div>`);
+			$nav.append(`<div class="oj-sidebar-section">${esc(t(g.label_ar, g.label_en))}</div>`);
 			(g.portals || []).forEach((p) => {
 				const label = t(p.label_ar, p.label_en);
 				const active = p.route === activeRoute ? " active" : "";
 				const $link = $(`
-					<a class="oj-sidebar-link${active}" href="${frappe.utils.escape_html(p.route)}">
-						<span class="oj-sidebar-icon">${p.icon || "🌐"}</span>
-						<span>${frappe.utils.escape_html(label)}</span>
+					<a class="oj-sidebar-link${active}" href="${esc(p.route)}">
+						${renderPortalIcon(p, "oj-sidebar-icon")}
+						<span>${esc(label)}</span>
 					</a>`);
 				$link.on("click", (e) => {
 					e.preventDefault();
@@ -43,37 +124,30 @@ frappe.provide("omnexa_core.vertical_portal");
 		return $nav;
 	}
 
-	function renderOperationalMenu(sections) {
-		const $menu = $('<div class="oj-pharma-ops-menu"></div>');
-		(sections || []).forEach((section) => {
-			const title = t(section.title_ar, section.title_en);
-			$menu.append(`<div class="oj-sidebar-section">${frappe.utils.escape_html(title)}</div>`);
-			(section.items || []).forEach((item) => {
-				const label = t(item.label_ar, item.label_en);
-				const $btn = $(`
-					<a class="oj-pharma-ops-link" href="${frappe.utils.escape_html(item.route)}">
-						<span class="oj-sidebar-icon">${item.icon || "📄"}</span>
-						<span>${frappe.utils.escape_html(label)}</span>
-					</a>`);
-				$btn.on("click", (e) => {
-					e.preventDefault();
-					navigateRoute(item.route);
-				});
-				$menu.append($btn);
+	function collectFlatPortals(groups) {
+		const allPortals = [];
+		(groups || []).forEach((g) => {
+			(g.portals || []).forEach((p) => {
+				if (p.exists === false || !p.route) return;
+				allPortals.push(p);
 			});
 		});
-		return $menu;
+		return allPortals;
 	}
 
-	function renderPharmaPortalNav(portals, activeRoute) {
+	function sidebarNavForContext(ctx, currentRoute) {
+		return renderSidebar(ctx.grouped_portals || [], currentRoute);
+	}
+
+	function renderFlatPortalNav(portals, activeRoute) {
 		const $nav = $('<nav class="oj-vertical-portal-sidebar"></nav>');
 		(portals || []).forEach((p) => {
 			const label = t(p.label_ar, p.label_en);
 			const active = p.route === activeRoute ? " active" : "";
 			const $link = $(`
-				<a class="oj-sidebar-link${active}" href="${frappe.utils.escape_html(p.route)}">
-					<span class="oj-sidebar-icon">${p.icon || "🌐"}</span>
-					<span>${frappe.utils.escape_html(label)}</span>
+				<a class="oj-sidebar-link${active}" href="${esc(p.route)}">
+					${renderPortalIcon(p, "oj-sidebar-icon")}
+					<span>${esc(label)}</span>
 				</a>`);
 			$link.on("click", (e) => {
 				e.preventDefault();
@@ -84,13 +158,41 @@ frappe.provide("omnexa_core.vertical_portal");
 		return $nav;
 	}
 
+	function renderOperationalMenu(sections) {
+		const $root = $('<div class="oj-pharma-ops-sections"></div>');
+		(sections || []).forEach((section) => {
+			const $sec = $(`
+				<section class="oj-pharma-ops-section">
+					<h5 class="oj-pharma-ops-section-title">${esc(t(section.title_ar, section.title_en))}</h5>
+					<div class="oj-pharma-ops-menu"></div>
+				</section>`);
+			(section.items || []).forEach((item) => {
+				const label = t(item.label_ar, item.label_en);
+				const $btn = $(`
+					<a class="oj-pharma-ops-link" href="${esc(item.route)}">
+						${renderPortalIcon(item)}
+						<span class="oj-pharma-ops-label">${esc(label)}</span>
+					</a>`);
+				$btn.on("click", (e) => {
+					e.preventDefault();
+					navigateRoute(item.route);
+				});
+				$sec.find(".oj-pharma-ops-menu").append($btn);
+			});
+			if ($sec.find(".oj-pharma-ops-link").length) {
+				$root.append($sec);
+			}
+		});
+		return $root;
+	}
+
 	function renderQuickActions(actions) {
 		const $row = $('<div class="omnexa-portal-quick-actions"></div>');
 		(actions || []).forEach((act) => {
-			const label = t(act.label_ar, act.label_en);
+			const label = t(act.label_ar || act.label, act.label_en || act.label);
 			const $btn = $(`
-				<a class="btn btn-sm btn-default omnexa-portal-quick-btn" href="${frappe.utils.escape_html(act.route)}">
-					${act.icon || "⚡"} ${frappe.utils.escape_html(label)}
+				<a class="btn btn-sm btn-default omnexa-portal-quick-btn" href="${esc(act.route)}">
+					${act.icon || "⚡"} ${esc(label)}
 				</a>`);
 			$btn.on("click", (e) => {
 				e.preventDefault();
@@ -102,19 +204,52 @@ frappe.provide("omnexa_core.vertical_portal");
 	}
 
 	function renderListPanel(titleAr, titleEn, rows, labelField) {
-		const title = t(titleAr, titleEn);
-		const $panel = $(`<div class="omnexa-portal-panel"><h5>${frappe.utils.escape_html(title)}</h5></div>`);
+		const $panel = $(`<div class="omnexa-portal-panel"><h5>${esc(t(titleAr, titleEn))}</h5></div>`);
 		const $list = $('<ul class="omnexa-portal-list"></ul>');
 		if (!rows || !rows.length) {
 			$list.append(`<li class="text-muted">${t("لا توجد عناصر", "No items")}</li>`);
 		} else {
 			rows.forEach((row) => {
-				const label = row[labelField] || row.name || row.description || row.subject || "-";
-				$list.append(`<li>${frappe.utils.escape_html(String(label))}</li>`);
+				const label =
+					row[labelField] ||
+					row.task_title ||
+					row.legal_case ||
+					row.applicant_name ||
+					row.description ||
+					row.name ||
+					"-";
+				$list.append(`<li>${esc(String(label))}</li>`);
 			});
 		}
 		$panel.append($list);
 		return $panel;
+	}
+
+	function normalizeDashboard(ctx) {
+		const dash = ctx.dashboard || {};
+		if (dash.kpis && (dash.work_queue || dash.pending_tasks || dash.approvals || dash.charts)) {
+			return dash;
+		}
+		const kpis = (dash.kpis || ctx.kpis || []).map((kpi) => ({
+			title_en: kpi.title_en || kpi.label_en,
+			title_ar: kpi.title_ar || kpi.label_ar,
+			value: kpi.value,
+			icon: kpi.icon || "📊",
+		}));
+		const quick_actions = (dash.quick_actions || []).map((act) => ({
+			label_en: act.label_en || act.label,
+			label_ar: act.label_ar || act.label,
+			route: act.route,
+			icon: act.icon || "⚡",
+		}));
+		return {
+			kpis,
+			quick_actions,
+			work_queue: dash.work_queue || dash.hearings || [],
+			pending_tasks: dash.pending_tasks || dash.tasks || [],
+			approvals: dash.approvals || dash.intake || [],
+			charts: dash.charts || [],
+		};
 	}
 
 	function renderPharmaDashboard(dashboard) {
@@ -125,11 +260,11 @@ frappe.provide("omnexa_core.vertical_portal");
 		if (kpis.length) {
 			const $kpis = $('<div class="omnexa-portal-kpi-grid"></div>');
 			kpis.forEach((kpi) => {
-				const title = t(kpi.title_ar, kpi.title_en || kpi.title);
+				const title = t(kpi.title_ar || kpi.label_ar, kpi.title_en || kpi.label_en || kpi.title);
 				$kpis.append(`
 					<div class="omnexa-portal-kpi-card">
-						<div class="omnexa-portal-kpi-title">${kpi.icon || "📊"} ${frappe.utils.escape_html(title)}</div>
-						<div class="omnexa-portal-kpi-value">${frappe.utils.escape_html(String(kpi.value ?? 0))}</div>
+						<div class="omnexa-portal-kpi-title">${kpi.icon || "📊"} ${esc(title)}</div>
+						<div class="omnexa-portal-kpi-value">${esc(String(kpi.value ?? 0))}</div>
 					</div>`);
 			});
 			$dash.append($kpis);
@@ -150,7 +285,7 @@ frappe.provide("omnexa_core.vertical_portal");
 			const $charts = $('<div class="omnexa-portal-charts"></div>');
 			dashboard.charts.forEach((ch) => {
 				const title = t(ch.title_ar, ch.title_en);
-				$charts.append(`<div class="omnexa-portal-chart-placeholder">${frappe.utils.escape_html(title)} (${ch.type || "chart"})</div>`);
+				$charts.append(`<div class="omnexa-portal-chart-placeholder">${esc(title)} (${ch.type || "chart"})</div>`);
 			});
 			$dash.append($charts);
 		}
@@ -158,310 +293,251 @@ frappe.provide("omnexa_core.vertical_portal");
 		return $dash;
 	}
 
-	omnexa_core.vertical_portal.mountPharmaDesk = function (wrapper, roleKey) {
-		const currentRoute = `/app/${frappe.get_route_str().replace(/ /g, "-")}`;
-		let $mount;
-		let pageTitle = __("Pharma Portal");
+	function renderStandardRolePortal($mount, wrapper, ctx, currentRoute, $sidebarNav) {
+		const portal = ctx.portal || {};
+		const title = t(portal.label_ar || ctx.title_ar, portal.label_en || ctx.title_en);
+		const roleLabel = t(portal.role_ar || ctx.role_ar, portal.role_en || ctx.role_en);
+		const brandName = t(ctx.brand_name_ar, ctx.brand_name_en) || title;
+		const icon = portal.icon || ctx.icon || "🌐";
 
-		const page = frappe.ui.make_app_page({ parent: wrapper, title: pageTitle, single_column: true });
-		$mount = $(page.body);
+		const $layout = $('<div class="oj-vertical-portal-layout omnexa-standard-role-portal"></div>');
+		applyPortalDirection($layout);
+		const $sidebar = $('<aside class="oj-vertical-portal-aside"></aside>');
+		$sidebar.append(`
+			<div class="oj-vertical-portal-brand">
+				${ctx.logo_url ? `<img src="${esc(ctx.logo_url)}" alt="" />` : `<span class="oj-portal-role-icon">${icon}</span>`}
+				<strong>${esc(brandName)}</strong>
+			</div>`);
+		$sidebar.append($sidebarNav || renderSidebar(ctx.grouped_portals || [], currentRoute));
+		$sidebar.append(
+			`<a class="oj-sidebar-link oj-sidebar-back" href="${esc(ctx.workcenter_route || "#")}">${t("← مركز العمل", "← Workcenter")}</a>`
+		);
 
-		frappe.call({
-			method: "omnexa_trading.pharma_portal_catalog.get_role_portal_context",
-			args: { role_key: roleKey },
-			callback(r) {
-				const ctx = r.message || {};
-				const portal = ctx.portal || {};
-				const title = t(portal.label_ar, portal.label_en) || pageTitle;
-				const roleLabel = t(portal.role_ar, portal.role_en) || roleKey;
+		const $main = $('<div class="oj-vertical-portal-main"></div>');
+		$main.append(`<h3 class="oj-section-title">${esc(title)}</h3>`);
+		$main.append(
+			`<p class="oj-muted omnexa-portal-role-line">${esc(t("بوابة دور", "Role portal"))}: <strong>${esc(roleLabel)}</strong></p>`
+		);
+		$main.append(renderPharmaDashboard(normalizeDashboard(ctx)));
 
-				const $layout = $('<div class="oj-vertical-portal-layout"></div>');
-				const $sidebar = $('<aside class="oj-vertical-portal-aside"></aside>');
-				$sidebar.append(
-					`<div class="oj-vertical-portal-brand">
-						${ctx.logo_url ? `<img src="${ctx.logo_url}" alt="" />` : ""}
-						<strong>${frappe.utils.escape_html(t(ctx.title_ar, ctx.title_en))}</strong>
-					</div>`
-				);
+		if ((ctx.menu_sections || []).length) {
+			$main.append(`<h5 class="oj-section-title">${t("القوائم التشغيلية", "Operational Menus")}</h5>`);
+			$main.append(renderOperationalMenu(ctx.menu_sections));
+		} else if ((ctx.quick_links || []).length) {
+			$main.append(`<h5 class="oj-section-title">${t("اختصارات", "Quick Links")}</h5>`);
+			$main.append(renderQuickActions(ctx.quick_links));
+		}
 
-				frappe.call({
-					method: "omnexa_trading.pharma_portal_catalog.get_grouped_pharma_portal_catalog",
-					callback(navRes) {
-						const groups = navRes.message || [];
-						const allPortals = [];
-						groups.forEach((g) => allPortals.push(...(g.portals || [])));
-						$sidebar.append(renderPharmaPortalNav(allPortals, currentRoute));
-						$sidebar.append(
-							`<a class="oj-sidebar-link oj-sidebar-back" href="${ctx.workcenter_route || "#"}">${t(
-								"← مركز العمل",
-								"← Workcenter"
-							)}</a>`
-						);
+		$layout.append($sidebar).append($main);
+		$mount.empty().append($layout);
 
-						const $main = $('<div class="oj-vertical-portal-main"></div>');
-						$main.append(`<h3 class="oj-section-title">${frappe.utils.escape_html(title)}</h3>`);
-						$main.append(
-							`<p class="oj-muted">${frappe.utils.escape_html(t("بوابة دور", "Role portal"))}: <strong>${frappe.utils.escape_html(roleLabel)}</strong></p>`
-						);
+		if (wrapper && wrapper.page && wrapper.page.set_title) {
+			wrapper.page.set_title(title);
+		}
+	}
 
-						const dashboard = ctx.dashboard || {};
-						if (dashboard.kpis || dashboard.work_queue) {
-							$main.append(renderPharmaDashboard(dashboard));
-						} else if (ctx.multi_portal && ctx.multi_portal.dashboard && ctx.multi_portal.dashboard.kpis) {
-							const $kpis = $('<div class="omnexa-portal-kpi-grid"></div>');
-							(ctx.multi_portal.dashboard.kpis || []).forEach((kpi) => {
-								$kpis.append(`
-									<div class="omnexa-portal-kpi-card">
-										<div class="omnexa-portal-kpi-title">${frappe.utils.escape_html(kpi.title)}</div>
-										<div class="omnexa-portal-kpi-value">${frappe.utils.escape_html(String(kpi.value ?? 0))}</div>
-									</div>`);
-							});
-							$main.append($kpis);
-						}
+	function resolveContextCall(appName, roleKey) {
+		const spec = APP_PORTAL_CONTEXT[appName];
+		if (spec) {
+			return { method: spec.method, args: spec.args(roleKey) };
+		}
+		return {
+			method: "omnexa_core.vertical_workcenter.role_portal_context.get_role_portal_context",
+			args: { app: appName, role_key: roleKey },
+		};
+	}
 
-						$main.append(`<h5 class="oj-section-title">${t("القوائم التشغيلية", "Operational Menus")}</h5>`);
-						$main.append(renderOperationalMenu(ctx.menu_sections || []));
+	function resolveWorkcenterCall(appName, opts) {
+		if (opts && opts.method) {
+			return { method: opts.method, args: opts.args || {} };
+		}
+		const spec = APP_WORKCENTER_CONTEXT[appName];
+		if (spec) {
+			return { method: spec.method, args: spec.args(appName) };
+		}
+		return {
+			method: "omnexa_core.vertical_workcenter.context.get_workcenter_context",
+			args: { app: appName },
+		};
+	}
 
-						$layout.append($sidebar).append($main);
-						$mount.empty().append($layout);
+	function renderStandardWorkcenter($mount, wrapper, ctx, appName, currentRoute, opts, refresh) {
+		opts = opts || {};
+		const title = t(opts.title_ar || ctx.title_ar, opts.title_en || ctx.title_en);
+		const subtitle = t(opts.subtitle_ar, opts.subtitle_en);
+		const roleLabel = t(ctx.role_label_ar || ctx.role_ar, ctx.role_label_en || ctx.role_en);
+		const brandName = t(ctx.brand_name_ar, ctx.brand_name_en) || title;
+		const icon = opts.icon || ctx.icon || "🎯";
 
-						if (wrapper && wrapper.page && wrapper.page.set_title) {
-							wrapper.page.set_title(title);
-						}
-					},
+		const $layout = $('<div class="oj-vertical-portal-layout omnexa-standard-role-portal"></div>');
+		applyPortalDirection($layout);
+		const $sidebar = $('<aside class="oj-vertical-portal-aside"></aside>');
+		$sidebar.append(`
+			<div class="oj-vertical-portal-brand">
+				${ctx.logo_url ? `<img src="${esc(ctx.logo_url)}" alt="" />` : `<span class="oj-portal-role-icon">${icon}</span>`}
+				<strong>${esc(brandName)}</strong>
+			</div>`);
+		$sidebar.append(sidebarNavForContext(ctx, currentRoute));
+		$sidebar.append(
+			`<a class="oj-sidebar-link oj-sidebar-back" href="${esc(ctx.workcenter_route || currentRoute)}">${t("← مركز العمل", "← Workcenter")}</a>`
+		);
+
+		const $main = $('<div class="oj-vertical-portal-main"></div>');
+		const $header = $('<div class="omnexa-portal-workcenter-header"></div>');
+		$header.append(`<h3 class="oj-section-title">${esc(title)}</h3>`);
+		if (subtitle) {
+			$header.append(`<p class="oj-muted omnexa-portal-role-line">${esc(subtitle)}</p>`);
+		}
+		if (roleLabel) {
+			$header.append(
+				`<p class="oj-muted omnexa-portal-role-line">${esc(t("بوابة دور", "Role portal"))}: <strong>${esc(roleLabel)}</strong></p>`
+			);
+		}
+		const $actions = $('<div class="omnexa-portal-header-actions"></div>');
+		if (refresh) {
+			$actions.append(
+				`<button type="button" class="btn btn-default btn-sm btn-wc-refresh">${t("تحديث", "Refresh")}</button>`
+			);
+		}
+		if (opts.websiteRoute) {
+			$actions.append(
+				`<a class="btn btn-primary btn-sm" href="${esc(opts.websiteRoute)}">${t("الموقع", "Website")}</a>`
+			);
+		}
+		if ($actions.children().length) {
+			$header.append($actions);
+		}
+		$main.append($header);
+		if ($actions.find(".btn-wc-refresh").length) {
+			$actions.find(".btn-wc-refresh").on("click", refresh);
+		}
+
+		if (opts.renderExtra) {
+			opts.renderExtra($main, ctx, refresh);
+		}
+
+		if (ctx.primary_portal && !ctx.is_admin) {
+			const pp = ctx.primary_portal;
+			const $hint = $(`
+				<div class="omnexa-portal-primary-hint mb-3">
+					<button type="button" class="btn btn-primary btn-sm btn-open-primary">${t("فتح بوابتي", "Open My Portal")}</button>
+				</div>`);
+			$hint.find(".btn-open-primary").on("click", () => navigateRoute(pp.route));
+			$main.append($hint);
+		}
+
+		$main.append(renderPharmaDashboard(normalizeDashboard(ctx)));
+
+		if ((ctx.menu_sections || []).length) {
+			$main.append(`<h5 class="oj-section-title">${t("القوائم التشغيلية", "Operational Menus")}</h5>`);
+			$main.append(renderOperationalMenu(ctx.menu_sections));
+		}
+
+		const groups = ctx.grouped_portals || [];
+		if (groups.length) {
+			$main.append(`<h5 class="oj-section-title">${t("بوابات الأدوار", "Role Portals")}</h5>`);
+			$main.append(omnexa_core.vertical_portal.renderPortalCategoryGrid(groups));
+		}
+
+		$layout.append($sidebar).append($main);
+		$mount.empty().append($layout);
+
+		if (wrapper && wrapper.page && wrapper.page.set_title) {
+			wrapper.page.set_title(title);
+		}
+	}
+
+	omnexa_core.vertical_portal.renderPortalCategoryGrid = function (groups) {
+		const $root = $('<div class="oj-portal-role-grid"></div>');
+		(groups || []).forEach((group) => {
+			(group.portals || []).forEach((portal) => {
+				if (portal.exists === false || !portal.route) return;
+				const $card = $(`
+					<a class="oj-portal-role-card" href="${esc(portal.route)}">
+						${renderPortalIcon(portal, "oj-portal-role-icon")}
+						<h4>${esc(t(portal.label_ar, portal.label_en))}</h4>
+						<p class="oj-muted">${esc(t(portal.role_ar, portal.role_en))}</p>
+					</a>`);
+				$card.on("click", (e) => {
+					e.preventDefault();
+					navigateRoute(portal.route);
 				});
-			},
+				$root.append($card);
+			});
 		});
+		return $root;
+	};
+
+	omnexa_core.vertical_portal.mountPharmaDesk = function (wrapper, roleKey) {
+		omnexa_core.vertical_portal.mountRoleDesk(wrapper, "omnexa_trading", roleKey);
+	};
+
+	omnexa_core.vertical_portal.mountWorkcenter = function (wrapper, appName, opts) {
+		opts = opts || {};
+		const currentRoute = `/app/${frappe.get_route_str().replace(/ /g, "-")}`;
+		document.body.classList.add("omnexa-role-portal-active");
+		$(wrapper).closest(".page-container").addClass("omnexa-role-portal-page");
+		scrubLegacySidebars(wrapper);
+		const page = frappe.ui.make_app_page({
+			parent: wrapper,
+			title: opts.pageTitle || __("Workcenter"),
+			single_column: true,
+		});
+		$(wrapper).find(".page-head").hide();
+		const $mount = $(page.main);
+
+		function load() {
+			$mount.html(`<div class="omnexa-portal-loading text-muted">${t("جاري التحميل...", "Loading...")}</div>`);
+			const callSpec = resolveWorkcenterCall(appName, opts);
+			frappe.call({
+				method: callSpec.method,
+				args: callSpec.args,
+				callback(r) {
+					if (r.exc) {
+						$mount.html(`<div class="text-muted">${t("تعذّر تحميل مركز العمل", "Failed to load workcenter")}</div>`);
+						return;
+					}
+					renderStandardWorkcenter($mount, wrapper, r.message || {}, appName, currentRoute, opts, load);
+				},
+			});
+		}
+
+		load();
 	};
 
 	omnexa_core.vertical_portal.mountRoleDesk = function (wrapper, appName, roleKey) {
-		if (appName === "omnexa_trading" && omnexa_core.vertical_portal.mountPharmaDesk) {
-			omnexa_core.vertical_portal.mountPharmaDesk(wrapper, roleKey);
-			return;
-		}
-		if (appName === "omnexa_hr" && window.egx && egx.desk && egx.desk.mountRoleLauncher) {
-			omnexa_core.vertical_portal.mountHrRoleDesk(wrapper, roleKey);
-			return;
-		}
-		const OJ = window.OmnexaJourney;
-		const VW = window.omnexa_core && omnexa_core.vertical_workcenter;
 		const currentRoute = `/app/${frappe.get_route_str().replace(/ /g, "-")}`;
-		let $mount;
-		let pageTitle = __("Role Portal");
+		const $mount = prepareMount(wrapper, __("Role Portal"));
+		$mount.html(`<div class="omnexa-portal-loading text-muted">${t("جاري التحميل...", "Loading...")}</div>`);
 
-		if (OJ && OJ.mountDeskPage) {
-			$mount = OJ.mountDeskPage(wrapper, pageTitle);
-		} else {
-			const page = frappe.ui.make_app_page({ parent: wrapper, title: pageTitle, single_column: true });
-			$mount = $(page.body);
-		}
-
+		const callSpec = resolveContextCall(appName, roleKey);
 		frappe.call({
-			method: "omnexa_core.vertical_workcenter.role_portal_context.get_role_portal_context",
-			args: { app: appName, role_key: roleKey },
+			method: callSpec.method,
+			args: callSpec.args,
 			callback(r) {
+				if (r.exc) {
+					$mount.html(`<div class="text-muted">${t("تعذّر تحميل البوابة", "Failed to load portal")}</div>`);
+					return;
+				}
 				const ctx = r.message || {};
-				const portal = ctx.portal || {};
-				const groups = ctx.grouped_portals || [];
-				const title = t(portal.label_ar || ctx.title_ar, portal.label_en || ctx.title_en) || pageTitle;
-				const roleLabel = t(portal.role_ar || ctx.role_ar, portal.role_en || ctx.role_en) || roleKey;
-				const brandName = t(ctx.brand_name_ar, ctx.brand_name_en) || t(ctx.title_ar, ctx.title_en);
-
-				const $layout = $('<div class="oj-vertical-portal-layout"></div>');
-				const $sidebar = $('<aside class="oj-vertical-portal-aside"></aside>');
-				$sidebar.append(
-					`<div class="oj-vertical-portal-brand">
-						${ctx.logo_url ? `<img src="${ctx.logo_url}" alt="" />` : `<span class="oj-portal-role-icon">${portal.icon || ctx.icon || "🌐"}</span>`}
-						<strong>${frappe.utils.escape_html(brandName)}</strong>
-					</div>`
+				renderStandardRolePortal(
+					$mount,
+					wrapper,
+					ctx,
+					currentRoute,
+					sidebarNavForContext(ctx, currentRoute)
 				);
-				$sidebar.append(renderSidebar(groups, currentRoute));
-				$sidebar.append(
-					`<a class="oj-sidebar-link oj-sidebar-back" href="${ctx.workcenter_route || "#"}">${t(
-						"← مركز العمل",
-						"← Workcenter"
-					)}</a>`
-				);
-
-				const $main = $('<div class="oj-vertical-portal-main"></div>');
-				$main.append(`<h3 class="oj-section-title">${frappe.utils.escape_html(title)} <span class="oj-muted">${portal.icon || ctx.icon || ""}</span></h3>`);
-				$main.append(
-					`<p class="oj-muted">${frappe.utils.escape_html(t("بوابة دور", "Role portal"))}: <strong>${frappe.utils.escape_html(roleLabel)}</strong></p>`
-				);
-
-				if ((ctx.kpis || []).length) {
-					const $kpis = $('<div class="omnexa-portal-kpi-grid"></div>');
-					ctx.kpis.forEach((kpi) => {
-						$kpis.append(`
-							<div class="omnexa-portal-kpi-card">
-								<div class="omnexa-portal-kpi-title">${frappe.utils.escape_html(t(kpi.label_ar, kpi.label_en))}</div>
-								<div class="omnexa-portal-kpi-value">${frappe.utils.escape_html(String(kpi.value ?? 0))}</div>
-							</div>`);
-					});
-					$main.append($kpis);
-				}
-
-				if ((ctx.menu_sections || []).length) {
-					$main.append(`<h5 class="oj-section-title">${t("القوائم التشغيلية", "Operational Menus")}</h5>`);
-					$main.append(renderOperationalMenu(ctx.menu_sections));
-				} else if ((ctx.quick_links || []).length) {
-					$main.append(`<h5 class="oj-section-title">${t("اختصارات", "Quick Links")}</h5>`);
-					$main.append(renderQuickActions(ctx.quick_links));
-				}
-
-				if (ctx.is_admin && (ctx.sibling_portals || []).length) {
-					const $portalGrid = $('<div class="oj-portal-role-grid"></div>');
-					ctx.sibling_portals.forEach((p) => {
-						if (!p.route) return;
-						const $card = $(`
-							<div class="oj-portal-role-card">
-								<div class="oj-portal-role-icon">${p.icon || "🌐"}</div>
-								<h4>${frappe.utils.escape_html(t(p.label_ar, p.label_en))}</h4>
-								<p class="oj-muted">${frappe.utils.escape_html(t(p.role_ar, p.role_en))}</p>
-								<button type="button" class="oj-btn oj-btn-primary oj-btn-sm">${t("فتح", "Open")}</button>
-							</div>`);
-						$card.on("click", () => navigateRoute(p.route));
-						$portalGrid.append($card);
-					});
-					$main.append(`<h5 class="oj-section-title" style="margin-top:20px">${t("جميع بوابات الأدوار", "All Role Portals")}</h5>`);
-					$main.append($portalGrid);
-				}
-
-				if (!ctx.menu_sections?.length && !ctx.quick_links?.length && !ctx.sibling_portals?.length) {
-					$main.append(
-						`<div class="oj-card oj-vertical-portal-card">
-							<p>${t("لا توجد قوائم مرتبطة بعد — راجع مساحة عمل القطاع.", "No linked menus yet — check the sector workspace.")}</p>
-						</div>`
-					);
-				}
-
-				$layout.append($sidebar).append($main);
-
-				if (OJ && OJ.shell && VW && VW.buildAppSidebar) {
-					const $body = $('<div class="oj-role-portal-hub"></div>').append($layout);
-					const $shell = OJ.shell({
-						title,
-						subtitle: t("بوابات الأدوار · قائمة حسب الدور", "Role portals · role-scoped menus"),
-						role: roleLabel,
-						brandName,
-						app: appName,
-						sidebar: VW.buildAppSidebar(ctx, currentRoute.split("/app/")[1], OJ),
-						bodyEl: $body,
-						homeRoute: ctx.workcenter_route,
-					});
-					$mount.empty().append($shell);
-				} else {
-					$mount.empty().append($layout);
-				}
-
-				if (wrapper && wrapper.page && wrapper.page.set_title) {
-					wrapper.page.set_title(title);
-				}
 			},
 		});
 	};
 
-	const HR_ROLE_META = {
-		"executive-dashboard": {
-			title: __("Executive Dashboard"),
-			description: __("Executive HR overview — same catalog as HR Dashboard."),
-		},
-		"operations-desk": {
-			title: __("HR Operations Desk"),
-			description: __("Day-to-day HR operations — attendance, leave, workforce management."),
-		},
-		"finance-desk": {
-			title: __("HR Finance Desk"),
-			description: __("Payroll, compensation, and HR finance workflows."),
-		},
-		"customer-portal": {
-			title: __("HR Customer Portal"),
-			description: __("External HR services portal for employees and stakeholders."),
-		},
-	};
+	if (window.frappe && frappe.router) {
+		frappe.router.on("change", () => {
+			document.body.classList.remove("omnexa-role-portal-active", "no-sidebar");
+			document.body.removeAttribute("data-sidebar");
+			$(".page-container").removeClass("omnexa-role-portal-page");
+		});
+	}
 
-	omnexa_core.vertical_portal.mountHrRoleDesk = function (wrapper, roleKey) {
-		const meta = HR_ROLE_META[roleKey] || { title: __("HR Role Desk"), description: "" };
-		const pageRoute = `hr-${roleKey}`;
-
-		egx.desk.boot_modern_page(
-			{
-				pageRoute: pageRoute,
-				wrapper: wrapper,
-				css: ["/assets/omnexa_hr/css/hr_desk.css"],
-				js: ["/assets/omnexa_core/js/egx_desk_dashboard.js"],
-			},
-			() => {
-				const page = frappe.ui.make_app_page({
-					parent: wrapper,
-					title: meta.title,
-					single_column: true,
-				});
-				page.set_primary_action(__("Refresh"), () => load($(page.main)));
-
-				function load($main) {
-					$main.html(`<div class="egx-skeleton-grid" style="padding:16px">${Array(4).fill('<div class="ed-skeleton-card" style="height:64px"></div>').join("")}</div>`);
-
-					if (roleKey === "executive-dashboard") {
-						frappe.call({
-							method: "omnexa_hr.omnexa_hr.api.hr_dashboard.get_hr_dashboard_catalog",
-							callback(r) {
-								egx.desk.mountDashboard($main, r.message || {}, { onRefresh: () => load($main) });
-							},
-						});
-						return;
-					}
-
-					const pageId = `hr-${roleKey}`;
-					frappe.call({
-						method: "omnexa_core.vertical_workcenter.context.get_workcenter_context",
-						args: { app: "omnexa_hr" },
-						callback(ctxRes) {
-							const ctx = ctxRes.message || {};
-							const all = (ctx.grouped_portals || []).flatMap((g) => g.portals || []);
-							const links = all
-								.filter((p) => p.exists !== false)
-								.map((p) => ({
-									label: t(p.label_ar, p.label_en),
-									href: p.route,
-									external: !String(p.route || "").startsWith("/hr"),
-								}));
-
-							frappe.call({
-								method: "omnexa_hr.omnexa_hr.api.hr_workspace_catalog.get_hr_workspace_catalog",
-								callback(catRes) {
-									const cat = catRes.message || {};
-									const seen = new Set(links.map((l) => l.href));
-									(cat.sections || []).forEach((section) => {
-										(section.links || []).forEach((l) => {
-											const href = l.href || l.next_href;
-											if (href && !seen.has(href)) {
-												links.push({ label: l.label, href: href, external: l.external });
-												seen.add(href);
-											}
-										});
-									});
-									const match = all.find((p) => p.id === pageId);
-									if (match) {
-										links.unshift({
-											label: t(match.label_ar, match.label_en),
-											href: match.route,
-											external: !String(match.route || "").startsWith("/hr"),
-										});
-									}
-									egx.desk.mountRoleLauncher($main, {
-										title: meta.title,
-										description: meta.description,
-										links: links.slice(0, 16),
-									});
-								},
-							});
-						},
-					});
-				}
-
-				load($(page.main));
-			}
-		);
-	};
+	omnexa_core.vertical_portal.renderPortalIcon = renderPortalIcon;
 })();

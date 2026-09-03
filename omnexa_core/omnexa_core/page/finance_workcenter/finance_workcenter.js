@@ -1,3 +1,4 @@
+// i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 frappe.pages["finance-workcenter"].on_page_load = function (wrapper) {
 	function start(OJ) {
 		const $mount = OJ.mountDeskPage(wrapper, __("Finance Workcenter"));

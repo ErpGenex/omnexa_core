@@ -1,3 +1,4 @@
+# i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 # Copyright (c) 2026, ErpGenEx and contributors
 # SPDX-License-Identifier: MIT
 """E5.1 — دخان حمل خفيف مع **نِسَب مئوية** (P50/P95) لمسار DB من طبقة التطبيق.

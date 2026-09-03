@@ -14,20 +14,11 @@ from omnexa_core.vertical_workcenter.registry import VERTICAL_WORKCENTER_REGISTR
 from omnexa_core.vertical_workcenter.scaffold import _app_module, _module_folder
 
 
+from omnexa_core.vertical_workcenter.portal_page_bootstrap import role_desk_page_js
+
+
 def _page_js(page_name: str, app: str, role_key: str) -> str:
-	return f'''frappe.pages["{page_name}"].on_page_load = function (wrapper) {{
-	if (window.omnexa_core && omnexa_core.vertical_portal && omnexa_core.vertical_portal.mountRoleDesk) {{
-		omnexa_core.vertical_portal.mountRoleDesk(wrapper, "{app}", "{role_key}");
-		return;
-	}}
-	const page = frappe.ui.make_app_page({{
-		parent: wrapper,
-		title: __("{page_name}"),
-		single_column: true,
-	}});
-	$(page.body).html("<p class=\\"text-muted\\">" + __("Load omnexa_core vertical portal desk") + "</p>");
-}};
-'''
+	return role_desk_page_js(page_name, app, role_key)
 
 
 def _sync_page_roles(page_name: str, roles: list[str]) -> None:

@@ -1,3 +1,4 @@
+# i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 # Copyright (c) 2026, ErpGenEx
 """Industry Solutions home workspace — vertical shortcuts, Arabic header."""
 

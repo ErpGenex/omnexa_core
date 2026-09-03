@@ -138,29 +138,203 @@
 	margin-bottom: 1.5rem;
 }
 
+.oj-pharma-ops-sections {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	margin-top: 0.5rem;
+}
+
+.oj-pharma-ops-section-title {
+	font-size: 0.78rem;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: #003366;
+	margin: 0 0 0.75rem;
+}
+
+.omnexa-portal-role-line {
+	margin-bottom: 1rem;
+}
+
+.omnexa-portal-loading {
+	padding: 2rem;
+	text-align: center;
+}
+
+.omnexa-portal-workcenter-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.omnexa-portal-header-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.omnexa-portal-primary-hint {
+	margin-bottom: 0.5rem;
+}
+
+/* Hide Frappe desk sidebar — commerce/trading portal full layout */
+body.omnexa-role-portal-active .page-head,
+body.omnexa-role-portal-active .layout-side-section,
+body.omnexa-role-portal-active .desk-sidebar,
+body.omnexa-role-portal-active .list-sidebar,
+body.omnexa-role-portal-active .overlay-sidebar,
+body.omnexa-role-portal-active .standard-sidebar,
+body.omnexa-role-portal-active .oj-shell > .oj-sidebar,
+body.omnexa-role-portal-active aside.oj-sidebar,
+body.omnexa-role-portal-active .legal-desk-shell > .legal-desk-aside,
+.omnexa-role-portal-page .page-head,
+.omnexa-role-portal-page .layout-side-section,
+.omnexa-role-portal-page .desk-sidebar,
+.omnexa-role-portal-page .list-sidebar {
+	display: none !important;
+}
+
+/* When standard portal layout is present, drop legacy hero / duplicate chrome */
+body.omnexa-role-portal-active .legal-desk-shell:has(.oj-vertical-portal-layout) > .legal-desk-aside,
+body.omnexa-role-portal-active .legal-desk-shell:has(.oj-vertical-portal-layout) .legal-desk-hero,
+body.omnexa-role-portal-active .oj-shell:has(.oj-vertical-portal-layout) > .oj-sidebar {
+	display: none !important;
+}
+
+body.omnexa-role-portal-active .legal-desk-shell:has(.oj-vertical-portal-layout) > .legal-desk-main,
+body.omnexa-role-portal-active .oj-shell:has(.oj-vertical-portal-layout) > .oj-main {
+	width: 100% !important;
+	max-width: 100% !important;
+	flex: 1 1 100% !important;
+}
+
+body.omnexa-role-portal-active.no-sidebar .layout-side-section,
+body.omnexa-role-portal-active.no-sidebar .layout-main-section-wrapper {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+body.omnexa-role-portal-active .layout-main-section-wrapper,
+.omnexa-role-portal-page .layout-main-section-wrapper {
+	padding: 0 !important;
+	max-width: 100% !important;
+}
+
+body.omnexa-role-portal-active .layout-main-section,
+.omnexa-role-portal-page .layout-main-section {
+	border: 0;
+	padding: 12px 16px 24px;
+	margin: 0;
+	max-width: 100% !important;
+	flex: 0 0 100% !important;
+	width: 100% !important;
+	background: #f0f4f8;
+}
+
+body.omnexa-role-portal-active .page-content > .row > [class*="col-lg-2"],
+.omnexa-role-portal-page .page-content > .row > [class*="col-lg-2"] {
+	display: none !important;
+}
+
+body.omnexa-role-portal-active .page-content > .row > [class*="col-lg-10"],
+body.omnexa-role-portal-active .page-content > .row > [class*="col-md-12"],
+.omnexa-role-portal-page .page-content > .row > [class*="col-lg-10"],
+.omnexa-role-portal-page .page-content > .row > [class*="col-md-12"] {
+	max-width: 100% !important;
+	flex: 0 0 100% !important;
+	width: 100% !important;
+}
+
+body.omnexa-role-portal-active .oj-vertical-portal-layout,
+.omnexa-role-portal-page .oj-vertical-portal-layout {
+	min-height: calc(100vh - 72px);
+}
+
+.omnexa-standard-role-portal .oj-vertical-portal-aside {
+	background: #f8fafc;
+}
+
 .oj-pharma-ops-menu {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-	gap: 0.5rem;
-	margin-top: 1rem;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 0.75rem;
 }
 
 .oj-pharma-ops-link {
 	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 0.65rem 0.85rem;
-	border-radius: 8px;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.55rem;
+	padding: 1rem;
+	border-radius: 12px;
 	border: 1px solid var(--border-color, #e0e0e0);
 	background: var(--card-bg, #fff);
 	color: var(--text-color, #212121);
 	text-decoration: none;
-	transition: background 0.15s ease;
+	min-height: 96px;
+	transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.oj-pharma-ops-icon {
+	font-size: 1.75rem;
+	line-height: 1;
+}
+
+.oj-portal-icon-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: 12px;
+	background: var(--portal-icon-bg, #6366f1);
+	color: #fff;
+	flex-shrink: 0;
+}
+
+.oj-portal-icon-badge .es-icon,
+.oj-portal-icon-badge .icon {
+	width: 1.35rem;
+	height: 1.35rem;
+	stroke: currentColor;
+	fill: currentColor;
+	color: #fff;
+}
+
+.oj-sidebar-icon.oj-portal-icon-badge {
+	width: 2rem;
+	height: 2rem;
+	border-radius: 10px;
+}
+
+.oj-sidebar-icon.oj-portal-icon-badge .es-icon,
+.oj-sidebar-icon.oj-portal-icon-badge .icon {
+	width: 1rem;
+	height: 1rem;
+}
+
+.oj-portal-role-icon.oj-portal-icon-badge {
+	margin-bottom: 8px;
+}
+
+.oj-pharma-ops-label {
+	font-size: 0.92rem;
+	font-weight: 600;
+	line-height: 1.3;
 }
 
 .oj-pharma-ops-link:hover {
 	background: color-mix(in srgb, var(--app-primary, #9c27b0) 10%, transparent);
 	color: var(--app-primary, #9c27b0);
+	transform: translateY(-1px);
+	box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+	text-decoration: none;
 }
 
 .oj-portal-role-grid {
@@ -197,5 +371,38 @@
 .oj-portal-role-card .oj-muted {
 	margin: 0 0 12px;
 	font-size: 0.85rem;
+}
+
+/* RTL — role portals & workcenters */
+[dir="rtl"] .oj-vertical-portal-layout,
+.oj-rtl .oj-vertical-portal-layout {
+	direction: rtl;
+}
+
+[dir="rtl"] .oj-vertical-portal-aside,
+.oj-rtl .oj-vertical-portal-aside {
+	border-left: none;
+	border-right: 1px solid var(--border-color, #e0e0e0);
+}
+
+[dir="rtl"] .oj-sidebar-link,
+.oj-rtl .oj-sidebar-link {
+	text-align: right;
+}
+
+[dir="rtl"] .omnexa-portal-kpi-grid,
+.oj-rtl .omnexa-portal-kpi-grid {
+	direction: rtl;
+}
+
+[dir="rtl"] .oj-pharma-ops-link,
+.oj-rtl .oj-pharma-ops-link {
+	align-items: flex-end;
+	text-align: right;
+}
+
+[dir="rtl"] .omnexa-portal-quick-actions,
+.oj-rtl .omnexa-portal-quick-actions {
+	flex-direction: row-reverse;
 }
 

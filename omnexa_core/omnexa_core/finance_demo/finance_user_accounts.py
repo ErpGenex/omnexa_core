@@ -1,3 +1,4 @@
+# i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 # Copyright (c) 2026, ErpGenEx
 """Export finance group user accounts + workflow roles to master docs."""
 

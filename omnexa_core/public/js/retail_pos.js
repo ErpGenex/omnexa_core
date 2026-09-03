@@ -1,3 +1,4 @@
+// i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 frappe.provide("omnexa_core.retail_pos");
 
 omnexa_core.retail_pos = {

@@ -708,6 +708,7 @@ def sync_vertical_app_workspace_menus() -> dict:
 		("erpgenex_realestate_dev", "erpgenex_realestate_dev.workspace.rd_workspace", "sync_rd_workspace_menu", "realestate_dev"),
 		("erpgenex_realestate_sales", "erpgenex_realestate_sales.workspace.rs_workspace", "sync_rs_workspace_menu", "realestate_sales"),
 		("erpgenex_maintenance_core", "erpgenex_maintenance_core.workspace.mc_workspace", "sync_mc_workspace_menu", "maintenance_core"),
+		("erpgenex_legal", "erpgenex_legal.legal_workspace", "sync_legal_workspace_menu", "legal"),
 		("omnexa_operational_risk", "omnexa_operational_risk.workspace.or_workspace", "sync_or_workspace_menu", "operational_risk"),
 		("omnexa_einvoice", "omnexa_einvoice.workspace.ei_workspace", "sync_ei_workspace_menu", "einvoice"),
 	)

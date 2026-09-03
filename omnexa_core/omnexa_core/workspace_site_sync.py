@@ -53,6 +53,7 @@ _VERTICAL_WORKSPACE_MODULES: dict[str, str] = {
 	"erpgenex_realestate_dev": "erpgenex_realestate_dev.workspace.rd_workspace",
 	"erpgenex_realestate_sales": "erpgenex_realestate_sales.workspace.rs_workspace",
 	"erpgenex_maintenance_core": "erpgenex_maintenance_core.workspace.mc_workspace",
+	"erpgenex_legal": "erpgenex_legal.legal_workspace",
 	"omnexa_operational_risk": "omnexa_operational_risk.workspace.or_workspace",
 	"omnexa_einvoice": "omnexa_einvoice.workspace.ei_workspace"
 	}

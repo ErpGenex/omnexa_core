@@ -1,3 +1,4 @@
+// i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 /**
  * Finance Group — Borrower Complete File (PDF / Excel / Report / Print)
  */

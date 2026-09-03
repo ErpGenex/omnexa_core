@@ -1,0 +1,4647 @@
+"""amended_from"" field must be present to do an amendment.",يجب أن بند واجهة بند واجهة.
+"""Company History""",بند واجهة
+"""Parent"" signifies the parent table in which this row must be added",بند واجهة
+"""Team Members"" or ""Management""",بند واجهة
+"""{0}"" is not a valid Google Sheets URL",URL — بند واجهة
+&lt;head&gt; HTML,HTML — بند واجهة
+'In Global Search' not allowed for type {0} in row {1},بند واجهة
+'In List View' not allowed for type {0} in row {1},بند واجهة
+'Recipients' not specified,بند واجهة
+'{0}' not allowed for type {1} in row {2},بند واجهة
+(Ctrl + G),( Ctrl + G )
+(Mandatory),بند واجهة
+** Failed: {0} to {1}: {2},** فشل: {0} إلى {1}: {2}
+**Currency** Master,بند واجهة
+0 - Draft; 1 - Submitted; 2 - Cancelled,0 مسودة; 1 مُرسل; 2 ملغى
+0 is highest,بند واجهة
+1 comment,بند واجهة
+1 Currency = [?] Fraction\nFor e.g. 1 USD = 100 Cent,USD — بند واجهة
+1 Google Calendar Event synced.,بند واجهة
+1 hour ago,بند واجهة
+1 minute ago,بند واجهة
+1 month ago,بند واجهة
+1 record will be exported,بند واجهة
+1 Report,تقرير 1
+1 week ago,بند واجهة
+1 year ago,بند واجهة
+5 Records,بند واجهة
+; not allowed in condition,بند واجهة
+"<h4>Default Template</h4>\n<p>Uses <a href=""http://jinja.pocoo.org/docs/templates/"">Jinja Templating</a> and all the fields of Address (including Custom Fields if any) will be available</p>\n<pre><code>{{ address_line1 }}&lt;br&gt;\n{% if address_line2 %}{{ address_line2 }}&lt;br&gt;{% endif -%}\n{{ city }}&lt;br&gt;\n{% if state %}{{ state }}&lt;br&gt;{% endif -%}\n{% if pincode %} PIN:  {{ pincode }}&lt;br&gt;{% endif -%}\n{{ country }}&lt;br&gt;\n{% if phone %}Phone: {{ phone }}&lt;br&gt;{% endif -%}\n{% if fax %}Fax: {{ fax }}&lt;br&gt;{% endif -%}\n{% if email_id %}Email: {{ email_id }}&lt;br&gt;{% endif -%}\n</code></pre>",PIN — بند واجهة
+"<p>Set context before rendering a template. Example:</p><p>\n</p><div><pre><code>\ncontext.project = frappe.get_doc(""Project"", frappe.form_dict.name)\n</code></pre></div>",بند واجهة
+_doctype,نوع المستند
+_report,تقرير
+A featured post must have a cover image,بند واجهة
+A field with the name '{}' already exists in doctype {}.,بند واجهة
+A Lead with this Email Address should exist,بند واجهة
+A list of resources which the Client App will have access to after the user allows it.<br> e.g. project,بند واجهة
+A log of request errors,بند واجهة
+A new account has been created for you at {0},بند واجهة
+A recurring {0} {1} has been created for you via Auto Repeat {2}.,بند واجهة
+A symbol for this currency. For e.g. $,بند واجهة
+A user who posts blogs.,بند واجهة
+A word by itself is easy to guess.,بند واجهة
+About Us Settings,إعدادات من نحن
+About Us Team Member,بند واجهة
+About {0} minute remaining,بند واجهة
+About {0} minutes remaining,بند واجهة
+About {0} seconds remaining,بند واجهة
+Accept Payment,بند واجهة
+Access Key ID,ID — بند واجهة
+Access Key Secret,بند واجهة
+Access Log,سجل الوصول
+Access not allowed from this IP Address,IP — بند واجهة
+Access Token,بند واجهة
+Access Token URL,URL — بند واجهة
+Account,بند واجهة
+Accounts Manager,بند واجهة
+Accounts User,بند واجهة
+Action,إجراء
+Action / Route,إجراء / بند واجهة
+Action Failed,إجراء فشل
+Action Timeout (Seconds),بند واجهة
+Action Type,إجراء النوع
+Actions,إجراءات
+"Actions for workflow (e.g. Approve, Cancel).",بند واجهة
+Active,نشط
+Active Domains,بند واجهة
+Active Sessions,بند واجهة
+Activity,النشاط
+Activity Log,النشاط السجل
+Activity Log by,النشاط السجل by
+Activity log of all users.,النشاط السجل من الكل مستخدمون .
+Add,بند واجهة
+Add / Manage Email Accounts.,بند واجهة / بند واجهة
+Add / Manage Email Domains.,بند واجهة / بند واجهة
+Add / Update,بند واجهة / تحديث
+Add a column,بند واجهة
+Add a comment,بند واجهة
+Add a New Role,بند واجهة
+Add A New Rule,بند واجهة
+Add a new section,بند واجهة
+Add a tag ...,بند واجهة
+Add a {0} Chart,بند واجهة
+Add all roles,بند واجهة
+Add Another Comment,بند واجهة
+Add Attachment,بند واجهة
+Add Chart to Dashboard,لوحة بند واجهة
+Add Child,بند واجهة
+Add Column,بند واجهة
+Add Contact,بند واجهة
+Add Contacts,بند واجهة
+Add Container,بند واجهة
+Add custom forms.,بند واجهة
+Add custom javascript to forms.,بند واجهة
+Add Custom Tags,بند واجهة
+Add Fields,بند واجهة
+Add fields to forms.,بند واجهة
+Add Filter,بند واجهة
+Add Filters,بند واجهة
+Add Gray Background,بند واجهة
+Add Group,بند واجهة
+Add meta tags to your web pages,بند واجهة
+Add Multiple,بند واجهة
+Add New Permission Rule,بند واجهة
+Add Participants,بند واجهة
+Add Review,بند واجهة
+Add Row,بند واجهة
+Add script for Child Table,بند واجهة
+Add Signature,بند واجهة
+Add Space on Bottom,بند واجهة
+Add Space on Top,بند واجهة
+Add Subscribers,بند واجهة
+Add to Dashboard,لوحة بند واجهة
+Add to table,بند واجهة
+Add to ToDo,بند واجهة
+Add Total Row,بند واجهة
+Add Unsubscribe Link,بند واجهة
+Add User Permissions,بند واجهة
+Add your own translations,بند واجهة
+added,بند واجهة
+"Added HTML in the &lt;head&gt; section of the web page, primarily used for website verification and SEO",HTML — بند واجهة
+Added {0},بند واجهة
+added {0},بند واجهة
+Added {0} ({1}),بند واجهة
+Adding System Manager to this User as there must be atleast one System Manager,بند واجهة
+Additional Permissions,إضافي صلاحيات
+Address,العنوان
+Address And Contacts,بند واجهة
+Address and other legal information you may want to put in the footer.,بند واجهة
+Address Line 1,سطر العنوان 1
+Address Line 2,سطر العنوان 2
+Address Template,العنوان قالب
+Address Title,العنوان العنوان
+Address Title is mandatory.,بند واجهة
+Address Type,نوع العنوان
+Addresses,بند واجهة
+Addresses And Contacts,بند واجهة
+Adds a client custom script to a DocType,بند واجهة
+Adds a custom field to a DocType,بند واجهة
+adjust,بند واجهة
+Admin,بند واجهة
+Administration,بند واجهة
+Administrator,المسؤول
+Administrator accessed {0} on {1} via IP Address {2}.,IP — بند واجهة
+Administrator Logged In,بند واجهة
+Advanced,بند واجهة
+Advanced Control,بند واجهة
+Advanced Search,بند واجهة
+Advanced Settings,إعدادات بند واجهة
+af-south-1,بند واجهة
+After Cancel,بند واجهة
+After Delete,بند واجهة
+After Save,بند واجهة
+After Save (Submitted Document),بند واجهة
+After Submit,بند واجهة
+after_insert,بند واجهة
+Aggregate Function Based On,بند واجهة
+Aggregate Function field is required to create a dashboard chart,بند واجهة
+Alert,تنبيه
+Align Labels to the Right,بند واجهة
+Align Right,بند واجهة
+Align Value,بند واجهة
+align-center,بند واجهة
+align-justify,بند واجهة
+align-left,بند واجهة
+align-right,بند واجهة
+ALL,بند واجهة
+All,الكل
+All customizations will be removed. Please confirm.,بند واجهة
+All Day,الكل يوم
+All Images attached to Website Slideshow should be public,بند واجهة
+"All possible Workflow States and roles of the workflow. Docstatus Options: 0 is""Saved"", 1 is ""Submitted"" and 2 is ""Cancelled""",بند واجهة
+All Records,بند واجهة
+All Time,بند واجهة
+All-uppercase is almost as easy to guess as all-lowercase.,بند واجهة
+Allocated To,مخصص إلى
+Allot Points To Assigned Users,بند واجهة
+Allow,بند واجهة
+Allow API Indexing Access,API — بند واجهة
+Allow approval for creator of the document,بند واجهة
+Allow Auto Repeat,بند واجهة
+Allow Bulk Edit,بند واجهة
+Allow Comments,بند واجهة
+Allow Consecutive Login Attempts,بند واجهة
+Allow Delete,بند واجهة
+Allow document creation via Email,بند واجهة
+Allow Dropbox Access,بند واجهة
+Allow Edit,بند واجهة
+Allow events in timeline,بند واجهة
+Allow Google Calendar Access,بند واجهة
+Allow Google Contacts Access,بند واجهة
+Allow Google Drive Access,بند واجهة
+Allow Google Indexing Access,بند واجهة
+Allow Guest,بند واجهة
+Allow Guest to View,بند واجهة
+Allow Guests to Upload Files,بند واجهة
+Allow Import (via Data Import Tool),بند واجهة
+Allow in Quick Entry,بند واجهة
+Allow Incomplete Forms,بند واجهة
+Allow Login After Fail,بند واجهة
+Allow Login using Mobile Number,بند واجهة
+Allow Login using User Name,بند واجهة
+Allow Modules,بند واجهة
+Allow Multiple,بند واجهة
+Allow on Submit,بند واجهة
+Allow only one session per user,بند واجهة
+Allow page break inside tables,بند واجهة
+Allow Print,بند واجهة
+Allow Print for Cancelled,بند واجهة
+Allow Print for Draft,بند واجهة
+Allow Read On All Link Options,بند واجهة
+Allow Rename,بند واجهة
+Allow Roles,بند واجهة
+Allow saving if mandatory fields are not filled,بند واجهة
+Allow Self Approval,بند واجهة
+Allow user to login only after this hour (0-24),بند واجهة
+Allow user to login only before this hour (0-24),بند واجهة
+Allowed,بند واجهة
+Allowed In Mentions,بند واجهة
+"Allowing DocType, DocType. Be careful!",بند واجهة
+Already in the following Users ToDo list:{0},بند واجهة
+Already Registered,بند واجهة
+Also adding the dependent currency field {0},بند واجهة
+Also adding the status dependency field {0},بند واجهة
+"Always add ""Draft"" Heading for printing draft documents",بند واجهة
+Always use Account's Email Address as Sender,بند واجهة
+Always use Account's Name as Sender's Name,بند واجهة
+Amend,بند واجهة
+Amended From,معدّل من
+Amending,بند واجهة
+Amount,المبلغ
+Amount Based On Field,بند واجهة
+Amount Field,بند واجهة
+Amount must be greater than 0.,يجب أن المبلغ بند واجهة.
+An error occured during the payment process. Please contact us.,بند واجهة
+An error occurred while setting Session Defaults,بند واجهة
+An icon file with .ico extension. Should be 16 x 16 px. Generated using a favicon generator. [favicon-generator.org],بند واجهة
+Analytics,التحليلات
+Ancestors Of,بند واجهة
+and,و
+Andaman and Nicobar Islands,بند واجهة
+Andhra Pradesh,بند واجهة
+Annual,بند واجهة
+Anonymous,بند واجهة
+Another transaction is blocking this one. Please try again in a few seconds.,بند واجهة
+"Another {0} with name {1} exists, select another name",بند واجهة
+Any string-based printer languages can be used. Writing raw commands requires knowledge of the printer's native language provided by the printer manufacturer. Please refer to the developer manual provided by the printer manufacturer on how to write their native commands. These commands are rendered on the server side using the Jinja Templating Language.,يتطلب بند واجهة بند واجهة.
+ap-east-1,بند واجهة
+ap-northeast-1,بند واجهة
+ap-northeast-2,بند واجهة
+ap-northeast-3,بند واجهة
+ap-south-1,بند واجهة
+ap-southeast-1,بند واجهة
+ap-southeast-2,بند واجهة
+"Apart from System Manager, roles with Set User Permissions right can set permissions for other users for that Document Type.",بند واجهة
+API,واجهة API
+API Access,واجهة API الوصول
+Api Access,واجهة API الوصول
+API Endpoint,API — بند واجهة
+API Endpoint Args,API — بند واجهة
+API Key,API — بند واجهة
+API Key cannot be  regenerated,API — بند واجهة
+API Key of the user(Event Subscriber) on the producer site,API — بند واجهة
+API Method,API — بند واجهة
+API Password,API — بند واجهة
+API Secret,API — بند واجهة
+API Secret of the user(Event Subscriber) on the producer site,API — بند واجهة
+API Username,API — بند واجهة
+App,بند واجهة
+App Access Key,بند واجهة
+App Client ID,ID — بند واجهة
+App Client Secret,بند واجهة
+App Name,بند واجهة
+App not found,بند واجهة
+App Secret Key,بند واجهة
+App {0} already installed,بند واجهة
+App {0} is not installed,بند واجهة
+"Append as communication against this DocType (must have fields, ""Status"", ""Subject"")",بند واجهة
+Append Emails to Sent Folder,بند واجهة
+Append To,بند واجهة
+Append To can be one of {0},بند واجهة
+Append To is mandatory for incoming mails,بند واجهة
+Applicable Document Types,بند واجهة
+Applicable For,بند واجهة
+Application Logo,بند واجهة
+Application Name,تطبيق الاسم
+Application Version,تطبيق إصدار
+Applied On,بند واجهة
+Apply,تطبيق
+Apply Assignment Rule,بند واجهة
+Apply Document Permissions,تطبيق مستند صلاحيات
+Apply Only Once,بند واجهة
+Apply Strict User Permissions,بند واجهة
+Apply this rule if the User is the Owner,تطبيق هذا قاعدة if مستخدم is المالك
+Apply this rule only once per document,بند واجهة
+Apply To All Document Types,بند واجهة
+Apply to all Documents Types,بند واجهة
+Applying: {0},بند واجهة
+Appreciate,بند واجهة
+Appreciation,بند واجهة
+Approval Required,موافقة مطلوب
+Approval Status,موافقة الحالة
+Approved,معتمد
+Archive,بند واجهة
+Archived,مؤرشف
+Archived Columns,بند واجهة
+Are you sure you want to delete all rows?,بند واجهة
+Are you sure you want to delete the attachment?,بند واجهة
+Are you sure you want to delete this post?,بند واجهة
+Are you sure you want to generate a new report?,بند واجهة
+Are you sure you want to merge {0} with {1}?,بند واجهة
+Are you sure you want to relink this communication to {0}?,بند واجهة
+Are you sure you want to reset all customizations?,بند واجهة
+Are you sure you want to save this document?,بند واجهة
+Are you sure?,بند واجهة
+Arial,بند واجهة
+arrow-down,بند واجهة
+arrow-left,بند واجهة
+arrow-right,بند واجهة
+arrow-up,بند واجهة
+Arunachal Pradesh,بند واجهة
+"As a best practice, do not assign the same set of permission rule to different Roles. Instead, set multiple Roles to the same User.",بند واجهة
+ASC,بند واجهة
+Assam,بند واجهة
+Assign,بند واجهة
+Assign Condition,بند واجهة
+"Assign one by one, in sequence",بند واجهة
+Assign To,تعيين إلى
+Assign to me,بند واجهة
+Assign to the one who has the least assignments,بند واجهة
+Assign to the user set in this field,بند واجهة
+Assign To Users,بند واجهة
+Assigned,بند واجهة
+Assigned By,بند واجهة
+Assigned By Full Name,بند واجهة
+Assigned By Me,بند واجهة
+Assigned To,مُسند إلى
+Assigned To/Owner,بند واجهة
+Assignment,بند واجهة
+Assignment closed by {0},بند واجهة
+Assignment Complete,بند واجهة
+Assignment Completed,بند واجهة
+Assignment Day {0} has been repeated.,بند واجهة
+Assignment Days,بند واجهة
+Assignment for {0} {1},بند واجهة
+Assignment Rule,بند واجهة
+Assignment Rule Day,بند واجهة
+Assignment Rule User,بند واجهة
+Assignment Rules,بند واجهة
+Assignment Update on {0},بند واجهة
+Assignments,بند واجهة
+asterisk,بند واجهة
+Atleast one field of Parent Document Type is mandatory,بند واجهة
+Attach,بند واجهة
+Attach a web link,بند واجهة
+Attach Document Print,بند واجهة
+Attach File,بند واجهة
+Attach file,بند واجهة
+Attach file for Import,بند واجهة
+Attach files / urls and add in table.,بند واجهة / بند واجهة
+Attach Image,بند واجهة
+Attach Print,بند واجهة
+Attach Your Picture,بند واجهة
+Attached File,بند واجهة
+Attached To DocType,بند واجهة
+Attached To Field,بند واجهة
+Attached To Name,بند واجهة
+Attachment,مرفق
+Attachment Limit (MB),بند واجهة
+Attachment Link,مرفق رابط
+Attachment Removed,بند واجهة
+Attachments,مرفقات
+Attempting Connection to QZ Tray...,بند واجهة
+Attempting to launch QZ Tray...,بند واجهة
+Auth Token,بند واجهة
+Auth URL Data,URL — بند واجهة
+Authenticating...,بند واجهة
+Authentication,بند واجهة
+Authentication Apps you can use are:,بند واجهة
+Authentication Credentials,بند واجهة
+Authentication failed while receiving emails from Email Account: {0}.,بند واجهة
+Author,بند واجهة
+Authorization Code,بند واجهة
+Authorize API Indexing  Access,API — بند واجهة
+Authorize Google Calendar Access,بند واجهة
+Authorize Google Contacts Access,بند واجهة
+Authorize Google Drive Access,بند واجهة
+Authorize URL,URL — بند واجهة
+Authorized,بند واجهة
+Auto,بند واجهة
+Auto assignment failed: {0},بند واجهة
+Auto Email Report,تقرير بند واجهة
+Auto Name,بند واجهة
+Auto Repeat,بند واجهة
+Auto Repeat created for this document,بند واجهة
+Auto Repeat Document Creation Failed,بند واجهة
+Auto Repeat Document Creation Failure,بند واجهة
+Auto Repeat failed for {0},بند واجهة
+Auto Reply Message,بند واجهة
+Automatic Linking can be activated only for one Email Account.,بند واجهة
+Automatic Linking can be activated only if Incoming is enabled.,بند واجهة
+Automatically Assign Documents to Users,بند واجهة
+Automatically generates recurring documents.,بند واجهة
+Automation,بند واجهة
+Avatar,بند واجهة
+Average,بند واجهة
+Average of {0},بند واجهة
+Avoid dates and years that are associated with you.,بند واجهة
+Avoid recent years.,بند واجهة
+Avoid sequences like abc or 6543 as they are easy to guess,بند واجهة
+Avoid years that are associated with you.,بند واجهة
+Awaiting Password,بند واجهة
+Awaiting password,بند واجهة
+Away,بند واجهة
+Back to Desk,رجوع إلى المكتب
+Back to Home,رجوع إلى الرئيسية
+Back to Login,رجوع إلى تسجيل الدخول
+Background Color,بند واجهة
+Background Email Queue,بند واجهة
+Background Jobs,بند واجهة
+Background Workers,بند واجهة
+Backing up to Google Drive.,بند واجهة
+Backup,بند واجهة
+Backup Details,بند واجهة
+Backup Files,بند واجهة
+Backup Folder ID,ID — بند واجهة
+Backup Folder Name,بند واجهة
+Backup Frequency,بند واجهة
+Backup job is already queued. You will receive an email with the download link,بند واجهة
+Backup Limit,بند واجهة
+Backup public and private files along with the database.,بند واجهة
+Backups,بند واجهة
+backward,بند واجهة
+ban-circle,بند واجهة
+Banner,بند واجهة
+Banner HTML,HTML — بند واجهة
+Banner Image,بند واجهة
+Banner is above the Top Menu Bar.,بند واجهة
+Bar,بند واجهة
+Barcode,بند واجهة
+barcode,بند واجهة
+Base Distinguished Name (DN),بند واجهة
+Base URL,URL — بند واجهة
+Based On,بند واجهة
+Based on Field,بند واجهة
+Based on Permissions For User,بند واجهة
+Basic,بند واجهة
+BCC,بند واجهة
+Before Cancel,بند واجهة
+Before Delete,بند واجهة
+Before Insert,بند واجهة
+Before Save,بند واجهة
+Before Save (Submitted Document),بند واجهة
+Before Submit,بند واجهة
+Beginner,بند واجهة
+Beginning with,بند واجهة
+beginning with,بند واجهة
+bell,بند واجهة
+Beta,بند واجهة
+Better add a few more letters or another word,بند واجهة
+Between,بند واجهة
+Bihar,بند واجهة
+Billing,الفوترة
+Bio,بند واجهة
+Birth Date,بند واجهة
+Blank Template,بند واجهة
+Block Module,بند واجهة
+Block Modules,بند واجهة
+Blocked,بند واجهة
+Blog,بند واجهة
+Blog Category,بند واجهة
+Blog Intro,بند واجهة
+Blog Introduction,بند واجهة
+Blog Post,بند واجهة
+Blog Settings,إعدادات بند واجهة
+Blog Title,بند واجهة
+Blogger,بند واجهة
+blue,بند واجهة
+Bold,بند واجهة
+bold,بند واجهة
+book,بند واجهة
+bookmark,بند واجهة
+Bot,بند واجهة
+Both DocType and Name required,كلاهما نوع المستند و الاسم مطلوب
+Both login and password required,بند واجهة
+Bottom,بند واجهة
+Bounced,بند واجهة
+Braintree payment gateway settings,بند واجهة
+Braintree Settings,إعدادات بند واجهة
+Brand,بند واجهة
+Brand HTML,HTML — بند واجهة
+Brand Image,بند واجهة
+Breadcrumbs,بند واجهة
+briefcase,بند واجهة
+Browse,بند واجهة
+"browse,",بند واجهة
+Browser,بند واجهة
+Browser not supported,بند واجهة
+Browser Version,بند واجهة
+Brute Force Security,بند واجهة
+Bucket Name,بند واجهة
+Build Report,تقرير بند واجهة
+Bulk Delete,بند واجهة
+Bulk Edit {0},بند واجهة
+Bulk Rename,بند واجهة
+Bulk Update,تحديث جماعي
+bullhorn,بند واجهة
+Button,بند واجهة
+Button Gradients,بند واجهة
+Button Help,بند واجهة
+Button Label,بند واجهة
+Button Rounded Corners,بند واجهة
+Button Shadows,بند واجهة
+"By default the title is used as meta title, adding a value here will override it.",بند واجهة
+by Role,by الدور
+Bypass Restricted IP Address Check If Two Factor Auth Enabled,IP — بند واجهة
+Bypass restricted IP Address check If Two Factor Auth Enabled,IP — بند واجهة
+Bypass Two Factor Auth for users who login from restricted IP Address,IP — بند واجهة
+ca-central-1,بند واجهة
+Cache Cleared,بند واجهة
+Calculate,بند واجهة
+Calendar,التقويم
+calendar,التقويم
+Calendar Name,التقويم الاسم
+Calendar View,التقويم عرض
+Call,بند واجهة
+Call To Action,بند واجهة
+Call To Action URL,URL — بند واجهة
+Callback Message,بند واجهة
+Callback Title,بند واجهة
+Callback URL,URL — بند واجهة
+Camera,بند واجهة
+camera,بند واجهة
+Can Read,بند واجهة
+Can Share,بند واجهة
+Can Write,بند واجهة
+Can't identify open {0}. Try something else.,بند واجهة
+Can't save the form as data import is in progress.,بند واجهة
+Cancel,إلغاء
+Cancel All Documents,إلغاء الكل المستندات
+Cancel {0} documents?,إلغاء { 0 } المستندات ?
+CANCELLED,ملغى
+Cancelled,ملغى
+Cancelled Document restored as Draft,بند واجهة
+cancelled this document,ملغى هذا مستند
+cancelled this document {0},ملغى هذا مستند { 0 }
+Cancelling,بند واجهة
+Cancelling documents,بند واجهة
+Cancelling {0},بند واجهة
+Cannot cancel before submitting. See Transition {0},بند واجهة
+Cannot change docstatus from 0 to 2,بند واجهة
+Cannot change docstatus from 1 to 0,بند واجهة
+Cannot change header content,بند واجهة
+Cannot change state of Cancelled Document. Transition row {0},بند واجهة
+Cannot change user details in demo. Please signup for a new account at https://erpnext.com,بند واجهة
+Cannot create a {0} against a child document: {1},بند واجهة
+Cannot delete file as it belongs to {0} {1} for which you do not have permissions,بند واجهة
+Cannot delete Home and Attachments folders,بند واجهة
+Cannot delete or cancel because {0} {1} is linked with {2} {3} {4},بند واجهة
+Cannot delete standard action. You can hide it if you want,بند واجهة
+Cannot delete standard field. You can hide it if you want,بند واجهة
+Cannot delete standard link. You can hide it if you want,بند واجهة
+Cannot delete {0},بند واجهة
+Cannot delete {0} as it has child nodes,بند واجهة
+Cannot edit a standard report. Please duplicate and create a new report,بند واجهة
+Cannot edit cancelled document,بند واجهة
+Cannot edit filters for standard charts,بند واجهة
+Cannot edit standard fields,بند واجهة
+"Cannot edit Standard Notification. To edit, please disable this and duplicate it",بند واجهة
+Cannot have multiple printers mapped to a single print format.,بند واجهة
+Cannot link cancelled document: {0},بند واجهة
+Cannot map because following condition fails:,بند واجهة
+Cannot match column {0} with any field,بند واجهة
+Cannot move row,بند واجهة
+Cannot open instance when its {0} is open,بند واجهة
+Cannot open {0} when its instance is open,بند واجهة
+Cannot Remove,بند واجهة
+Cannot remove ID field,ID — بند واجهة
+Cannot set Notification on Document Type {0},بند واجهة
+Cannot update {0},بند واجهة
+Cannot use sub-query in order by,بند واجهة
+Cannot {0} {1},بند واجهة
+Capitalization doesn't help very much.,بند واجهة
+Card,بند واجهة
+Card Details,بند واجهة
+Card Label,بند واجهة
+Cards,بند واجهة
+Categorize blog posts.,بند واجهة
+Category,الفئة
+Category Description,الفئة الوصف
+Category Name,الفئة الاسم
+"CC, BCC & Email Template",بند واجهة و البريد الإلكتروني قالب
+Cent,بند واجهة
+Center,بند واجهة
+"Certain documents, like an Invoice, should not be changed once final. The final state for such documents is called Submitted. You can restrict which roles can Submit.",بند واجهة
+certificate,بند واجهة
+Chain Integrity,بند واجهة
+Chaining Hash,بند واجهة
+Chandigarh,بند واجهة
+Change,بند واجهة
+"Change field properties (hide, readonly, permission etc.)",بند واجهة
+Change Label (via Custom Translation),بند واجهة
+Change Password,بند واجهة
+Change User,بند واجهة
+changed value of {0},بند واجهة
+changed value of {0} {1},بند واجهة
+changed values for {0},بند واجهة
+changed values for {0} {1},بند واجهة
+Channel,قناة
+Chart,الملف الطبي
+Chart Configuration,بند واجهة
+Chart Name,الملف الطبي الاسم
+Chart Options,بند واجهة
+Chart Source,الملف الطبي المصدر
+Chart Type,نوع المخطط
+Charts,المخططات
+Chat,بند واجهة
+Chat Background,بند واجهة
+Chat Message,بند واجهة
+Chat messages and other notifications.,بند واجهة
+Chat Operators,بند واجهة
+Chat Profile,بند واجهة
+Chat Profile for User {0} exists.,بند واجهة
+Chat Room,بند واجهة
+Chat Room Name,بند واجهة
+Chat Room User,بند واجهة
+Chat Token,بند واجهة
+Chat Type,بند واجهة
+Check,بند واجهة
+check,بند واجهة
+"Check columns to select, drag to set order.",بند واجهة
+Check Request URL,URL — بند واجهة
+Check the Error Log for more information: {0},بند واجهة
+Check this if you are testing your payment using the Sandbox API,API — بند واجهة
+Check this if you don't want users to sign up for an account on your site. Users won't get desk access unless you explicitly provide it.,بند واجهة
+Check this if you want to force the user to select a series before saving. There will be no default if you check this.,بند واجهة
+Check this to pull emails from your mailbox,بند واجهة
+Check which Documents are readable by a User,بند واجهة
+Checking one moment,بند واجهة
+"Checking this will enable tracking page views for blogs, web pages, etc.",بند واجهة
+Checking this will hide custom doctypes and reports cards in Links section,بند واجهة
+Checking this will publish the page on your website and it'll be visible to everyone.,بند واجهة
+Checking this will show a text area where you can write custom javascript that will run on this page.,بند واجهة
+Checksum Version,بند واجهة
+chevron-down,بند واجهة
+chevron-left,بند واجهة
+chevron-right,بند واجهة
+chevron-up,بند واجهة
+Chhattisgarh,بند واجهة
+Child Table,بند واجهة
+Child Table Mapping,بند واجهة
+Child Tables are shown as a Grid in other DocTypes,بند واجهة
+choose an,بند واجهة
+Choose authentication method to be used by all users,بند واجهة
+Choose Existing Card or create New Card,بند واجهة
+circle-arrow-down,بند واجهة
+circle-arrow-left,بند واجهة
+circle-arrow-right,بند واجهة
+circle-arrow-up,بند واجهة
+City,المدينة
+City/Town,بند واجهة
+Clear,مسح
+clear,مسح
+Clear Activity Log After,بند واجهة
+Clear all roles,مسح الكل أدوار
+Clear Cache and Reload,بند واجهة
+Clear Email Queue After,بند واجهة
+Clear Error log After,بند واجهة
+Clear Error Logs,بند واجهة
+Clear Filters,مسح المرشحات
+Clear User Permissions,مسح مستخدم صلاحيات
+"Clearing end date, as it cannot be in the past for published pages.",بند واجهة
+Click here to post bugs and suggestions,بند واجهة
+Click here to verify,بند واجهة
+Click on <b>Authorize Google Drive Access</b> to authorize Google Drive Access.,بند واجهة
+Click on a file to select it.,بند واجهة
+Click On Customize to add your first widget,بند واجهة
+Click on the link below to approve the request,بند واجهة
+Click on the link below to complete your registration and set a new password,بند واجهة
+Click on the link below to download your data,بند واجهة
+Click on the link below to verify your request,بند واجهة
+Click on the lock icon to toggle public/private,بند واجهة
+Click on the row for accessing filters.,بند واجهة
+Click on {0} to generate Refresh Token.,بند واجهة
+Click table to edit,بند واجهة
+Click to Set Dynamic Filters,بند واجهة
+Click to Set Filters,بند واجهة
+Clicked,بند واجهة
+Client,العميل
+Client Code,العميل الرمز
+Client Credentials,بند واجهة
+Client ID,العميل المعرّف
+Client Information,بند واجهة
+Client Script,بند واجهة
+Client Secret,بند واجهة
+Client side script extensions in Javascript,بند واجهة
+Client URLs,بند واجهة
+Close,إغلاق
+Close Condition,بند واجهة
+Closed,مغلق
+cn-north-1,بند واجهة
+cn-northwest-1,بند واجهة
+Code,الرمز
+cog,بند واجهة
+Collapse,بند واجهة
+Collapse All,طي الكل
+Collapsible,بند واجهة
+Collapsible Depends On,بند واجهة
+Color,بند واجهة
+Column,بند واجهة
+Column <b>{0}</b> already exist.,بند واجهة
+Column Break,بند واجهة
+Column Labels:,بند واجهة
+Column Name,بند واجهة
+Column Name cannot be empty,بند واجهة
+Columns,بند واجهة
+Columns / Fields,بند واجهة / بند واجهة
+Columns based on,بند واجهة
+Combination of Grant Type (<code>{0}</code>) and Response Type (<code>{1}</code>) not allowed,بند واجهة
+Comment,بند واجهة
+comment,بند واجهة
+Comment By,بند واجهة
+Comment can only be edited by the owner,بند واجهة
+Comment Email,بند واجهة
+Comment Type,بند واجهة
+Commented on {0}: {1},بند واجهة
+Comments,تعليقات
+comments,تعليقات
+Comments and Communications will be associated with this linked document,بند واجهة
+Comments cannot have links or email addresses,بند واجهة
+Comments on this blog post will be disabled if checked.,بند واجهة
+Commit,بند واجهة
+Common names and surnames are easy to guess.,بند واجهة
+Communicated via {0} on {1}: {2},بند واجهة
+Communication,بند واجهة
+Communication Link,بند واجهة
+Communication Type,بند واجهة
+Community Contribution,بند واجهة
+Compact Item Print,بند واجهة
+Company,الشركة
+Company History,بند واجهة
+Company Introduction,بند واجهة
+Company Name,الشركة الاسم
+"Company, Fiscal Year and Currency defaults",بند واجهة
+Compiled Successfully,بند واجهة
+Complete,مكتمل
+Complete By,مكتمل By
+Complete Registration,بند واجهة
+Complete Setup,مكتمل الإعداد
+Completed,مكتمل
+Component,بند واجهة
+Compose Email,بند واجهة
+Condition,بند واجهة
+Condition Detail,بند واجهة
+Conditions,بند واجهة
+Configure Chart,بند واجهة
+Configure Charts,بند واجهة
+"Configure notifications for mentions, assignments, energy points and more.",بند واجهة
+Confirm,تأكيد
+Confirm Deletion of Data,بند واجهة
+Confirm New Password,بند واجهة
+Confirm Request,بند واجهة
+Confirm Translations,بند واجهة
+Confirm Your Email,تأكيد الخاص بك البريد الإلكتروني
+Confirmation Email Template,بند واجهة
+Confirmed,مؤكد
+Connected to QZ Tray!,بند واجهة
+Connection lost. Some features might not work.,بند واجهة
+Connection Name,اتصال الاسم
+Connection Success,اتصال نجاح
+Connector Name,بند واجهة
+Connector Type,بند واجهة
+Console,بند واجهة
+Console Log,بند واجهة
+Contact,جهة اتصال
+Contact Details,جهة اتصال التفاصيل
+Contact Email,جهة اتصال البريد الإلكتروني
+Contact Numbers,بند واجهة
+"Contact options, like ""Sales Query, Support Query"" etc each on a new line or separated by commas.",بند واجهة
+Contact Phone,جهة اتصال الهاتف
+Contact Synced with Google Contacts.,بند واجهة
+Contact Us Settings,إعدادات جهة اتصال Us
+Contacts,بند واجهة
+Content,بند واجهة
+Content (HTML),HTML — بند واجهة
+Content (Markdown),بند واجهة
+Content Hash,بند واجهة
+Content Type,بند واجهة
+Content type for building the page,بند واجهة
+Content web page.,بند واجهة
+Context,السياق
+Context Script,بند واجهة
+Continue,متابعة
+Contribute Translations,بند واجهة
+Contributed,بند واجهة
+Contributed Translations,بند واجهة
+Contribution Document Name,بند واجهة
+Contribution Status,بند واجهة
+Controller method get_razorpay_order missing,بند واجهة
+Conversation Tones,بند واجهة
+Copied to clipboard.,بند واجهة
+Copyright,بند واجهة
+Core,النواة
+Core DocTypes cannot be customized.,بند واجهة
+Core Modules {0} cannot be searched in Global Search.,بند واجهة
+Could not connect to outgoing email server,بند واجهة
+Could not create razorpay order,بند واجهة
+Could not create Razorpay order. Please contact Administrator,بند واجهة
+Could not find {0},بند واجهة
+Could not find {0} in {1},بند واجهة
+Could not identify {0},بند واجهة
+Could not map column {0} to field {1},بند واجهة
+Could not save customization,بند واجهة
+Couldn't Load Desk,بند واجهة
+"Couldn't save, please check the data you have entered",بند واجهة
+Count,بند واجهة
+Count Customizations,بند واجهة
+Count Filter,بند واجهة
+Counter,بند واجهة
+Country,الدولة
+Country Name,الدولة الاسم
+County,بند واجهة
+Create,أنشئ
+Create a New Format,بند واجهة
+Create a new record,أنشئ جديد سجل
+Create a new {0},أنشئ جديد { 0 }
+Create and manage newsletter,بند واجهة
+Create and Send Newsletters,بند واجهة
+Create Card,بند واجهة
+Create Chart,أنشئ الملف الطبي
+Create Contacts from Incoming Emails,بند واجهة
+Create Entry,بند واجهة
+Create Log,أنشئ السجل
+Create New,أنشئ جديد
+Create Post,بند واجهة
+Create User Email,أنشئ مستخدم البريد الإلكتروني
+Create your first {0},أنشئ الخاص بك أول {0}
+Created,تاريخ الإنشاء
+created,تاريخ الإنشاء
+Created By,تاريخ الإنشاء By
+Created Custom Field {0} in {1},بند واجهة
+Created On,تاريخ الإنشاء
+created {0},تاريخ الإنشاء { 0 }
+Created {0} records successfully.,بند واجهة
+Creating {0},بند واجهة
+Criticism,بند واجهة
+Criticize,بند واجهة
+Cron,بند واجهة
+Cron Format,بند واجهة
+Crop,بند واجهة
+CSS,CSS
+CSS Class,CSS — بند واجهة
+CSV,CSV
+CTA,بند واجهة
+CTA Label,بند واجهة
+CTA URL,URL — بند واجهة
+Ctrl + Down,Ctrl — بند واجهة
+Ctrl + Up,Ctrl + Up
+Ctrl+Enter to add comment,Ctrl — بند واجهة
+Currency,العملة
+Currency Name,العملة الاسم
+Currency Precision,بند واجهة
+Current,بند واجهة
+Current Mapping,بند واجهة
+Current Mapping Action,بند واجهة
+Current Mapping Delete Start,بند واجهة
+Current Mapping Start,بند واجهة
+Current Mapping Type,بند واجهة
+Current status,بند واجهة
+Currently Replying,بند واجهة
+Currently updating {0},بند واجهة
+Currently Viewing,بند واجهة
+Currently you have {0} review points,بند واجهة
+Custom,مخصص
+Custom Base URL,URL — بند واجهة
+Custom Configuration,بند واجهة
+Custom CSS,مخصص CSS
+Custom DocPerm,بند واجهة
+Custom Documents,المستندات المخصصة
+Custom Field,بند واجهة
+Custom Field {0} is created by the Administrator and can only be deleted through the Administrator account.,بند واجهة
+Custom Fields can only be added to a standard DocType.,بند واجهة
+Custom Fields cannot be added to core DocTypes.,بند واجهة
+Custom Format,بند واجهة
+Custom HTML,مخصص HTML
+Custom HTML Help,مخصص HTML مساعدة
+Custom JS,مخصص JS
+Custom Menu Items,بند واجهة
+Custom Options,بند واجهة
+Custom Overrides,بند واجهة
+Custom Report,تقرير مخصص
+Custom Reports,بند واجهة
+Custom Role,مخصص الدور
+Custom Script,بند واجهة
+Custom SCSS,بند واجهة
+Custom Sidebar Menu,بند واجهة
+Custom Translations,بند واجهة
+Custom?,مخصص ?
+Customization,بند واجهة
+Customizations for <b>{0}</b> exported to:<br>{1},بند واجهة
+Customizations Reset,تخصيصات إعادة ضبط
+Customizations Saved Successfully,بند واجهة
+Customize,تخصيص
+Customize Form,تخصيص النموذج
+Customize Form Field,بند واجهة
+"Customize Label, Print Hide, Default etc.",بند واجهة
+Customize Workspace,تخصيص مساحة العمل
+Customize...,تخصيص...
+"Customized Formats for Printing, Email",بند واجهة
+Customized HTML Templates for printing transactions.,HTML — بند واجهة
+Cut,بند واجهة
+Dadra and Nagar Haveli,بند واجهة
+Daily,بند واجهة
+Daily Event Digest is sent for Calendar Events where reminders are set.,بند واجهة
+Daily Events should finish on the Same Day.,بند واجهة
+Daily Long,بند واجهة
+Daman and Diu,بند واجهة
+Danger,بند واجهة
+danger,بند واجهة
+Dark Color,بند واجهة
+darkgrey,بند واجهة
+Dashboard,لوحة معلومات
+dashboard,لوحة معلومات
+Dashboard Chart,مخطط لوحة
+Dashboard Chart Field,بند واجهة
+Dashboard Chart Link,لوحة معلومات الملف الطبي رابط
+Dashboard Chart Source,لوحة معلومات الملف الطبي المصدر
+Dashboard Manager,بند واجهة
+Dashboard Name,لوحة معلومات الاسم
+Dashboard Settings,إعدادات لوحة معلومات
+Dashboards,بند واجهة
+Data,بند واجهة
+Data Export,بند واجهة
+Data Import,بند واجهة
+Data Import Legacy,بند واجهة
+Data Import Template,بند واجهة
+Data Migration,بند واجهة
+Data Migration Connector,بند واجهة
+Data Migration Mapping,بند واجهة
+Data Migration Mapping Detail,بند واجهة
+Data Migration Plan,بند واجهة
+Data Migration Plan Mapping,بند واجهة
+Data Migration Run,بند واجهة
+Data missing in table,بند واجهة
+Data Too Long,بند واجهة
+Database Engine,بند واجهة
+Database Name,بند واجهة
+Date,التاريخ
+Date and Number Format,بند واجهة
+Date Format,بند واجهة
+Date {0} must be in format: {1},بند واجهة
+Dates are often easy to guess.,بند واجهة
+Datetime,بند واجهة
+Day,يوم
+Day of Week,بند واجهة
+Days After,بند واجهة
+Days Before,بند واجهة
+Days Before or After,بند واجهة
+dd-mm-yyyy,بند واجهة
+dd.mm.yyyy,بند واجهة
+dd/mm/yyyy,بند واجهة
+Dear,بند واجهة
+"Dear System Manager,",بند واجهة
+"Dear User,",بند واجهة
+Dear {0},بند واجهة
+Default,بند واجهة
+Default Address Template cannot be deleted,بند واجهة
+Default for 'Check' type of field {0} must be either '0' or '1',بند واجهة
+Default Inbox,بند واجهة
+Default Incoming,بند واجهة
+Default Letter Head,بند واجهة
+Default Outgoing,بند واجهة
+Default Portal Home,بند واجهة
+Default Print Format,بند واجهة
+Default Print Language,بند واجهة
+Default Redirect URI,بند واجهة
+Default Role at Time of Signup,بند واجهة
+Default Role on Creation,بند واجهة
+Default Sending,بند واجهة
+Default Sending and Inbox,بند واجهة
+Default Sort Field,بند واجهة
+Default Sort Order,بند واجهة
+Default Theme,بند واجهة
+Default Value,بند واجهة
+Default value for {0} must be in the list of options.,يجب أن بند واجهة بند واجهة.
+Default {0},بند واجهة
+"Default: ""Contact Us""",بند واجهة
+Defaults,بند واجهة
+DefaultValue,بند واجهة
+Define workflows for forms.,بند واجهة
+Defines actions on states and the next step and allowed roles.,بند واجهة
+Defines workflow states and rules for a document.,بند واجهة
+Delayed,بند واجهة
+Delete,حذف
+Delete All,حذف الكل
+Delete and Generate New,بند واجهة
+Delete comment?,بند واجهة
+Delete Data,بند واجهة
+Delete this record to allow sending to this email address,بند واجهة
+Delete {0} items permanently?,بند واجهة
+Deleted,بند واجهة
+Deleted DocType,بند واجهة
+Deleted Document,بند واجهة
+Deleted Documents,بند واجهة
+Deleted Name,بند واجهة
+Deleting {0},بند واجهة
+Delhi,بند واجهة
+Delivery Failed,بند واجهة
+Delivery Status,بند واجهة
+Department,بند واجهة
+Depends On,بند واجهة
+DESC,بند واجهة
+Descendants Of,بند واجهة
+Description,الوصف
+"Description for listing page, in plain text, only a couple of lines. (max 200 characters)",بند واجهة
+Designation,بند واجهة
+Desk,المكتب
+Desk Access,المكتب الوصول
+Desk Card,بند واجهة
+Desk Chart,المكتب الملف الطبي
+Desk Page,المكتب صفحة
+Desk Shortcut,المكتب اختصار
+Desktop,بند واجهة
+Desktop Icon,بند واجهة
+Desktop Icon already exists,بند واجهة
+Details,التفاصيل
+Developer,بند واجهة
+Developer Mode Only,بند واجهة
+Did not add,بند واجهة
+Did not cancel,بند واجهة
+Did not find {0} for {0} ({1}),بند واجهة
+Did not remove,بند واجهة
+"Different ""States"" this document can exist in. Like ""Open"", ""Pending Approval"" etc.",بند واجهة
+Digits,بند واجهة
+Direct,بند واجهة
+Direct room with {0} already exists.,بند واجهة
+Disable Auto Refresh,بند واجهة
+Disable Comments,تعطيل تعليقات
+Disable Count,بند واجهة
+Disable Customer Signup link in Login page,بند واجهة
+Disable Prepared Report,تقرير بند واجهة
+Disable Report,تقرير تعطيل
+Disable Sidebar Stats,بند واجهة
+Disable Signup,بند واجهة
+Disable Signup for your site,بند واجهة
+Disable SMTP server authentication,SMTP — بند واجهة
+Disable Standard Email Footer,بند واجهة
+Disable User Customization,بند واجهة
+Disabled,معطّل
+Disabled Auto Reply,بند واجهة
+Discard,بند واجهة
+Dismiss,بند واجهة
+Display,بند واجهة
+Display Depends On,بند واجهة
+Do not allow user to change after set the first time,بند واجهة
+Do not edit headers which are preset in the template,بند واجهة
+Do not have permission to access {0} bucket.,بند واجهة
+Do not send Emails,بند واجهة
+Do you really want to send this email newsletter?,بند واجهة
+Do you want to cancel all linked documents?,بند واجهة
+Doc Event,بند واجهة
+Doc Events,بند واجهة
+Doc Status,بند واجهة
+DocField,بند واجهة
+DocPerm,بند واجهة
+DocShare,بند واجهة
+DocType,نوع المستند
+Doctype,نوع المستند
+DocType <b>{0}</b> provided for the field <b>{1}</b> must have atleast one Link field,بند واجهة
+DocType Action,نوع المستند إجراء
+DocType can not be merged,بند واجهة
+DocType can only be renamed by Administrator,بند واجهة
+DocType Event,نوع المستند حدث
+DocType is a Table / Form in the application.,بند واجهة / نموذج في تطبيق .
+DocType Link,نوع المستند رابط
+DocType must be Submittable for the selected Doc Event,بند واجهة
+DocType on which this Workflow is applicable.,بند واجهة
+Doctype required,نوع المستند مطلوب
+DocType View,نوع المستند عرض
+DocType's name should not start or end with whitespace,بند واجهة
+"DocType's name should start with a letter and it can only consist of letters, numbers, spaces and underscores",بند واجهة
+Document,مستند
+Document Actions,مستند إجراءات
+Document can't saved.,بند واجهة
+Document Follow,بند واجهة
+Document Follow Notification,بند واجهة
+Document is only editable by users with role,بند واجهة
+Document Link,مستند رابط
+Document Links,مستند روابط
+Document Name,مستند الاسم
+Document Naming Rule,بند واجهة
+Document Naming Rule Condition,بند واجهة
+Document Queued,مستند في الانتظار
+Document renamed from {0} to {1},بند واجهة
+Document Restoration Summary,ملخص بند واجهة
+Document Restored,بند واجهة
+Document Share,مستند مشاركة
+Document Share Report,تقرير مستند مشاركة
+Document States,بند واجهة
+Document Status,مستند الحالة
+Document Tag,بند واجهة
+Document Title,مستند العنوان
+Document Type,مستند النوع
+Document Type Field Mapping,بند واجهة
+Document Type is not importable,بند واجهة
+Document Type is not submittable,بند واجهة
+Document type is required to create a dashboard chart,مستند النوع is مطلوب إلى أنشئ لوحة معلومات الملف الطبي
+Document Type Mapping,بند واجهة
+Document Type to Track,مستند النوع إلى مسار
+Document Type {0} has been repeated.,بند واجهة
+"document type..., e.g. customer","مستند النوع . . . , e . g . العميل"
+Document Types,بند واجهة
+Document {0} Already Restored,بند واجهة
+Document {0} has been set to state {1} by {2},بند واجهة
+Documentation Link,بند واجهة
+Documentation URL,URL — بند واجهة
+Documents,المستندات
+Documents assigned to you and by you.,بند واجهة
+Documents restored successfully,بند واجهة
+Documents that failed to restore,بند واجهة
+Documents that were already restored,بند واجهة
+Domain,بند واجهة
+domain name,بند واجهة
+Domain Settings,إعدادات بند واجهة
+Domains,بند واجهة
+Domains HTML,HTML — بند واجهة
+Don't create new records,بند واجهة
+Don't have an account? Sign up,بند واجهة
+"Don't HTML Encode HTML tags like &lt;script&gt; or just characters like &lt; or &gt;, as they could be intentionally used in this field",HTML HTML — بند واجهة
+Don't Import,بند واجهة
+"Don't know, ask 'help'",بند واجهة
+Don't Override Status,بند واجهة
+Don't Send Emails,بند واجهة
+Donut,بند واجهة
+Download,بند واجهة
+download,بند واجهة
+Download Backups,بند واجهة
+Download Data,بند واجهة
+Download Files Backup,بند واجهة
+Download Link,بند واجهة
+Download link for your backup will be emailed on the following email address: {0},بند واجهة
+Download Report,تقرير بند واجهة
+Download Template,بند واجهة
+Download template,بند واجهة
+Download with Data,بند واجهة
+Download Your Data,بند واجهة
+download-alt,بند واجهة
+DRAFT,مسودة
+Draft,مسودة
+"Drag and drop files,",بند واجهة
+Drag and Drop tool to build and customize Print Formats.,بند واجهة
+Drag elements from the sidebar to add. Drag them back to trash.,بند واجهة
+Drop,بند واجهة
+Drop files here,بند واجهة
+Drop Here,بند واجهة
+Dropbox access is approved!,بند واجهة
+Dropbox Access Key,بند واجهة
+Dropbox Access Secret,بند واجهة
+Dropbox Access Token,بند واجهة
+Dropbox backup settings,بند واجهة
+Dropbox Settings,إعدادات بند واجهة
+Dropbox Setup,بند واجهة
+Dropdowns,بند واجهة
+Due Date,تاريخ الاستحقاق
+Due Date Based On,بند واجهة
+Duplicate,نسخ
+Duplicate Filter Name,نسخ تصفية الاسم
+Duplicate Name,نسخ الاسم
+Duration,بند واجهة
+Dynamic Filters,بند واجهة
+Dynamic Filters JSON,JSON — بند واجهة
+Dynamic Filters Section,بند واجهة
+Dynamic Link,بند واجهة
+Dynamic Report Filters,بند واجهة
+Dynamic Route,بند واجهة
+Dynamic Template,بند واجهة
+"e.g. ""Support"", ""Sales"", ""Jerry Yang""",بند واجهة
+e.g. (55 + 434) / 4 or =Math.sin(Math.PI/2)...,e.g. (55 + 434) / بند واجهة
+e.g. pop.gmail.com / imap.gmail.com,بند واجهة / بند واجهة
+e.g. replies@yourcomany.com. All replies will come to this inbox.,بند واجهة
+e.g. smtp.gmail.com,بند واجهة
+Edit,تعديل
+edit,تعديل
+Edit Auto Email Report Settings,إعدادات تقرير بند واجهة
+Edit Chart,تعديل الملف الطبي
+Edit Custom HTML,تعديل مخصص HTML
+Edit DocType,تعديل نوع المستند
+Edit Filter,تعديل تصفية
+Edit Format,بند واجهة
+Edit Heading,بند واجهة
+Edit HTML,تعديل HTML
+Edit in Full Page,تعديل في كامل صفحة
+Edit in full page,تعديل في كامل صفحة
+Edit Profile,تعديل الملف الشخصي
+Edit Properties,بند واجهة
+Edit Shortcut,تعديل اختصار
+Edit to add content,بند واجهة
+Edit Values,تعديل القيم
+Edit {0},تعديل {0}
+Editable Grid,بند واجهة
+Editing Row,بند واجهة
+Eg. smsgateway.com/api/send_sms.cgi,بند واجهة
+eject,بند واجهة
+EMail,البريد الإلكتروني
+Email,البريد الإلكتروني
+email,بريد إلكتروني
+Email / Notifications,البريد الإلكتروني / إشعارات
+Email Account,بند واجهة
+Email Account added multiple times,بند واجهة
+Email Account Name,بند واجهة
+Email Account not setup. Please create a new Email Account from Setup > Email > Email Account,بند واجهة
+Email Account setup please enter your password for: {0},بند واجهة
+Email Address,البريد الإلكتروني العنوان
+Email address,البريد الإلكتروني العنوان
+Email Address whose Google Contacts are to be synced.,بند واجهة
+Email Addresses,بند واجهة
+Email Domain,بند واجهة
+"Email Domain not configured for this account, Create one?",بند واجهة
+Email Flag Queue,بند واجهة
+Email Footer Address,بند واجهة
+Email Group,بند واجهة
+Email Group List,بند واجهة
+Email Group Member,بند واجهة
+Email has been marked as spam,بند واجهة
+Email has been moved to trash,بند واجهة
+Email ID,البريد الإلكتروني المعرّف
+Email Id,البريد الإلكتروني Id
+"Email ID must be unique, Email Account already exists for {0}",ID — بند واجهة
+Email IDs,بند واجهة
+Email Inbox,البريد الإلكتروني البريد الوارد
+email inbox,بريد إلكتروني البريد الوارد
+Email Login ID,البريد الإلكتروني تسجيل الدخول المعرّف
+Email not sent to {0} (unsubscribed / disabled),بند واجهة / معطّل )
+Email not verified with {0},بند واجهة
+Email Queue,البريد الإلكتروني الانتظار
+Email Queue Recipient,البريد الإلكتروني الانتظار المستلم
+Email Queue records.,بند واجهة
+Email queued to {0} recipients,بند واجهة
+Email Reply Help,بند واجهة
+Email Rule,البريد الإلكتروني قاعدة
+Email Sent,البريد الإلكتروني مُرسل
+Email Server,بند واجهة
+Email Settings,إعدادات البريد الإلكتروني
+Email Signature,البريد الإلكتروني التوقيع
+Email Status,البريد الإلكتروني الحالة
+Email Sync Option,بند واجهة
+Email Template,البريد الإلكتروني قالب
+Email Templates for common queries.,بند واجهة
+Email To,البريد الإلكتروني إلى
+Email Unsubscribe,بند واجهة
+Emails are muted,بند واجهة
+Emails will be sent with next possible workflow actions,بند واجهة
+Embed image slideshows in website pages.,بند واجهة
+empty,بند واجهة
+Enable,تفعيل
+Enable / Disable Domains,تفعيل / بند واجهة
+Enable Allow Auto Repeat for the doctype {0} in Customize Form,بند واجهة
+Enable Auto Reply,بند واجهة
+Enable Auto-deletion of Prepared Reports,بند واجهة
+Enable Automatic Backup,بند واجهة
+Enable Automatic Linking in Documents,بند واجهة
+Enable Chat,بند واجهة
+Enable Comments,تفعيل تعليقات
+Enable developer mode to create a standard Web Template,بند واجهة
+Enable Email Notifications,تفعيل البريد الإلكتروني إشعارات
+Enable Google API in Google Settings.,API — بند واجهة
+Enable Google Indexing,بند واجهة
+Enable In App Website Tracking,بند واجهة
+Enable Incoming,بند واجهة
+Enable Onboarding,بند واجهة
+Enable Outgoing,بند واجهة
+Enable Password Policy,بند واجهة
+Enable Print Server,بند واجهة
+Enable Raw Printing,بند واجهة
+Enable Report,تقرير تفعيل
+Enable Scheduled Jobs,بند واجهة
+Enable Security,بند واجهة
+Enable Social Login,تفعيل اجتماعي تسجيل الدخول
+Enable Social Sharing,بند واجهة
+Enable Tracking Page Views,بند واجهة
+Enable Two Factor Auth,بند واجهة
+Enabled,مفعّل
+Enabled email inbox for user {0},مفعّل بريد إلكتروني البريد الوارد لـ مستخدم { 0 }
+Enabled scheduled execution for script {0},بند واجهة
+"Encryption key is invalid, Please check site_config.json",بند واجهة
+End Date,النهاية التاريخ
+End Date cannot be before Start Date!,بند واجهة
+End Date Field,بند واجهة
+Endpoint URL,URL — بند واجهة
+Ends on,بند واجهة
+Energy Point,بند واجهة
+Energy Point Log,بند واجهة
+Energy Point Rule,بند واجهة
+Energy Point Settings,إعدادات بند واجهة
+Energy Point Update on {0},بند واجهة
+Energy Points,بند واجهة
+Energy Points:,بند واجهة
+Enter Client Id and Client Secret in Google Settings.,بند واجهة
+Enter Code displayed in OTP App.,OTP — بند واجهة
+"Enter default value fields (keys) and values. If you add multiple values for a field, the first one will be picked. These defaults are also used to set ""match"" permission rules. To see list of fields, go to ""Customize Form"".",بند واجهة
+Enter Email Recipient(s),بند واجهة
+Enter folder name,بند واجهة
+Enter Form Type,بند واجهة
+"Enter keys to enable login via Facebook, Google, GitHub.",بند واجهة
+Enter python module or select connector type,بند واجهة
+"Enter static url parameters here (Eg. sender=ERPNext, username=ERPNext, password=1234 etc.)",بند واجهة
+Enter url parameter for message,بند واجهة
+Enter url parameter for receiver nos,بند واجهة
+Enter Value,بند واجهة
+Enter your password,بند واجهة
+Entity Name,بند واجهة
+Entity Type,بند واجهة
+envelope,بند واجهة
+Equals,بند واجهة
+ERPNext Role,بند واجهة
+Error,خطأ
+Error Attaching File,بند واجهة
+Error Code: {0},خطأ الرمز: {0}
+"Error connecting to QZ Tray Application...<br><br> You need to have QZ Tray application installed and running, to use the Raw Print feature.<br><br><a target=""_blank"" href=""https://qz.io/download/"">Click here to Download and install QZ Tray</a>.<br> <a target=""_blank"" href=""https://erpnext.com/docs/user/manual/en/setting-up/print/raw-printing"">Click here to learn more about Raw Printing</a>.",بند واجهة
+Error has occurred in {0},بند واجهة
+Error in Custom Script,بند واجهة
+Error in Notification,خطأ في إشعار
+Error in Notification: {},خطأ في إشعار: {}
+Error Log,خطأ السجل
+Error Log Notification,خطأ السجل إشعار
+Error Message,خطأ رسالة
+Error Report,تقرير خطأ
+Error Snapshot,خطأ لقطة
+Error while connecting to email account {0},بند واجهة
+Error while evaluating Notification {0}. Please fix your template.,بند واجهة
+Error: Document has been modified after you have opened it,بند واجهة
+Error: Value missing for {0}: {1},بند واجهة
+Errors in Background Events,بند واجهة
+ESC,بند واجهة
+eu-central-1,بند واجهة
+eu-north-1,بند واجهة
+eu-south-1,بند واجهة
+eu-west-1,بند واجهة
+eu-west-2,بند واجهة
+eu-west-3,بند واجهة
+Event,حدث
+Event and other calendars.,بند واجهة
+Event Category,حدث الفئة
+Event Configurations,بند واجهة
+Event Consumer,بند واجهة
+Event Consumer Document Type,بند واجهة
+Event Consumer Document Types,بند واجهة
+Event Participants,بند واجهة
+Event Producer,بند واجهة
+Event Producer Document Type,بند واجهة
+Event Producer Document Types,بند واجهة
+Event Producer Last Update,بند واجهة
+Event Streaming,بند واجهة
+Event Subscriber,بند واجهة
+Event Subscriber has to be a System Manager.,بند واجهة
+Event Sync Log,بند واجهة
+Event Synced with Google Calendar.,بند واجهة
+Event Type,حدث النوع
+Event Update Log,حدث تحديث السجل
+Events in Today's Calendar,بند واجهة
+Everyone,بند واجهة
+"Ex: ""colors"": [""#d1d8dd"", ""#ff5858""]",بند واجهة
+Example,بند واجهة
+Example Email Address,بند واجهة
+"Example: ""/desk""",بند واجهة
+Example: #Tree/Account,بند واجهة
+Example: 00001,بند واجهة
+Example: {{ subject }},بند واجهة
+Excel,بند واجهة
+Exception,استثناء
+Exception Type,استثناء النوع
+exclamation-sign,بند واجهة
+Execute,بند واجهة
+Execute Console script,بند واجهة
+Execution Time: {0} sec,بند واجهة
+Expand,بند واجهة
+Expand All,توسيع الكل
+Expert,بند واجهة
+Expiration time,بند واجهة
+Expire Notification On,بند واجهة
+Expired,منتهي
+Expires In,بند واجهة
+Expiry time of QR Code Image Page,بند واجهة
+Export,تصدير
+Export 1 record,تصدير 1 سجل
+Export All {0} rows?,بند واجهة
+Export Custom Permissions,تصدير مخصص صلاحيات
+Export Customizations,تصدير تخصيصات
+Export Data,بند واجهة
+Export Data in CSV / Excel format.,CSV — بند واجهة / بند واجهة
+Export Errored Rows,بند واجهة
+Export From,تصدير من
+Export not allowed. You need {0} role to export.,بند واجهة
+Export Report: {0},تصدير تقرير: {0}
+Export Type,تصدير النوع
+Export {0} records,بند واجهة
+Expose Recipients,بند واجهة
+"Expression, Optional",بند واجهة
+Extends,بند واجهة
+Extends Another Page,بند واجهة
+eye-close,بند واجهة
+eye-open,بند واجهة
+Facebook,بند واجهة
+facebook,بند واجهة
+facetime-video,بند واجهة
+Fail,بند واجهة
+Failed,فشل
+Failed to change password.,بند واجهة
+Failed to complete setup,فشل إلى مكتمل الإعداد
+Failed to connect to server,بند واجهة
+Failed to connect to the Event Producer site. Retry after some time.,بند واجهة
+Failed to create an Event Consumer or an Event Consumer for the current site is already registered.,بند واجهة
+"Failed to decode token, please provide a valid base64-encoded token.",بند واجهة
+Failed to send {0} Auto Email Report,تقرير بند واجهة
+Failed Transactions,بند واجهة
+Failed while amending subscription,بند واجهة
+Failure,بند واجهة
+fairlogin,بند واجهة
+fast-backward,بند واجهة
+fast-forward,بند واجهة
+FavIcon,بند واجهة
+Fax,فاكس
+Featured,بند واجهة
+Feedback,بند واجهة
+Feedback Request,بند واجهة
+Female,أنثى
+Fetch attached images from document,بند واجهة
+Fetch From,بند واجهة
+Fetch If Empty,بند واجهة
+Fetch Images,بند واجهة
+Fetching default Global Search documents.,بند واجهة
+Fetching posts...,بند واجهة
+Field,بند واجهة
+"Field ""route"" is mandatory for Web Views",بند واجهة
+"Field ""value"" is mandatory. Please specify value to be updated",بند واجهة
+Field Description,بند واجهة
+Field Maps,بند واجهة
+Field Name,بند واجهة
+"Field that represents the Workflow State of the transaction (if field is not present, a new hidden Custom Field will be created)",بند واجهة
+Field To Check,بند واجهة
+Field to Track,بند واجهة
+Field Type,بند واجهة
+Field type cannot be changed for {0},بند واجهة
+Field {0} not found.,بند واجهة
+Fieldname,بند واجهة
+Fieldname is limited to 64 characters ({0}),بند واجهة
+Fieldname not set for Custom Field,بند واجهة
+Fieldname which will be the DocType for this link field.,بند واجهة
+Fieldname {0} cannot have special characters like {1},بند واجهة
+Fieldname {0} conflicting with meta object,بند واجهة
+Fieldname {0} is restricted,بند واجهة
+Fields,بند واجهة
+Fields Multicheck,بند واجهة
+"Fields separated by comma (,) will be included in the ""Search By"" list of Search dialog box",بند واجهة
+Fieldtype,بند واجهة
+Fieldtype cannot be changed from {0} to {1} in row {2},بند واجهة
+File,ملف
+file,ملف
+File '{0}' not found,بند واجهة
+File Backup,بند واجهة
+File backup is ready,بند واجهة
+File Information,بند واجهة
+File Manager,بند واجهة
+File Name,ملف الاسم
+File name cannot have {0},بند واجهة
+File not attached,بند واجهة
+File Size,بند واجهة
+File size exceeded the maximum allowed size of {0} MB,بند واجهة
+File too big,بند واجهة
+File Type,ملف النوع
+File Upload,بند واجهة
+File Upload Disconnected. Please try again.,بند واجهة
+File Upload in Progress. Please try again in a few moments.,بند واجهة
+File URL,ملف URL
+File {0} does not exist,بند واجهة
+Files,ملفات
+film,بند واجهة
+Filter,تصفية
+filter,تصفية
+Filter By,تصفية By
+Filter Data,بند واجهة
+Filter List,تصفية قائمة
+Filter Meta,بند واجهة
+Filter must be a tuple or list (in a list),بند واجهة
+"Filter must have 4 values (doctype, fieldname, operator, value): {0}",بند واجهة
+Filter Name,تصفية الاسم
+Filter Values,تصفية القيم
+Filter...,تصفية...
+"Filtered by ""{0}""",بند واجهة
+Filtered Records,بند واجهة
+Filters,المرشحات
+Filters applied for {0},بند واجهة
+Filters Configuration,بند واجهة
+Filters Display,بند واجهة
+Filters JSON,المرشحات JSON
+Filters saved,بند واجهة
+Filters Section,بند واجهة
+"Filters will be accessible via <code>filters</code>. <br><br>Send output as <code>result = [result]</code>, or for old style <code>data = [columns], [result]</code>",بند واجهة
+Find {0} in {1},بند واجهة
+Finished,منتهٍ
+fire,بند واجهة
+First,أول
+First data column must be blank.,يجب أن بند واجهة بند واجهة.
+First Level,بند واجهة
+First Name,أول الاسم
+First set the name and save the record.,بند واجهة
+First Success Message,أول نجاح رسالة
+First Transaction,بند واجهة
+Flag,بند واجهة
+flag,بند واجهة
+Float,بند واجهة
+Float Precision,بند واجهة
+Fold,بند واجهة
+Fold can not be at the end of the form,بند واجهة
+Fold must come before a Section Break,بند واجهة
+Folder,مجلد
+Folder name should not include '/' (slash),بند واجهة
+Folder {0} is not empty,بند واجهة
+folder-close,مجلد - إغلاق
+folder-open,مجلد - فتح
+Follow,بند واجهة
+Followed by,بند واجهة
+Following fields are missing:,بند واجهة
+Following fields have missing values:,بند واجهة
+Font,بند واجهة
+font,بند واجهة
+Font Properties,بند واجهة
+Font Size,بند واجهة
+Fonts,بند واجهة
+Footer,بند واجهة
+Footer HTML,HTML — بند واجهة
+Footer Items,بند واجهة
+Footer Logo,بند واجهة
+Footer Template,بند واجهة
+Footer Template Values,بند واجهة
+Footer will display correctly only in PDF,PDF — بند واجهة
+"For comparison, use >5, <10 or =324. For ranges, use 5:10 (for values between 5 & 10).",بند واجهة و 10).
+"For currency {0}, the minimum transaction amount should be {1}",بند واجهة
+For DocType Link / DocType Action,لـ نوع المستند رابط / نوع المستند إجراء
+For Document Event,لـ مستند حدث
+For Document Type,لـ مستند النوع
+For example if you cancel and amend INV004 it will become a new document INV004-1. This helps you to keep track of each amendment.,بند واجهة
+"For example: If you want to include the document ID, use {0}",ID — بند واجهة
+For Example: {} Open,بند واجهة
+For example: {} Open,بند واجهة
+"For help see <a href=""https://frappeframework.com/docs/user/en/guides/portal-development/web-forms"" target=""_blank"">Client Script API and Examples</a>",API — بند واجهة
+"For Links, enter the DocType as range.\nFor Select, enter list of Options, each on a new line.",بند واجهة
+"For more information, <a class=""text-muted"" href=""https://erpnext.com/docs/user/manual/en/setting-up/email/linking-emails-to-document"">click here</a>.",بند واجهة
+"For more information, {0}.",بند واجهة
+"For performance, only the first 100 rows were processed.",بند واجهة
+"For updating, you can update only selective columns.",بند واجهة
+For User,لـ مستخدم
+For Value,بند واجهة
+For {0} at level {1} in {2} in row {3},بند واجهة
+Force,بند واجهة
+Force Show,بند واجهة
+Force User to Reset Password,بند واجهة
+Forgot Password,بند واجهة
+Forgot Password?,بند واجهة
+Form Customization,بند واجهة
+Form Settings,إعدادات نموذج
+Form URL-Encoded,URL — بند واجهة
+Format,بند واجهة
+Format Data,بند واجهة
+Forward,بند واجهة
+forward,بند واجهة
+Forward To Email Address,بند واجهة
+Fraction,بند واجهة
+Fraction Units,بند واجهة
+Frames,بند واجهة
+Frappe,Frappe
+Frappe Framework,Frappe — بند واجهة
+Frappe page builder using components,Frappe — بند واجهة
+Frequency,التكرار
+Frequently Visited Links,بند واجهة
+Friday,الجمعة
+Friendly Title,بند واجهة
+From,من
+From Date,من التاريخ
+From Date Field,بند واجهة
+From Document Type,من مستند النوع
+From Full Name,من كامل الاسم
+From User,من مستخدم
+Full,كامل
+Full Name,كامل الاسم
+Full Page,كامل صفحة
+Full Width,بند واجهة
+fullscreen,بند واجهة
+Function,بند واجهة
+Function Based On,بند واجهة
+Further nodes can be only created under 'Group' type nodes,بند واجهة
+gained by {0} via automatic rule {1},بند واجهة
+gained {0} points,بند واجهة
+Gantt,مخطط جantt
+Gateway,بند واجهة
+Gateway Controller,بند واجهة
+Gateway Settings,إعدادات بند واجهة
+gave {0} points,بند واجهة
+GCalendar Sync ID,ID — بند واجهة
+Gender,الجنس
+Genderqueer,بند واجهة
+Generate Keys,بند واجهة
+Generate New Report,تقرير بند واجهة
+Generated File,بند واجهة
+Geo,بند واجهة
+Geolocation,بند واجهة
+Get Alerts for Today,بند واجهة
+Get Contacts,بند واجهة
+Get Fields,بند واجهة
+Get Items,بند واجهة
+Get your globally recognized avatar from Gravatar.com,بند واجهة
+gift,بند واجهة
+Git Branch,بند واجهة
+GitHub,بند واجهة
+Github flavoured markdown syntax,بند واجهة
+GitHub Sync ID,ID — بند واجهة
+Give Review Points,بند واجهة
+glass,بند واجهة
+Global Search DocType,بند واجهة
+Global Search Document Types Reset.,بند واجهة
+Global Search Settings,إعدادات بند واجهة
+Global Shortcuts,بند واجهة
+Global Unsubscribe,بند واجهة
+globe,بند واجهة
+GMail,بند واجهة
+Go Back,Go رجوع
+Go to next record,Go إلى التالي سجل
+Go to Page,Go إلى صفحة
+Go to previous record,Go إلى السابق سجل
+Go to the document,Go إلى مستند
+Go to this URL after completing the form (only for Guest users),URL — بند واجهة
+Go to {0} List,Go إلى {0} قائمة
+Go to {0} Page,Go إلى {0} صفحة
+Goa,بند واجهة
+Goal,بند واجهة
+Good Work 🎉,بند واجهة
+Google,بند واجهة
+Google Analytics Anonymize IP,IP — بند واجهة
+Google Analytics ID,ID — بند واجهة
+Google API Settings.,API — بند واجهة
+Google Calendar,بند واجهة
+"Google Calendar - Could not create Calendar for {0}, error code {1}.",بند واجهة
+"Google Calendar - Could not delete Event {0} from Google Calendar, error code {1}.",بند واجهة
+"Google Calendar - Could not fetch event from Google Calendar, error code {0}.",بند واجهة
+"Google Calendar - Could not insert contact in Google Contacts {0}, error code {1}.",بند واجهة
+"Google Calendar - Could not insert event in Google Calendar {0}, error code {1}.",بند واجهة
+"Google Calendar - Could not update Event {0} in Google Calendar, error code {1}.",بند واجهة
+Google Calendar Event ID,ID — بند واجهة
+Google Calendar has been configured.,بند واجهة
+Google Calendar ID,ID — بند واجهة
+Google Calendar Integration.,بند واجهة
+Google Contacts,بند واجهة
+"Google Contacts - Could not sync contacts from Google Contacts {0}, error code {1}.",بند واجهة
+"Google Contacts - Could not update contact in Google Contacts {0}, error code {1}.",بند واجهة
+Google Contacts has been configured.,بند واجهة
+Google Contacts Id,بند واجهة
+Google Contacts Integration is disabled.,بند واجهة
+Google Contacts Integration.,بند واجهة
+Google Drive,بند واجهة
+Google Drive - Could not create folder in Google Drive - Error Code {0},بند واجهة
+Google Drive - Could not find folder in Google Drive - Error Code {0},بند واجهة
+Google Drive - Could not locate - {0},بند واجهة
+Google Drive Backup Successful.,بند واجهة
+Google Drive Backup.,بند واجهة
+Google Drive has been configured.,بند واجهة
+Google Drive Integration.,بند واجهة
+Google Font,بند واجهة
+Google Indexing has been configured.,بند واجهة
+Google Integration is disabled.,بند واجهة
+Google Services,بند واجهة
+Google Settings,إعدادات بند واجهة
+Google Sheets URL is invalid or not publicly accessible.,URL — بند واجهة
+"Google Sheets URL must end with ""gid={number}"". Copy and paste the URL from the browser address bar and try again.",يجب أن URL — بند واجهة URL — بند واجهة.
+Google Snippet Preview,بند واجهة
+Google Translation,بند واجهة
+Grant Type,بند واجهة
+Great,بند واجهة
+Great Job,بند واجهة
+green,بند واجهة
+Group,بند واجهة
+Group By,تجميع حسب
+Group By Based On,بند واجهة
+Group By field is required to create a dashboard chart,بند واجهة
+Group By Type,بند واجهة
+Group Name,بند واجهة
+Group name cannot be empty.,بند واجهة
+Group Node,بند واجهة
+Groups of DocTypes,بند واجهة
+GST State,بند واجهة
+GST State Number,بند واجهة
+Guest,زائر
+Gujarat,بند واجهة
+Half,بند واجهة
+Half Day,بند واجهة
+Half Yearly,بند واجهة
+Half-yearly,بند واجهة
+hand-down,بند واجهة
+hand-left,بند واجهة
+hand-right,بند واجهة
+hand-up,بند واجهة
+Haryana,بند واجهة
+Has  Attachment,بند واجهة
+Has Attachments,بند واجهة
+Has Domain,بند واجهة
+Has Mapping,بند واجهة
+Has Role,بند واجهة
+Has Web View,بند واجهة
+Have an account? Login,بند واجهة
+hdd,بند واجهة
+Header,بند واجهة
+Header and Breadcrumbs,بند واجهة
+Header HTML,HTML — بند واجهة
+Header HTML set from attachment {0},HTML — بند واجهة
+Header Image,بند واجهة
+Headers,بند واجهة
+Heading,بند واجهة
+headphones,بند واجهة
+heart,بند واجهة
+Heatmap,بند واجهة
+Hello {0},بند واجهة
+Hello!,بند واجهة
+Help,مساعدة
+Help Article,بند واجهة
+Help Articles,بند واجهة
+Help Category,مساعدة الفئة
+Help Dropdown,بند واجهة
+Help HTML,مساعدة HTML
+Help on Search,مساعدة في بحث
+"Help: To link to another record in the system, use ""#Form/Note/[Note Name]"" as the Link URL. (don't use ""http://"")",URL — بند واجهة
+Helvetica,بند واجهة
+Hidden,بند واجهة
+Hide,بند واجهة
+Hide Block,بند واجهة
+Hide Border,بند واجهة
+Hide Copy,بند واجهة
+Hide CTA,بند واجهة
+Hide Custom DocTypes and Reports,بند واجهة
+Hide Days,بند واجهة
+Hide details,بند واجهة
+Hide footer in auto email reports,بند واجهة
+Hide Footer Signup,بند واجهة
+Hide Login,بند واجهة
+Hide Seconds,بند واجهة
+Hide Sidebar and Menu,بند واجهة
+Hide Standard Menu,بند واجهة
+Hide Traceback,بند واجهة
+Hide Weekends,بند واجهة
+High,مرتفع
+Higher priority rule will be applied first,بند واجهة
+Highlight,بند واجهة
+Himachal Pradesh,بند واجهة
+"Hint: Include symbols, numbers and capital letters in the password",بند واجهة
+Home,الرئيسية
+home,منزلي
+Home Page,الرئيسية صفحة
+Home Settings,إعدادات الرئيسية
+Home/Test Folder 1,بند واجهة
+Home/Test Folder 1/Test Folder 3,بند واجهة
+Home/Test Folder 2,بند واجهة
+HOOK-.####,بند واجهة
+Host,بند واجهة
+Hostname,بند واجهة
+Hourly,بند واجهة
+Hourly comment limit reached for: {0},بند واجهة
+Hourly Long,بند واجهة
+Hourly rate limit for generating password reset links,بند واجهة
+"How should this currency be formatted? If not set, will use system defaults",بند واجهة
+HTML,HTML
+HTML Editor,HTML — بند واجهة
+HTML for header section. Optional,HTML — بند واجهة
+"HTML Header, Robots and Redirects",HTML — بند واجهة
+HTML Page,HTML صفحة
+HTML with jinja support,HTML — بند واجهة
+hub,بند واجهة
+Hub Sync ID,ID — بند واجهة
+I found these:,بند واجهة
+Icon,بند واجهة
+icon,بند واجهة
+Icon will appear on the button,بند واجهة
+ID (name) of the entity whose property is to be set,ID — بند واجهة
+Identity Details,بند واجهة
+Idx,بند واجهة
+"If a Role does not have access at Level 0, then higher levels are meaningless.",بند واجهة
+"If Apply Strict User Permission is checked and User Permission is defined for a DocType for a User, then all the documents where value of the link is blank, will not be shown to that User",بند واجهة
+If Checked workflow status will not override status in list view,بند واجهة
+"If checked, all other workflows become inactive.",بند واجهة
+"If checked, this field will be not overwritten based on Fetch From if a value already exists.",بند واجهة
+"If checked, users will not see the Confirm Access dialog.",بند واجهة
+"If disabled, this role will be removed from all users.",بند واجهة
+"If enabled,  user can login from any IP Address using Two Factor Auth, this can also be set for all users in System Settings",إعدادات IP — بند واجهة
+"If enabled, all users can login from any IP Address using Two Factor Auth. This can also be set only for specific user(s) in User Page",IP — بند واجهة
+"If enabled, changes to the document are tracked and shown in timeline",بند واجهة
+"If enabled, document views are tracked, this can happen multiple times",بند واجهة
+"If enabled, the document is marked as seen, the first time a user opens it",بند واجهة
+"If enabled, the notification will show up in the notifications dropdown on the top right corner of the navigation bar.",بند واجهة
+"If enabled, the password strength will be enforced based on the Minimum Password Score value. A value of 2 being medium strong and 4 being very strong.",بند واجهة
+"If enabled, users who login from Restricted IP Address, won't be prompted for Two Factor Auth",IP — بند واجهة
+"If enabled, users will be notified every time they login. If not enabled, users will only be notified once.",بند واجهة
+"If Icon is set, it will be shown instead of Label",بند واجهة
+If non standard port (e.g. 587),بند واجهة
+"If non standard port (e.g. 587). If on Google Cloud, try port 2525.",بند واجهة
+"If non-standard port (e.g. POP3: 995/110, IMAP: 993/143)",IMAP — بند واجهة
+"If not set, the currency precision will depend on number format",بند واجهة
+If Owner,If المالك
+If the condition is satisfied user will be rewarded with the points. eg. doc.status == 'Closed'\n,بند واجهة
+If the document has different field names on the Producer and Consumer's end check this and set up the Mapping,بند واجهة
+"If the user has any role checked, then the user becomes a ""System User"". ""System User"" has access to the desktop",بند واجهة
+"If these instructions where not helpful, please add in your suggestions on GitHub Issues.",بند واجهة
+If this is checked the documents will have the same name as they have on the Event Producer's site,بند واجهة
+"If this is checked, rows with valid data will be imported and invalid rows will be dumped into a new file for you to import later.",بند واجهة
+If user is the owner,If مستخدم is المالك
+"If you are updating, please select ""Overwrite"" else existing rows will not be deleted.",بند واجهة
+If you are updating/overwriting already created records.,بند واجهة
+"If you are uploading new records, ""Naming Series"" becomes mandatory, if present.",بند واجهة
+"If you are uploading new records, leave the ""name"" (ID) column blank.",ID — بند واجهة
+If you don't want to create any new records while updating the older records.,بند واجهة
+"If you set this, this Item will come in a drop-down under the selected parent.",بند واجهة
+"If you think this is unauthorized, please change the Administrator password.",بند واجهة
+"If your data is in HTML, please copy paste the exact HTML code with the tags.",HTML HTML — بند واجهة
+Ignore attachments over this size,بند واجهة
+Ignore encoding errors,بند واجهة
+Ignore User Permissions,بند واجهة
+Ignore XSS Filter,بند واجهة
+Ignored Apps,بند واجهة
+Ignored: {0} to {1},بند واجهة
+Illegal Access Token. Please try again,بند واجهة
+Illegal Document Status for {0},بند واجهة
+Illegal SQL Query,SQL — بند واجهة
+Image,صورة
+Image Field,بند واجهة
+Image field must be a valid fieldname,بند واجهة
+Image field must be of type Attach Image,بند واجهة
+Image Link,صورة رابط
+Image View,صورة عرض
+Images,بند واجهة
+Implicit,بند واجهة
+Import,استيراد
+Import Data,بند واجهة
+Import Data from CSV / Excel files.,CSV — بند واجهة / بند واجهة
+Import Email From,استيراد البريد الإلكتروني من
+Import File,استيراد ملف
+Import File Errors and Warnings,بند واجهة
+Import from Google Sheets,بند واجهة
+Import Log,استيراد السجل
+Import Log Preview,استيراد السجل معاينة
+Import Preview,استيراد معاينة
+Import Progress,بند واجهة
+Import Status,استيراد الحالة
+Import Subscribers,بند واجهة
+"Import template should be of type .csv, .xlsx or .xls",بند واجهة
+Import template should contain a Header and atleast one row.,بند واجهة
+Import Type,استيراد النوع
+Import Warnings,بند واجهة
+Import Zip,بند واجهة
+Important,بند واجهة
+Importing {0} of {1},بند واجهة
+"Importing {0} of {1}, {2}",بند واجهة
+In Days,بند واجهة
+In Filter,In تصفية
+In Global Search,بند واجهة
+In Grid View,بند واجهة
+In Hours,بند واجهة
+In List View,In قائمة عرض
+in minutes,بند واجهة
+In points. Default is 9.,بند واجهة
+In Preview,In معاينة
+In Progress,قيد التنفيذ
+In Reply To,بند واجهة
+In seconds,بند واجهة
+In Standard Filter,بند واجهة
+In Valid Request,بند واجهة
+Inactive,غير نشط
+Inbox,البريد الوارد
+inbox,البريد الوارد
+Inbox User,البريد الوارد مستخدم
+Include Attachments,بند واجهة
+Include indentation,بند واجهة
+Include Search in Top Bar,بند واجهة
+"Include symbols, numbers and capital letters in the password",بند واجهة
+Include Theme from Apps,بند واجهة
+Include Web View Link in Email,بند واجهة
+Incoming Change,بند واجهة
+Incoming email account not correct,بند واجهة
+Incomplete login details,بند واجهة
+Incorrect Configuration,بند واجهة
+Incorrect email or password. Please check your login credentials.,بند واجهة
+Incorrect URL,URL — بند واجهة
+Incorrect User or Password,بند واجهة
+Incorrect value in row {0}: {1} must be {2} {3},بند واجهة
+Incorrect value: {0} must be {1} {2},بند واجهة
+Incorrect Verification code,بند واجهة
+indent-left,بند واجهة
+indent-right,بند واجهة
+Index,بند واجهة
+Index Web Pages for Search,بند واجهة
+Indexing Authorization Code,بند واجهة
+Indexing Refresh Token,بند واجهة
+Indicator,بند واجهة
+Industry Type ID,ID — بند واجهة
+Info,معلومات
+info-sign,بند واجهة
+Info:,معلومات:
+Initial Sync Count,بند واجهة
+InnoDB,بند واجهة
+Insert,بند واجهة
+Insert Above,بند واجهة
+Insert After,بند واجهة
+Insert After cannot be set as {0},بند واجهة
+"Insert After field '{0}' mentioned in Custom Field '{1}', with label '{2}', does not exist",بند واجهة
+Insert Below,بند واجهة
+Insert Column Before {0},بند واجهة
+Insert New Records,بند واجهة
+Insert new records,بند واجهة
+Insert Style,بند واجهة
+Installed Application,بند واجهة
+Installed Applications,بند واجهة
+Instructions Emailed,بند واجهة
+Insufficient Permission for {0},بند واجهة
+Int,بند واجهة
+Integration Request,بند واجهة
+Integration Request Service,بند واجهة
+Integration Type,تكامل النوع
+Integrations,بند واجهة
+Integrations can use this field to set email delivery status,بند واجهة
+Interests,بند واجهة
+Intermediate,بند واجهة
+Internal record of document shares,بند واجهة
+Internal Server Error,بند واجهة
+Introduce your company to the website visitor.,بند واجهة
+Introduction,بند واجهة
+Introductory information for the Contact Us Page,بند واجهة
+Invalid,بند واجهة
+"Invalid ""depends_on"" expression",بند واجهة
+"Invalid ""depends_on"" expression set in filter {0}",بند واجهة
+Invalid Access Key ID or Secret Access Key.,ID — بند واجهة
+Invalid Account SID or Auth Token.,بند واجهة
+"Invalid Authorization headers, add a token with a prefix from one of the following: {0}.",بند واجهة
+"Invalid Authorization Type {0}, must be one of {1}.",يجب أن بند واجهة بند واجهة.
+"Invalid Bearer token, please provide a valid access token with prefix 'Bearer'.",بند واجهة
+Invalid column,بند واجهة
+Invalid Credentials,بند واجهة
+Invalid CSV Format,CSV — بند واجهة
+Invalid Date,بند واجهة
+Invalid expression set in filter {0},بند واجهة
+Invalid expression set in filter {0} ({1}),بند واجهة
+Invalid field name {0},بند واجهة
+Invalid field name: {0},بند واجهة
+Invalid fieldname '{0}' in autoname,بند واجهة
+Invalid file path: {0},بند واجهة
+Invalid file URL. Please contact System Administrator.,URL — بند واجهة
+Invalid Filter Value,بند واجهة
+Invalid filter: {0},بند واجهة
+Invalid Home Page,بند واجهة
+Invalid include path,بند واجهة
+Invalid JSON,JSON — بند واجهة
+Invalid json added in the custom options: {0},بند واجهة
+Invalid JSON in card links for {0},JSON — بند واجهة
+Invalid Link,بند واجهة
+Invalid login or password,بند واجهة
+Invalid Login Token,بند واجهة
+Invalid Login. Try again.,بند واجهة
+Invalid Mail Server. Please rectify and try again.,بند واجهة
+Invalid module path,بند واجهة
+Invalid naming series (. missing),بند واجهة
+Invalid Option,بند واجهة
+Invalid or corrupted content for import,بند واجهة
+Invalid Outgoing Mail Server or Port,بند واجهة
+Invalid Output Format,بند واجهة
+Invalid Password,بند واجهة
+Invalid Password:,بند واجهة
+Invalid payment gateway credentials,بند واجهة
+Invalid recipient address,بند واجهة
+Invalid Request,بند واجهة
+Invalid Search Field {0},بند واجهة
+Invalid Subscription,بند واجهة
+Invalid template file for import,بند واجهة
+Invalid Token,بند واجهة
+"Invalid token, please provide a valid token with prefix 'Basic' or 'Token'.",بند واجهة
+Invalid URL,URL — بند واجهة
+Invalid User Name or Support Password. Please rectify and try again.,بند واجهة
+Invalid username or password,بند واجهة
+Invalid {0} condition,بند واجهة
+Inverse,بند واجهة
+Invite as User,بند واجهة
+IP Address,IP العنوان
+Is Active,Is نشط
+Is Attachments Folder,Is مرفقات مجلد
+Is Billing Contact,Is الفوترة جهة اتصال
+Is Child Table,بند واجهة
+Is Complete,Is مكتمل
+Is Completed,Is مكتمل
+Is Custom Field,بند واجهة
+Is Default,بند واجهة
+Is First Startup,بند واجهة
+Is Folder,Is مجلد
+Is Global,بند واجهة
+Is Globally Pinned,بند واجهة
+Is Home Folder,Is الرئيسية مجلد
+Is Mandatory Field,بند واجهة
+Is Optional State,بند واجهة
+Is Pinned,بند واجهة
+Is Primary,Is أساسي
+Is Primary Contact,Is أساسي جهة اتصال
+Is Primary Mobile,Is أساسي الجوال
+Is Primary Phone,Is أساسي الهاتف
+Is Private,بند واجهة
+Is Public,بند واجهة
+Is Published Field,بند واجهة
+Is Published Field must be a valid fieldname,بند واجهة
+Is Single,بند واجهة
+Is Skipped,بند واجهة
+Is Spam,بند واجهة
+Is Standard,بند واجهة
+Is Submittable,بند واجهة
+Is Table,بند واجهة
+Is Tree,Is شجرة
+Is Unique,بند واجهة
+Is Your Company Address,Is الخاص بك الشركة العنوان
+It is risky to delete this file: {0}. Please contact your System Manager.,بند واجهة
+italic,بند واجهة
+Item cannot be added to its own descendants,بند واجهة
+Item Label,بند واجهة
+Item Type,الصنف النوع
+Jammu and Kashmir,بند واجهة
+JavaScript,بند واجهة
+Javascript,بند واجهة
+JavaScript Format: frappe.query_reports['REPORTNAME'] = {},بند واجهة
+Javascript is disabled on your browser,بند واجهة
+Javascript to append to the head section of the page.,بند واجهة
+Jharkhand,بند واجهة
+Jinja,بند واجهة
+Job,بند واجهة
+John Doe,بند واجهة
+john@doe.com,بند واجهة
+JSON,JSON
+JSON Request Body,JSON — بند واجهة
+Jump to field,بند واجهة
+just now,بند واجهة
+Kanban,بند واجهة
+Kanban Board,لوحة كانبان
+Kanban Board Column,بند واجهة
+Kanban Board Name,بند واجهة
+Karma,بند واجهة
+Karnataka,بند واجهة
+Keep track of all update feeds,بند واجهة
+Keeps track of all communications,بند واجهة
+Kerala,بند واجهة
+Key,بند واجهة
+Keyboard Shortcuts,بند واجهة
+Knowledge Base,بند واجهة
+Knowledge Base Contributor,بند واجهة
+Knowledge Base Editor,بند واجهة
+Label,بند واجهة
+Label and Type,بند واجهة
+Label Help,بند واجهة
+Label is mandatory,بند واجهة
+Lakshadweep Islands,بند واجهة
+Landing Page,بند واجهة
+Landscape,بند واجهة
+Language,اللغة
+Language Code,اللغة الرمز
+Language Name,اللغة الاسم
+"Language, Date and Time settings",بند واجهة
+Last,بند واجهة
+Last Active,بند واجهة
+Last Backup On,بند واجهة
+Last Deployed On,بند واجهة
+Last Execution,بند واجهة
+Last IP,IP — بند واجهة
+Last Known Versions,بند واجهة
+Last Login,بند واجهة
+Last Message,بند واجهة
+Last Modified By,بند واجهة
+Last Modified Date,بند واجهة
+Last Modified On,بند واجهة
+Last Month,الشهر الماضي
+Last Name,بند واجهة
+Last Password Reset Date,بند واجهة
+Last Point Allocation Date,بند واجهة
+Last Quarter,بند واجهة
+Last refreshed,بند واجهة
+Last Sync On,بند واجهة
+Last Synced On,بند واجهة
+Last synced {0},بند واجهة
+Last Update,بند واجهة
+Last Updated By,بند واجهة
+Last Updated On,آخر تحديث
+Last User,بند واجهة
+Last Week,الأسبوع الماضي
+Last Year,بند واجهة
+LDAP Email Field,LDAP — بند واجهة
+LDAP First Name Field,LDAP — بند واجهة
+LDAP Group,LDAP — بند واجهة
+LDAP Group Field,LDAP — بند واجهة
+LDAP Group Mapping,LDAP — بند واجهة
+LDAP Group Mappings,LDAP — بند واجهة
+LDAP is not enabled.,LDAP — بند واجهة
+LDAP Last Name Field,LDAP — بند واجهة
+LDAP Middle Name Field,LDAP — بند واجهة
+LDAP Mobile Field,LDAP — بند واجهة
+LDAP Not Installed,LDAP — بند واجهة
+LDAP Phone Field,LDAP — بند واجهة
+LDAP Search String,LDAP — بند واجهة
+"LDAP Search String needs to end with a placeholder, eg sAMAccountName={0}",LDAP — بند واجهة
+LDAP Security,LDAP — بند واجهة
+LDAP Server Url,LDAP — بند واجهة
+LDAP Settings,إعدادات LDAP
+Ldap settings,بند واجهة
+LDAP User Creation and Mapping,LDAP — بند واجهة
+LDAP Username Field,LDAP — بند واجهة
+Lead Conversion Time,بند واجهة
+Leaderboard,بند واجهة
+leaf,بند واجهة
+Leave a Comment,بند واجهة
+Leave blank to repeat always,بند واجهة
+Leave this conversation,بند واجهة
+Left,بند واجهة
+Left this conversation,بند واجهة
+Length,بند واجهة
+Length of {0} should be between 1 and 1000,بند واجهة
+Less,بند واجهة
+Let's avoid repeated words and characters,بند واجهة
+Let's Get Started,بند واجهة
+Let's prepare the system for first use.,بند واجهة
+Let's take you back to onboarding,بند واجهة
+Letter,بند واجهة
+Letter Head,بند واجهة
+Letter Head Based On,بند واجهة
+Letter Head Image,بند واجهة
+Letter Head in HTML,HTML — بند واجهة
+Letter Head Name,بند واجهة
+Level,بند واجهة
+"Level 0 is for document level permissions, higher levels for field level permissions.",بند واجهة
+Level Name,بند واجهة
+License,ترخيص
+Light Color,بند واجهة
+lightblue,بند واجهة
+Like,بند واجهة
+like,بند واجهة
+Liked,بند واجهة
+Liked By,بند واجهة
+Liked by {0},بند واجهة
+Likes,إعجابات
+Limit,بند واجهة
+Limit Number of DB Backups,DB — بند واجهة
+Line,بند واجهة
+Link,رابط
+link,رابط
+Link Cards,بند واجهة
+Link DocType,رابط نوع المستند
+Link Document Type,رابط مستند النوع
+Link Expired,رابط منتهي
+Link Fieldname,بند واجهة
+Link Name,رابط الاسم
+"Link that is the website home page. Standard Links (index, login, products, blog, about, contact)",بند واجهة
+Link Title,رابط العنوان
+Link To,رابط إلى
+Link to the page you want to open. Leave blank if you want to make it a group parent.,بند واجهة
+Linked,بند واجهة
+Linked Documents,بند واجهة
+Linked With,مرتبط بـ
+Linked with {0},بند واجهة
+linkedin,بند واجهة
+Links,روابط
+List,قائمة
+list,قائمة
+List a document type,قائمة مستند النوع
+"List as [{""label"": _(""Jobs""), ""route"":""jobs""}]",بند واجهة
+List Filter,قائمة تصفية
+List of backups available for download,بند واجهة
+List of patches executed,بند واجهة
+List of themes for Website.,بند واجهة
+List Settings,إعدادات قائمة
+List View Setting,بند واجهة
+List View Settings,إعدادات عرض قائمة
+list-alt,بند واجهة
+Load Balancing,بند واجهة
+Load More,بند واجهة
+Loading,تحميل
+Loading Filters...,تحميل المرشحات...
+Loading import file...,تحميل استيراد ملف . . .
+Loading...,جاري التحميل...
+Local DocType,محلي نوع المستند
+Local Document Type,محلي مستند النوع
+Local Fieldname,بند واجهة
+Local Primary Key,بند واجهة
+Locals,بند واجهة
+Location,الموقع
+lock,بند واجهة
+Log,السجل
+Log Cleanup,بند واجهة
+Log cleanup and notification configuration,بند واجهة
+Log Data,بند واجهة
+Log Details,السجل التفاصيل
+Log in to access this page.,السجل في إلى الوصول هذا صفحة .
+Log of error during requests.,بند واجهة
+Log of error on automated events (scheduler).,بند واجهة
+Log of Scheduler Errors,بند واجهة
+Log Setting User,بند واجهة
+Log Settings,إعدادات السجل
+Logged in,بند واجهة
+logged in,بند واجهة
+Logged in as Guest or Administrator,بند واجهة
+Logged Out,بند واجهة
+Login,تسجيل الدخول
+Login After,بند واجهة
+Login and view in Browser,بند واجهة
+Login Before,بند واجهة
+Login Id is required,تسجيل الدخول Id is مطلوب
+Login not allowed at this time,بند واجهة
+Login Required,تسجيل الدخول مطلوب
+"Login session expired, refresh page to retry",بند واجهة
+Login to comment,بند واجهة
+Login token required,بند واجهة
+Login Verification Code from {},بند واجهة
+Login with LDAP,تسجيل الدخول مع LDAP
+Logo Width,بند واجهة
+Logout,خروج
+Logout All Sessions,بند واجهة
+Logout All Sessions on Password Reset,بند واجهة
+Logout From All Devices After Changing Password,بند واجهة
+Logs,بند واجهة
+Long Text,بند واجهة
+Looks Great,بند واجهة
+Looks like something is wrong with this site's payment gateway configuration. No payment has been made.,بند واجهة
+Looks like something is wrong with this site's Paypal configuration.,بند واجهة
+"Looks like something went wrong during the transaction. Since we haven't confirmed the payment, Paypal will automatically refund you this amount. If it doesn't, please send us an email and mention the Correlation ID: {0}.",ID — بند واجهة
+Looks like you didn't change the value,بند واجهة
+Low,منخفض
+Madam,بند واجهة
+Madhya Pradesh,بند واجهة
+magnet,بند واجهة
+Maharashtra,بند واجهة
+Main Section,بند واجهة
+Main Section (HTML),HTML — بند واجهة
+Main Section (Markdown),بند واجهة
+"Maintains a Log of all inserts, updates and deletions on Event Producer site for documents that have consumers.",بند واجهة
+Maintains a log of every event consumed along with the status of the sync and a Resync button in case sync fails.,بند واجهة
+Maintenance Manager,بند واجهة
+Maintenance User,صيانة مستخدم
+"Make ""name"" searchable in Global Search",بند واجهة
+Make all attachments private,بند واجهة
+Make use of longer keyboard patterns,بند واجهة
+Make {0},بند واجهة
+Makes the page public,بند واجهة
+Male,ذكر
+Manage Third Party Apps,بند واجهة
+Mandatory,بند واجهة
+Mandatory Depends On,بند واجهة
+Mandatory field: set role for,بند واجهة
+Mandatory field: {0},بند واجهة
+"Mandatory fields required in table {0}, Row {1}",بند واجهة
+Mandatory fields required in {0},بند واجهة
+Mandatory Information missing:,بند واجهة
+Mandatory:,بند واجهة
+Manipur,بند واجهة
+Map Columns,بند واجهة
+Map columns from {0} to fields in {1},بند واجهة
+Map route parameters into form variables. Example <code>/project/&lt;name&gt;</code>,بند واجهة
+map-marker,بند واجهة
+Mapping,بند واجهة
+Mapping column {0} to field {1},بند واجهة
+Mapping Name,بند واجهة
+Mapping Type,بند واجهة
+Mappings,بند واجهة
+Mark all as Read,بند واجهة
+Mark as Read,بند واجهة
+Mark as Spam,بند واجهة
+Mark as Unread,بند واجهة
+Markdown,بند واجهة
+Markdown Editor,بند واجهة
+Marked As Spam,بند واجهة
+Max 500 records at a time,بند واجهة
+Max Attachment Size (in MB),بند واجهة
+Max Attachments,بند واجهة
+Max Length,بند واجهة
+Max Value,بند واجهة
+Max width for type Currency is 100px in row {0},بند واجهة
+Maximum,بند واجهة
+Maximum Attachment Limit for this record reached.,بند واجهة
+Maximum Number of Fields,بند واجهة
+Maximum Points,بند واجهة
+Maximum points allowed after multiplying points with the multiplier value\n(Note: For no limit leave this field empty or set 0),بند واجهة
+Maximum {0} rows allowed,بند واجهة
+me-south-1,بند واجهة
+"Meaning of Submit, Cancel, Amend",بند واجهة
+Medium,متوسط
+Meeting,بند واجهة
+Meghalaya,بند واجهة
+Mention,بند واجهة
+Mention transaction completion page URL,URL — بند واجهة
+Mentions,بند واجهة
+Menu,القائمة
+Merchant ID,ID — بند واجهة
+Merchant Key,بند واجهة
+Merge with existing,بند واجهة
+merged {0} into {1},بند واجهة
+Merging is only possible between Group-to-Group or Leaf Node-to-Leaf Node,بند واجهة
+Message,رسالة
+message,رسالة
+Message (HTML),رسالة (HTML)
+Message (Markdown),بند واجهة
+Message clipped,بند واجهة
+Message Count,بند واجهة
+Message Examples,بند واجهة
+Message from server: {0},بند واجهة
+Message ID,رسالة المعرّف
+Message not setup,بند واجهة
+Message Parameter,بند واجهة
+Message Preview,رسالة معاينة
+Message to be displayed on successful completion (only for Guest users),بند واجهة
+Message-id,رسالة id
+Meta Description,بند واجهة
+Meta Image,بند واجهة
+Meta Tags,بند واجهة
+Meta Title,بند واجهة
+Meta title for SEO,بند واجهة
+Method,بند واجهة
+Middle Name,الاسم الأوسط
+Middle Name (Optional),بند واجهة
+Migration ID Field,ID — بند واجهة
+Milestone,بند واجهة
+Milestone Tracker,بند واجهة
+Minimum,بند واجهة
+Minimum Password Score,بند واجهة
+minus,بند واجهة
+minus-sign,بند واجهة
+Miss,بند واجهة
+Missing Fields,بند واجهة
+Missing parameter Kanban Board Name,بند واجهة
+Missing parameters for login,بند واجهة
+Missing Values Required,مفقود القيم مطلوب
+Mizoram,بند واجهة
+mm-dd-yyyy,بند واجهة
+mm/dd/yyyy,بند واجهة
+Mobile No,الجوال لا
+Mobile number,الجوال الرقم
+Models (building blocks) of the Application,بند واجهة
+Modified By,عُدّل بواسطة
+Module,وحدة
+module,وحدة
+Module Def,بند واجهة
+Module Name,اسم الوحدة
+module name...,وحدة الاسم . . .
+Module Not Found,بند واجهة
+Module Onboarding,بند واجهة
+Module Path,بند واجهة
+Module to Export,وحدة إلى تصدير
+Modules,الوحدات
+Modules HTML,الوحدات HTML
+Monday,الاثنين
+Monospace,بند واجهة
+Month,بند واجهة
+Monthly,شهري
+Monthly Long,بند واجهة
+Monthly Rank:,شهري الترتيب:
+More,المزيد
+More articles on {0},بند واجهة
+More content for the bottom of the page.,بند واجهة
+More Information,بند واجهة
+Most Used,بند واجهة
+Move,بند واجهة
+move,بند واجهة
+Move To,بند واجهة
+Move to Row Number,بند واجهة
+Move To Trash,بند واجهة
+Mrs,بند واجهة
+Multiple root nodes not allowed.,بند واجهة
+Multiplier Field,بند واجهة
+music,بند واجهة
+Must be a publicly accessible Google Sheets URL,URL — بند واجهة
+"Must be of type ""Attach Image""",بند واجهة
+Must have report permission to access this report.,بند واجهة
+Must specify a Query to run,بند واجهة
+Mute Sounds,بند واجهة
+My Account,بند واجهة
+MyISAM,بند واجهة
+Nagaland,بند واجهة
+Name,الاسم
+Name cannot contain special characters like {0},بند واجهة
+Name Case,بند واجهة
+Name not set via prompt,بند واجهة
+Name of the Document Type (DocType) you want this field to be linked to. e.g. Customer,بند واجهة
+Name of the new Print Format,بند واجهة
+Name of {0} cannot be {1},بند واجهة
+Names and surnames by themselves are easy to guess.,بند واجهة
+Naming,بند واجهة
+"Naming Options:\n<ol><li><b>field:[fieldname]</b> - By Field</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>\n<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>",بند واجهة
+Naming Series,بند واجهة
+Naming Series mandatory,بند واجهة
+Navbar,بند واجهة
+Navbar Item,بند واجهة
+Navbar Settings,إعدادات بند واجهة
+Navbar Template,بند واجهة
+Navbar Template Values,بند واجهة
+Navigate Home,بند واجهة
+Navigate list down,بند واجهة
+Navigate list up,بند واجهة
+Negative Value,بند واجهة
+Nested set error. Please contact the Administrator.,بند واجهة
+New,جديد
+new,جديد
+New Activity,جديد النشاط
+New Address,جديد العنوان
+New Chart,جديد الملف الطبي
+New Chat,بند واجهة
+New Comment on {0}: {1},بند واجهة
+New Connection,جديد اتصال
+New Contact,جديد جهة اتصال
+New Custom Print Format,بند واجهة
+New data will be inserted.,بند واجهة
+New Document Shared {0},جديد مستند مشترك { 0 }
+New Email,جديد البريد الإلكتروني
+New Email Account,بند واجهة
+New Event,جديد حدث
+New Folder,جديد مجلد
+New Kanban Board,بند واجهة
+New Mention on {0},بند واجهة
+New Message from Website Contact Page,بند واجهة
+New module created {0},جديد وحدة تاريخ الإنشاء { 0 }
+New Name,جديد الاسم
+New Newsletter,بند واجهة
+New Notification,جديد إشعار
+New Number Card,بند واجهة
+New Password,بند واجهة
+New Password Required.,بند واجهة
+New Print Format Name,بند واجهة
+New Report name,جديد تقرير الاسم
+New Shortcut,جديد اختصار
+new type of document,جديد النوع من مستند
+New updates are available,بند واجهة
+New Value,بند واجهة
+New value to be set,بند واجهة
+New {0},جديد {0}
+New {0} Created,جديد {0} تاريخ الإنشاء
+New {0} {1} added to Dashboard {2},بند واجهة
+New {0} {1} created,جديد { 0 } { 1 } تاريخ الإنشاء
+New {0}: {1},جديد {0}: {1}
+New {} releases for the following apps are available,بند واجهة
+Newsletter,بند واجهة
+Newsletter Email Group,بند واجهة
+Newsletter has already been sent,بند واجهة
+Newsletter Manager,بند واجهة
+Newsletter should have at least one recipient,بند واجهة
+Newsletter should have atleast one recipient,بند واجهة
+Newsletters,بند واجهة
+"Newsletters to contacts, leads.",بند واجهة
+Next,التالي
+Next Action Email Template,التالي إجراء البريد الإلكتروني قالب
+Next actions,التالي إجراءات
+Next Actions HTML,التالي إجراءات HTML
+Next Schedule Date,التالي جدولة التاريخ
+Next Scheduled Date,التالي مجدول التاريخ
+Next State,بند واجهة
+Next Sync Token,بند واجهة
+No Active Sessions,بند واجهة
+No activity,لا النشاط
+No address added yet.,بند واجهة
+No alerts for today,بند واجهة
+No changes in document,لا التغييرات في مستند
+No comments yet,بند واجهة
+No comments yet. Start a new discussion.,بند واجهة
+No conditions provided,بند واجهة
+No contacts added yet.,بند واجهة
+No contacts linked to document,بند واجهة
+No Copy,بند واجهة
+No Data,بند واجهة
+No data found in the file. Please reattach the new file with data.,بند واجهة
+No data to export,بند واجهة
+No default Address Template found. Please create a new one from Setup > Printing and Branding > Address Template.,بند واجهة
+No document found for given filters,بند واجهة
+No documents found tagged with {0},بند واجهة
+No Email Account,بند واجهة
+No email account associated with the User. Please add an account under User > Email Inbox.,بند واجهة
+No Email Accounts Assigned,بند واجهة
+No Emails,بند واجهة
+No Entry for the User {0} found within LDAP!,LDAP — بند واجهة
+No Events Today,بند واجهة
+no failed attempts,بند واجهة
+No failed logs,بند واجهة
+"No fields found that can be used as a Kanban Column. Use the Customize Form to add a Custom Field of type ""Select"".",بند واجهة
+No file attached,بند واجهة
+No filters found,بند واجهة
+No Filters Set,بند واجهة
+No further records,بند واجهة
+No Google Calendar Event to sync.,بند واجهة
+No items found.,لم يُعثر على بند واجهة.
+No Label,بند واجهة
+No LDAP User found for email: {0},LDAP — بند واجهة
+No matching records. Search something new,بند واجهة
+No More Activity,لا المزيد النشاط
+No more items to display,بند واجهة
+No more posts,بند واجهة
+No Name Specified for {0},بند واجهة
+"No need for symbols, digits, or uppercase letters.",بند واجهة
+No new Google Contacts synced.,بند واجهة
+No of Columns,بند واجهة
+No of emails remaining to be synced,بند واجهة
+No of Rows (Max 500),بند واجهة
+No pending or current jobs for this site,بند واجهة
+No permission for {0},لا صلاحية لـ { 0 }
+No permission to '{0}' {1},لا صلاحية إلى ' { 0 } ' { 1 }
+No permission to read {0},لا صلاحية إلى قراءة { 0 }
+No permission to {0} {1} {2},لا صلاحية إلى { 0 } { 1 } { 2 }
+No Permissions set for this criteria.,بند واجهة
+No Permissions Specified,بند واجهة
+No Permitted Charts,بند واجهة
+No Permitted Charts on this Dashboard,لوحة بند واجهة
+No posts yet,بند واجهة
+No Preview,لا معاينة
+No Preview Available,لا معاينة متاح
+No Printer is Available.,بند واجهة
+No Records Created,بند واجهة
+No records deleted,بند واجهة
+No records present in {0},بند واجهة
+No records tagged.,بند واجهة
+No records will be exported,بند واجهة
+No Results,بند واجهة
+No results found for {0} in Global Search,بند واجهة
+No Tags,بند واجهة
+No template found at path: {0},بند واجهة
+No Upcoming Events,بند واجهة
+No user found,بند واجهة
+No values to show,بند واجهة
+No {0} found,بند واجهة
+No {0} mail,بند واجهة
+No {0} permission,لا { 0 } صلاحية
+Non Negative,بند واجهة
+Non-Conforming,بند واجهة
+None,لا شيء
+none of,لا شيء من
+None: End of Workflow,بند واجهة
+Not a valid Comma Separated Value (CSV File),CSV — بند واجهة
+Not a valid DocType view:,بند واجهة
+Not a valid user,بند واجهة
+Not a valid User Image.,بند واجهة
+Not a valid Workflow Action,بند واجهة
+Not a zip file,بند واجهة
+Not active,بند واجهة
+Not Allowed,بند واجهة
+Not allowed for {0}: {1},بند واجهة
+"Not allowed to attach {0} document, please enable Allow Print For {0} in Print Settings",إعدادات بند واجهة
+Not allowed to change {0} after submission,بند واجهة
+Not allowed to Import,بند واجهة
+Not allowed to print cancelled documents,بند واجهة
+Not allowed to print draft documents,بند واجهة
+Not Allowed: Disabled User,بند واجهة
+Not Ancestors Of,بند واجهة
+Not Descendants Of,بند واجهة
+Not enough permission to see links,بند واجهة
+Not Equals,بند واجهة
+Not Found,بند واجهة
+Not found,بند واجهة
+Not In,بند واجهة
+Not in Developer Mode,بند واجهة
+Not in Developer Mode! Set in site_config.json or make 'Custom' DocType.,بند واجهة
+Not Like,بند واجهة
+Not Linked to any record,بند واجهة
+Not Permitted,بند واجهة
+Not permitted,بند واجهة
+Not permitted to view {0},بند واجهة
+Not Published,بند واجهة
+Not Saved,بند واجهة
+Not Seen,بند واجهة
+Not Sent,بند واجهة
+Not Set,بند واجهة
+Note,ملاحظة
+Note Seen By,بند واجهة
+Note:,ملاحظة:
+Note: By default emails for failed backups are sent.,بند واجهة
+Note: Changing the Page Name will break previous URL to this page.,URL — بند واجهة
+"Note: For best results,  images must be of the same size and width must be greater than height.",يجب أن بند واجهة بند واجهة.
+Note: Multiple sessions will be allowed in case of mobile device,بند واجهة
+Notes:,ملاحظات:
+Nothing to show,بند واجهة
+Nothing to update,بند واجهة
+Notification,إشعار
+Notification Log,إشعار السجل
+Notification Recipient,إشعار المستلم
+Notification Settings,إعدادات إشعار
+Notification Subscribed Document,بند واجهة
+Notification Tones,بند واجهة
+Notifications,إشعارات
+Notifications and bulk mails will be sent from this outgoing server.,بند واجهة
+Notifications Disabled,إشعارات معطّل
+Notify by Email,بند واجهة
+Notify by email,بند واجهة
+Notify if unreplied,بند واجهة
+Notify if unreplied for (in mins),بند واجهة
+Notify Users On Every Login,بند واجهة
+Notify users with a popup when they log in,بند واجهة
+Now,بند واجهة
+now,بند واجهة
+Number,الرقم
+Number Card,بطاقة رقمية
+Number Card Link,بند واجهة
+Number Cards,بند واجهة
+Number Format,بند واجهة
+Number of Backups,بند واجهة
+Number of columns for a field in a Grid (Total Columns in a grid should be less than 11),بند واجهة
+Number of columns for a field in a List View or a Grid (Total Columns should be less than 11),بند واجهة
+Number of DB Backups,DB — بند واجهة
+Number of DB backups cannot be less than 1,DB — بند واجهة
+Number of Groups,بند واجهة
+OAuth Authorization Code,OAuth — بند واجهة
+OAuth Bearer Token,OAuth — بند واجهة
+OAuth Client,OAuth العميل
+OAuth Client ID,OAuth العميل المعرّف
+OAuth Provider Settings,إعدادات OAuth مزود
+Odisha,بند واجهة
+Off,بند واجهة
+off,بند واجهة
+Office,بند واجهة
+Office 365,بند واجهة
+Offline,بند واجهة
+ok-circle,بند واجهة
+ok-sign,بند واجهة
+Old Password,بند واجهة
+Old Password Required.,بند واجهة
+old_parent,بند واجهة
+Older backups will be automatically deleted,بند واجهة
+"On {0}, {1} wrote:",بند واجهة
+on_cancel,في إلغاء
+on_change,بند واجهة
+on_submit,في إرسال
+on_trash,بند واجهة
+on_update,في تحديث
+on_update_after_submit,بند واجهة
+Onboarding,بند واجهة
+Onboarding Complete,بند واجهة
+Onboarding Permission,بند واجهة
+Onboarding Step,بند واجهة
+Onboarding Step Map,بند واجهة
+"Once submitted, submittable documents cannot be changed. They can only be Cancelled and Amended.",بند واجهة
+"Once you have set this, the users will only be able access documents (eg. Blog Post) where the link exists (eg. Blogger).",بند واجهة
+One Last Step,بند واجهة
+One of,بند واجهة
+one of,بند واجهة
+One Time Password (OTP) Registration Code from {},OTP — بند واجهة
+Online,بند واجهة
+Only 200 inserts allowed in one request,بند واجهة
+Only Administrator can delete Email Queue,بند واجهة
+Only Administrator can edit,بند واجهة
+Only Administrator can save a standard report. Please rename and save.,بند واجهة
+Only Administrator is allowed to use Recorder,بند واجهة
+Only Allow Edit For,بند واجهة
+Only mandatory fields are necessary for new records. You can delete non-mandatory columns if you wish.,بند واجهة
+Only one {0} can be set as primary.,بند واجهة
+Only Options allowed for Data field are:,بند واجهة
+Only Send Records Updated in Last X Hours,بند واجهة
+Only standard DocTypes are allowed to be customized from Customize Form.,بند واجهة
+Only users involved in the document are listed,بند واجهة
+Only {0} emailed reports are allowed per user,بند واجهة
+only.,بند واجهة
+Oops,بند واجهة
+Oops! Something went wrong,بند واجهة
+"Oops, you are not allowed to know that",بند واجهة
+Open,فتح
+Open a dialog with mandatory fields to create a new record quickly,بند واجهة
+Open a module or tool,بند واجهة
+Open Awesomebar,بند واجهة
+Open Chat,بند واجهة
+Open Document,فتح مستند
+Open Documents,فتح المستندات
+Open Help,فتح مساعدة
+Open Link,فتح رابط
+Open list item,فتح قائمة الصنف
+Open Reference Document,فتح المرجع مستند
+Open Settings,إعدادات فتح
+Open Source Applications for the Web,بند واجهة
+Open Translation,بند واجهة
+Open URL in a New Tab,URL — بند واجهة
+Open your authentication app on your mobile phone.,بند واجهة
+Open {0},فتح {0}
+Opened,بند واجهة
+Operation,بند واجهة
+Operator must be one of {0},بند واجهة
+Option 1,خيار 1
+Option 2,خيار 2
+Option 3,خيار 3
+Option {0} for field {1} is not a child table,بند واجهة
+Optional: Always send to these ids. Each Email Address on a new row,بند واجهة
+Optional: The alert will be sent if this expression is true,بند واجهة
+Options,بند واجهة
+Options 'Dynamic Link' type of field must point to another Link Field with options as 'DocType',بند واجهة
+Options for select. Each option on a new line.,بند واجهة
+Options for {0} must be set before setting the default value.,يجب أن بند واجهة بند واجهة.
+Options Help,بند واجهة
+Options not set for link field {0},بند واجهة
+or attach a,بند واجهة
+Or login with,أو تسجيل الدخول مع
+orange,بند واجهة
+Order,أمر
+Org History,بند واجهة
+Org History Heading,بند واجهة
+Organizational Unit for Users,بند واجهة
+Orientation,بند واجهة
+Original Value,بند واجهة
+Other,أخرى
+Other Territory,بند واجهة
+OTP App,OTP — بند واجهة
+OTP Issuer Name,OTP — بند واجهة
+OTP secret can only be reset by the Administrator.,OTP — بند واجهة
+OTP Secret has been reset. Re-registration will be required on next login.,OTP — بند واجهة
+OTP setup using OTP App was not completed. Please contact Administrator.,OTP OTP — بند واجهة
+Outgoing email account not correct,بند واجهة
+Outlook.com,بند واجهة
+Output,بند واجهة
+Overwrite,بند واجهة
+Owner,المالك
+Package Document Type,حزمة مستند النوع
+Package Publish Target,بند واجهة
+Package Publish Tool,بند واجهة
+Page,صفحة
+page,صفحة
+Page Builder,بند واجهة
+Page Building Blocks,بند واجهة
+Page has expired!,بند واجهة
+Page HTML,صفحة HTML
+Page Length,بند واجهة
+Page Missing or Moved,بند واجهة
+Page Name,صفحة الاسم
+Page not found,بند واجهة
+Page Settings,إعدادات صفحة
+Page Shortcuts,صفحة الاختصارات
+Page to show on the website\n,بند واجهة
+Page {0} of {1},صفحة {0} من {1}
+Pages in Desk (place holders),بند واجهة
+Parameter,بند واجهة
+Parent,بند واجهة
+Parent Error Snapshot,بند واجهة
+Parent Field (Tree),بند واجهة
+Parent Field must be a valid fieldname,بند واجهة
+Parent is required to get child table data,بند واجهة
+Parent is the name of the document to which the data will get added to.,بند واجهة
+Parent Label,بند واجهة
+Parent Table,بند واجهة
+Partial Success,جزئي نجاح
+Partially Successful,بند واجهة
+Participants,بند واجهة
+Party GSTIN,بند واجهة
+Passive,بند واجهة
+Password,بند واجهة
+Password changed successfully.,بند واجهة
+Password for Base DN,بند واجهة
+Password is required or select Awaiting Password,بند واجهة
+Password not found,بند واجهة
+Password Reset,بند واجهة
+Password reset instructions have been sent to your email,بند واجهة
+Password Reset Link Generation Limit,بند واجهة
+Password Updated,بند واجهة
+Passwords do not match!,بند واجهة
+Paste,بند واجهة
+Patch,بند واجهة
+Patch Log,بند واجهة
+Path,بند واجهة
+Path to CA Certs File,بند واجهة
+Path to private Key File,بند واجهة
+Path to Server Certificate,بند واجهة
+pause,بند واجهة
+Payment Cancelled,السداد ملغى
+Payment Success,السداد نجاح
+PayPal payment gateway settings,بند واجهة
+PayPal Settings,إعدادات بند واجهة
+Paytm payment gateway settings,بند واجهة
+Paytm Settings,إعدادات بند واجهة
+PDF,PDF
+PDF generation failed,PDF — بند واجهة
+PDF generation failed because of broken image links,PDF — بند واجهة
+PDF Page Size,PDF — بند واجهة
+"PDF printing via ""Raw Print"" is not yet supported. Please remove the printer mapping in Printer Settings and try again.",PDF — بند واجهة
+PDF Settings,إعدادات PDF
+pencil,بند واجهة
+Pending,قيد الانتظار
+Pending Approval,قيد الانتظار موافقة
+Pending Verification,بند واجهة
+Percent,بند واجهة
+Percent Complete,بند واجهة
+Percentage,بند واجهة
+Period,الفترة
+Perm Level,بند واجهة
+Permanent,بند واجهة
+Permanently Cancel {0}?,بند واجهة
+Permanently delete {0}?,بند واجهة
+Permanently Submit {0}?,بند واجهة
+Permission Error,صلاحية خطأ
+Permission Level,بند واجهة
+Permission Levels,بند واجهة
+Permission Rules,بند واجهة
+Permissions,صلاحيات
+Permissions are automatically applied to Standard Reports and searches.,بند واجهة
+"Permissions are set on Roles and Document Types (called DocTypes) by setting rights like Read, Write, Create, Delete, Submit, Cancel, Amend, Report, Import, Export, Print, Email and Set User Permissions.",بند واجهة
+Permissions at higher levels are Field Level permissions. All Fields have a Permission Level set against them and the rules defined at that permissions apply to the field. This is useful in case you want to hide or make certain field read-only for certain Roles.,بند واجهة
+"Permissions at level 0 are Document Level permissions, i.e. they are primary for access to the document.",بند واجهة
+Permissions get applied on Users based on what Roles they are assigned.,بند واجهة
+Permitted Documents For User,بند واجهة
+Personal,بند واجهة
+Personal Data Deletion Request,بند واجهة
+Personal Data Download Request,بند واجهة
+Phone,الهاتف
+Phone No.,الهاتف لا.
+Pick Columns,بند واجهة
+picture,بند واجهة
+Pie,بند واجهة
+Pin Globally,بند واجهة
+Pin To Bottom,بند واجهة
+Pin To Top,بند واجهة
+Pincode,بند واجهة
+Places,بند واجهة
+plane,بند واجهة
+Plant,بند واجهة
+play,بند واجهة
+play-circle,بند واجهة
+Please add a subject to your email,بند واجهة
+Please add a valid comment.,بند واجهة
+Please ask your administrator to verify your sign-up,بند واجهة
+Please attach a file first.,بند واجهة
+Please attach an image file to set HTML,HTML — بند واجهة
+Please check the filter values set for Dashboard Chart: {},بند واجهة
+"Please check the value of ""Fetch From"" set for field {0}",بند واجهة
+Please check your email for verification,بند واجهة
+Please check your registered email address for instructions on how to proceed. Do not close this window as you will have to return to it.,بند واجهة
+Please click on the following link to set your new password,بند واجهة
+Please close this window,بند واجهة
+Please confirm your action to {0} this document.,بند واجهة
+Please create Card first,بند واجهة
+Please create chart first,بند واجهة
+Please do not change the rows above {0},بند واجهة
+Please do not change the template headings.,بند واجهة
+Please duplicate this to make changes,بند واجهة
+Please Duplicate this Website Theme to customize.,بند واجهة
+Please enable developer mode to create new connection,بند واجهة
+Please enable pop-ups,بند واجهة
+Please enable pop-ups in your browser,بند واجهة
+Please enable twilio settings before sending WhatsApp messages,بند واجهة
+Please enable Twilio settings to send WhatsApp messages,بند واجهة
+Please ensure that your profile has an email address,بند واجهة
+Please enter Access Token URL,URL — بند واجهة
+Please enter Authorize URL,URL — بند واجهة
+Please enter Base URL,URL — بند واجهة
+Please enter Client ID before social login is enabled,ID — بند واجهة
+Please enter Client Secret before social login is enabled,بند واجهة
+Please enter Redirect URL,URL — بند واجهة
+Please enter the password,بند واجهة
+Please enter valid mobile nos,بند واجهة
+Please enter values for App Access Key and App Secret Key,بند واجهة
+Please Enter Your Password to Continue,بند واجهة
+Please find attached {0}: {1},بند واجهة
+Please generate keys for the Event Subscriber User {0} first.,بند واجهة
+Please hide the standard navbar items instead of deleting them,بند واجهة
+Please Install the ldap3 library via pip to use ldap functionality.,بند واجهة
+Please make sure that there are no empty columns in the file.,بند واجهة
+Please make sure the Reference Communication Docs are not circularly linked.,بند واجهة
+Please refresh to get the latest document.,بند واجهة
+Please save before attaching.,بند واجهة
+Please save the document before assignment,بند واجهة
+Please save the document before removing assignment,بند واجهة
+Please save the Newsletter before sending,بند واجهة
+Please save the report first,بند واجهة
+Please save to edit the template.,بند واجهة
+Please select a Amount Field.,بند واجهة
+Please select a file or url,بند واجهة
+Please select a new name to rename,بند واجهة
+Please select a valid csv file with data,بند واجهة
+Please select a valid date filter,بند واجهة
+Please select another payment method. PayPal does not support transactions in currency '{0}',بند واجهة
+Please select another payment method. Paytm does not support transactions in currency '{0}',بند واجهة
+Please select another payment method. Razorpay does not support transactions in currency '{0}',بند واجهة
+Please select another payment method. Stripe does not support transactions in currency '{0}',بند واجهة
+Please select applicable Doctypes,بند واجهة
+Please select atleast 1 column from {0} to sort/group,بند واجهة
+Please select Company,بند واجهة
+Please select DocType first,بند واجهة
+Please select document type first.,بند واجهة
+Please select Entity Type first,بند واجهة
+Please select Minimum Password Score,بند واجهة
+Please select prefix first,بند واجهة
+Please select target language for translation,بند واجهة
+Please select the Document Type.,بند واجهة
+Please select {0},بند واجهة
+Please set a printer mapping for this print format in the Printer Settings,إعدادات بند واجهة
+Please set API Key and Secret on the producer and consumer sites first.,API — بند واجهة
+Please set Base URL in Social Login Key for Frappe,URL Frappe — بند واجهة
+Please Set Chart,بند واجهة
+Please set Dropbox access keys in your site config,بند واجهة
+Please set Email Address,بند واجهة
+Please set filters,بند واجهة
+Please set filters value in Report Filter table.,بند واجهة
+Please set the following documents in this Dashboard as standard first.,بند واجهة
+Please set the series to be used.,بند واجهة
+Please setup a message first,بند واجهة
+Please setup default Email Account from Setup > Email > Email Account,بند واجهة
+"Please setup SMS before setting it as an authentication method, via SMS Settings",إعدادات SMS SMS — بند واجهة
+Please specify,بند واجهة
+Please specify which date field must be checked,بند واجهة
+Please specify which value field must be checked,بند واجهة
+Please try again,بند واجهة
+Please Update SMS Settings,إعدادات SMS — بند واجهة
+Please verify your Email Address,بند واجهة
+plus,بند واجهة
+plus-sign,بند واجهة
+Point Allocation Periodicity,بند واجهة
+Points,بند واجهة
+Points Given,بند واجهة
+Pondicherry,بند واجهة
+Port,منفذ
+Portal Menu,بوابة القائمة
+Portal Menu Item,بوابة القائمة الصنف
+Portal Settings,إعدادات بوابة
+Portrait,بند واجهة
+Position,بند واجهة
+Post,بند واجهة
+Post Comment,بند واجهة
+Postal,بريدي
+Postal Code,بريدي الرمز
+Postprocess Method,بند واجهة
+Posts,بند واجهة
+Posts by {0},بند واجهة
+Posts filed under {0},بند واجهة
+Precision,بند واجهة
+Precision should be between 1 and 6,بند واجهة
+Predictable substitutions like '@' instead of 'a' don't help very much.,بند واجهة
+Prefer not to say,بند واجهة
+Preferred Billing Address,بند واجهة
+Preferred Shipping Address,بند واجهة
+Prefix,بادئة
+Prepared Report,تقرير بند واجهة
+Prepared Report Expiry Period (Days),بند واجهة
+Prepared Report User,بند واجهة
+Preparing Report,تقرير بند واجهة
+Preprocess Method,بند واجهة
+Press Alt Key to trigger additional shortcuts in Menu and Sidebar,بند واجهة
+Press Enter to save,بند واجهة
+Preview,معاينة
+Preview HTML,معاينة HTML
+Preview Message,معاينة رسالة
+Previous,السابق
+Previous Hash,بند واجهة
+Primary,أساسي
+Primary Color,بند واجهة
+Print,طباعة
+print,طباعة
+Print Documents,طباعة المستندات
+Print Format,بند واجهة
+Print Format Builder,بند واجهة
+Print Format Help,بند واجهة
+Print Format Type,بند واجهة
+Print Format {0} is disabled,بند واجهة
+Print Hide,بند واجهة
+Print Hide If No Value,بند واجهة
+Print Sent to the printer!,بند واجهة
+Print Server,بند واجهة
+Print Settings,إعدادات طباعة
+Print Settings...,طباعة الإعدادات...
+Print Style,بند واجهة
+Print Style Name,بند واجهة
+Print Style Preview,بند واجهة
+Print taxes with zero amount,بند واجهة
+Print UOM after Quantity,UOM — بند واجهة
+Print Width,بند واجهة
+"Print Width of the field, if the field is a column in a table",بند واجهة
+Print with letterhead,بند واجهة
+Printer,بند واجهة
+Printer Mapping,بند واجهة
+Printer Name,بند واجهة
+Printer Settings,إعدادات بند واجهة
+Printing,بند واجهة
+Printing failed,بند واجهة
+Priority,الأولوية
+Private,بند واجهة
+Private and public Notes.,بند واجهة
+Private Key,بند واجهة
+Proceed Anyway,بند واجهة
+Processing,قيد المعالجة
+Processing...,قيد المعالجة...
+Producer Document Name,بند واجهة
+Producer URL,URL — بند واجهة
+Prof,بند واجهة
+Progress,بند واجهة
+Project,بند واجهة
+Property,عقار
+Property Depends On,بند واجهة
+Property Setter,بند واجهة
+Property Setter overrides a standard DocType or Field property,بند واجهة
+Property Type,عقار النوع
+ProTip: Add <code>Reference: {{ reference_doctype }} {{ reference_name }}</code> to send document reference,بند واجهة
+Provider,مزود
+Provider Name,مزود الاسم
+Public,بند واجهة
+Public Key,بند واجهة
+Public Transport,بند واجهة
+Publish,بند واجهة
+Publishable Key,بند واجهة
+Published,بند واجهة
+Published On,بند واجهة
+Published on,بند واجهة
+Pull,بند واجهة
+Pull Failed,بند واجهة
+Pull from Google Calendar,بند واجهة
+Pull from Google Contacts,بند واجهة
+Pull Insert,بند واجهة
+Pull Update,بند واجهة
+Pulled from Google Calendar,بند واجهة
+Pulled from Google Contacts,بند واجهة
+Punjab,بند واجهة
+Purchase Manager,بند واجهة
+Purchase Master Manager,بند واجهة
+Purchase User,شراء مستخدم
+purple,بند واجهة
+Push,بند واجهة
+Push Delete,بند واجهة
+Push Failed,بند واجهة
+Push Insert,بند واجهة
+Push to Google Calendar,بند واجهة
+Push to Google Contacts,بند واجهة
+Push Update,بند واجهة
+Python Module,بند واجهة
+Pyver,بند واجهة
+QR Code,QR الرمز
+QR Code for Login Verification,بند واجهة
+qrcode,بند واجهة
+Quarter Day,بند واجهة
+Quarterly,ربع سنوي
+Query,بند واجهة
+Query / Script,بند واجهة / بند واجهة
+Query must be a SELECT,بند واجهة
+Query Options,بند واجهة
+Query Report,تقرير بند واجهة
+query-report,بند واجهة
+question-sign,بند واجهة
+Queue / Worker,الانتظار / بند واجهة
+Queue should be one of {0},بند واجهة
+Queued,في الانتظار
+Queued for backup. It may take a few minutes to an hour.,بند واجهة
+Queued for backup. You will receive an email with the download link,بند واجهة
+Quick Entry,بند واجهة
+Quick Help for Setting Permissions,بند واجهة
+QZ Tray Connection Active!,بند واجهة
+QZ Tray Failed:,بند واجهة
+Rajasthan,بند واجهة
+random,بند واجهة
+Range,بند واجهة
+Rank:,الترتيب:
+Rating,بند واجهة
+Rating:,بند واجهة
+Raw Commands,بند واجهة
+Raw Email,بند واجهة
+RAW Information Log,بند واجهة
+Raw Printing,بند واجهة
+Raw Printing Settings...,بند واجهة
+Razorpay Payment gateway settings,بند واجهة
+Razorpay Settings,إعدادات بند واجهة
+Razorpay Signature Verification Failed,بند واجهة
+Read,قراءة
+Read by Recipient,قراءة by المستلم
+Read by Recipient On,قراءة by المستلم On
+Read Only,بند واجهة
+Read Only Depends On,بند واجهة
+Read Time,بند واجهة
+Reason,السبب
+Rebuild,بند واجهة
+Received,مستلم
+Receiver By Document Field,بند واجهة
+Receiver By Role,بند واجهة
+Receiver Parameter,بند واجهة
+Recent Activity,بند واجهة
+Recent years are easy to guess.,بند واجهة
+Recipient,المستلم
+Recipient Unsubscribed,بند واجهة
+Recipients,بند واجهة
+Record does not exist,بند واجهة
+Recorder,بند واجهة
+Records for following doctypes will be filtered,بند واجهة
+red,بند واجهة
+Redirect To,بند واجهة
+Redirect URI Bound To Auth Code,بند واجهة
+Redirect URIs,بند واجهة
+Redirect URL,URL — بند واجهة
+Redis cache server not running. Please contact Administrator / Tech support,Redis — بند واجهة / بند واجهة
+Ref DocType,بند واجهة
+Ref Report DocType,بند واجهة
+Reference,المرجع
+Reference Date,المرجع التاريخ
+Reference DocName,بند واجهة
+Reference Docname,بند واجهة
+Reference DocType,نوع المستند المرجعي
+Reference Doctype,المرجع نوع المستند
+Reference DocType and Reference Name are required,بند واجهة
+Reference Document,المرجع مستند
+Reference document has been cancelled,بند واجهة
+Reference Document Type,المرجع مستند النوع
+Reference Name,المرجع الاسم
+Reference name,المرجع الاسم
+Reference Owner,المرجع المالك
+Reference Report,تقرير المرجع
+Reference Type,المرجع النوع
+Reference: {0} {1},المرجع: {0} {1}
+Referrer,بند واجهة
+Refresh,تحديث
+refresh,تحديث
+Refresh All,تحديث الكل
+Refresh Google Sheet,بند واجهة
+Refresh Token,بند واجهة
+Refreshing,بند واجهة
+Refreshing...,جاري التحديث...
+Region,بند واجهة
+Register OAuth Client App,OAuth — بند واجهة
+Registered but disabled,بند واجهة
+Rejected,مرفوض
+Relapsed,بند واجهة
+Relapses,بند واجهة
+Relink,بند واجهة
+Relink Communication,بند واجهة
+Relinked,بند واجهة
+Reload,إعادة تحميل
+Reload File,إعادة تحميل ملف
+Remember Last Selected Value,بند واجهة
+Remote,عن بُعد
+Remote Document Type,عن بُعد مستند النوع
+Remote Fieldname,بند واجهة
+Remote ID,عن بُعد المعرّف
+Remote Objectname,بند واجهة
+Remote Primary Key,بند واجهة
+Remote Value Filters,بند واجهة
+Remove,بند واجهة
+remove,بند واجهة
+Remove all customizations?,بند واجهة
+Remove Field,بند واجهة
+Remove Filter,بند واجهة
+Remove Section,بند واجهة
+Remove Tag,بند واجهة
+remove-circle,بند واجهة
+remove-sign,بند واجهة
+removed,بند واجهة
+Removed {0},بند واجهة
+Rename,إعادة تسمية
+Rename many items by uploading a .csv file.,بند واجهة
+Rename {0},إعادة تسمية {0}
+"Renamed files and replaced code in controllers, please check!",بند واجهة
+renamed from {0} to {1},بند واجهة
+Reopen,بند واجهة
+Repeat,بند واجهة
+repeat,بند واجهة
+Repeat Header and Footer in PDF,PDF — بند واجهة
+Repeat On,بند واجهة
+Repeat on Day,بند واجهة
+Repeat on Last Day of the Month,بند واجهة
+Repeat this Event,بند واجهة
+Repeat Till,بند واجهة
+"Repeats like ""aaa"" are easy to guess",بند واجهة
+"Repeats like ""abcabcabc"" are only slightly harder to guess than ""abc""",بند واجهة
+Repeats {0},بند واجهة
+Replied,بند واجهة
+Reply,بند واجهة
+Reply All,بند واجهة
+Report,تقرير
+Report Builder,بند واجهة
+Report cannot be set for Single types,بند واجهة
+Report Column,بند واجهة
+Report Description,تقرير الوصف
+Report Document Error,تقرير مستند خطأ
+Report End Time,بند واجهة
+Report Filter,تقرير تصفية
+Report Filters,تقرير المرشحات
+"Report has no data, please modify the filters or change the Report Name",بند واجهة
+"Report has no numeric fields, please change the Report Name",بند واجهة
+Report Hide,بند واجهة
+Report Information,بند واجهة
+Report Manager,بند واجهة
+Report Name,تقرير الاسم
+Report of all document shares,بند واجهة
+Report Reference Doctype,تقرير المرجع نوع المستند
+Report Start Time,بند واجهة
+Report Type,تقرير النوع
+Report updated successfully,بند واجهة
+Report was not saved (there were errors),بند واجهة
+Report with more than 10 columns looks better in Landscape mode.,بند واجهة
+Report {0},تقرير {0}
+Report {0} is disabled,تقرير { 0 } is معطّل
+Report:,تقرير:
+Reports,بند واجهة
+Reports & Masters,بند واجهة و بند واجهة
+Reports already in Queue,بند واجهة
+Represents a User in the system.,بند واجهة
+Represents the states allowed in one document and role assigned to change the state.,بند واجهة
+Request Body consists of an invalid JSON structure,JSON — بند واجهة
+Request Data,بند واجهة
+Request Structure,بند واجهة
+Request Timed Out,بند واجهة
+Request URL,URL — بند واجهة
+Require Trusted Certificate,بند واجهة
+Res: {0},بند واجهة
+Reset,إعادة ضبط
+Reset Chart,إعادة ضبط الملف الطبي
+Reset Fields,بند واجهة
+Reset LDAP Password,LDAP — بند واجهة
+Reset OTP Secret,OTP — بند واجهة
+Reset Password,بند واجهة
+Reset Password Key,بند واجهة
+Reset Permissions for {0}?,إعادة ضبط صلاحيات لـ {0}?
+Reset to defaults,بند واجهة
+Reset your password,بند واجهة
+resize-full,بند واجهة
+resize-horizontal,بند واجهة
+resize-small,بند واجهة
+resize-vertical,بند واجهة
+Response,بند واجهة
+response,بند واجهة
+Response Type,بند واجهة
+Restore,بند واجهة
+Restore or permanently delete a document.,بند واجهة
+Restore Original Permissions,بند واجهة
+Restore to default settings?,بند واجهة
+Restored,بند واجهة
+restored {0} as {1},بند واجهة
+Restoring Deleted Document,بند واجهة
+Restrict IP,IP — بند واجهة
+Restrict To Domain,بند واجهة
+Restrict to Domain,بند واجهة
+Restrict user for specific document,بند واجهة
+Restrict user from this IP address only. Multiple IP addresses can be added by separating with commas. Also accepts partial IP addresses like (111.111.111),IP IP IP — بند واجهة
+Restricted,بند واجهة
+Restrictions,بند واجهة
+Resume Sending,بند واجهة
+Resync,بند واجهة
+Retake,بند واجهة
+Retry,بند واجهة
+Return to the Verification screen and enter the code displayed by your authentication app,بند واجهة
+retweet,بند واجهة
+Reverse Icon Color,بند واجهة
+Revert,بند واجهة
+Revert Of,بند واجهة
+Reverted,بند واجهة
+Reverting length to {0} for '{1}' in '{2}'. Setting the length as {3} will cause truncation of data.,بند واجهة
+Review,مراجعة
+Review Level,بند واجهة
+Review Levels,بند واجهة
+Review Points,بند واجهة
+Review Points:,بند واجهة
+Reviews,بند واجهة
+Revoke,بند واجهة
+Revoked,ملغى
+Rich Text,بند واجهة
+Right,بند واجهة
+road,بند واجهة
+Robots.txt,بند واجهة
+Role,الدور
+Role and Level,بند واجهة
+Role Name,الدور الاسم
+Role Permission for Page and Report,تقرير الدور صلاحية لـ صفحة و
+Role Permissions,الدور صلاحيات
+Role Permissions Manager,مدير صلاحيات الأدوار
+Role Profile,الدور الملف الشخصي
+Roles,أدوار
+Roles Assigned,بند واجهة
+Roles can be set for users from their User page.,بند واجهة
+Roles HTML,أدوار HTML
+Roles Html,بند واجهة
+Room,بند واجهة
+Room Type,بند واجهة
+Root {0} cannot be deleted,بند واجهة
+Round Robin,بند واجهة
+Route,بند واجهة
+Route History,بند واجهة
+Route Redirects,بند واجهة
+Route to Success Link,بند واجهة
+"Route: Example ""/desk""",بند واجهة
+Row,بند واجهة
+Row #,بند واجهة
+Row #{0}:,بند واجهة
+Row #{0}: Invalid Local Fieldname,بند واجهة
+Row #{0}: Please set Mapping or Default Value for the field {1} since its a dependency field,بند واجهة
+Row #{0}: Please set remote value filters for the field {1} to fetch the unique remote dependency document,بند واجهة
+Row Index,بند واجهة
+Row Name,بند واجهة
+Row No,بند واجهة
+Row Number,بند واجهة
+Row Status,بند واجهة
+Row Values Changed,بند واجهة
+Row {0},بند واجهة
+Row {0}: Not allowed to disable Mandatory for standard fields,بند واجهة
+Row {0}: Not allowed to enable Allow on Submit for standard fields,بند واجهة
+Rows Added,بند واجهة
+Rows Removed,بند واجهة
+Rule,قاعدة
+Rule Conditions,بند واجهة
+Rule Name,اسم القاعدة
+Rules defining transition of state in the workflow.,بند واجهة
+"Rules for how states are transitions, like next state and which role is allowed to change state etc.",بند واجهة
+Rules with higher priority number will be applied first.,بند واجهة
+Run,بند واجهة
+Run Jobs only Daily if Inactive For (Days),بند واجهة
+Run scheduled jobs only if checked,بند واجهة
+S3 Backup complete!,بند واجهة
+S3 Backup Settings,إعدادات بند واجهة
+S3 Bucket Details,بند واجهة
+sa-east-1,بند واجهة
+Sales Manager,بند واجهة
+Sales Master Manager,بند واجهة
+Sales User,بند واجهة
+Salesforce,بند واجهة
+Salutation,بند واجهة
+Same Field is entered more than once,بند واجهة
+Sample,بند واجهة
+Saturday,السبت
+Save,حفظ
+Save Anyway,بند واجهة
+Save API Secret:,API — بند واجهة
+Save As,حفظ As
+Save Filter,حفظ تصفية
+Save filters,حفظ المرشحات
+Save Report,تقرير حفظ
+Saved,بند واجهة
+Saved Successfully,بند واجهة
+Saving,بند واجهة
+Saving...,جاري الحفظ...
+Scan the QR Code and enter the resulting code displayed.,بند واجهة
+Schedule Script,بند واجهة
+Schedule Send,بند واجهة
+Schedule Sending,بند واجهة
+Scheduled,مجدول
+Scheduled execution for script {0} has updated,بند واجهة
+Scheduled Job,بند واجهة
+Scheduled Job Log,بند واجهة
+Scheduled Job Type,بند واجهة
+Scheduled To Send,بند واجهة
+Scheduled to send,بند واجهة
+Scheduler Event,بند واجهة
+Scheduler Inactive,بند واجهة
+Scheduler is inactive. Cannot import data.,بند واجهة
+Scopes,بند واجهة
+screenshot,بند واجهة
+Script,بند واجهة
+Script Manager,بند واجهة
+Script or Query reports,بند واجهة
+Script Report,تقرير بند واجهة
+Script to attach to all web pages.,بند واجهة
+Script Type,بند واجهة
+Search,بحث
+search,بحث
+Search by filename or extension,بند واجهة
+Search field {0} is not valid,بند واجهة
+Search Fields,بند واجهة
+Search for '{0}',بحث لـ '{0}'
+Search for anything,بند واجهة
+Search Help,بحث مساعدة
+Search in a document type,بحث في مستند النوع
+Search or Create a New Chat,بند واجهة
+Search or type a command,ابحث أو اكتب أمرًا
+Search Priorities,بند واجهة
+Search Results for,بند واجهة
+Search results for,بند واجهة
+Search Source Text,بند واجهة
+Search...,بحث...
+Searching,بند واجهة
+Searching ...,بند واجهة
+Secret Key,بند واجهة
+Section,بند واجهة
+Section Break,بند واجهة
+Section Heading,بند واجهة
+Security,بند واجهة
+Security Settings,إعدادات بند واجهة
+See all past reports.,بند واجهة
+See https://docs.aws.amazon.com/general/latest/gr/s3.html for details.,بند واجهة
+See on Website,بند واجهة
+See the document at {0},بند واجهة
+Seems API Key or API Secret is wrong !!!,API API — بند واجهة
+"Seems issue with server's razorpay config. Don't worry, in case of failure amount will get refunded to your account.",بند واجهة
+Seems Publishable Key or Secret Key is wrong !!!,بند واجهة
+Seems token you are using is invalid!,بند واجهة
+Seen,بند واجهة
+Seen By,بند واجهة
+Seen By Table,بند واجهة
+Select,اختيار
+Select a Brand Image first.,بند واجهة
+Select a chat to start messaging.,بند واجهة
+Select a DocType to make a new format,بند واجهة
+Select a group node first.,بند واجهة
+Select a valid Sender Field for creating documents from Email,بند واجهة
+Select a valid Subject field for creating documents from Email,بند واجهة
+Select All,تحديد الكل
+Select an existing format to edit or start a new format.,بند واجهة
+Select an image of approx width 150px with a transparent background for best results.,بند واجهة
+Select atleast 1 record for printing,بند واجهة
+Select atleast 2 actions,بند واجهة
+Select Attachments,اختيار مرفقات
+Select Child Table,بند واجهة
+Select Column,بند واجهة
+Select Columns,بند واجهة
+Select Dashboard,لوحة اختيار
+Select Date Range,بند واجهة
+Select DocType,اختيار نوع المستند
+Select Doctype,اختيار نوع المستند
+Select Document Type,اختيار مستند النوع
+Select Document Type or Role to start.,اختيار مستند النوع أو الدور إلى بدء .
+Select Document Types to set which User Permissions are used to limit access.,بند واجهة
+Select Event Type,اختيار حدث النوع
+Select Field,بند واجهة
+Select Field...,بند واجهة
+Select Fields,بند واجهة
+Select Fields To Insert,بند واجهة
+Select Fields To Update,بند واجهة
+Select File Format,بند واجهة
+Select File Type,اختيار ملف النوع
+Select Filters,اختيار المرشحات
+Select From Date,اختيار من التاريخ
+Select Google Calendar to which event should be synced.,بند واجهة
+Select Google Contacts to which contact should be synced.,بند واجهة
+Select Group By...,بند واجهة
+Select Language,اختيار اللغة
+Select Language...,اختيار اللغة...
+Select Languages,بند واجهة
+Select list item,اختيار قائمة الصنف
+Select Mandatory,بند واجهة
+Select Module,اختيار وحدة
+Select multiple list items,بند واجهة
+Select or drag across time slots to create a new event.,بند واجهة
+Select Print Format,بند واجهة
+Select Print Format to Edit,بند واجهة
+Select records for assignment,بند واجهة
+Select Role,اختيار الدور
+Select Table Columns for {0},بند واجهة
+Select the label after which you want to insert new field.,بند واجهة
+Select Transaction,بند واجهة
+"Select your Country, Time Zone and Currency",بند واجهة
+Select Your Region,بند واجهة
+Select {0},اختيار {0}
+Self approval is not allowed,بند واجهة
+Send,بند واجهة
+Send After,بند واجهة
+Send alert if date matches this field's value,بند واجهة
+Send alert if this field's value changes,بند واجهة
+Send Alert On,بند واجهة
+Send an email reminder in the morning,بند واجهة
+Send an email to {0} to link it here,بند واجهة
+Send Attachments,بند واجهة
+Send days before or after the reference date,بند واجهة
+Send Email Alert,بند واجهة
+Send Email for Successful Backup,بند واجهة
+Send Email for Successful backup,بند واجهة
+Send Email Print Attachments as PDF (Recommended),PDF — بند واجهة
+Send enquiries to this email address,بند واجهة
+Send me a copy,بند واجهة
+Send Me A Copy of Outgoing Emails,بند واجهة
+Send Notification To,بند واجهة
+Send Notification to,بند واجهة
+Send Notifications For Documents Followed By Me,بند واجهة
+Send Notifications For Email Threads,بند واجهة
+Send Notifications To,بند واجهة
+Send Now,بند واجهة
+Send only if there is any data,بند واجهة
+Send Print as PDF,PDF — بند واجهة
+Send Read Receipt,بند واجهة
+Send System Notification,بند واجهة
+Send To All Assignees,بند واجهة
+Send Unsubscribe Link,بند واجهة
+Send unsubscribe message in email,بند واجهة
+Send Welcome Email,بند واجهة
+Sender,المرسل
+Sender Email,المرسل البريد الإلكتروني
+Sender Field,بند واجهة
+Sender Field should have Email in options,بند واجهة
+Sendgrid,بند واجهة
+Sending,بند واجهة
+Sent,مُرسل
+Sent or Received,مُرسل أو مستلم
+Sent Read Receipt,مُرسل قراءة الإيصال
+Sent/Received Email,مُرسل/مستلم البريد الإلكتروني
+Separator,بند واجهة
+Series List for this Transaction,بند واجهة
+Series {0} already used in {1},بند واجهة
+Server Action,بند واجهة
+Server Error,بند واجهة
+Server IP,IP — بند واجهة
+Server Script,بند واجهة
+Service,بند واجهة
+Session Default,بند واجهة
+Session Default Settings,إعدادات بند واجهة
+Session Defaults,افتراضيات الجلسة
+Session Defaults Saved,بند واجهة
+Session Expired,جلسة منتهي
+Session Expiry,بند واجهة
+Session Expiry in Hours e.g. 06:00,بند واجهة
+Session Expiry Mobile,بند واجهة
+Session Expiry must be in format {0},بند واجهة
+Session Start Failed,جلسة بدء فشل
+Set,بند واجهة
+Set as Default,بند واجهة
+Set as Default Theme,بند واجهة
+Set Banner from Image,بند واجهة
+Set Chart,بند واجهة
+Set custom roles for page and report,بند واجهة
+"Set default format, page size, print style etc.",بند واجهة
+"Set Default Options for all charts on this Dashboard (Ex: ""colors"": [""#d1d8dd"", ""#ff5858""])",بند واجهة
+Set Dynamic Filters,بند واجهة
+Set Filters,بند واجهة
+Set Filters for {0},بند واجهة
+Set New Password,بند واجهة
+Set non-standard precision for a Float or Currency field,بند واجهة
+Set Number of Backups,بند واجهة
+Set numbering series for transactions.,بند واجهة
+Set Only Once,بند واجهة
+Set Password,بند واجهة
+Set Permissions,بند واجهة
+Set Permissions on Document Types and Roles,بند واجهة
+Set Property After Alert,بند واجهة
+Set Quantity,بند واجهة
+Set Role For,بند واجهة
+Set to 0 for no limit on the number of backups taken,بند واجهة
+Set up rules for user assignments.,بند واجهة
+Set User Permissions,بند واجهة
+Set Value,بند واجهة
+Setting this Address Template as default as there is no other default,بند واجهة
+Setting up Global Search documents.,بند واجهة
+Setting up your system,بند واجهة
+Settings,الإعدادات
+Settings Dropdown,بند واجهة
+Settings for About Us Page.,الإعدادات لـ حول Us صفحة.
+Settings for Contact Us Page,الإعدادات لـ جهة اتصال Us صفحة
+Settings for Contact Us Page.,الإعدادات لـ جهة اتصال Us صفحة.
+Settings for OAuth Provider,الإعدادات لـ OAuth مزود
+Settings for the About Us Page,الإعدادات لـ حول Us صفحة
+Setup,الإعداد
+Setup > Customize Form,الإعداد > تخصيص نموذج
+Setup > User,الإعداد > مستخدم
+Setup > User Permissions,الإعداد > مستخدم صلاحيات
+Setup Auto Email,بند واجهة
+Setup Complete,الإعداد مكتمل
+Setup Notifications based on various criteria.,بند واجهة
+"Setup of top navigation bar, footer and logo.",بند واجهة
+Setup Reports to be emailed at regular intervals,بند واجهة
+Setup Wizard,الإعداد معالج
+Share,مشاركة
+share,مشاركة
+Share this document with,مشاركة هذا مستند مع
+Share URL,مشاركة URL
+Share With,مشاركة مع
+Share {0} with,مشاركة {0} مع
+share-alt,بند واجهة
+Shared,مشترك
+Shared With,مشترك مع
+Shared with everyone,بند واجهة
+Shared with the following Users with Read access:{0},بند واجهة
+Shared with {0},مشترك مع { 0 }
+Shipping,بند واجهة
+Shop,بند واجهة
+shopping-cart,بند واجهة
+Short keyboard patterns are easy to guess,بند واجهة
+Short Name,بند واجهة
+Shortcuts,الاختصارات
+Show,بند واجهة
+show,بند واجهة
+Show all Versions,بند واجهة
+Show as cc,بند واجهة
+Show as Grid,بند واجهة
+Show Attachments,بند واجهة
+Show Calendar,بند واجهة
+Show CTA in Blog,بند واجهة
+Show Dashboard,لوحة بند واجهة
+Show Document,بند واجهة
+Show failed jobs,بند واجهة
+Show Failed Logs,بند واجهة
+Show Form Tour,بند واجهة
+Show Full Error and Allow Reporting of Issues to the Developer,بند واجهة
+Show full form instead of a quick entry modal,بند واجهة
+Show Full Form?,بند واجهة
+Show in filter,بند واجهة
+Show in Module Section,بند واجهة
+Show Keyboard Shortcuts,بند واجهة
+Show Line Breaks after Sections,بند واجهة
+Show More Activity,بند واجهة
+Show more details,بند واجهة
+Show only errors,بند واجهة
+Show percentage difference according to this time interval,بند واجهة
+Show Percentage Stats,بند واجهة
+Show Permissions,بند واجهة
+Show Preview Popup,بند واجهة
+Show Relapses,بند واجهة
+Show Report,تقرير بند واجهة
+Show Section Headings,بند واجهة
+Show Sidebar,بند واجهة
+Show Tags,بند واجهة
+Show Title,بند واجهة
+"Show title in browser window as ""Prefix - title""",بند واجهة
+Show Totals,بند واجهة
+Show Traceback,بند واجهة
+Show Warnings,بند واجهة
+Show Weekends,بند واجهة
+Showing only first {0} rows out of {1},بند واجهة
+Showing only Numeric fields from Report,تقرير بند واجهة
+Sidebar and Comments,بند واجهة
+Sidebar Items,بند واجهة
+Sidebar Settings,إعدادات بند واجهة
+Sign Up,بند واجهة
+Sign up,بند واجهة
+Sign Up is disabled,بند واجهة
+signal,بند واجهة
+Signature,التوقيع
+Signup Disabled,بند واجهة
+Signups have been disabled for this website.,بند واجهة
+Sikkim,بند واجهة
+"Simple Python Expression, Example: status == 'Open' and type == 'Bug'",بند واجهة
+"Simple Python Expression, Example: Status in (""Closed"", ""Cancelled"")",بند واجهة
+"Simple Python Expression, Example: Status in (""Invalid"")",بند واجهة
+Simultaneous Sessions,بند واجهة
+since last month,بند واجهة
+since last week,بند واجهة
+since last year,بند واجهة
+since yesterday,بند واجهة
+Single DocTypes cannot be customized.,بند واجهة
+Single Post (article).,بند واجهة
+Single Types have only one record no tables associated. Values are stored in tabSingles,بند واجهة
+Site URL,الموقع URL
+Sites,بند واجهة
+Size,بند واجهة
+Skip,تخطي
+Skip Authorization,بند واجهة
+Skip rows with errors,بند واجهة
+Skip Step,بند واجهة
+Skipping column {0},بند واجهة
+Skipping Duplicate Column {0},بند واجهة
+Skipping Untitled Column,بند واجهة
+Skype,بند واجهة
+Slack,بند واجهة
+Slack Channel,بند واجهة
+Slack Webhook Error,بند واجهة
+Slack Webhook URL,URL — بند واجهة
+Slack Webhooks for internal integration,بند واجهة
+Slideshow,بند واجهة
+Slideshow Items,بند واجهة
+Slideshow like display for the website,بند واجهة
+Slideshow Name,بند واجهة
+Small Text,بند واجهة
+Smallest circulating fraction unit (coin). For e.g. 1 cent for USD and it should be entered as 0.01,USD — بند واجهة
+Smallest Currency Fraction Value,بند واجهة
+SMS,رسالة نصية
+SMS Gateway URL,SMS URL — بند واجهة
+SMS Parameter,SMS — بند واجهة
+SMS sent to following numbers: {0},SMS — بند واجهة
+SMS Settings,إعدادات رسالة نصية
+SMS was not sent. Please contact Administrator.,SMS — بند واجهة
+SMTP Server,SMTP — بند واجهة
+SMTP Settings for outgoing emails,SMTP — بند واجهة
+Snapshot View,لقطة عرض
+Social,اجتماعي
+Social Home,اجتماعي الرئيسية
+Social Link Settings,إعدادات اجتماعي رابط
+Social Link Type,اجتماعي رابط النوع
+Social Login Key,بند واجهة
+Social Login Provider,اجتماعي تسجيل الدخول مزود
+Social Logins,بند واجهة
+Socketio is not connected. Cannot upload,بند واجهة
+Soft-Bounced,بند واجهة
+Some columns might get cut off when printing to PDF. Try to keep number of columns under 10.,PDF — بند واجهة
+Some of the features might not work in your browser. Please update your browser to the latest version.,بند واجهة
+Something went wrong,بند واجهة
+Something went wrong during the token generation. Click on {0} to generate a new one.,بند واجهة
+Something went wrong while generating dropbox access token. Please check error log for more details.,بند واجهة
+"Something went wrong while loading Desk. <b>Please relaod the page</b>. If the problem persists, contact the Administrator",بند واجهة
+Something went wrong while saving customizations,بند واجهة
+Sorry! I could not find what you were looking for.,بند واجهة
+Sorry! Sharing with Website User is prohibited.,بند واجهة
+Sorry! User should have complete access to their own record.,بند واجهة
+Sorry! You are not permitted to view this page.,بند واجهة
+"Sorry, you're not authorized.",بند واجهة
+Sort Field,بند واجهة
+Sort field {0} must be a valid fieldname,بند واجهة
+Sort Order,ترتيب أمر
+Source,المصدر
+Source Message,المصدر رسالة
+Source Name,المصدر الاسم
+Source Text,بند واجهة
+Spam,بند واجهة
+SparkPost,بند واجهة
+Special Characters are not allowed,بند واجهة
+"SQL Conditions. Example: status=""Open""",SQL — بند واجهة
+SSL/TLS Mode,SSL TLS — بند واجهة
+Staging,بند واجهة
+Standard,بند واجهة
+"Standard DocType cannot have default print format, use Customize Form",بند واجهة
+Standard Not Set,بند واجهة
+Standard Print Format cannot be updated,بند واجهة
+Standard Print Style cannot be changed. Please duplicate to edit.,بند واجهة
+Standard Reports,بند واجهة
+Standard rich text editor with controls,بند واجهة
+Standard roles cannot be disabled,بند واجهة
+Standard roles cannot be renamed,بند واجهة
+Standard Sidebar Menu,بند واجهة
+Standings,بند واجهة
+star,بند واجهة
+star-empty,بند واجهة
+Start,بدء
+Start a conversation.,بند واجهة
+Start Date,تاريخ البدء
+Start Date Field,بند واجهة
+Start entering data below this line,بند واجهة
+Start Import,بدء استيراد
+Start new Format,بند واجهة
+Start Time,بند واجهة
+Started,بند واجهة
+Starting Frappe ...,Frappe — بند واجهة
+Starts on,بند واجهة
+StartTLS,بند واجهة
+State,بند واجهة
+State/Province,بند واجهة
+States,بند واجهة
+"States for workflow (e.g. Draft, Approved, Cancelled).",بند واجهة
+Static Parameters,بند واجهة
+Stats,بند واجهة
+Stats based on last month's performance (from {0} to {1}),بند واجهة
+Stats based on last week's performance (from {0} to {1}),بند واجهة
+Stats Time Interval,بند واجهة
+Status,الحالة
+Status Updated,بند واجهة
+Status: {0},الحالة: {0}
+Step,بند واجهة
+step-backward,بند واجهة
+step-forward,بند واجهة
+Steps,بند واجهة
+Steps to verify your login,بند واجهة
+stop,إيقاف
+Stopped,متوقف
+Stores the JSON of last known versions of various installed apps. It is used to show release notes.,JSON — بند واجهة
+Straight rows of keys are easy to guess,بند واجهة
+Stripe payment gateway settings,بند واجهة
+Stripe Settings,إعدادات بند واجهة
+Style,بند واجهة
+"Style represents the button color: Success - Green, Danger - Red, Inverse - Black, Primary - Dark Blue, Info - Light Blue, Warning - Orange",بند واجهة
+Style Settings,إعدادات بند واجهة
+Stylesheet,بند واجهة
+Stylesheets for Print Formats,بند واجهة
+"Sub-currency. For e.g. ""Cent""",بند واجهة
+Sub-domain provided by erpnext.com,بند واجهة
+Subdomain,بند واجهة
+Subject,الموضوع
+Subject Field,بند واجهة
+"Subject Field type should be Data, Text, Long Text, Small Text, Text Editor",بند واجهة
+Submit,إرسال
+Submit After Import,بند واجهة
+Submit after importing,بند واجهة
+Submit an Issue,بند واجهة
+Submit this document to complete this step.,بند واجهة
+Submit this document to confirm,إرسال هذا مستند إلى تأكيد
+Submit {0} documents?,إرسال { 0 } المستندات ?
+Submitted,مُرسل
+Submitted Document cannot be converted back to draft. Transition row {0},بند واجهة
+submitted this document,مُرسل هذا مستند
+submitted this document {0},مُرسل هذا مستند { 0 }
+Submitting,بند واجهة
+Submitting {0},بند واجهة
+Submitting...,جاري الإرسال...
+Subscription Notification,اشتراك إشعار
+Subsidiary,بند واجهة
+Subtitle,بند واجهة
+Success,نجاح
+success,نجاح
+Success Action,نجاح إجراء
+Success Message,نجاح رسالة
+Success URL,نجاح URL
+Success! You are good to go 👍,بند واجهة
+Successful Transactions,بند واجهة
+Successful: {0} to {1},بند واجهة
+Successfully Done,بند واجهة
+"Successfully imported {0} record out of {1}. Click on Export Errored Rows, fix the errors and import again.",بند واجهة
+Successfully imported {0} record.,بند واجهة
+"Successfully imported {0} records out of {1}. Click on Export Errored Rows, fix the errors and import again.",بند واجهة
+Successfully imported {0} records.,بند واجهة
+Successfully Submitted!,بند واجهة
+Successfully Updated,بند واجهة
+Successfully updated translations,بند واجهة
+"Successfully updated {0} record out of {1}. Click on Export Errored Rows, fix the errors and import again.",بند واجهة
+Successfully updated {0} record.,بند واجهة
+"Successfully updated {0} records out of {1}. Click on Export Errored Rows, fix the errors and import again.",بند واجهة
+Successfully updated {0} records.,بند واجهة
+Suggested Username: {0},بند واجهة
+Sum,بند واجهة
+Sum of {0},بند واجهة
+Summary,الملخص
+Sunday,الأحد
+Support Email Address Not Specified,بند واجهة
+Suspend Sending,بند واجهة
+Switch To Desk,بند واجهة
+Symbol,بند واجهة
+Sync,بند واجهة
+Sync Calendar,بند واجهة
+Sync Contacts,بند واجهة
+Sync on Migrate,بند واجهة
+"Sync token was invalid and has been resetted, Retry syncing.",بند واجهة
+Sync with Google Calendar,بند واجهة
+Sync with Google Contacts,بند واجهة
+Synced,بند واجهة
+Syncing,بند واجهة
+Syncing {0} of {1},بند واجهة
+Syntax error in template,بند واجهة
+System,النظام
+System and Website Users,بند واجهة
+System Console,بند واجهة
+System Manager,مدير النظام
+System managers are allowed by default,بند واجهة
+System Notification,النظام إشعار
+System Page,النظام صفحة
+System Settings,إعدادات النظام
+System User,النظام مستخدم
+System will automatically delete Prepared Reports after these many days since creation,بند واجهة
+Table,بند واجهة
+Table Break,بند واجهة
+Table Field,بند واجهة
+Table HTML,HTML — بند واجهة
+Table MultiSelect,بند واجهة
+Table updated,بند واجهة
+Table {0} cannot be empty,بند واجهة
+Tag,بند واجهة
+tag,بند واجهة
+Tag Link,بند واجهة
+"tag name..., e.g. #tag",بند واجهة
+Tags,بند واجهة
+tags,بند واجهة
+Take Backup,بند واجهة
+Take Backup Now,بند واجهة
+Take Photo,بند واجهة
+Tamil Nadu,بند واجهة
+Target,بند واجهة
+Task,مهمة
+tasks,مهام
+Tax Category,بند واجهة
+Team Members,بند واجهة
+Team Members Heading,بند واجهة
+Telangana,بند واجهة
+Template,قالب
+Template Error,قالب خطأ
+Template Options,بند واجهة
+Template Warnings,بند واجهة
+Temporarily Disabled,بند واجهة
+Test,بند واجهة
+Test Email Address,بند واجهة
+Test email sent to {0},بند واجهة
+Test Runner,بند واجهة
+Test_Folder,بند واجهة
+Testing,بند واجهة
+Text,بند واجهة
+Text Align,بند واجهة
+Text Color,بند واجهة
+Text Content,بند واجهة
+Text Editor,بند واجهة
+text in document type,بند واجهة
+Text to be displayed for Link to Web Page if this form has a web page. Link route will be automatically generated based on `page_name` and `parent_website_route`,بند واجهة
+text-height,بند واجهة
+text-width,بند واجهة
+th-large,بند واجهة
+th-list,th - قائمة
+Thank you,بند واجهة
+Thank you for your email,بند واجهة
+Thank you for your feedback!,بند واجهة
+Thank you for your interest in subscribing to our updates,بند واجهة
+Thank you for your message,بند واجهة
+"The application has been updated to a new version, please refresh this page",بند واجهة
+The attachments could not be correctly linked to the new document,بند واجهة
+The Auto Repeat for this document has been disabled.,بند واجهة
+The column {0} has {1} different date formats. Automatically setting {2} as the default format as it is the most common. Please change other values in this column to this format.,بند واجهة
+The comment cannot be empty,بند واجهة
+The Condition '{0}' is invalid,بند واجهة
+The CSV format is case sensitive,CSV — بند واجهة
+The document could not be correctly assigned,بند واجهة
+The document has been assigned to {0},بند واجهة
+The first user will become the System Manager (you can change this later).,بند واجهة
+The First User: You,بند واجهة
+The following records needs to be created before we can import your file.,بند واجهة
+The Link specified has either been used before or Invalid,بند واجهة
+The mapping configuration between two doctypes.,بند واجهة
+"The meta description is an HTML attribute that provides a brief summary of a web page. Search engines such as Google often display the meta description in search results, which can influence click-through rates.",HTML — بند واجهة
+"The meta image is unique image representing the content of the page. Images for this Card should be at least 280px in width, and at least 150px in height.",بند واجهة
+The name that will appear in Google Calendar,بند واجهة
+The page you are looking for is missing. This could be because it is moved or there is a typo in the link.,بند واجهة
+The password of your account has expired.,بند واجهة
+The process for deletion of {0} data associated with {1} has been initiated.,بند واجهة
+The resource you are looking for is not available,بند واجهة
+The site which is consuming your events.,بند واجهة
+The site you want to subscribe to for consuming events.,بند واجهة
+The system provides many pre-defined roles. You can add new roles to set finer permissions.,بند واجهة
+The user from this field will be rewarded points,بند واجهة
+The webhook will be triggered if this expression is true,بند واجهة
+The {0} is already on auto repeat {1},بند واجهة
+Theme,بند واجهة
+Theme Configuration,بند واجهة
+Theme URL,URL — بند واجهة
+There are documents which have workflow states that do not exist in this Workflow. It is recommended that you add these states to the Workflow and change their states before removing these states.,بند واجهة
+There are some linked records which needs to be created before we can import your file. Do you want to create the following missing records automatically?,بند واجهة
+There are {0} with the same filters already in the queue:,بند واجهة
+There can be only one Fold in a form,بند واجهة
+There is an error in your Address Template {0},بند واجهة
+There is no data to be exported,بند واجهة
+There is some problem with the file url: {0},بند واجهة
+There is {0} with the same filters already in the queue:,بند واجهة
+There must be atleast one permission rule.,يجب أن بند واجهة بند واجهة.
+"There seems to be an issue with the server's braintree configuration. Don't worry, in case of failure, the amount will get refunded to your account.",بند واجهة
+There should be atleast one row for the following tables: {0},بند واجهة
+There should be atleast one row for {0} table,بند واجهة
+There should remain at least one System Manager,بند واجهة
+There was an error building this page,بند واجهة
+There was an error saving filters,بند واجهة
+There were errors,بند واجهة
+There were errors while creating the document. Please try again.,بند واجهة
+There were errors while sending email. Please try again.,بند واجهة
+"There were some errors setting the name, please contact the administrator",بند واجهة
+These values will be automatically updated in transactions and also will be useful to restrict permissions for this user on transactions containing these values.,بند واجهة
+Third Party Apps,بند واجهة
+Third Party Authentication,بند واجهة
+This action is only allowed for {},بند واجهة
+This cannot be undone,بند واجهة
+This card will be available to all Users if this is set,بند واجهة
+This chart will be available to all Users if this is set,بند واجهة
+This Currency is disabled. Enable to use in transactions,بند واجهة
+This document cannot be reverted,بند واجهة
+This document has been modified after the email was sent.,بند واجهة
+This document has been reverted,بند واجهة
+"This document is already amended, you cannot ammend it again",بند واجهة
+This document is currently queued for execution. Please try again,بند واجهة
+This email is autogenerated,بند واجهة
+This email was sent to {0},بند واجهة
+This email was sent to {0} and copied to {1},بند واجهة
+This feature is brand new and still experimental,بند واجهة
+This field will appear only if the fieldname defined here has value OR the rules are true (examples):\nmyfield\neval:doc.myfield=='My Value'\neval:doc.age&gt;18,بند واجهة
+This form does not have any input,بند واجهة
+This form has been modified after you have loaded it,بند واجهة
+This format is used if country specific format is not found,بند واجهة
+This goes above the slideshow.,بند واجهة
+This is a background report. Please set the appropriate filters and then generate a new one.,بند واجهة
+This is a top-10 common password.,بند واجهة
+This is a top-100 common password.,بند واجهة
+This is a very common password.,بند واجهة
+This is an automatically generated reply,بند واجهة
+This is an example Google SERP Preview.,بند واجهة
+This is similar to a commonly used password.,بند واجهة
+This is the number of the last created transaction with this prefix,بند واجهة
+This is the template file generated with only the rows having some error. You should use this file for correction and import.,بند واجهة
+This Kanban Board will be private,بند واجهة
+This link has already been activated for verification.,بند واجهة
+This link is invalid or expired. Please make sure you have pasted correctly.,بند واجهة
+This may get printed on multiple pages,بند واجهة
+This Month,هذا الشهر
+This month,بند واجهة
+This Quarter,بند واجهة
+This query style is discontinued,بند واجهة
+This report was generated on {0},بند واجهة
+This report was generated {0}.,بند واجهة
+This request has not yet been approved by the user.,بند واجهة
+This role update User Permissions for a user,هذا الدور تحديث مستخدم صلاحيات لـ مستخدم
+This title will be used as the title of the webpage as well as in meta tags,بند واجهة
+This Week,هذا الأسبوع
+"This will be automatically generated when you publish the page, you can also enter a route yourself if you wish",بند واجهة
+This will be shown in a modal after routing,بند واجهة
+This will be shown to the user in a dialog after routing to the report,بند واجهة
+This will log out {0} from all other devices,بند واجهة
+This will permanently remove your data.,بند واجهة
+This Year,هذا السنة
+Throttled,بند واجهة
+Thumbnail URL,URL — بند واجهة
+thumbs-down,بند واجهة
+thumbs-up,بند واجهة
+Thursday,الخميس
+Time,بند واجهة
+time,بند واجهة
+Time Format,بند واجهة
+Time format,بند واجهة
+Time in seconds to retain QR code image on server. Min:<strong>240</strong>,بند واجهة
+Time Interval,بند واجهة
+Time Series,بند واجهة
+Time Series Based On,بند واجهة
+Time series based on is required to create a dashboard chart,بند واجهة
+Time Zone,بند واجهة
+Time Zones,بند واجهة
+Time {0} must be in format: {1},بند واجهة
+Timeline DocType,الخط الزمني نوع المستند
+Timeline Field,بند واجهة
+Timeline field must be a Link or Dynamic Link,بند واجهة
+Timeline field must be a valid fieldname,بند واجهة
+Timeline Links,الخط الزمني روابط
+Timeline Name,الخط الزمني الاسم
+Timeseries,بند واجهة
+Timespan,بند واجهة
+Timestamp,بند واجهة
+tint,بند واجهة
+Title,العنوان
+Title Case,بند واجهة
+Title Field,بند واجهة
+Title field must be a valid fieldname,بند واجهة
+Title of the page,العنوان من صفحة
+Title Prefix,العنوان بادئة
+"To add dynamic subject, use jinja tags like\n\n<div><pre><code>New {{ doc.doctype }} #{{ doc.name }}</code></pre></div>",بند واجهة
+"To add dynamic subject, use jinja tags like\n\n<div><pre><code>{{ doc.name }} Delivered</code></pre></div>",بند واجهة
+To and CC,إلى و CC
+"To configure Auto Repeat, enable ""Allow Auto Repeat"" from {0}.",بند واجهة
+To Date,إلى التاريخ
+To Date Field,بند واجهة
+To enable it follow the instructions in the following link: {0},بند واجهة
+"To get the updated report, click on {0}.",بند واجهة
+To print output use <code>log(text)</code>,بند واجهة
+"To use Google Calendar, enable {0}.",بند واجهة
+"To use Google Contacts, enable {0}.",بند واجهة
+"To use Google Drive, enable {0}.",بند واجهة
+"To use Google Indexing, enable <a href=""#Form/Google Settings"">Google Settings</a>.",بند واجهة
+"To use Slack Channel, add a <a href=""#List/Slack%20Webhook%20URL/List"">Slack Webhook URL</a>.",URL — بند واجهة
+"To use WhatsApp for Business, initialize <a href=""#Form/Twilio Settings"">Twilio Settings</a>.",بند واجهة
+To User,إلى مستخدم
+to your browser,بند واجهة
+Today,اليوم
+Today's Events,بند واجهة
+ToDo,مهمة
+Toggle Chart,بند واجهة
+Toggle Charts,بند واجهة
+Toggle Grid View,بند واجهة
+Toggle Public/Private,بند واجهة
+Toggle Sidebar,إظهار/إخفاء الشريط الجانبي
+toggle Tag,بند واجهة
+Token,بند واجهة
+Token is missing,بند واجهة
+Too Many Requests,بند واجهة
+"Too many users signed up recently, so the registration is disabled. Please try back in an hour",بند واجهة
+Too many writes in one request. Please send smaller requests,بند واجهة
+Top,بند واجهة
+Top Bar Item,بند واجهة
+Top Bar Items,بند واجهة
+Top Performer,بند واجهة
+Top Reviewer,بند واجهة
+Top {0},بند واجهة
+Topic,بند واجهة
+Total,الإجمالي
+Total number of emails to sync in initial sync process,بند واجهة
+Total Pages,الإجمالي صفحات
+Total Rows,بند واجهة
+Total Subscribers,بند واجهة
+Totals,بند واجهة
+Totals Row,بند واجهة
+Traceback,بند واجهة
+Track Changes,مسار التغييرات
+Track Email Status,مسار البريد الإلكتروني الحالة
+Track Field,بند واجهة
+"Track if your email has been opened by the recipient.\n<br>\nNote: If you're sending to multiple recipients, even if 1 recipient reads the email, it'll be considered ""Opened""",بند واجهة
+Track milestones for any document,بند واجهة
+Track Seen,بند واجهة
+Track Views,بند واجهة
+Tracks milestones on the lifecycle of a document if it undergoes multiple stages.,بند واجهة
+Transaction Hash,بند واجهة
+Transaction Log,بند واجهة
+Transaction Log Report,تقرير بند واجهة
+Transgender,بند واجهة
+Transition Rules,بند واجهة
+Transitions,بند واجهة
+Translatable,بند واجهة
+Translate {0},بند واجهة
+Translated Message,بند واجهة
+Translated Text,بند واجهة
+Translation,بند واجهة
+Translation Tool,بند واجهة
+Translations,بند واجهة
+Trash,بند واجهة
+trash,بند واجهة
+Tree,شجرة
+Tree structures are implemented using Nested Set,بند واجهة
+Tree view is not available for {0},بند واجهة
+Trigger Method,بند واجهة
+Trigger Name,المُحفّز الاسم
+"Trigger on valid methods like ""before_insert"", ""after_update"", etc (will depend on the DocType selected)",بند واجهة
+Trigger Primary Action,المُحفّز أساسي إجراء
+Tripura,بند واجهة
+Try to avoid repeated words and characters,بند واجهة
+Try to use a longer keyboard pattern with more turns,بند واجهة
+Tuesday,الثلاثاء
+Twilio Number,بند واجهة
+Twilio Number Group,بند واجهة
+Twilio Settings,إعدادات بند واجهة
+Twilio WhatsApp Message Error,بند واجهة
+twitter,بند واجهة
+Two Factor Authentication,بند واجهة
+Two Factor Authentication method,بند واجهة
+Type,النوع
+Type something in the search box to search,بند واجهة
+Type:,النوع:
+UID,بند واجهة
+UIDNEXT,بند واجهة
+UIDVALIDITY,بند واجهة
+Unable to find attachment {0},بند واجهة
+Unable to find DocType {0},بند واجهة
+Unable to load camera.,بند واجهة
+Unable to load: {0},بند واجهة
+Unable to open attached file. Did you export it as CSV?,CSV — بند واجهة
+Unable to read file format for {0},بند واجهة
+Unable to send emails at this time,بند واجهة
+Unable to update event,بند واجهة
+Unable to write file format for {0},بند واجهة
+Unassign Condition,بند واجهة
+Uncaught Server Exception,بند واجهة
+Unchanged,بند واجهة
+Under Development,بند واجهة
+Unfollow,بند واجهة
+Unhandled Email,بند واجهة
+Unique,بند واجهة
+Unknown Column: {0},بند واجهة
+"Unknown file encoding. Tried utf-8, windows-1250, windows-1252.",بند واجهة
+Unknown User,غير معروف مستخدم
+Unknown View,غير معروف عرض
+Unpin,بند واجهة
+Unread,بند واجهة
+Unread Notification Sent,بند واجهة
+UNSEEN,بند واجهة
+Unselect All,بند واجهة
+Unshared,بند واجهة
+Unsubscribe,بند واجهة
+Unsubscribe Method,بند واجهة
+Unsubscribe Param,بند واجهة
+Unsubscribed,بند واجهة
+Unsupported File Format,بند واجهة
+Untitled Column,بند واجهة
+Untranslated,بند واجهة
+Unzip,بند واجهة
+Unzipped {0} files,بند واجهة
+Unzipping files...,بند واجهة
+Upcoming Events,بند واجهة
+Upcoming Events for Today,بند واجهة
+Update,تحديث
+Update Details,تحديث التفاصيل
+Update Existing Records,بند واجهة
+Update Field,بند واجهة
+Update many values at one time.,بند واجهة
+Update records,بند واجهة
+Update Series Number,تحديث سلسلة الرقم
+Update Settings,إعدادات تحديث
+Update Translations,بند واجهة
+Update Value,بند واجهة
+Updated,بند واجهة
+Updated Successfully,بند واجهة
+Updated successfully,بند واجهة
+Updated To A New Version 🎉,بند واجهة
+updated to {0},بند واجهة
+Updated {0}: {1},بند واجهة
+Updating,بند واجهة
+Updating {0},بند واجهة
+"Updating {0} of {1}, {2}",بند واجهة
+Upload,بند واجهة
+upload,بند واجهة
+Upload Failed,بند واجهة
+Upload failed,بند واجهة
+Upload file,بند واجهة
+Upload {0} files,بند واجهة
+uploaded file,بند واجهة
+Uploaded successfully,بند واجهة
+Uploaded To Dropbox,بند واجهة
+Uploaded To Google Drive,بند واجهة
+Uploading {0} of {1},بند واجهة
+UPPER CASE,بند واجهة
+"URIs for receiving authorization code once the user allows access, as well as failure responses. Typically a REST endpoint exposed by the Client App.\n<br>e.g. http://hostname//api/method/frappe.www.login.login_via_facebook",بند واجهة
+URL,URL
+URL for documentation or help,URL — بند واجهة
+URL must start with 'http://' or 'https://',URL — بند واجهة
+URL of the page,URL من صفحة
+URL to go to on clicking the slideshow image,URL — بند واجهة
+URLs,بند واجهة
+us-east-1,بند واجهة
+us-east-2,بند واجهة
+us-west-1,بند واجهة
+us-west-2,بند واجهة
+Usage Info,بند واجهة
+use % as wildcard,بند واجهة
+Use % for any non empty value.,بند واجهة
+"Use a few words, avoid common phrases.",بند واجهة
+Use ASCII encoding for password,بند واجهة
+Use Different Email Login ID,ID — بند واجهة
+Use IMAP,الاستخدام IMAP
+Use of sub-query or function is restricted,بند واجهة
+Use POST,بند واجهة
+Use Report Chart,الاستخدام تقرير الملف الطبي
+Use Same Name,الاستخدام نفس الاسم
+Use socketio to upload file,بند واجهة
+Use SSL,الاستخدام SSL
+Use SSL for Outgoing,SSL — بند واجهة
+Use this fieldname to generate title,بند واجهة
+Use TLS,الاستخدام TLS
+Used For Google Maps Integration.,بند واجهة
+User,مستخدم
+user,مستخدم
+User '{0}' already has the role '{1}',بند واجهة
+User Agent,مستخدم وكيل
+User can login using Email id or Mobile number,بند واجهة
+User can login using Email id or User Name,بند واجهة
+User Cannot Create,بند واجهة
+User Cannot Search,بند واجهة
+User Defaults,بند واجهة
+User does not exist,بند واجهة
+User editable form on Website.,بند واجهة
+User Email,مستخدم البريد الإلكتروني
+User Emails,بند واجهة
+User Field,بند واجهة
+User ID,مستخدم المعرّف
+User Id,مستخدم Id
+User ID of a Blogger,ID — بند واجهة
+User ID Property,مستخدم المعرّف عقار
+User Image,مستخدم صورة
+User is mandatory for Share,بند واجهة
+User must always select,بند واجهة
+User Name,مستخدم الاسم
+User not allowed to delete {0}: {1},بند واجهة
+User Permission,مستخدم صلاحية
+User permission already exists,بند واجهة
+User Permissions,صلاحيات المستخدم
+User Permissions are used to limit users to specific records.,بند واجهة
+User Permissions created sucessfully,بند واجهة
+User permissions should not apply for this Link,بند واجهة
+User Profile,مستخدم الملف الشخصي
+User Roles,مستخدم أدوار
+User Settings,إعدادات مستخدم
+User Social Login,مستخدم اجتماعي تسجيل الدخول
+User Tags,بند واجهة
+User Type,مستخدم النوع
+User {0} cannot be deleted,بند واجهة
+User {0} cannot be disabled,بند واجهة
+User {0} cannot be renamed,بند واجهة
+User {0} does not have access to this document,بند واجهة
+User {0} does not have doctype access via role permission for document {1},بند واجهة
+User {0} has requested for data deletion,بند واجهة
+User {0} is disabled,مستخدم { 0 } is معطّل
+User {0} not found on the producer site,بند واجهة
+Username,بند واجهة
+Username {0} already exists,بند واجهة
+Users,مستخدمون
+Users and Permissions,مستخدمون و صلاحيات
+Users assigned to the reference document will get points.,بند واجهة
+Users To Notify,بند واجهة
+Users with role {0}:,مستخدمون مع الدور { 0 } :
+Uses the Email Address mentioned in this Account as the Sender for all emails sent using this Account.,بند واجهة
+Uses the Email Address Name mentioned in this Account as the Sender's Name for all emails sent using this Account.,بند واجهة
+Using this console may allow attackers to impersonate you and steal your information. Do not enter or paste code that you do not understand.,بند واجهة
+Uttar Pradesh,بند واجهة
+Uttarakhand,بند واجهة
+Valid,صالح
+Valid email and name required,صالح بريد إلكتروني و الاسم مطلوب
+Valid Login id required.,صالح تسجيل الدخول المعرّف مطلوب .
+Validate Field,بند واجهة
+Validation Error,بند واجهة
+Validity,بند واجهة
+Value,بند واجهة
+value,بند واجهة
+Value Based On,بند واجهة
+Value cannot be changed for {0},بند واجهة
+Value cannot be negative for,بند واجهة
+Value cannot be negative for {0}: {1},بند واجهة
+Value Change,بند واجهة
+Value Changed,بند واجهة
+Value for a check field can be either 0 or 1,بند واجهة
+Value for field {0} is too long in {1}. Length should be lesser than {2} characters,بند واجهة
+Value for {0} cannot be a list,بند واجهة
+Value from this field will be set as the due date in the ToDo,بند واجهة
+Value missing for,بند واجهة
+Value must be one of {0},بند واجهة
+Value To Be Set,بند واجهة
+Value to Validate,بند واجهة
+Value too big,بند واجهة
+Value {0} missing for {1},بند واجهة
+Value {0} must be in the valid duration format: d h m s,بند واجهة
+Value {0} must in {1} format,بند واجهة
+Values Changed,بند واجهة
+values separated by commas,بند واجهة
+Verdana,بند واجهة
+Verfication Code,بند واجهة
+Verification,بند واجهة
+Verification Code,بند واجهة
+Verification code email not sent. Please contact Administrator.,بند واجهة
+Verification code has been sent to your registered email address.,بند واجهة
+Verification Link,بند واجهة
+Verified,بند واجهة
+Verifier,بند واجهة
+Verify,بند واجهة
+Verify Password,بند واجهة
+Verifying...,بند واجهة
+Version,إصدار
+Version Updated,بند واجهة
+via Assignment Rule,بند واجهة
+via automatic rule {0} on {1},بند واجهة
+via Data Import,بند واجهة
+via Notification,بند واجهة
+via {0},بند واجهة
+Video URL,URL — بند واجهة
+View All,عرض الكل
+View Comment,بند واجهة
+View document,عرض مستند
+View Full Log,عرض كامل السجل
+View List,عرض قائمة
+View Log,عرض السجل
+"View Log of all print, download and export events",بند واجهة
+View Permitted Documents,بند واجهة
+View Properties (via Customize Form),بند واجهة
+View Ref,بند واجهة
+View Report,تقرير عرض
+View report in your browser,بند واجهة
+View Settings,إعدادات عرض
+View this in your browser,بند واجهة
+View Website,عرض الموقع
+View {0},عرض {0}
+viewed,بند واجهة
+Viewed By,بند واجهة
+Visit,بند واجهة
+Visit Web Page,بند واجهة
+Visitor,بند واجهة
+volume-down,بند واجهة
+volume-off,بند واجهة
+volume-up,بند واجهة
+Warehouse,المستودع
+Warning,تحذير
+warning-sign,بند واجهة
+Warning: Unable to find {0} in any table related to {1},بند واجهة
+Was this article helpful?,بند واجهة
+Watch Video,بند واجهة
+We have received a request for deletion of {0} data associated with: {1},بند واجهة
+We have received a request from you to download your {0} data associated with: {1},بند واجهة
+Web Form,بند واجهة
+Web Form Field,بند واجهة
+Web Form Fields,بند واجهة
+Web Link,بند واجهة
+web link,بند واجهة
+Web Page,بند واجهة
+Web Page Block,بند واجهة
+Web Page Link Text,بند واجهة
+Web Page View,بند واجهة
+Web Site,بند واجهة
+Web Template,بند واجهة
+Web Template Field,بند واجهة
+Web Template Values,بند واجهة
+Web View,بند واجهة
+Webhook,بند واجهة
+Webhook Data,بند واجهة
+Webhook Header,بند واجهة
+Webhook Headers,بند واجهة
+Webhook Request,بند واجهة
+Webhook Secret,بند واجهة
+Webhook Security,بند واجهة
+Webhook Trigger,بند واجهة
+Webhook URL,URL — بند واجهة
+Webhooks calling API requests into web apps,API — بند واجهة
+Website,بند واجهة
+Website Analytics,بند واجهة
+Website Manager,بند واجهة
+Website Meta Tag,بند واجهة
+Website Route Meta,بند واجهة
+Website Route Redirect,بند واجهة
+Website Script,بند واجهة
+Website Settings,إعدادات بند واجهة
+Website Sidebar,بند واجهة
+Website Sidebar Item,بند واجهة
+Website Slideshow,بند واجهة
+Website Slideshow Item,بند واجهة
+Website Theme,بند واجهة
+Website Theme Ignore App,بند واجهة
+Website Theme Image,بند واجهة
+Website Theme Image Link,بند واجهة
+Website User,بند واجهة
+Wednesday,الأربعاء
+Week,بند واجهة
+Weekdays,بند واجهة
+Weekly,أسبوعي
+Weekly Long,بند واجهة
+Welcome email sent,بند واجهة
+Welcome Email Template,بند واجهة
+Welcome Message,بند واجهة
+Welcome to {0},بند واجهة
+West Bengal,بند واجهة
+"When enabled this will allow guests to upload files to your application, You can enable this if you wish to collect files from user without having them to log in, for example in job applications web form.",بند واجهة
+"When you Amend a document after Cancel and save it, it will get a new number that is a version of the old number.",بند واجهة
+Which view of the associated DocType should this shortcut take you to?,بند واجهة
+Width,بند واجهة
+Widths can be set in px or %.,بند واجهة
+Wildcard Filter,بند واجهة
+"Will add ""%"" before and after the query",بند واجهة
+Will be used in url (usually first name).,بند واجهة
+Will be your login ID,ID — بند واجهة
+Will only be shown if section headings are enabled,بند واجهة
+Will run scheduled jobs only once a day for inactive sites. Default 4 days if set to 0.,بند واجهة
+With Letter head,بند واجهة
+With Letterhead,بند واجهة
+Worflow States Don't Exist,بند واجهة
+Workflow,بند واجهة
+Workflow Action,بند واجهة
+Workflow Action is not created for optional states,بند واجهة
+Workflow Action Master,بند واجهة
+Workflow Action Name,بند واجهة
+Workflow Document State,بند واجهة
+Workflow Name,بند واجهة
+Workflow State,حالة سير العمل
+Workflow State Field,بند واجهة
+Workflow State not set,بند واجهة
+Workflow state represents the current state of a document.,بند واجهة
+Workflow State transition not allowed from {0} to {1},بند واجهة
+Workflow Status,بند واجهة
+Workflow Transition,بند واجهة
+workspace,مساحة العمل
+wrench,بند واجهة
+Write,كتابة
+Wrong Fetch From value,بند واجهة
+Wrong fieldname <b>{0}</b> in add_fetch configuration of custom script,بند واجهة
+X Axis Field,بند واجهة
+X Field,بند واجهة
+XLSX,بند واجهة
+Y Axis,بند واجهة
+Y Axis Fields,بند واجهة
+Y Field,بند واجهة
+Yahoo Mail,بند واجهة
+Yandex.Mail,بند واجهة
+Year,السنة
+Yearly,بند واجهة
+yellow,بند واجهة
+Yes,نعم
+Yesterday,أمس
+yesterday,أمس
+You,بند واجهة
+You are connected to internet.,بند واجهة
+You are not allowed to access this {0} record because it is linked to {1} '{2}' in field {3},بند واجهة
+"You are not allowed to access {0} because it is linked to {1} '{2}' in row {3}, field {4}",بند واجهة
+You are not allowed to create columns,بند واجهة
+You are not allowed to delete a standard Website Theme,بند واجهة
+You are not allowed to delete Standard Report,تقرير بند واجهة
+You are not allowed to export {} doctype,بند واجهة
+You are not allowed to print this document,بند واجهة
+You are not allowed to print this report,بند واجهة
+You are not allowed to send emails related to this document,بند واجهة
+You are not allowed to update this Web Form Document,بند واجهة
+You are not connected to Internet. Retry after sometime.,بند واجهة
+You are not permitted to access this page.,بند واجهة
+You are not permitted to view the newsletter.,بند واجهة
+You are now following this document. You will receive daily updates via email. You can change this in User Settings.,بند واجهة
+You can add dynamic properties from the document by using Jinja templating.,بند واجهة
+You can also copy-paste this,بند واجهة
+You can also copy-paste this {0} to your browser,بند واجهة
+"You can change Submitted documents by cancelling them and then, amending them.",بند واجهة
+You can find things by asking 'find orange in customers',بند واجهة
+"You can only upload JPG, PNG, PDF, or Microsoft documents.",PDF — بند واجهة
+You can only upload upto 5000 records in one go. (may be less in some cases),بند واجهة
+"You can select one from the following,",بند واجهة
+You can try changing the filters of your report.,بند واجهة
+You can use Customize Form to set levels on fields.,بند واجهة
+You can use wildcard %,بند واجهة
+You can't set 'Options' for field {0},بند واجهة
+You can't set 'Translatable' for field {0},بند واجهة
+You cannot create a dashboard chart from single DocTypes,بند واجهة
+You cannot give review points to yourself,بند واجهة
+You cannot unset 'Read Only' for field {0},بند واجهة
+You do not have enough permissions to access this resource. Please contact your manager to get access.,بند واجهة
+You do not have enough permissions to complete the action,بند واجهة
+You do not have enough points,بند واجهة
+You do not have enough review points,بند واجهة
+You do not have permissions to cancel all linked documents.,بند واجهة
+You don't have access to Report: {0},بند واجهة
+You don't have any messages yet.,بند واجهة
+You don't have permission to access this file,بند واجهة
+You don't have permission to get a report on: {0},بند واجهة
+You don't have the permissions to access this document,بند واجهة
+You gained {0} point,بند واجهة
+You gained {0} points,بند واجهة
+You have a new message from:,بند واجهة
+You have been successfully logged out,بند واجهة
+You have reached the hourly limit for generating password reset links. Please try again later.,بند واجهة
+You have unsaved changes in this form. Please save before you continue.,بند واجهة
+You have unseen {0},بند واجهة
+You haven't added any Dashboard Charts or Number Cards yet.,بند واجهة
+You may continue with onboarding,بند واجهة
+You must login to submit this form,بند واجهة
+You need to be in developer mode to edit a Standard Web Form,بند واجهة
+You need to be in developer mode to edit this document,بند واجهة
+You need to be logged in and have System Manager Role to be able to access backups.,بند واجهة
+You need to be logged in to access this page,بند واجهة
+You need to be logged in to access this {0}.,بند واجهة
+You need to create these first:,بند واجهة
+You need to enable JavaScript for your app to work.,بند واجهة
+"You need to have ""Share"" permission",بند واجهة
+You need to install pycups to use this feature!,بند واجهة
+You need write permission to rename,بند واجهة
+You seem good to go!,بند واجهة
+You selected Draft or Cancelled documents,بند واجهة
+You unfollowed this document,بند واجهة
+"You're doing great, let's take you back to the onboarding page.",بند واجهة
+Your account has been locked and will resume after {0} seconds,بند واجهة
+Your assignment on {0} {1} has been removed by {2},بند واجهة
+Your connection request to Google Calendar was successfully accepted,بند واجهة
+Your Country,الخاص بك الدولة
+Your Email Address,الخاص بك البريد الإلكتروني العنوان
+Your email address,الخاص بك بريد إلكتروني العنوان
+Your information has been submitted,بند واجهة
+Your Language,الخاص بك اللغة
+Your login id is,الخاص بك تسجيل الدخول المعرّف is
+Your Name,الخاص بك الاسم
+Your organization name and address for the email footer.,بند واجهة
+Your payment has been successfully registered.,بند واجهة
+Your payment has failed.,بند واجهة
+Your payment is cancelled.,الخاص بك السداد is ملغى .
+Your payment was successfully accepted,بند واجهة
+"Your query has been received. We will reply back shortly. If you have any additional information, please reply to this mail.",بند واجهة
+"Your session has expired, please login again to continue.",بند واجهة
+Your Shortcuts,الخاص بك الاختصارات
+Your system is being updated. Please refresh again after a few moments.,بند واجهة
+Your Target,بند واجهة
+yyyy-mm-dd,بند واجهة
+Zero,بند واجهة
+Zero means send records updated at anytime,بند واجهة
+zoom-in,بند واجهة
+zoom-out,بند واجهة
+{0} ({1}) (1 row mandatory),بند واجهة
+{0} added,بند واجهة
+{0} already exists. Select another name,بند واجهة
+{0} already unsubscribed,بند واجهة
+{0} already unsubscribed for {1} {2},بند واجهة
+{0} and {1},{0} و {1}
+{0} appreciated on {1},بند واجهة
+{0} appreciated your work on {1} with {2} point,بند واجهة
+{0} appreciated your work on {1} with {2} points,بند واجهة
+{0} appreciated {1},بند واجهة
+{0} appreciation point for {1} {2},بند واجهة
+{0} appreciation points for {1} {2},بند واجهة
+{0} are currently {1},بند واجهة
+{0} are mandatory fields,بند واجهة
+{0} are required,بند واجهة
+{0} assigned a new task {1} {2} to you,بند واجهة
+{0} assigned {1}: {2},بند واجهة
+{0} Calendar,{0} التقويم
+{0} cannot be set for Single types,بند واجهة
+{0} Chart,{0} الملف الطبي
+{0} comments,{ 0 } تعليقات
+{0} created successfully,بند واجهة
+{0} criticism point for {1} {2},بند واجهة
+{0} criticism points for {1} {2},بند واجهة
+{0} criticized on {1},بند واجهة
+{0} criticized your work on {1} with {2} point,بند واجهة
+{0} criticized your work on {1} with {2} points,بند واجهة
+{0} criticized {1},بند واجهة
+{0} Dashboard,لوحة {0}
+{0} days ago,بند واجهة
+{0} does not exist in row {1},بند واجهة
+"{0} field cannot be set as unique in {1}, as there are non-unique existing values",بند واجهة
+{0} Fields,بند واجهة
+{0} gained {1} point for {2} {3},بند واجهة
+{0} gained {1} points for {2} {3},بند واجهة
+{0} Google Calendar Events synced.,بند واجهة
+{0} Google Contacts synced.,بند واجهة
+{0} has already assigned default value for {1}.,بند واجهة
+{0} has been successfully added to the Email Group.,بند واجهة
+{0} has left the conversation in {1} {2},بند واجهة
+{0} has no versions tracked.,بند واجهة
+{0} hours ago,بند واجهة
+{0} in row {1} cannot have both URL and child items,URL — بند واجهة
+{0} is a mandatory field,بند واجهة
+{0} is a mandatory field asdadsf,بند واجهة
+{0} is an invalid Data field.,بند واجهة
+{0} is an invalid email address in 'Recipients',بند واجهة
+{0} is currently {1},بند واجهة
+{0} is mandatory,بند واجهة
+{0} is not a raw printing format.,بند واجهة
+{0} is not a valid DocType for Dynamic Link,بند واجهة
+{0} is not a valid Email Address,بند واجهة
+{0} is not a valid file url,بند واجهة
+{0} is not a valid Name,بند واجهة
+{0} is not a valid Phone Number,بند واجهة
+{0} is not a valid report format. Report format should one of the following {1},بند واجهة
+{0} is not a valid Workflow State. Please update your Workflow and try again.,بند واجهة
+{0} is now default print format for {1} doctype,بند واجهة
+{0} is required,{0} is مطلوب
+{0} is saved,بند واجهة
+{0} items selected,بند واجهة
+{0} List,{0} قائمة
+{0} logged in,بند واجهة
+{0} logged out: {1},بند واجهة
+{0} mentioned you in a comment in {1} {2},بند واجهة
+{0} minutes ago,بند واجهة
+{0} Modules,{0} الوحدات
+{0} months ago,بند واجهة
+{0} must be after {1},بند واجهة
+{0} must be one of {1},بند واجهة
+{0} must be set first,بند واجهة
+{0} must be unique,بند واجهة
+{0} Name,{0} الاسم
+{0} not a valid State,بند واجهة
+{0} not allowed to be renamed,بند واجهة
+{0} not found,بند واجهة
+{0} of {1} ({2} rows with children),بند واجهة
+{0} record deleted,بند واجهة
+{0} records deleted,بند واجهة
+{0} records will be exported,بند واجهة
+{0} Report,تقرير {0}
+{0} Reports,بند واجهة
+{0} reverted your point on {1},بند واجهة
+{0} reverted your points on {1},بند واجهة
+{0} reverted {1},بند واجهة
+{0} room must have atmost one user.,يجب أن بند واجهة بند واجهة.
+{0} rows for {1},بند واجهة
+{0} saved successfully,بند واجهة
+{0} self assigned this task: {1},بند واجهة
+{0} Settings,إعدادات {0}
+{0} Settings not found,بند واجهة
+{0} shared a document {1} {2} with you,بند واجهة
+{0} shared this document with everyone,بند واجهة
+{0} shared this document with {1},{ 0 } مشترك هذا مستند مع { 1 }
+{0} should not be same as {1},بند واجهة
+{0} subscribers added,بند واجهة
+{0} to stop receiving emails of this type,بند واجهة
+{0} translations pending,بند واجهة
+{0} Tree,{0} شجرة
+{0} un-shared this document with {1},{ 0 } un - مشترك هذا مستند مع { 1 }
+{0} updated,بند واجهة
+{0} values selected,بند واجهة
+{0} Web page views,بند واجهة
+{0} weeks ago,بند واجهة
+{0} years ago,بند واجهة
+{0} {1} added,بند واجهة
+{0} {1} added to Dashboard {2},بند واجهة
+{0} {1} already exists,بند واجهة
+"{0} {1} cannot be ""{2}"". It should be one of ""{3}""",بند واجهة
+{0} {1} cannot be a leaf node as it has children,بند واجهة
+"{0} {1} does not exist, select a new target to merge",بند واجهة
+{0} {1} is linked with the following submitted documents: {2},بند واجهة
+{0} {1} not found,بند واجهة
+{0} {1}: Submitted Record cannot be deleted. You must {2} Cancel {3} it first.,يجب أن بند واجهة {2} إلغاء {3} it أول.
+"{0}, Row {1}",بند واجهة
+"{0}: '{1}' ({3}) will get truncated, as max characters allowed is {2}",بند واجهة
+{0}: Cannot set Amend without Cancel,بند واجهة
+{0}: Cannot set Assign Amend if not Submittable,بند واجهة
+{0}: Cannot set Assign Submit if not Submittable,بند واجهة
+{0}: Cannot set Cancel without Submit,بند واجهة
+{0}: Cannot set import as {1} is not importable,بند واجهة
+{0}: Cannot set Import without Create,بند واجهة
+"{0}: Cannot set Submit, Cancel, Amend without Write",بند واجهة
+"{0}: Failed to attach new recurring document. To enable attaching document in the auto repeat notification email, enable {1} in Print Settings",إعدادات بند واجهة
+{0}: Field '{1}' cannot be set as Unique as it has non-unique values,بند واجهة
+{0}: Field {1} in row {2} cannot be hidden and mandatory without default,بند واجهة
+{0}: Field {1} of type {2} cannot be mandatory,بند واجهة
+{0}: Fieldname cannot be one of {1},بند واجهة
+{0}: Fieldname {1} appears multiple times in rows {2},بند واجهة
+{0}: Fieldtype {1} for {2} cannot be unique,بند واجهة
+{0}: No basic permissions set,بند واجهة
+"{0}: Only one rule allowed with the same Role, Level and {1}",بند واجهة
+{0}: Options must be a valid DocType for field {1} in row {2},بند واجهة
+{0}: Options required for Link or Table type field {1} in row {2},بند واجهة
+{0}: Options {1} must be the same as doctype name {2} for the field {3},بند واجهة
+{0}: Other permission rules may also apply,بند واجهة
+{0}: Permission at level 0 must be set before higher levels are set,بند واجهة
+{0}: {1} is set to state {2},بند واجهة
+{0}:Fieldtype {1} for {2} cannot be indexed,بند واجهة
+{app_title},بند واجهة
+{function} of {fieldlabel},بند واجهة
+{{{0}}} is not a valid fieldname pattern. It should be {{field_name}}.,بند واجهة
+{} Complete,{} مكتمل
+{} Dashboard,لوحة {}
+{} is not a valid date string.,بند واجهة
+← Back to upload files,بند واجهة

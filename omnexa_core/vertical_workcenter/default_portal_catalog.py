@@ -62,6 +62,7 @@ def _app_portal_catalog_hook(app: str) -> list[dict] | None:
 		"omnexa_healthcare": "omnexa_healthcare.api.portal_catalog.get_grouped_portal_catalog",
 		"omnexa_trading": "omnexa_trading.pharma_portal_catalog.get_grouped_pharma_portal_catalog",
 		"omnexa_fixed_assets": "omnexa_fixed_assets.fixed_assets_portal_catalog.get_grouped_portal_catalog",
+		"erpgenex_legal": "erpgenex_legal.api.portal_catalog.get_grouped_portal_catalog",
 	}
 	method = hooks.get(app)
 	if not method:
@@ -107,6 +108,12 @@ def get_default_grouped_portal_catalog(app: str) -> list[dict]:
 	]
 
 
+def _enrich_portal_groups(app: str, groups: list[dict]) -> list[dict]:
+	from omnexa_core.vertical_workcenter.portal_menu_item import enrich_portal_groups
+
+	return enrich_portal_groups(app, groups)
+
+
 def get_grouped_portal_catalog_for_app(app: str, *, filter_by_user: bool = True) -> list[dict]:
 	custom = _app_portal_catalog_hook(app)
 	if custom:
@@ -115,8 +122,8 @@ def get_grouped_portal_catalog_for_app(app: str, *, filter_by_user: bool = True)
 		groups = get_default_grouped_portal_catalog(app)
 
 	if not filter_by_user:
-		return groups
+		return _enrich_portal_groups(app, groups)
 
 	from omnexa_core.vertical_workcenter.portal_role_policy import filter_grouped_portals_for_user
 
-	return filter_grouped_portals_for_user(groups)
+	return _enrich_portal_groups(app, filter_grouped_portals_for_user(groups))

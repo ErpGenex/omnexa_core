@@ -1,3 +1,4 @@
+// i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 /**
  * ErpGenEx — Executive hub (Healthcare workcenter parity) for all verticals
  */

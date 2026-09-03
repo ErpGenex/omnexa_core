@@ -1,0 +1,20 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "disabled": 0,
+ "doctype": "Report",
+ "filters": [],
+ "is_standard": "Yes",
+ "module": "Omnexa Core",
+ "name": "User Branch Access Register",
+ "prepared_report": 0,
+ "query": "",
+ "ref_doctype": "User Branch Access",
+ "report_name": "User Branch Access Register",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

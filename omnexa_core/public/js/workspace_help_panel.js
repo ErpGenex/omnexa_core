@@ -1,3 +1,4 @@
+// i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 // Omnexa User Assistant: navbar + workspace/list sidebars + FAB on all Desk screens; contextual tips and search.
 (function () {
 	const LS_AUTO = "omnexa_wh_auto_open";

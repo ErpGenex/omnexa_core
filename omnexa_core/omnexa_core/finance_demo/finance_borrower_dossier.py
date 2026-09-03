@@ -1,3 +1,4 @@
+# i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 # Copyright (c) 2026, ErpGenEx
 """Unified borrower / finance case complete file — PDF & Excel across Finance Group verticals."""
 

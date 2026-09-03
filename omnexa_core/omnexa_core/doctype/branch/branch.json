@@ -27,6 +27,9 @@
     "branch_demo_education_institution_type",
     "branch_demo_education_seed_roles",
     "branch_demo_education_sync_laravel",
+    "branch_demo_legal_clients",
+    "branch_demo_legal_matters",
+    "branch_demo_hotel_assets_count",
     "tab_break_1",
     "tax_section",
     "default_vat_rate",
@@ -242,7 +245,21 @@
       "fieldtype": "Select",
       "in_list_view": 1,
       "label": "Branch Demo Activity",
-      "options": "General\nHealthcare\nEducation\nFinancial Services\nConstruction\nHotel Assets"
+      "options": "General\nHealthcare\nEducation\nFinancial Services\nConstruction\nHotel Assets\nLegal"
+    },
+    {
+      "default": "30",
+      "depends_on": "eval:doc.branch_demo_activity=='Legal'",
+      "fieldname": "branch_demo_legal_clients",
+      "fieldtype": "Int",
+      "label": "Legal Clients"
+    },
+    {
+      "default": "15",
+      "depends_on": "eval:doc.branch_demo_activity=='Legal'",
+      "fieldname": "branch_demo_legal_matters",
+      "fieldtype": "Int",
+      "label": "Legal Matters"
     },
     {
       "default": "200",

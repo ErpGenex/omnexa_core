@@ -1,3 +1,4 @@
+// i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 /**
  * Finance portal factory — Journey shell for all finance role desks
  */

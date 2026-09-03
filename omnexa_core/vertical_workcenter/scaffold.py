@@ -94,18 +94,9 @@ def scaffold_workcenter(app: str, *, sync_hooks: bool = True) -> dict:
 	else:
 		frappe.db.set_value("Page", page_name, "title", page_doc["title"], update_modified=False)
 
-	js = f'''frappe.pages["{page_name}"].on_page_load = function (wrapper) {{
-	if (window.omnexa_core && omnexa_core.vertical_workcenter && omnexa_core.vertical_workcenter.mount) {{
-		omnexa_core.vertical_workcenter.mount(wrapper, "{app}");
-		return;
-	}}
-	const page = frappe.ui.make_app_page({{
-		parent: wrapper,
-		title: __("{entry["title_en"]} Workcenter"),
-		single_column: true}});
-	$(page.body).html('<p class="text-muted">' + __("Load omnexa_core vertical workcenter kit") + "</p>");
-}};
-'''
+	from omnexa_core.vertical_workcenter.portal_page_bootstrap import workcenter_page_js
+
+	js = workcenter_page_js(page_name, app, entry["title_en"])
 	(page_dir / f"{folder}.js").write_text(js)
 
 	if sync_hooks:

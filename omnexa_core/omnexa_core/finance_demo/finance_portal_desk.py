@@ -1,3 +1,4 @@
+# i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv
 # Copyright (c) 2026, ErpGenEx
 """Finance portal desk API — KPIs, tables, workflow links per role journey."""
 
