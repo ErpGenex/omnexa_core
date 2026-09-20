@@ -627,7 +627,10 @@ _KEYWORD_RULES: tuple[tuple[tuple[str, ...], str], ...] = (
 	(("manufacturing", "production", "bom"), "🏭"),
 	(("inventory", "stock", "warehouse"), "📦"),
 	(("employee", "payroll", "hr "), "👷"),
-	(("student", "education", "school"), "🎓"),
+	(("student", "school", "report card"), "🎓"),
+	(("teacher", "classroom"), "👩‍🏫"),
+	(("course", "curriculum", "lesson"), "📚"),
+	(("exam", "assessment"), "📝"),
 	(("tourism", "travel", "package"), "✈️"),
 	(("agriculture", "farm", "crop"), "🌾"),
 	(("credit", "loan", "finance case"), "💳"),
@@ -749,6 +752,10 @@ def _icon_from_page_suffix(link_to: str) -> str | None:
 
 def _icon_from_keywords(link_to: str, label: str) -> str | None:
 	haystack = _normalize_key(f"{link_to} {label}")
+	stripped = _strip_vertical_prefix(f"{link_to} {label}")
+	for keywords, icon in _KEYWORD_RULES:
+		if any(kw in stripped for kw in keywords):
+			return icon
 	for keywords, icon in _KEYWORD_RULES:
 		if any(kw in haystack for kw in keywords):
 			return icon
@@ -756,7 +763,7 @@ def _icon_from_keywords(link_to: str, label: str) -> str | None:
 
 
 def _icon_from_tokens(link_to: str, label: str) -> str | None:
-	text = _normalize_key(f"{link_to} {label}")
+	text = _strip_vertical_prefix(f"{link_to} {label}") or _normalize_key(f"{link_to} {label}")
 	for token, icon in sorted(_TOKEN_ICONS.items(), key=lambda x: -len(x[0])):
 		if token in text:
 			return icon
@@ -846,8 +853,38 @@ _SVG_RULES: tuple[tuple[tuple[str, ...], str, str], ...] = (
 	(("project", "engineering", "cpm", "riba"), "es-line-template", "#1e40af"),
 	(("employee", "payroll", "hr ", "resource"), "es-line-people", "#0369a1"),
 	(("leave", "attendance"), "es-line-calender", "#0891b2"),
-	(("patient", "clinical", "healthcare"), "es-line-heart", "#e11d48"),
-	(("student", "education", "report card"), "es-line-template", "#7c3aed"),
+	# Healthcare — specific first (never match bare app prefix alone)
+	(("physician", "practitioner", "doctor"), "es-line-people", "#0369a1"),
+	(("nursing", "nurse", "mar"), "es-line-support", "#be185d"),
+	(("pharmacy", "prescription", "erx", "rx ", "medication", "drug formulary", "dispense"), "es-line-tag", "#7c3aed"),
+	(("radiology", "dicom", "imaging", "pacs", "teleradiology"), "es-line-image", "#0ea5e9"),
+	(("lab", "lis", "sample", "qc log"), "es-line-search", "#0891b2"),
+	(("er board", "er visit", "emergency"), "es-line-alert-triangle", "#dc2626"),
+	(("icu", "nicu", "critical care"), "es-line-activity", "#e11d48"),
+	(("bed map", " bed", "admission", "inpatient", "adt"), "es-line-home", "#0f766e"),
+	(("dental", "orthodontic", "implant"), "es-line-emoji", "#06b6d4"),
+	(("blood", "transfusion", "donor"), "es-line-zap", "#b91c1c"),
+	(("ot board", "operating", "surgery", "anesthesia"), "es-line-status", "#c2410c"),
+	(("dialysis",), "es-line-reload", "#0284c7"),
+	(("optometry",), "es-line-preview", "#6366f1"),
+	(("rehab", "physio"), "es-line-activity", "#16a34a"),
+	(("diet", "nutrition"), "es-line-colour", "#65a30d"),
+	(("morgue",), "es-line-home", "#334155"),
+	(("telehealth", "telemedicine"), "es-line-video", "#7c3aed"),
+	(("in basket", "in-basket"), "es-line-inbox", "#4f46e5"),
+	(("queue", "roster"), "es-line-bullet-list", "#2563eb"),
+	(("reception",), "es-line-call", "#059669"),
+	(("patient chart", "medical file", "encounter", "episode", "clinical condition", "observation"), "es-line-filetype", "#1e40af"),
+	(("patient portal", "patient consumer", "patient mobile"), "es-line-people", "#0369a1"),
+	(("patients desk", "patient ", " mpi"), "es-line-people", "#0284c7"),
+	(("follow-up", "follow up", "specialty wizard", "journey wizard"), "es-line-sparkle", "#c026d3"),
+	(("device admin", "medical device"), "es-line-settings", "#475569"),
+	(("clinic deployment", "clinic selection"), "es-line-sparkle", "#c026d3"),
+	(("family medicine", "family tree", "family unit"), "es-line-teams", "#db2777"),
+	(("insurance", "payer", "claim", "nphies", "prior auth"), "es-line-security", "#0d9488"),
+	(("billing", "service charge", "copay", "rcm"), "icon-money-coins-1", "#b45309"),
+	(("student", "report card", "course", "exam"), "es-line-template", "#7c3aed"),
+	(("teacher", "classroom"), "es-line-people", "#7c3aed"),
 	(("construction", "bim", "hazard", "hse", "ipc"), "es-line-alert-triangle", "#c2410c"),
 	(("audit", "compliance", "governance"), "es-line-check", "#0f766e"),
 	(("risk", "stress", "deviation"), "es-line-alert-circle", "#dc2626"),
@@ -868,7 +905,6 @@ _SVG_RULES: tuple[tuple[tuple[str, ...], str, str], ...] = (
 	(("user", "role"), "es-line-people", "#6366f1"),
 	(("fee item",), "es-line-tag", "#b45309"),
 	(("billing invoice", "sales invoice", "purchase invoice"), "es-line-filetype", "#b45309"),
-	(("physician", "practitioner"), "es-line-people", "#0369a1"),
 	(("mobile", "pwa"), "es-line-web", "#7c3aed"),
 	(("training",), "es-line-template", "#7c3aed"),
 	(("validation",), "es-line-check", "#16a34a"),
@@ -889,6 +925,8 @@ _SVG_RULES: tuple[tuple[tuple[str, ...], str, str], ...] = (
 	(("boq",), "es-line-template", "#c2410c"),
 	(("factoring case",), "es-line-filetype", "#0369a1"),
 	(("portal", "console", "desk"), "es-line-web", "#6366f1"),
+	# Last-resort vertical defaults (only after specific rules miss)
+	(("clinical",), "es-line-heart", "#e11d48"),
 )
 
 _LINK_TYPE_SVG: dict[str, tuple[str, str]] = {
@@ -949,13 +987,104 @@ _EXACT_SVG: dict[str, tuple[str, str]] = {
 	"trading-export-manager": ("es-line-arrow-up-right", "#059669"),
 	"trading-cashier": ("icon-money-coins-1", "#b45309"),
 	"trading-store-keeper": ("es-line-table-view", "#0f766e"),
+	# Healthcare pages — distinct icons (never share one heart)
+	"healthcare-workcenter": ("es-line-dashboard", "#1e3a8a"),
+	"healthcare-executive-dashboard": ("es-line-chart", "#0f766e"),
+	"healthcare-appointment-calendar": ("es-line-calender", "#2563eb"),
+	"healthcare-patient-queue": ("es-line-bullet-list", "#2563eb"),
+	"healthcare-practitioner-roster": ("es-line-teams", "#0369a1"),
+	"healthcare-in-basket": ("es-line-inbox", "#4f46e5"),
+	"healthcare-er-board": ("es-line-alert-triangle", "#dc2626"),
+	"healthcare-icu-board": ("es-line-activity", "#e11d48"),
+	"healthcare-bed-map": ("es-line-home", "#0f766e"),
+	"healthcare-lab-workbench": ("es-line-search", "#0891b2"),
+	"healthcare-radiology-worklist": ("es-line-image", "#0ea5e9"),
+	"healthcare-dicom-viewer": ("es-line-image-alt1", "#0284c7"),
+	"healthcare-pharmacy-desk": ("es-line-tag", "#7c3aed"),
+	"healthcare-pharmacy-rx-verify": ("es-line-check", "#16a34a"),
+	"healthcare-patient-chart": ("es-line-filetype", "#1e40af"),
+	"healthcare-patient-journey": ("es-line-sparkle", "#c026d3"),
+	"healthcare-follow-up-plans": ("es-line-plan", "#db2777"),
+	"healthcare-dental-chart": ("es-line-emoji", "#06b6d4"),
+	"healthcare-specialty-wizard": ("es-line-sparkle", "#c026d3"),
+	"healthcare-patient-portal": ("es-line-people", "#0369a1"),
+	"healthcare-patient-consumer": ("es-line-web", "#0284c7"),
+	"healthcare-telehealth-room": ("es-line-video", "#7c3aed"),
+	"healthcare-nursing-portal": ("es-line-support", "#be185d"),
+	"healthcare-patient-mobile": ("es-line-mobile", "#6366f1"),
+	"healthcare-physician-mobile": ("es-line-mobile", "#0369a1"),
+	"healthcare-physician-workbench": ("es-line-people", "#0369a1"),
+	"healthcare-reception-desk": ("es-line-call", "#059669"),
+	"healthcare-cashier-desk": ("icon-money-coins-1", "#b45309"),
+	"healthcare-finance-desk": ("es-line-payments", "#b45309"),
+	"healthcare-appointments-desk": ("es-line-calender", "#2563eb"),
+	"healthcare-patients-desk": ("es-line-people", "#0284c7"),
+	"healthcare-erx-writer": ("es-line-edit", "#7c3aed"),
+	"healthcare-ot-board": ("es-line-status", "#c2410c"),
+	"healthcare-dialysis-desk": ("es-line-reload", "#0284c7"),
+	"healthcare-ld-board": ("es-line-add-people", "#db2777"),
+	"healthcare-optometry-desk": ("es-line-preview", "#6366f1"),
+	"healthcare-rehab-desk": ("es-line-activity", "#16a34a"),
+	"healthcare-diet-desk": ("es-line-colour", "#65a30d"),
+	"healthcare-blood-desk": ("es-line-zap", "#b91c1c"),
+	"healthcare-morgue-desk": ("es-line-archive", "#334155"),
+	"healthcare-device-admin": ("es-line-settings", "#475569"),
+	"clinic-deployment-wizard": ("es-line-sparkle", "#c026d3"),
+	"healthcare-family-medicine-dashboard": ("es-line-teams", "#db2777"),
+	"healthcare-family-tree": ("es-line-group", "#db2777"),
+	"Healthcare Patient": ("es-line-people", "#0284c7"),
+	"Healthcare Practitioner": ("es-line-people", "#0369a1"),
+	"Healthcare Appointment": ("es-line-calender", "#2563eb"),
+	"Healthcare Encounter": ("es-line-filetype", "#1e40af"),
+	"Healthcare Settings": ("es-line-settings", "#475569"),
 }
+
+
+_VERTICAL_NAME_PREFIXES: tuple[str, ...] = (
+	"healthcare-",
+	"healthcare ",
+	"education-",
+	"education ",
+	"trading-",
+	"trading ",
+	"legal-",
+	"legal ",
+	"fixed-assets-",
+	"fixed asset ",
+	"fa-",
+	"hr-",
+	"hr ",
+	"construction-",
+	"tourism-",
+	"agriculture-",
+	"restaurant-",
+	"nursery-",
+	"omnexa-",
+)
+
+
+def _strip_vertical_prefix(value: str) -> str:
+	text = _normalize_key(value)
+	changed = True
+	while changed:
+		changed = False
+		for prefix in _VERTICAL_NAME_PREFIXES:
+			if text.startswith(prefix):
+				text = text[len(prefix) :].strip()
+				changed = True
+	return text
 
 
 def _resolve_portal_icon_svg(link_type: str, link_to: str, label: str) -> tuple[str, str]:
 	if link_to in _EXACT_SVG:
 		return _EXACT_SVG[link_to]
 	haystack = _normalize_key(f"{link_to} {label}")
+	stripped = _strip_vertical_prefix(f"{link_to} {label}")
+	# Match stripped name first so vertical prefixes (healthcare-, education-)
+	# do not force one generic icon onto every menu item.
+	for keywords, svg, color in _SVG_RULES:
+		if any(kw in stripped for kw in keywords):
+			return svg, color
 	for keywords, svg, color in _SVG_RULES:
 		if any(kw in haystack for kw in keywords):
 			return svg, color
