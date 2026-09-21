@@ -451,6 +451,45 @@ def _git_app_repo_root(app_slug: str) -> str | None:
 	return None
 
 
+def _github_auth_token() -> str:
+	"""PAT for non-interactive git fetch/pull (Marketplace updates)."""
+	for key in ("omnexa_github_token", "github_token"):
+		val = frappe.conf.get(key)
+		if isinstance(val, str) and val.strip():
+			return val.strip()
+	for env_key in ("GITHUB_TOKEN", "GH_TOKEN"):
+		val = os.environ.get(env_key)
+		if val and str(val).strip():
+			return str(val).strip()
+	if frappe.db.exists("DocType", "Omnexa Marketplace Settings"):
+		try:
+			doc = frappe.get_single("Omnexa Marketplace Settings")
+			pw = doc.get_password("github_personal_access_token")
+			if pw and str(pw).strip():
+				return str(pw).strip()
+		except Exception:
+			pass
+	return ""
+
+
+def _git_subprocess_env() -> dict:
+	"""Disable credential prompts; map github.com URLs to PAT when configured."""
+	env = os.environ.copy()
+	env["GIT_TERMINAL_PROMPT"] = "0"
+	token = _github_auth_token()
+	if token:
+		env["GIT_CONFIG_COUNT"] = "2"
+		env["GIT_CONFIG_KEY_0"] = f"url.https://x-access-token:{token}@github.com/.insteadOf"
+		env["GIT_CONFIG_VALUE_0"] = "https://github.com/"
+		env["GIT_CONFIG_KEY_1"] = f"url.https://x-access-token:{token}@github.com/.insteadOf"
+		env["GIT_CONFIG_VALUE_1"] = "ssh://git@github.com/"
+	return env
+
+
+def _git_auth_configured() -> bool:
+	return bool(_github_auth_token())
+
+
 def _git_run(app_root: str, args: list[str], timeout: int = 120) -> tuple[int, str]:
 	try:
 		p = subprocess.run(
@@ -459,11 +498,24 @@ def _git_run(app_root: str, args: list[str], timeout: int = 120) -> tuple[int, s
 			text=True,
 			timeout=timeout,
 			check=False,
+			env=_git_subprocess_env(),
 		)
 		out = (p.stdout or "") + "\n" + (p.stderr or "")
 		return p.returncode, out
 	except Exception:
 		return 1, frappe.get_traceback()[-2000:]
+
+
+def _git_pull_failure_hint(output: str) -> str:
+	if _git_auth_configured():
+		return ""
+	needle = "could not read Username for 'https://github.com'"
+	if needle in (output or ""):
+		return (
+			"Set a GitHub PAT: Omnexa Marketplace Settings → GitHub Personal Access Token, "
+			"or omnexa_github_token in site config / common_site_config, or GITHUB_TOKEN for bench workers."
+		)
+	return ""
 
 
 def _git_preferred_remote(app_root: str) -> str | None:
@@ -1385,10 +1437,13 @@ def update_app_now(
 	if update_source_norm == "github":
 		ok_pull, out_pull = _git_update_app_to_ref(app_slug, target_ref or "")
 		if not ok_pull:
+			hint = _git_pull_failure_hint(out_pull)
 			return {
 				"updated": False,
 				"message": "git_pull_failed",
 				"output": out_pull,
+				"hint": hint,
+				"github_auth_configured": _git_auth_configured(),
 				"backup": backup_state,
 				"update_source": update_source_norm
 	}
