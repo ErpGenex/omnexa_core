@@ -9,8 +9,7 @@
 	function shouldFilter() {
 		const f = filterState();
 		if (f.activity_menu_scope === "all") return false;
-		if (!f.active) return false;
-		return Boolean((frappe.boot.omnexa_denied_workspace_keys || []).length);
+		return Boolean(f.active);
 	}
 
 	function deniedWorkspaceKeys() {
@@ -59,7 +58,13 @@
 
 		const denied = deniedWorkspaceKeys();
 		const sectors = sectorParents();
-		if (!denied.size) return;
+		if (!denied.size) {
+			$(".sidebar-item-container.omnexa-activity-hidden")
+				.removeClass("omnexa-activity-hidden")
+				.removeAttr("hidden")
+				.show();
+			return;
+		}
 
 		const $sidebar = $(".desk-sidebar");
 		if (!$sidebar.length) return;

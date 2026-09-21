@@ -655,6 +655,19 @@ def filter_workspace_sidebar_by_activity(result: dict) -> dict:
 	return result
 
 
+def _workspace_pages_for_boot_filter(bootinfo) -> list[dict]:
+	"""Full sidebar page list for denylist computation (boot often lacks allowed_workspaces)."""
+	pages = bootinfo.get("allowed_workspaces") or []
+	if pages:
+		return pages
+	try:
+		from frappe.desk.desktop import get_workspace_sidebar_items as frappe_sidebar
+
+		return frappe_sidebar().get("pages") or []
+	except Exception:
+		return []
+
+
 def inject_desk_visibility_boot(bootinfo) -> None:
 	"""Apply manual + activity app hiding to boot apps list and workspace sidebar."""
 	if isinstance(bootinfo, dict) and not isinstance(bootinfo, frappe._dict):
@@ -699,17 +712,24 @@ def inject_desk_visibility_boot(bootinfo) -> None:
 		if filtered:
 			bootinfo.setdefault("apps_data", {})["default_path"] = filtered[0].get("route") or "/app"
 
-	pages = bootinfo.get("allowed_workspaces") or []
-	if pages:
-		filtered_pages = _filter_workspace_pages(pages, hidden)
-		bootinfo["allowed_workspaces"] = filtered_pages
+	source_pages = _workspace_pages_for_boot_filter(bootinfo)
+	if source_pages:
+		filtered_pages = _filter_workspace_pages(source_pages, hidden)
+		if bootinfo.get("allowed_workspaces"):
+			bootinfo["allowed_workspaces"] = filtered_pages
 		bootinfo["omnexa_allowed_workspace_names"] = sorted(
 			{(p.get("name") or "").strip() for p in filtered_pages if (p.get("name") or "").strip()}
 		)
 		bootinfo["omnexa_allowed_workspace_titles"] = sorted(
-			{(p.get("title") or p.get("name") or "").strip() for p in filtered_pages if (p.get("title") or p.get("name") or "").strip()}
+			{
+				(p.get("title") or p.get("name") or "").strip()
+				for p in filtered_pages
+				if (p.get("title") or p.get("name") or "").strip()
+			}
 		)
-		bootinfo["omnexa_denied_workspace_keys"] = _denied_workspace_keys(pages, hidden)
+		bootinfo["omnexa_denied_workspace_keys"] = _denied_workspace_keys(source_pages, hidden)
+	else:
+		bootinfo["omnexa_denied_workspace_keys"] = []
 
 	page_info = bootinfo.get("page_info") or {}
 	if page_info:
