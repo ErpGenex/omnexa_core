@@ -396,20 +396,44 @@ def _score_application(audit: dict) -> dict:
 	performance = min(100, performance)
 
 	ar_lines = trans.get("ar_lines") or 0
+	# Real translation quality — penalize placeholders and untranslated rows
+	translation_quality = 100.0
+	try:
+		from omnexa_core.global_excellence.ar_translation_builder import _read_existing_ar, _translations_dir
+		from omnexa_core.global_excellence.screen_translation_sweep import _needs_fix
+
+		td = _translations_dir(app)
+		if td and (td / "ar.csv").is_file():
+			rows = _read_existing_ar(td / "ar.csv")
+			if rows:
+				bad = sum(1 for en, ar in rows.items() if _needs_fix(en, ar))
+				translation_quality = round(100 * (1 - bad / len(rows)), 1)
+		# Frappe core overlay (omnexa_core/frappe_ar.csv)
+		if app == "omnexa_core":
+			fp = td / "frappe_ar.csv" if td else None
+			if fp and fp.is_file():
+				frows = _read_existing_ar(fp)
+				if frows:
+					fbad = sum(1 for en, ar in frows.items() if _needs_fix(en, ar))
+					fq = round(100 * (1 - fbad / len(frows)), 1)
+					translation_quality = min(translation_quality, fq)
+	except Exception:
+		pass
+
 	if is_infra and dt_count <= 1:
 		loc_coverage = min(100, max(ar_lines / 3, 99 if ar_lines >= 270 else (95 if ar_lines >= 180 else (60 if trans.get("ar_csv") else 30))))
 	else:
 		loc_coverage = min(100, ar_lines / 3) if ar_lines else (30 if trans.get("ar_csv") else 10)
-	loc = max(0, loc_coverage - hardcoded_ar * 2)
+	loc = max(0, min(translation_quality, loc_coverage - hardcoded_ar * 2))
 	unmanaged = (audit.get("hardcoded_scan") or {}).get("unmanaged_arabic_files") or 0
-	if unmanaged <= 2 and ar_lines >= 297:
-		loc = max(loc, 99.0)
-	elif unmanaged == 0 and ar_lines >= 300:
-		loc = max(loc, 100.0)
-	elif ar_lines >= 300 and hardcoded_ar == 0:
-		loc = max(loc, 98.0)
-	if is_infra and trans.get("ar_csv") and unmanaged <= 2:
-		loc = max(loc, 99.0)
+	if translation_quality >= 95 and unmanaged <= 2 and ar_lines >= 270:
+		loc = max(loc, min(99.0, translation_quality))
+	elif translation_quality >= 98 and unmanaged == 0 and ar_lines >= 300:
+		loc = max(loc, min(100.0, translation_quality))
+	elif translation_quality >= 90 and ar_lines >= 300 and hardcoded_ar == 0:
+		loc = max(loc, min(98.0, translation_quality))
+	if is_infra and trans.get("ar_csv") and unmanaged <= 2 and translation_quality >= 90:
+		loc = max(loc, min(99.0, translation_quality))
 
 	weights = {
 		"functional": 0.15,

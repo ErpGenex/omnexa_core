@@ -238,19 +238,30 @@ def _finance_workspace_aliases() -> dict[str, str]:
 		("Finance GRC", "Operational Risk"),
 		("Finance Microfinance", "SME Microfinance"),
 		("📦 Leasing", "Leasing Finance"),
+		("Leasing", "Leasing Finance"),
 		("🏠 Mortgage", "Mortgage Finance"),
+		("Mortgage", "Mortgage Finance"),
 		("📄 Factoring", "Factoring"),
+		("Factoring", "Factoring"),
 		("🏪 SME Finance", "SME Retail Finance"),
+		("SME Finance", "SME Retail Finance"),
 		("💹 Treasury ALM", "ALM"),
+		("Treasury ALM", "ALM"),
 		("🚗 Auto Finance", "Vehicle Finance"),
+		("Auto Finance", "Vehicle Finance"),
 		("🛒 Consumer Lending", "Consumer Finance"),
+		("Consumer Lending", "Consumer Finance"),
 		("📈 Credit Risk", "Credit Risk"),
 		("🛡️ Operational Risk", "Operational Risk"),
+		("Operational Risk", "Operational Risk"),
 		("🤝 Microfinance Field", "SME Microfinance"),
+		("Microfinance Field", "SME Microfinance"),
 		("🛡️ Credit Origination", "Credit Engine"),
+		("Credit Origination", "Credit Engine"),
 		("Finance Credit Origination", "Credit Engine"),
 		("Finance Executive", "Finance Engine"),
 		("📊 Group Executive", "Finance Engine"),
+		("Group Executive", "Finance Engine"),
 	]
 	for alias, canonical in pairs:
 		app = aliases.get(canonical)
@@ -497,15 +508,44 @@ def _workspace_owned_by_hidden_app(page: dict, hidden: set[str]) -> bool:
 	app = _workspace_app_slug(page)
 	if app and app in hidden:
 		return True
-	if not hidden:
+	# Finance/vertical shortcut desks live under Omnexa Core even when the vertical
+	# app is not installed — still hide them when they are outside company activity.
+	if (
+		app
+		and app not in INFRA_DESK_APPS
+		and app not in PLATFORM_APP_SLUGS
+		and _activity_filter_applies_to_user()
+		and not app_matches_company_activity(app)
+	):
+		return True
+	if not hidden and not app:
 		return False
 	finance_keys = _finance_activity_workspace_keys()
 	name = (page.get("name") or "").strip()
 	title = (page.get("title") or name).strip()
-	if name in finance_keys or title in finance_keys:
-		for key in (name, title):
-			owner = _finance_workspace_aliases().get(key) or _workspace_app_slug({"name": key, "title": key, "module": ""})
-			if owner and owner in hidden:
+	bare_name = _strip_leading_workspace_emoji(name)
+	bare_title = _strip_leading_workspace_emoji(title)
+	if (
+		name in finance_keys
+		or title in finance_keys
+		or bare_name in finance_keys
+		or bare_title in finance_keys
+	):
+		for key in (name, title, bare_name, bare_title):
+			if not key:
+				continue
+			owner = _finance_workspace_aliases().get(key) or _workspace_app_slug(
+				{"name": key, "title": key, "module": ""}
+			)
+			if owner and (
+				owner in hidden
+				or (
+					owner not in INFRA_DESK_APPS
+					and owner not in PLATFORM_APP_SLUGS
+					and _activity_filter_applies_to_user()
+					and not app_matches_company_activity(owner)
+				)
+			):
 				return True
 	return False
 
@@ -513,16 +553,46 @@ def _workspace_owned_by_hidden_app(page: dict, hidden: set[str]) -> bool:
 def _workspace_page_keys(page: dict) -> set[str]:
 	name = (page.get("name") or "").strip()
 	title = (page.get("title") or name).strip()
-	return {k for k in (name, title) if k}
+	keys = {k for k in (name, title) if k}
+	# Client item-name sometimes drops the leading emoji; include bare variants.
+	for key in list(keys):
+		bare = _strip_leading_workspace_emoji(key)
+		if bare:
+			keys.add(bare)
+	return keys
+
+
+_EMOJI_PREFIX_RE = None
+
+
+def _strip_leading_workspace_emoji(value: str) -> str:
+	"""Return workspace key without a leading emoji / symbol prefix."""
+	global _EMOJI_PREFIX_RE
+	text = (value or "").strip()
+	if not text:
+		return ""
+	if _EMOJI_PREFIX_RE is None:
+		import re
+
+		_EMOJI_PREFIX_RE = re.compile(
+			r"^(?:[\U0001F300-\U0001FAFF\U00002700-\U000027BF\U0001F1E0-\U0001F1FF]"
+			r"[\U0000FE0F\U0000200D]?)+"
+			r"\s*"
+		)
+	return _EMOJI_PREFIX_RE.sub("", text).strip() or text
 
 
 def _denied_workspace_keys(pages: list[dict], hidden: set[str]) -> list[str]:
 	"""Explicit denylist for client-side sidebar — only out-of-activity workspaces."""
-	if not pages or not hidden:
+	if not pages:
+		return []
+	# Always evaluate ownership when activity filter is on — even if `hidden` apps
+	# is empty (vertical desks may exist without their apps being installed).
+	if not hidden and not _activity_filter_applies_to_user():
 		return []
 	denied: set[str] = set()
 	for page in pages:
-		if _workspace_owned_by_hidden_app(page, hidden):
+		if _workspace_owned_by_hidden_app(page, hidden or set()):
 			denied.update(_workspace_page_keys(page))
 	return sorted(denied)
 
@@ -536,11 +606,16 @@ def _sector_parent_titles() -> set[str]:
 		return set()
 
 
-def _filter_workspace_pages(pages: list[dict], hidden: set[str]) -> list[dict]:
-	if not pages or not hidden:
+def _filter_workspace_pages(pages: list[dict], hidden: set[str] | None = None) -> list[dict]:
+	"""Drop desks owned by out-of-activity apps.
+
+	Runs whenever the activity filter applies — even if ``hidden`` is empty —
+	because finance shortcut desks live under Omnexa Core without their apps installed.
+	"""
+	if not pages:
 		return pages
-	hidden = set(hidden) - INFRA_DESK_APPS
-	if not hidden:
+	hidden = set(hidden or ()) - INFRA_DESK_APPS
+	if not hidden and not _activity_filter_applies_to_user():
 		return pages
 
 	kept: list[dict] = []

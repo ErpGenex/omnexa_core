@@ -11,7 +11,21 @@ from .finance_demo.finance_role_demo import ROLE_DEMO_WORKSPACE_NAMES
 def filter_workspace_sidebar(result: dict) -> dict:
 	"""Remove role-demo stub workspaces and out-of-activity desks from sidebar."""
 	pages = result.get("pages") or []
-	filtered = [p for p in pages if (p.get("name") or "") not in ROLE_DEMO_WORKSPACE_NAMES]
+	demo_keys = set(ROLE_DEMO_WORKSPACE_NAMES)
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_role_demo import ROLE_SPECS
+
+		for spec in ROLE_SPECS:
+			for key in (spec.get("workspace"), spec.get("title")):
+				if key:
+					demo_keys.add(key)
+	except Exception:
+		pass
+	filtered = [
+		p
+		for p in pages
+		if (p.get("name") or "") not in demo_keys and (p.get("title") or "") not in demo_keys
+	]
 	if len(filtered) != len(pages):
 		result = {**result, "pages": filtered}
 
@@ -19,11 +33,15 @@ def filter_workspace_sidebar(result: dict) -> dict:
 		from omnexa_core.omnexa_core.app_visibility import (
 			_activity_filter_applies_to_user,
 			_filter_workspace_pages,
+			get_activity_hidden_apps,
 			get_desk_hidden_for_user,
+			get_user_company_activity,
 		)
 
 		if _activity_filter_applies_to_user():
 			hidden = get_desk_hidden_for_user()
+			if not hidden:
+				hidden = get_activity_hidden_apps(get_user_company_activity())
 			pages = result.get("pages") or []
 			filtered = _filter_workspace_pages(pages, hidden)
 			if len(filtered) != len(pages):

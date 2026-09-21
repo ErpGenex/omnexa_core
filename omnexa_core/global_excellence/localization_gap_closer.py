@@ -64,6 +64,9 @@ def _mark_file_managed(fp: Path) -> bool:
 		text = fp.read_text(encoding="utf-8")
 	except Exception:
 		return False
+	# Never prepend comments to JSON — Frappe sync uses json.loads and will fail.
+	if fp.suffix.lower() == ".json":
+		return False
 	if text.lstrip().startswith("# i18n:managed") or text.lstrip().startswith("// i18n:managed"):
 		return False
 	marker = "# i18n:managed-catalog — bilingual/regional catalog; UI via ar.csv\n"

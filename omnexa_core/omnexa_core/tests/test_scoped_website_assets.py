@@ -68,3 +68,17 @@ class TestScopedWebsiteAssets(FrappeTestCase):
 		out = update_website_context(context)
 		self.assertIn("/assets/omnexa_healthcare/css/hospital_website.css", out["web_include_css"])
 		self.assertNotIn("/assets/omnexa_education/css/education_website.css", out["web_include_css"])
+
+	def test_global_theme_css_kept_on_login(self):
+		"""Apps with CSS but no public route prefixes stay global (login/theme)."""
+		context = frappe._dict(
+			path="login",
+			web_include_css=[
+				"/assets/erpgenex_theme_0426/css/erpgenex_login.css",
+				"/assets/omnexa_healthcare/css/hospital_website.css",
+			],
+			web_include_js=[],
+		)
+		out = update_website_context(context)
+		self.assertIn("/assets/erpgenex_theme_0426/css/erpgenex_login.css", out["web_include_css"])
+		self.assertNotIn("/assets/omnexa_healthcare/css/hospital_website.css", out["web_include_css"])

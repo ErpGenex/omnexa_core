@@ -44,11 +44,23 @@ def _transition(state, action, next_state, allowed="System Manager"):
 	}
 
 
+def _status_looks_like_approval(doctype: str) -> bool:
+	"""True only when Select status already uses Draft / Pending Approval style values."""
+	meta = frappe.get_meta(doctype)
+	field = meta.get_field("status")
+	if not field or field.fieldtype not in ("Select", "Data"):
+		return False
+	options = {o.strip() for o in (field.options or "").split("\n") if o.strip()}
+	return "Draft" in options and ("Pending Approval" in options or "Approved" in options)
+
+
 def _workflow_state_field(doctype: str) -> str | None:
+	"""Prefer dedicated workflow_state. Never hijack business status (e.g. Arabic SaaS enums)."""
 	meta = frappe.get_meta(doctype)
 	if meta.has_field("workflow_state"):
 		return "workflow_state"
-	if meta.has_field("status") and meta.get_field("status").fieldtype in ("Select", "Data"):
+	# Legacy: only reuse status when it already matches the approval vocabulary.
+	if _status_looks_like_approval(doctype):
 		return "status"
 	return None
 
@@ -105,11 +117,22 @@ def ensure_standard_approval_workflow(doctype: str, *, workflow_name: str | None
 		return None
 	state_field = _workflow_state_field(doctype)
 	if not state_field:
-		return None
+		# Do not override operational status fields (SaaS Arabic enums, Queued/Running, …).
+		if not ensure_workflow_state_custom_field(doctype):
+			return None
+		state_field = _workflow_state_field(doctype)
+		if not state_field:
+			return None
 	meta = frappe.get_meta(doctype)
 	is_submittable = bool(meta.is_submittable)
 	wf_name = workflow_name or f"{doctype} Approval"
 	if frappe.db.exists("Workflow", wf_name):
+		# Keep existing row but never re-activate a status-hijack workflow whose
+		# Select options conflict with Draft/Pending Approval.
+		existing_field = frappe.db.get_value("Workflow", wf_name, "workflow_state_field")
+		if existing_field == "status" and not _status_looks_like_approval(doctype):
+			frappe.db.set_value("Workflow", wf_name, "is_active", 0)
+			return None
 		frappe.db.set_value("Workflow", wf_name, "is_active", 1)
 		return wf_name
 

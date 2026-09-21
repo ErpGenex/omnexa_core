@@ -19,6 +19,7 @@ from omnexa_core.global_excellence.ar_translation_builder import (
 from omnexa_core.global_excellence.screen_translation_sweep import _needs_fix, collect_live_ui_strings
 from omnexa_core.omnexa_core.i18n.desk_translation_catalog import translate_desk_label
 from omnexa_core.omnexa_core.i18n.mega_glossary import FRAGMENT_AR, build_mega_glossary
+from omnexa_core.omnexa_core.i18n.complete_en_ar import COMPLETE_WORD_AR
 
 _LATIN = re.compile(r"[A-Za-z]{3,}")
 _EN_ALLOW = re.compile(
@@ -45,10 +46,45 @@ _PHRASE_RULES: list[tuple[re.Pattern, str]] = [
 	(re.compile(r"^(.+?) must be submitted\.$"), "يجب إرسال {1}."),
 	(re.compile(r"^(.+?) requires (.+)\.$"), "يتطلب {1} {2}."),
 	(re.compile(r"^payload must be a JSON object$"), "يجب أن تكون الحمولة كائن JSON"),
+	(re.compile(r"^Can only (.+)$"), "يمكن فقط {1}"),
+	(re.compile(r"^Cannot (.+)$"), "لا يمكن {1}"),
+	(re.compile(r"^Could not (.+)$"), "تعذّر {1}"),
+	(re.compile(r"^Failed to (.+)$"), "فشل {1}"),
+	(re.compile(r"^Unable to (.+)$"), "تعذّر {1}"),
+	(re.compile(r"^Please (.+)$"), "يرجى {1}"),
+	(re.compile(r"^Invalid (.+)$"), "{1} غير صالح"),
+	(re.compile(r"^Missing (.+)$"), "{1} مفقود"),
+	(re.compile(r"^(.+?) is required\.?$"), "{1} مطلوب"),
+	(re.compile(r"^(.+?) are required\.?$"), "{1} مطلوبة"),
+	(re.compile(r"^(.+?) already exists\.?$"), "{1} موجود بالفعل"),
+	(re.compile(r"^(.+?) does not exist\.?$"), "{1} غير موجود"),
+	(re.compile(r"^(.+?) not found\.?$"), "لم يُعثر على {1}"),
+	(re.compile(r"^Get started with (.+)$"), "ابدأ بـ {1}"),
+	(re.compile(r"^(.+?) Config$"), "إعداد {1}"),
+	(re.compile(r"^(.+?) Name$"), "اسم {1}"),
+	(re.compile(r"^(.+?) Type$"), "نوع {1}"),
+	(re.compile(r"^(.+?) Code$"), "رمز {1}"),
+	(re.compile(r"^(.+?) Date$"), "تاريخ {1}"),
+	(re.compile(r"^(.+?) Status$"), "حالة {1}"),
+	(re.compile(r"^(.+?) Log$"), "سجل {1}"),
+	(re.compile(r"^(.+?) List$"), "قائمة {1}"),
+	(re.compile(r"^(.+?) Details$"), "تفاصيل {1}"),
+	(re.compile(r"^(.+?) History$"), "سجل {1}"),
+	(re.compile(r"^(.+?) for (.+)$"), "{1} لـ {2}"),
+	(re.compile(r"^(.+?) in (.+)$"), "{1} في {2}"),
+	(re.compile(r"^(.+?) of (.+)$"), "{1} من {2}"),
+	(re.compile(r"^(.+?) to (.+)$"), "{1} إلى {2}"),
+	(re.compile(r"^(.+?) from (.+)$"), "{1} من {2}"),
+	(re.compile(r"^(.+?) with (.+)$"), "{1} مع {2}"),
+	(re.compile(r"^(.+?) without (.+)$"), "{1} بدون {2}"),
 	(re.compile(r"^(.+?) — (.+)$"), "{1} — {2}"),
 	(re.compile(r"^(.+?) & (.+)$"), "{1} و {2}"),
 	(re.compile(r"^(.+?) / (.+)$"), "{1} / {2}"),
 ]
+
+
+def _split_camelcase(text: str) -> str:
+	return re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text)
 
 
 def _strip_allowed_english(text: str) -> str:
@@ -57,6 +93,48 @@ def _strip_allowed_english(text: str) -> str:
 
 def _still_english(text: str) -> bool:
 	return bool(_LATIN.search(_strip_allowed_english(text)))
+
+
+def _arabic_letter_ratio(text: str) -> float:
+	letters = [c for c in text if c.isalpha()]
+	if not letters:
+		return 0.0
+	ar = sum(1 for c in letters if "\u0600" <= c <= "\u06FF")
+	return ar / len(letters)
+
+
+def _accept_translation(candidate: str, raw: str) -> bool:
+	"""Accept full Arabic or majority-Arabic composed translations."""
+	if not candidate or candidate == raw:
+		return False
+	if not _still_english(candidate):
+		return True
+	return _arabic_letter_ratio(candidate) >= 0.55
+
+
+def _compose_arabic_from_tokens(raw: str, glossary: dict[str, str]) -> str:
+	"""Build best-effort Arabic from glossary tokens — no placeholder fallback."""
+	tokens = re.findall(r"[A-Za-z0-9]+|[^\w\s]", raw)
+	parts: list[str] = []
+	any_ar = False
+	lower_map = {k.lower(): v for k, v in glossary.items()}
+	for tok in tokens:
+		if not tok.strip():
+			continue
+		if _EN_ALLOW.fullmatch(tok) or (tok.isupper() and len(tok) <= 6):
+			parts.append(tok)
+			continue
+		tr = glossary.get(tok) or FRAGMENT_AR.get(tok) or COMPLETE_WORD_AR.get(tok)
+		if not tr:
+			tr = lower_map.get(tok.lower()) or COMPLETE_WORD_AR.get(tok.lower())
+		if tr:
+			parts.append(tr)
+			any_ar = True
+		else:
+			parts.append(tok)
+	candidate = " ".join(parts).strip()
+	candidate = re.sub(r"\s+", " ", candidate)
+	return candidate if any_ar else raw
 
 
 def _translate_tokens(text: str, glossary: dict[str, str]) -> str:
@@ -69,7 +147,13 @@ def _translate_tokens(text: str, glossary: dict[str, str]) -> str:
 			out.append(" " if part == "-" else part)
 			continue
 		clean = part.strip(".,;:!?()[]{}\"'")
-		tr = glossary.get(clean) or glossary.get(part) or translate_desk_label(clean)
+		tr = (
+			glossary.get(clean)
+			or glossary.get(part)
+			or COMPLETE_WORD_AR.get(clean)
+			or COMPLETE_WORD_AR.get(clean.lower())
+			or translate_desk_label(clean)
+		)
 		if tr != clean and tr:
 			out.append(part.replace(clean, tr))
 			changed = True
@@ -87,18 +171,22 @@ _GLOSSARY_CACHE: dict[str, str] | None = None
 def translate_zero_gap(text: str) -> str:
 	if not text or not str(text).strip():
 		return text
-	raw = str(text).strip()
+	raw = _split_camelcase(str(text).strip())
 	if raw in _TRANSLATION_CACHE:
 		return _TRANSLATION_CACHE[raw]
 
 	global _GLOSSARY_CACHE
 	if _GLOSSARY_CACHE is None:
 		_GLOSSARY_CACHE = build_mega_glossary()
+		_GLOSSARY_CACHE.update(COMPLETE_WORD_AR)
 	glossary = _GLOSSARY_CACHE
 
 	if raw in glossary and glossary[raw] != raw:
 		_TRANSLATION_CACHE[raw] = glossary[raw]
 		return glossary[raw]
+	if raw in COMPLETE_WORD_AR and COMPLETE_WORD_AR[raw] != raw:
+		_TRANSLATION_CACHE[raw] = COMPLETE_WORD_AR[raw]
+		return COMPLETE_WORD_AR[raw]
 
 	desk = translate_desk_label(raw)
 	if desk != raw:
@@ -117,9 +205,12 @@ def translate_zero_gap(text: str) -> str:
 			if not _still_english(out):
 				_TRANSLATION_CACHE[raw] = out
 				return out
+			if _accept_translation(out, raw):
+				_TRANSLATION_CACHE[raw] = out
+				return out
 
 	tokenized = _translate_tokens(raw, glossary)
-	if tokenized != raw and not _still_english(tokenized):
+	if _accept_translation(tokenized, raw):
 		_TRANSLATION_CACHE[raw] = tokenized
 		return tokenized
 
@@ -130,7 +221,13 @@ def translate_zero_gap(text: str) -> str:
 		any_change = False
 		for w in words:
 			clean = w.strip(".,;:!?()[]{}\"'*")
-			tr = glossary.get(clean) or glossary.get(w) or translate_desk_label(clean)
+			tr = (
+				glossary.get(clean)
+				or glossary.get(w)
+				or COMPLETE_WORD_AR.get(clean)
+				or COMPLETE_WORD_AR.get(clean.lower())
+				or translate_desk_label(clean)
+			)
 			if tr and tr != clean:
 				tr_words.append(w.replace(clean, tr))
 				any_change = True
@@ -138,39 +235,37 @@ def translate_zero_gap(text: str) -> str:
 				tr_words.append(w)
 		if any_change:
 			candidate = " ".join(tr_words)
-			if not _still_english(candidate):
+			if _accept_translation(candidate, raw):
 				_TRANSLATION_CACHE[raw] = candidate
 				return candidate
 
-	# Last resort: Arabic label — acronyms/allowed tokens only in Latin
+	# Last resort: compose Arabic from known tokens (never use placeholder text)
 	if _LATIN.search(raw):
-		tokens = re.findall(r"[A-Za-z0-9]+|[^\w\s]", raw)
-		parts: list[str] = []
-		for tok in tokens:
-			if not tok.strip():
-				continue
-			if _EN_ALLOW.fullmatch(tok) or (tok.isupper() and len(tok) <= 6):
-				parts.append(tok)
-				continue
-			tr = glossary.get(tok) or FRAGMENT_AR.get(tok)
-			if tr:
-				parts.append(tr)
-			elif tok.lower() in {k.lower(): v for k, v in glossary.items()}:
-				parts.append(next(v for k, v in glossary.items() if k.lower() == tok.lower()))
-			else:
-				parts.append(tok)
-		candidate = " ".join(parts).strip()
-		candidate = re.sub(r"\s+", " ", candidate)
-		if candidate and not _still_english(candidate):
+		candidate = _compose_arabic_from_tokens(raw, glossary)
+		if _accept_translation(candidate, raw):
 			_TRANSLATION_CACHE[raw] = candidate
 			return candidate
-		allowed_tokens = _EN_ALLOW.findall(raw)
-		if allowed_tokens:
-			fallback = f"{' '.join(allowed_tokens)} — بند واجهة"
-			_TRANSLATION_CACHE[raw] = fallback
-			return fallback
-		_TRANSLATION_CACHE[raw] = "بند واجهة"
-		return "بند واجهة"
+
+	# Aggressive word-by-word sweep using complete dictionary
+	if _LATIN.search(raw):
+		candidate = raw
+		lower_complete = {k.lower(): v for k, v in COMPLETE_WORD_AR.items()}
+		lower_glossary = {k.lower(): v for k, v in glossary.items()}
+		for match in sorted(set(re.findall(r"[A-Za-z][A-Za-z']*", raw)), key=len, reverse=True):
+			if _EN_ALLOW.fullmatch(match) or (match.isupper() and len(match) <= 6):
+				continue
+			tr = (
+				COMPLETE_WORD_AR.get(match)
+				or lower_complete.get(match.lower())
+				or glossary.get(match)
+				or lower_glossary.get(match.lower())
+			)
+			if tr and tr != match:
+				candidate = re.sub(rf"\b{re.escape(match)}\b", tr, candidate)
+		candidate = re.sub(r"\s+", " ", candidate).strip()
+		if _accept_translation(candidate, raw):
+			_TRANSLATION_CACHE[raw] = candidate
+			return candidate
 
 	_TRANSLATION_CACHE[raw] = raw
 	return raw
@@ -400,3 +495,57 @@ def export_translation_zero_gap(export_dir: str | None = None, sync_translations
 
 		export_dir = str(Path(get_bench_path()) / "Docs" / datetime.now().strftime("%Y-%m-%d") / "global-competitive-benchmark")
 	return run_translation_zero_gap(export_dir=export_dir, write=True, sync_translations=sync_translations)
+
+
+def run_complete_arabic_100(
+	*, export_dir: str | None = None, write: bool = True, sync_translations: bool = True, max_passes: int = 3
+) -> dict:
+	"""Iterative translation until zero _needs_fix gaps (target 100% Arabic UI)."""
+	global _GLOSSARY_CACHE, _TRANSLATION_CACHE
+	from omnexa_core.global_excellence.screen_translation_sweep import run_screen_translation_sweep
+
+	passes: list[dict] = []
+	for n in range(1, max_passes + 1):
+		_TRANSLATION_CACHE.clear()
+		_GLOSSARY_CACHE = None
+		before = count_all_gaps()
+		if before["total_bad"] == 0:
+			passes.append({"pass": n, "status": "already_complete", "gaps_before": before, "gaps_after": before})
+			break
+		if write:
+			run_screen_translation_sweep(write=True)
+		run_translation_zero_gap(export_dir=None, write=write, sync_translations=False)
+		after = count_all_gaps()
+		passes.append(
+			{
+				"pass": n,
+				"gaps_before": before,
+				"gaps_after": after,
+				"fixed_this_pass": before["total_bad"] - after["total_bad"],
+			}
+		)
+		if after["total_bad"] == 0:
+			break
+
+	sync_stats: dict = {"skipped": True}
+	if write and sync_translations:
+		sync_stats = sync_all_translations_to_doctype(upsert=True)
+		frappe.db.commit()
+		frappe.clear_cache()
+
+	final = count_all_gaps()
+	result = {
+		"site": frappe.local.site,
+		"generated_at": datetime.now().isoformat(timespec="seconds"),
+		"passes": passes,
+		"final_gaps": final,
+		"sync": sync_stats,
+		"arabic_100_achieved": final["total_bad"] == 0,
+	}
+	if export_dir and write:
+		out = Path(export_dir)
+		out.mkdir(parents=True, exist_ok=True)
+		p = out / "10_COMPLETE_ARABIC_100.json"
+		p.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+		result["export_path"] = str(p)
+	return result

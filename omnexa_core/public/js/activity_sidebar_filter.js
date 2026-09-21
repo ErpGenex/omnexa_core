@@ -14,7 +14,22 @@
 	}
 
 	function deniedWorkspaceKeys() {
-		return new Set((frappe.boot.omnexa_denied_workspace_keys || []).map(String));
+		const raw = (frappe.boot.omnexa_denied_workspace_keys || []).map(String);
+		const set = new Set(raw);
+		for (const key of raw) {
+			const bare = stripLeadingEmoji(key);
+			if (bare) set.add(bare);
+		}
+		return set;
+	}
+
+	function stripLeadingEmoji(value) {
+		return String(value || "")
+			.replace(
+				/^(?:[\u{1F300}-\u{1FAFF}\u{2700}-\u{27BF}\u{1F1E0}-\u{1F1FF}][\u{FE0F}\u{200D}]?)+\s*/u,
+				""
+			)
+			.trim();
 	}
 
 	function sectorParents() {
@@ -26,12 +41,19 @@
 	}
 
 	function isDenied(itemName, denied) {
-		return Boolean(itemName && denied.has(itemName));
+		if (!itemName) return false;
+		if (denied.has(itemName)) return true;
+		const bare = stripLeadingEmoji(itemName);
+		if (bare && bare !== itemName && denied.has(bare)) return true;
+		return false;
 	}
 
 	function applySidebarFilter() {
 		if (!shouldFilter()) {
-			$(".sidebar-item-container.omnexa-activity-hidden").removeClass("omnexa-activity-hidden").removeAttr("hidden").show();
+			$(".sidebar-item-container.omnexa-activity-hidden")
+				.removeClass("omnexa-activity-hidden")
+				.removeAttr("hidden")
+				.show();
 			return;
 		}
 
@@ -71,6 +93,8 @@
 			$(document).on("workspace_sidebar_updated page-change route-change", () => {
 				setTimeout(applySidebarFilter, 50);
 			});
+			// Desk rebuilds the sidebar asynchronously after boot — re-apply a few times.
+			[150, 400, 1000].forEach((ms) => setTimeout(applySidebarFilter, ms));
 		});
 	}
 

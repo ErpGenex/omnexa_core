@@ -47,6 +47,9 @@ def _check_portal_css(css: str) -> dict:
 
 
 def audit_rtl_for_vertical(app: str, *, workcenter: str | None = None) -> dict:
+	if not workcenter:
+		entry = next((r for r in VERTICAL_WORKCENTER_REGISTRY if r.get("app") == app), None)
+		workcenter = (entry or {}).get("workcenter")
 	js = _read_app_file("omnexa_core", _PORTAL_JS)
 	css = _read_app_file("omnexa_core", _PORTAL_CSS)
 	js_result = _check_portal_js(js)
@@ -65,7 +68,6 @@ def audit_rtl_for_vertical(app: str, *, workcenter: str | None = None) -> dict:
 		"portal_css": css_result,
 		"overall": overall,
 	}
-
 
 def run_rtl_regression(*, reference_only: bool = False) -> dict:
 	targets = VERTICAL_WORKCENTER_REGISTRY

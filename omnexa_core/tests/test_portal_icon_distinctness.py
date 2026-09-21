@@ -38,6 +38,36 @@ class TestPortalIconDistinctness(unittest.TestCase):
 		meta = resolve_portal_icon_meta("omnexa_healthcare", "Page", "healthcare-lab-workbench", "Lab")
 		self.assertNotEqual(meta["icon_svg"], "es-line-heart")
 
+	def test_healthcare_does_not_match_car_vehicle_icon(self):
+		"""Regression: substring 'car' inside 'healthcare' must not map to vehicle/move."""
+		meta = resolve_portal_icon_meta(
+			"omnexa_healthcare", "DocType", "Healthcare Facility Profile", "Facility Profile"
+		)
+		self.assertNotEqual(meta["icon_svg"], "es-line-move")
+
+	def test_organization_setup_icons_are_distinct(self):
+		items = [
+			("Healthcare Facility Profile", "Facility Profile"),
+			("Healthcare Department", "Department"),
+			("Healthcare Specialty", "Specialty"),
+			("Healthcare Icd10 Code", "ICD-10 Codes"),
+			("Healthcare Icd11 Code", "ICD-11 Codes"),
+			("Healthcare Cpt Code", "CPT Codes"),
+			("Healthcare Home Visit Request", "Home Visits"),
+			("Healthcare Disaster Recovery Plan", "DR Runbooks"),
+			("Healthcare Sso Provider", "SSO Providers"),
+			("Healthcare Pacs Endpoint", "PACS Endpoints"),
+			("Healthcare Remote Monitoring Reading", "RPM Readings"),
+			("Healthcare Medical Tourism Case", "Medical Tourism"),
+		]
+		metas = [
+			resolve_portal_icon_meta("omnexa_healthcare", "DocType", link_to, label)
+			for link_to, label in items
+		]
+		svgs = [m["icon_svg"] for m in metas]
+		self.assertGreaterEqual(len(set(svgs)), 9, svgs)
+		self.assertNotIn("es-line-move", svgs)
+
 
 if __name__ == "__main__":
 	unittest.main()

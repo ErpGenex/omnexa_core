@@ -58,19 +58,21 @@ def enrich_card_break_label(label: str) -> str:
 	return f"📁 {text}"
 
 
-def _link_es_icon(link_type: str, link_to: str | None) -> str:
+def _link_es_icon(link_type: str, link_to: str | None, label: str | None = None) -> str:
+	"""Distinct SVG from portal icon resolver — never a generic arrow for every DocType."""
+	from omnexa_core.vertical_workcenter.portal_icon_resolver import resolve_portal_icon_meta
+
 	lt = (link_type or "").strip()
+	if lt not in ("DocType", "Page", "Report", "Dashboard", "URL", "Workspace"):
+		lt = "DocType"
+	meta = resolve_portal_icon_meta(None, lt, link_to or "", label or link_to or "")
+	svg = (meta.get("icon_svg") or "").strip()
+	if svg:
+		return svg
 	if lt == "Report":
 		return "es-line-reports"
 	if lt == "Page":
 		return "es-line-dashboard"
-	if lt == "DocType" and link_to and frappe.db.exists("DocType", link_to):
-		di = frappe.db.get_value("DocType", link_to, "icon")
-		if isinstance(di, str) and di.startswith("es-"):
-			return di
-		if isinstance(di, str) and di and " " not in di and not di.startswith("fa"):
-			return di
-		return "es-line-filetype"
 	return "es-line-filetype"
 
 
@@ -108,7 +110,7 @@ def enrich_workspace_visual_icons(ws_name: str, *, save: bool = True) -> dict[st
 			lt = (row.link_type or "").strip()
 			if lt not in ("DocType", "Page", "Report"):
 				continue
-			icon = _link_es_icon(lt, row.link_to)
+			icon = _link_es_icon(lt, row.link_to, row.label)
 			if (row.icon or "") != icon:
 				updates["icon"] = icon
 				stats["link_icons"] += 1
@@ -133,7 +135,7 @@ def enrich_workspace_visual_icons(ws_name: str, *, save: bool = True) -> dict[st
 			if st == "URL":
 				updates["icon"] = "es-line-link"
 			elif st in ("DocType", "Page", "Report"):
-				updates["icon"] = _link_es_icon(st, row.link_to)
+				updates["icon"] = _link_es_icon(st, row.link_to, row.label)
 		if updates and save:
 			frappe.db.set_value("Workspace Shortcut", row.name, updates, update_modified=False)
 			changed = True

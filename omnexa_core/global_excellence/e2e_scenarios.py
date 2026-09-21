@@ -53,14 +53,24 @@ def _scenario_report_execute(app: str) -> dict:
 	if not report:
 		return {"status": "skip", "reason": "no_reports"}
 	rpt = report[0]
+	default_co = frappe.db.get_single_value("Global Defaults", "default_company") or frappe.db.get_value(
+		"Company", {}, "name"
+	)
+	filters = {"company": default_co} if default_co else {}
 	try:
 		from frappe.desk.query_report import generate_report_result
 
-		result = generate_report_result(rpt.name, filters={}, user=frappe.session.user, ignore_prepared_report=True)
+		rpt_doc = frappe.get_doc("Report", rpt.name)
+		result = generate_report_result(rpt_doc, filters=filters, user=frappe.session.user)
 		rows = result.get("result") or []
-		return {"status": "pass", "report": rpt.name, "row_count": len(rows) if isinstance(rows, list) else 0}
+		return {
+			"status": "pass",
+			"report": rpt.name,
+			"row_count": len(rows) if isinstance(rows, list) else 0,
+			"filters_applied": filters,
+		}
 	except Exception as exc:
-		return {"status": "warn", "report": rpt.name, "error": str(exc)[:200]}
+		return {"status": "warn", "report": rpt.name, "error": str(exc)[:200], "filters_applied": filters}
 
 
 def _scenario_workflow(app: str) -> dict:

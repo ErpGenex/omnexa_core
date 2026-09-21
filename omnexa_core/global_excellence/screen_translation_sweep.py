@@ -24,9 +24,15 @@ _EN_ALLOW = re.compile(
 )
 
 
+_AR_PLACEHOLDER = "بند واجهة"
+
+
 def _needs_fix(en: str, ar: str) -> bool:
 	if not en or not ar:
 		return bool(en and not ar)
+	# Auto-generated placeholder — not a real translation
+	if _AR_PLACEHOLDER in ar:
+		return True
 	# Pure acronyms / codes / standards — identity or labeled mapping OK
 	if en == ar:
 		if re.fullmatch(r"[A-Z0-9_./ -]{2,24}", en):

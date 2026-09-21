@@ -129,24 +129,41 @@ def _current_path(context) -> str:
 	return path.rstrip("/") or "/"
 
 
-def _asset_key(asset: str) -> str:
-	return (asset or "").split("?", 1)[0]
+def _asset_key(asset) -> str:
+	if not isinstance(asset, str):
+		return ""
+	return asset.split("?", 1)[0]
 
 
-def _filter_assets(all_assets: list[str], path: str, kind: str) -> list[str]:
+def _filter_assets(all_assets: list, path: str, kind: str) -> list[str]:
 	registry = _get_registry()
 	allowed: set[str] = set()
 	vertical_assets: set[str] = set()
 
 	for spec in registry.values():
-		for asset in spec[kind]:
-			vertical_assets.add(_asset_key(asset))
-		if app_matches_path(spec["prefixes"], path):
+		prefixes = spec["prefixes"]
+		# Apps with assets but no public route prefixes are global (theme, login, shell).
+		# Only apps that declare route prefixes are treated as vertical-scoped.
+		if not prefixes:
 			for asset in spec[kind]:
+				if not isinstance(asset, str):
+					continue
+				allowed.add(_asset_key(asset))
+			continue
+		for asset in spec[kind]:
+			if not isinstance(asset, str):
+				continue
+			vertical_assets.add(_asset_key(asset))
+		if app_matches_path(prefixes, path):
+			for asset in spec[kind]:
+				if not isinstance(asset, str):
+					continue
 				allowed.add(_asset_key(asset))
 
 	filtered: list[str] = []
 	for asset in all_assets:
+		if not isinstance(asset, str):
+			continue
 		key = _asset_key(asset)
 		if any(key.startswith(prefix) for prefix in _ALWAYS_INCLUDE_PREFIXES):
 			filtered.append(asset)

@@ -290,21 +290,24 @@ body.omnexa-role-portal-active .oj-vertical-portal-layout,
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 2.75rem;
-	height: 2.75rem;
-	border-radius: 12px;
+	width: 2.85rem;
+	height: 2.85rem;
+	border-radius: 14px;
 	background: var(--portal-icon-bg, #6366f1);
 	color: #fff;
 	flex-shrink: 0;
+	box-shadow: 0 6px 16px color-mix(in srgb, var(--portal-icon-bg, #6366f1) 38%, transparent);
+	border: 1px solid rgba(255, 255, 255, 0.22);
 }
 
 .oj-portal-icon-badge .es-icon,
 .oj-portal-icon-badge .icon {
-	width: 1.35rem;
-	height: 1.35rem;
+	width: 1.4rem;
+	height: 1.4rem;
 	stroke: currentColor;
 	fill: currentColor;
 	color: #fff;
+	filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
 }
 
 .oj-sidebar-icon.oj-portal-icon-badge {

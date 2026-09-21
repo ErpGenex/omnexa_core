@@ -310,6 +310,16 @@ def _collect_strings_from_disk(app: str) -> set[str]:
 		for m in re.finditer(r'_\(\s*["\']([^"\']{2,120})["\']\s*\)', text):
 			strings.add(m.group(1))
 
+	for html_path in base.rglob("*.html"):
+		if any(x in html_path.parts for x in ("node_modules", ".git", "test")):
+			continue
+		try:
+			text = html_path.read_text(encoding="utf-8", errors="ignore")
+		except Exception:
+			continue
+		for m in re.finditer(r"_\(\s*['\"]([^'\"]{2,120})['\"]\s*\)", text):
+			strings.add(m.group(1))
+
 	strings.discard("")
 	return {s for s in strings if s and s.strip()}
 

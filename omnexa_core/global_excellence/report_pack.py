@@ -10,18 +10,30 @@ import frappe
 from omnexa_core.global_excellence.ar_translation_builder import _app_module_root
 
 
-def _list_columns_for_doctype(doctype: str) -> list[tuple[str, str, str, int]]:
+def _list_columns_for_doctype(doctype: str) -> list[tuple[str, str, str, int, str | None]]:
 	meta = frappe.get_meta(doctype)
-	cols: list[tuple[str, str, str, int]] = [("name", "Name", "Link", 140)]
+	cols: list[tuple[str, str, str, int, str | None]] = [("name", "Name", "Link", 140, doctype)]
 	for f in meta.fields:
 		if f.in_list_view and f.fieldname not in ("name",):
-			ft = f.fieldtype if f.fieldtype in ("Link", "Date", "Int", "Float", "Currency", "Data", "Select", "Check") else "Data"
-			cols.append((f.fieldname, f.label or f.fieldname, ft, 120))
+			ft = f.fieldtype if f.fieldtype in ("Link", "Date", "Int", "Float", "Currency", "Data", "Check") else "Data"
+			# Avoid Select without options — crashes query_report; Link needs options
+			opts = f.options if ft == "Link" else None
+			cols.append((f.fieldname, f.label or f.fieldname, ft, 120, opts))
 		if len(cols) >= 6:
 			break
 	if len(cols) == 1:
-		cols.append(("modified", "Modified", "Datetime", 150))
+		cols.append(("modified", "Modified", "Datetime", 150, None))
 	return cols[:6]
+
+
+def _column_py(c: tuple) -> str:
+	fieldname, label, fieldtype, width = c[0], c[1], c[2], c[3]
+	opts = c[4] if len(c) > 4 else None
+	base = f'{{"label": _("{label}"), "fieldname": "{fieldname}", "fieldtype": "{fieldtype}"'
+	if fieldtype == "Link":
+		base += f', "options": "{opts or "DocType"}"'
+	base += f", \"width\": {width}}}"
+	return base
 
 
 def _write_report(app: str, spec: dict) -> dict:
@@ -30,11 +42,22 @@ def _write_report(app: str, spec: dict) -> dict:
 	slug = frappe.scrub(spec["name"])
 	ref = spec["ref_doctype"]
 	table = f"tab{ref}"
-	col_defs = spec.get("columns_sql") or _list_columns_for_doctype(ref)
+	raw_cols = spec.get("columns_sql") or _list_columns_for_doctype(ref)
+	# Normalize tuples to 5-tuple
+	col_defs = []
+	for c in raw_cols:
+		if len(c) >= 5:
+			col_defs.append(c)
+		elif c[2] == "Link" and c[0] == "name":
+			col_defs.append((c[0], c[1], c[2], c[3], ref))
+		elif c[2] == "Link":
+			col_defs.append((c[0], c[1], c[2], c[3], None))
+		elif c[2] == "Select":
+			col_defs.append((c[0], c[1], "Data", c[3], None))
+		else:
+			col_defs.append((c[0], c[1], c[2], c[3], None))
 	select_parts = [f"`{c[0]}`" for c in col_defs]
-	columns_py = ",\n\t\t".join(
-		f'{{"label": _("{c[1]}"), "fieldname": "{c[0]}", "fieldtype": "{c[2]}", "width": {c[3]}}}' for c in col_defs
-	)
+	columns_py = ",\n\t\t".join(_column_py(c) for c in col_defs)
 	py_content = f'''# Copyright (c) 2026, ErpGenEx
 # Auto-generated Global Excellence report pack
 

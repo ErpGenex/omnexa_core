@@ -1,0 +1,10 @@
+{% extends "templates/web.html" %}
+{# In-app website portal entry — no Next.js dependency #}
+{% block page_content %}
+<div class="egx-portal-bridge" style="max-width:480px;margin:4rem auto;padding:2rem;text-align:center;font-family:system-ui,sans-serif">
+  <h1>{{ title or _("Customer Portal") }}</h1>
+  <p>{{ _("Redirecting to your portal…") }}</p>
+  <p><a class="btn btn-primary" href="{{ portal_href }}">{{ _("Open portal") }}</a></p>
+  <script>window.location.replace({{ portal_href|tojson }});</script>
+</div>
+{% endblock %}

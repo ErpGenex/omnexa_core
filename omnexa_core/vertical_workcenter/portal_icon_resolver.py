@@ -890,7 +890,7 @@ _SVG_RULES: tuple[tuple[tuple[str, ...], str, str], ...] = (
 	(("risk", "stress", "deviation"), "es-line-alert-circle", "#dc2626"),
 	(("ticket", "service"), "es-line-ticket", "#7c3aed"),
 	(("booking", "reservation", "rent"), "es-line-calender", "#2563eb"),
-	(("vehicle", "fleet", "car", "toll", "fuel"), "es-line-move", "#475569"),
+	(("vehicle", "fleet", "car rental", "cars ", " toll", "fuel"), "es-line-move", "#475569"),
 	(("agriculture", "farm", "plot", "crop"), "es-line-image", "#65a30d"),
 	(("tourism", "travel", "hotel room"), "es-line-home", "#db2777"),
 	(("tax", "zatca", "e-invoice", "einvoice"), "es-line-filetype", "#0d9488"),
@@ -1037,6 +1037,50 @@ _EXACT_SVG: dict[str, tuple[str, str]] = {
 	"Healthcare Appointment": ("es-line-calender", "#2563eb"),
 	"Healthcare Encounter": ("es-line-filetype", "#1e40af"),
 	"Healthcare Settings": ("es-line-settings", "#475569"),
+	# Healthcare organization & coding masters — distinct premium icons (espresso sprites only)
+	"Healthcare Facility Profile": ("es-line-folder-shared", "#1d4ed8"),
+	"Healthcare Department": ("es-line-folder", "#0369a1"),
+	"Healthcare Service Unit": ("es-line-tiles", "#0d9488"),
+	"Healthcare Specialty": ("es-line-star", "#7c3aed"),
+	"Healthcare Specialty Module": ("es-line-all-apps", "#6366f1"),
+	"Healthcare Icd10 Code": ("es-line-bullet-list", "#0284c7"),
+	"Healthcare Icd11 Code": ("es-line-article", "#0891b2"),
+	"Healthcare Cpt Code": ("es-line-tag", "#0ea5e9"),
+	"Healthcare Snomed Code": ("es-line-book", "#2563eb"),
+	"Healthcare Drg Code": ("es-line-table-view", "#1e40af"),
+	"Healthcare Appointment Waitlist": ("es-line-calender", "#2563eb"),
+	"Healthcare Telehealth Session": ("es-line-video", "#7c3aed"),
+	"Healthcare Home Visit Request": ("es-line-customer", "#059669"),
+	"Healthcare Remote Monitoring Reading": ("es-line-activity", "#e11d48"),
+	"Healthcare Patient Dependent": ("es-line-add-people", "#0284c7"),
+	"Healthcare Medical Tourism Case": ("es-line-globe", "#0d9488"),
+	"Healthcare Disaster Recovery Plan": ("es-line-security", "#b91c1c"),
+	"Healthcare Penetration Test Report": ("es-line-lock", "#dc2626"),
+	"Healthcare Pacs Endpoint": ("es-line-cloud", "#0ea5e9"),
+	"Healthcare Sso Provider": ("es-line-lock", "#4f46e5"),
+	"Healthcare Load Test Report": ("es-line-chart", "#0f766e"),
+	"Healthcare Radiology Cad Finding": ("es-line-search", "#0284c7"),
+	"Healthcare Certification Record": ("es-line-certificates", "#ca8a04"),
+	"Healthcare Pharmacy Delivery Request": ("es-line-share", "#7c3aed"),
+	"Healthcare Claim Denial Appeal": ("es-line-reply", "#0d9488"),
+	"Healthcare Teleradiology Case": ("es-line-image", "#0ea5e9"),
+	"Healthcare Clinical Template": ("es-line-template", "#e11d48"),
+	"Healthcare Procedure": ("es-line-status", "#c2410c"),
+	"Healthcare Lab Test Panel": ("es-line-search", "#0891b2"),
+	"Healthcare Lab Reference Range": ("es-line-align", "#0e7490"),
+	"Healthcare Imaging Modality": ("es-line-image-alt1", "#0284c7"),
+	"Healthcare Radiology Report Template": ("es-line-filetype", "#0369a1"),
+	"Healthcare Drug Interaction Rule": ("es-line-alert-circle", "#dc2626"),
+	"Healthcare Dental Chart Entry": ("es-line-emoji", "#06b6d4"),
+	"Healthcare Follow Up Plan": ("es-line-plan", "#db2777"),
+	"Healthcare Dental Treatment Plan": ("es-line-double-check", "#0891b2"),
+	"Healthcare Orthodontic Case": ("es-line-emoji", "#0891b2"),
+	"Healthcare Implant Trace": ("es-line-code", "#6366f1"),
+	"Healthcare Patient Merge Log": ("es-line-copy", "#475569"),
+	"Healthcare Patient Consent": ("es-line-check", "#16a34a"),
+	"Healthcare Phi Access Log": ("es-line-preview", "#64748b"),
+	"Healthcare Patient Push Notification": ("es-line-chat-alt", "#ea580c"),
+	"Healthcare Mobile Device Token": ("es-line-mobile", "#6366f1"),
 }
 
 
@@ -1075,6 +1119,17 @@ def _strip_vertical_prefix(value: str) -> str:
 	return text
 
 
+def _keyword_matches(haystack: str, keyword: str) -> bool:
+	"""Substring match; short tokens require word boundaries (avoid 'car' in 'healthcare')."""
+	kw = (keyword or "").strip().lower()
+	text = haystack or ""
+	if not kw:
+		return False
+	if len(kw) <= 3:
+		return re.search(rf"(^|[^a-z0-9]){re.escape(kw)}([^a-z0-9]|$)", text) is not None
+	return kw in text
+
+
 def _resolve_portal_icon_svg(link_type: str, link_to: str, label: str) -> tuple[str, str]:
 	if link_to in _EXACT_SVG:
 		return _EXACT_SVG[link_to]
@@ -1083,10 +1138,10 @@ def _resolve_portal_icon_svg(link_type: str, link_to: str, label: str) -> tuple[
 	# Match stripped name first so vertical prefixes (healthcare-, education-)
 	# do not force one generic icon onto every menu item.
 	for keywords, svg, color in _SVG_RULES:
-		if any(kw in stripped for kw in keywords):
+		if any(_keyword_matches(stripped, kw) for kw in keywords):
 			return svg, color
 	for keywords, svg, color in _SVG_RULES:
-		if any(kw in haystack for kw in keywords):
+		if any(_keyword_matches(haystack, kw) for kw in keywords):
 			return svg, color
 	return _LINK_TYPE_SVG.get(link_type, ("es-line-filetype", "#64748b"))
 
