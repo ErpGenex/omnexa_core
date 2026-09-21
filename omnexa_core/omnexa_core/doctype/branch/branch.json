@@ -43,6 +43,7 @@
     "zatca_enabled",
     "zatca_phase",
     "zatca_environment",
+    "zatca_auto_submit_on_si_submit",
     "zatca_section_org",
     "zatca_vat_registration_number",
     "zatca_organization_name",
@@ -858,6 +859,14 @@
       "options": "sandbox\nsimulation\nproduction",
       "depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled",
       "default": "sandbox"
+    },
+    {
+      "fieldname": "zatca_auto_submit_on_si_submit",
+      "fieldtype": "Check",
+      "label": "Auto-submit Sales Invoice to ZATCA",
+      "default": "0",
+      "description": "Like PharmaClick directupdate: when enabled, submitting a Sales Invoice runs ZATCA Phase 1/2. Off by default (manual via ZATCA Console).",
+      "depends_on": "eval:doc.country_iso=='SA' && doc.zatca_enabled"
     },
     {
       "fieldname": "zatca_section_org",
