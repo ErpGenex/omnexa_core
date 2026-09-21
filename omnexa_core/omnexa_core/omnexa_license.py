@@ -383,6 +383,33 @@ def _b64url_decode(data: str) -> bytes:
 	return base64.urlsafe_b64decode((data + padding).encode("utf-8"))
 
 
+def _looks_like_jwt(value: str) -> bool:
+	"""True when value has three non-empty JWT segments (header.payload.signature)."""
+	parts = (value or "").strip().split(".")
+	return len(parts) == 3 and all(p.strip() for p in parts)
+
+
+def _marketplace_license_settings() -> dict[str, str]:
+	"""License PEM / bypass from Omnexa Marketplace Settings (per-site, no SSH)."""
+	if not frappe.db.exists("DocType", "Omnexa Marketplace Settings"):
+		return {}
+	try:
+		doc = frappe.get_single("Omnexa Marketplace Settings")
+	except Exception:
+		return {}
+	out: dict[str, str] = {}
+	pem = (doc.get("license_public_key_pem") or "").strip()
+	if pem and "BEGIN PUBLIC KEY" in pem:
+		out["license_public_key_pem"] = pem
+	try:
+		bypass = (doc.get_password("developer_bypass_code") or "").strip()
+	except Exception:
+		bypass = (doc.get("developer_bypass_code") or "").strip()
+	if bypass:
+		out["developer_bypass_code"] = bypass
+	return out
+
+
 def _extract_jwt_from_license_value(raw_value: str) -> tuple[Optional[str], str]:
 	"""
 	Supports both:
@@ -418,6 +445,10 @@ def _is_developer_bypass(token_or_key: Optional[str]) -> bool:
 	value = (token_or_key or "").strip()
 	if not value:
 		return False
+	settings = _marketplace_license_settings()
+	settings_bypass = settings.get("developer_bypass_code")
+	if settings_bypass and value == settings_bypass:
+		return True
 	one = frappe.conf.get("omnexa_developer_bypass_code")
 	if isinstance(one, str) and one.strip() and value == one.strip():
 		return True
@@ -430,10 +461,33 @@ def _is_developer_bypass(token_or_key: Optional[str]) -> bool:
 
 
 def _get_public_key_pem() -> Optional[str]:
+	settings_pem = _marketplace_license_settings().get("license_public_key_pem")
+	if settings_pem:
+		return settings_pem
 	key = frappe.conf.get("omnexa_license_public_key_pem")
 	if key and isinstance(key, str) and "BEGIN PUBLIC KEY" in key:
 		return key.strip()
 	return None
+
+
+def activation_failure_message(result: "LicenseCheckResult") -> str:
+	"""User-facing hint for Marketplace Activate Key failures."""
+	status = result.status or "invalid"
+	reason = (result.reason or "").strip()
+	if status == "misconfigured":
+		return frappe._(
+			"License verification is not configured on this site. "
+			"Open Omnexa Marketplace Settings and set License Public Key PEM and/or Developer Bypass Code "
+			"(or omnexa_license_public_key_pem / omnexa_developer_bypass_code in site config)."
+		)
+	if status == "invalid" and reason in ("not_a_jwt", "invalid_activation_key_format", "invalid_activation_key_envelope"):
+		return frappe._(
+			"This is not a valid storefront JWT key. Use ERPGX1-… or eyJ… from the shop, "
+			"or enter the Developer Bypass Code configured in Omnexa Marketplace Settings."
+		)
+	if reason:
+		return frappe._("License key was not accepted: {0} ({1})").format(status, reason)
+	return frappe._("License key was not accepted: {0}").format(status)
 
 
 def _get_verifying_pem(token: str) -> tuple[Optional[str], str]:
@@ -655,6 +709,11 @@ def verify_app_license(app_slug: str) -> LicenseCheckResult:
 		token, token_reason = _extract_jwt_from_license_value(token)
 		if not token:
 			return LicenseCheckResult(status="invalid", reason=token_reason or "invalid_license_value")
+		if not _looks_like_jwt(token):
+			return LicenseCheckResult(
+				status="invalid",
+				reason="not_a_jwt",
+			)
 		if _allow_unsigned_local_keys():
 			base = _decode_unverified_license_jwt(token, expect_app=app_slug)
 			return _apply_time_policies(app_slug, base)

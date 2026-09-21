@@ -24,6 +24,7 @@ from omnexa_core.omnexa_core.app_visibility import (
 	get_user_company_activity,
 )
 from omnexa_core.omnexa_core.omnexa_license import (
+	activation_failure_message,
 	TRIAL_DAYS,
 	clear_license_key,
 	clear_trial_for_app,
@@ -1225,6 +1226,9 @@ def activate_app_license(app_slug: str, activation_key: str):
 			title=frappe._("License"),
 		)
 	_assert_marketplace_app_slug(app_slug)
+	activation_key = (activation_key or "").strip()
+	if not activation_key:
+		frappe.throw(frappe._("Activation key is required."), title=frappe._("License"))
 	previous = get_stored_license_key(app_slug)
 	set_license_key(app_slug=app_slug, license_value=activation_key)
 	status = verify_app_license(app_slug)
@@ -1233,10 +1237,7 @@ def activate_app_license(app_slug: str, activation_key: str):
 			set_license_key(app_slug=app_slug, license_value=previous)
 		else:
 			clear_license_key(app_slug)
-		frappe.throw(
-			frappe._("License key was not accepted: {0}").format(status.status),
-			title=frappe._("License"),
-		)
+		frappe.throw(activation_failure_message(status), title=frappe._("License"))
 	# Online activation moment counts as a fresh online validation.
 	set_manual_revoke(app_slug, False)
 	record_online_license_check(app_slug)

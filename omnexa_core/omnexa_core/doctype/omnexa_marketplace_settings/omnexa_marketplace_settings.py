@@ -9,3 +9,9 @@ from omnexa_core.omnexa_core.app_visibility import clear_desk_visibility_cache
 class OmnexaMarketplaceSettings(Document):
 	def on_update(self):
 		clear_desk_visibility_cache()
+		try:
+			from omnexa_core.omnexa_core.app_visibility import _ensure_settings_doc
+
+			_ensure_settings_doc()
+		except Exception:
+			pass

@@ -10,7 +10,11 @@
     "filter_desk_by_company_activity",
     "activity_filter_exempt_roles",
     "desk_hidden_apps",
-    "visibility_help"
+    "visibility_help",
+    "license_section",
+    "license_public_key_pem",
+    "developer_bypass_code",
+    "license_help"
   ],
   "fields": [
     {
@@ -44,6 +48,30 @@
       "fieldtype": "HTML",
       "label": "Help",
       "options": "<p class=\"text-muted\">Set <b>Business Activity</b> on each <b>Company</b>. Desk shows only matching vertical apps + platform apps (Accounting, e-Invoice, etc.). Use Marketplace to manually hide/show individual apps.</p>"
+    },
+    {
+      "fieldname": "license_section",
+      "fieldtype": "Section Break",
+      "label": "License Verification"
+    },
+    {
+      "description": "RSA/EC public key PEM used to verify JWT license keys from the storefront. Alternative: set omnexa_license_public_key_pem in site config.",
+      "fieldname": "license_public_key_pem",
+      "fieldtype": "Code",
+      "label": "License Public Key PEM",
+      "options": "PEM"
+    },
+    {
+      "description": "Optional developer / internal bypass code accepted in Marketplace → Activate Key (same as omnexa_developer_bypass_code in site config).",
+      "fieldname": "developer_bypass_code",
+      "fieldtype": "Password",
+      "label": "Developer Bypass Code"
+    },
+    {
+      "fieldname": "license_help",
+      "fieldtype": "HTML",
+      "label": "License Help",
+      "options": "<p class=\"text-muted\">Paid apps need a signed JWT from the shop, or a matching bypass code above. Plain passwords are not JWTs — configure the bypass code here if you use one.</p>"
     }
   ],
   "issingle": 1,

@@ -350,6 +350,57 @@ class TestOmnexaLicense(FrappeTestCase):
 			else:
 				frappe.local.conf["developer_mode"] = old_dev
 
+	def test_plain_password_not_jwt_is_invalid_not_misconfigured(self):
+		app = "omnexa_healthcare"
+		old_lic = frappe.local.conf.get("omnexa_licenses")
+		old_pk = frappe.local.conf.get("omnexa_license_public_key_pem")
+		try:
+			frappe.local.conf.pop("omnexa_license_public_key_pem", None)
+			frappe.local.conf.pop("omnexa_developer_bypass_code", None)
+			frappe.local.conf["omnexa_licenses"] = {app: "not-a-jwt-plain-key-xyz"}
+			r = verify_app_license(app)
+			self.assertEqual(r.status, "invalid")
+			self.assertEqual(r.reason, "not_a_jwt")
+		finally:
+			if old_lic is None:
+				frappe.local.conf.pop("omnexa_licenses", None)
+			else:
+				frappe.local.conf["omnexa_licenses"] = old_lic
+			if old_pk is None:
+				frappe.local.conf.pop("omnexa_license_public_key_pem", None)
+			else:
+				frappe.local.conf["omnexa_license_public_key_pem"] = old_pk
+
+	def test_developer_bypass_from_marketplace_settings(self):
+		if not frappe.db.exists("DocType", "Omnexa Marketplace Settings"):
+			self.skipTest("Omnexa Marketplace Settings not migrated")
+		app = "omnexa_healthcare"
+		old_lic = frappe.local.conf.get("omnexa_licenses")
+		old_bypass = frappe.local.conf.get("omnexa_developer_bypass_code")
+		doc = frappe.get_single("Omnexa Marketplace Settings")
+		old_pw = doc.get_password("developer_bypass_code") if doc.get("developer_bypass_code") else None
+		try:
+			frappe.local.conf.pop("omnexa_developer_bypass_code", None)
+			doc.developer_bypass_code = "MP-SETTINGS-BYPASS"
+			doc.save(ignore_permissions=True)
+			frappe.db.commit()
+			frappe.clear_cache()
+			frappe.local.conf["omnexa_licenses"] = {app: "MP-SETTINGS-BYPASS"}
+			r = verify_app_license(app)
+			self.assertEqual(r.status, "licensed_dev_override")
+		finally:
+			if old_lic is None:
+				frappe.local.conf.pop("omnexa_licenses", None)
+			else:
+				frappe.local.conf["omnexa_licenses"] = old_lic
+			if old_bypass is None:
+				frappe.local.conf.pop("omnexa_developer_bypass_code", None)
+			else:
+				frappe.local.conf["omnexa_developer_bypass_code"] = old_bypass
+			doc = frappe.get_single("Omnexa Marketplace Settings")
+			doc.developer_bypass_code = old_pw or ""
+			doc.save(ignore_permissions=True)
+
 	def test_jwt_licensed_valid_rs256(self):
 		import jwt
 
