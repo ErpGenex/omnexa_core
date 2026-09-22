@@ -4,6 +4,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from omnexa_core.omnexa_core.activity_scope import (
+	_company_profile_drift,
 	get_activity_scope_plan,
 	get_apps_to_keep_for_activity,
 	get_apps_to_uninstall_for_activity,
@@ -52,3 +53,13 @@ class TestActivityScope(FrappeTestCase):
 			self.assertNotIn("erpgenex_maintenance_core", plan["apps_to_remove"])
 			skipped = {s["app"] for s in plan.get("apps_skipped_dependency") or []}
 			self.assertIn("erpgenex_maintenance_core", skipped)
+
+	def test_scope_plan_includes_company_drift_and_vertical_meta(self):
+		frappe.set_user("Administrator")
+		plan = get_activity_scope_plan("Healthcare")
+		self.assertIn("companies_on_site", plan)
+		self.assertIn("companies_profile_drift", plan)
+		self.assertIn("vertical_apps_expected", plan)
+		self.assertEqual(plan["company_activity"], "Healthcare")
+		drift = _company_profile_drift("Healthcare")
+		self.assertIsInstance(drift, list)

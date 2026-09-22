@@ -770,9 +770,60 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		}
 	}
 
+	let scopeSummaryTimer = null;
+
+	function formatScopeSummary(plan) {
+		if (!plan || !plan.company_activity) {
+			return __("Select an activity and use Preview for details.");
+		}
+		const parts = [];
+		parts.push(`${__("Target")}: ${plan.company_activity}`);
+		if (plan.current_company_activity && plan.current_company_activity !== plan.company_activity) {
+			parts.push(`${__("Current")}: ${plan.current_company_activity}`);
+		}
+		const removeN = (plan.apps_to_remove || []).length;
+		const driftN = (plan.companies_profile_drift || []).length;
+		const missing = plan.vertical_apps_missing || [];
+		if (removeN) {
+			parts.push(`${__("Uninstall")}: ${removeN}`);
+		}
+		if (driftN) {
+			parts.push(`${__("Companies to align")}: ${driftN}`);
+		}
+		if (missing.length) {
+			parts.push(`${__("Install vertical")}: ${missing.join(", ")}`);
+		}
+		if (plan.already_scoped) {
+			parts.push(__("Already aligned"));
+		} else if (plan.can_apply) {
+			parts.push(__("Ready to apply"));
+		} else if (plan.blocked && plan.blocked.length) {
+			parts.push(__("Blocked — see Preview"));
+		}
+		return parts.join(" · ");
+	}
+
+	async function refreshScopeSummary() {
+		const activity = $container.find("[data-scope-activity]").val();
+		if (!activity) {
+			return;
+		}
+		try {
+			const plan = await fetchScopePlan(activity);
+			$container.find("[data-scope-summary]").text(formatScopeSummary(plan));
+		} catch (e) {
+			// ignore transient errors while typing
+		}
+	}
+
+	function scheduleScopeSummaryRefresh() {
+		clearTimeout(scopeSummaryTimer);
+		scopeSummaryTimer = setTimeout(refreshScopeSummary, 350);
+	}
+
 	async function initActivityScopePanel(payload) {
 		const $panel = $container.find('[data-section="activity-scope"]');
-		if (!payload.activity_scope_enabled || !frappe.user.has_role("System Manager")) {
+		if (!payload.activity_scope_enabled) {
 			$panel.addClass("d-none");
 			return;
 		}
@@ -793,9 +844,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		if (activities.includes(current)) {
 			$sel.val(current);
 		}
-		$panel.find("[data-scope-summary]").text(
-			`${__("Company activity now")}: ${frappe.utils.escape_html(current)}`
-		);
+		await refreshScopeSummary();
 	}
 
 	async function fetchScopePlan(activity) {
@@ -827,9 +876,18 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const plan = await fetchScopePlan(activity);
 		const keep = (plan.apps_to_keep || []).join(", ") || "—";
 		const remove = (plan.apps_to_remove || []).join(", ") || __("(none)");
+		const still = (plan.apps_out_of_scope_still_installed || []).join(", ") || __("(none)");
 		const skipped = (plan.apps_skipped_dependency || [])
 			.map((s) => `${s.app} ← ${(s.kept_because_required_by || []).join(", ")}`)
 			.join("<br>");
+		const drift = (plan.companies_profile_drift || [])
+			.map(
+				(d) =>
+					`${d.company}: ${d.business_activity}${d.strict_activity_menu_filtering ? "" : ` (${__("strict off")})`}`
+			)
+			.join("<br>");
+		const verticalMissing = (plan.vertical_apps_missing || []).join(", ") || __("(none installed missing)");
+		const verticalPresent = (plan.vertical_apps_present || []).join(", ") || __("(none)");
 		frappe.msgprint({
 			title: __("Activity scope preview"),
 			indicator: plan.can_apply ? "blue" : plan.already_scoped ? "green" : "orange",
@@ -838,10 +896,20 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				(plan.current_company_activity
 					? ` · ${__("Current")}: ${frappe.utils.escape_html(plan.current_company_activity)}`
 					: "") +
+				`<br><b>${__("Companies on site")}:</b> ${frappe.utils.escape_html(
+					(plan.companies_on_site || []).join(", ") || "—"
+				)}` +
+				(drift
+					? `<p class="small mt-1"><b>${__("Profile drift")}:</b><br>${drift}</p>`
+					: `<p class="small text-success mt-1">${__("All companies match target activity with strict desk filtering.")}</p>`) +
+				`<br><b>${__("Vertical apps (present)")}:</b> ${frappe.utils.escape_html(verticalPresent)}` +
+				`<br><b>${__("Vertical apps (install from Marketplace)")}:</b> ${frappe.utils.escape_html(verticalMissing)}` +
 				`<br><b>${__("Keep")} (${(plan.apps_to_keep || []).length}):</b><br>` +
 				`<span class="small font-monospace">${frappe.utils.escape_html(keep)}</span><br><br>` +
 				`<b>${__("Remove from site")} (${(plan.apps_to_remove || []).length}):</b><br>` +
 				`<span class="small font-monospace text-danger">${frappe.utils.escape_html(remove)}</span>` +
+				`<br><b>${__("Out of scope but still installed")}:</b><br>` +
+				`<span class="small font-monospace">${frappe.utils.escape_html(still)}</span>` +
 				(skipped
 					? `<p class="text-warning small mt-2"><b>${__("Kept (required by platform app)")}:</b><br>${skipped}</p>`
 					: "") +
@@ -857,6 +925,7 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 					: "") +
 				`<p class="text-muted small mt-2">${frappe.utils.escape_html(plan.warning || "")}</p>`,
 		});
+		await refreshScopeSummary();
 	}
 
 	async function onScopeApply() {
@@ -905,8 +974,12 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 		const result = (r && r.message) || {};
 		if (result.applied) {
 			const failed = result.failed || [];
+			const companies = (result.companies_updated || []).length;
 			frappe.show_alert({
-				message: __("Activity scope applied — removed {0} app(s)", [(result.uninstalled || []).length]),
+				message: __("Activity scope applied — {0} company(ies), {1} app(s) removed", [
+					companies,
+					(result.uninstalled || []).length,
+				]),
 				indicator: failed.length ? "orange" : "green",
 			});
 			if (failed.length) {
@@ -917,6 +990,9 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 				});
 			}
 			await loadCatalog();
+			setTimeout(() => {
+				window.location.reload();
+			}, 1200);
 		}
 	}
 
@@ -940,11 +1016,10 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 			(helpHtml ? `<div class="mb-2">${helpHtml}</div>` : "") +
 				`<div class="alert alert-info py-2 px-3 mb-2 small">` +
 				`<b>${__("Desk apps scope")}:</b> ${__(
-					"Users see only apps for company activity"
+					"Desk menus follow company business activity"
 				)} <b>${companyActivity}</b> ${__(
-					"+ platform apps (Accounting, e-Invoice, …). Set activity on"
-				)} <a href="/app/company">${__("Company")}</a>. ` +
-				`${__("System Managers always see all apps on Desk.")}</div>` +
+					"+ platform apps (Accounting, e-Invoice, …). Use Activity scope above to align all companies, uninstall other verticals, and refresh workspaces."
+				)}</div>` +
 				`<div class="mb-2">${__(
 					"Install and update use one GitHub organization base for every app (no GitHub login on this server)."
 				)} <code class="small">${gh}/&lt;app&gt;.git</code></div>` +
@@ -2044,6 +2119,9 @@ frappe.pages["erpgenex-marketplace"].on_page_load = function (wrapper) {
 	});
 	$container.on("click", '[data-action="scope-apply"]', async function () {
 		await onScopeApply();
+	});
+	$container.on("change", "[data-scope-activity]", function () {
+		scheduleScopeSummaryRefresh();
 	});
 	$container.on("click", '[data-action="hide-desk"]', async function () {
 		await onToggleDeskVisibility($(this).data("app"), true);

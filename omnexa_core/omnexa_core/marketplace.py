@@ -1131,9 +1131,14 @@ def get_activity_scope_options():
 	from omnexa_core.omnexa_core.activity_scope import list_company_activities
 	from omnexa_core.omnexa_core.app_visibility import get_user_company_activity
 
+	from omnexa_core.omnexa_core.activity_scope import _company_profile_drift, _list_site_companies
+
+	current = get_user_company_activity()
 	return {
 		"activities": list_company_activities(),
-		"current_company_activity": get_user_company_activity()
+		"current_company_activity": current,
+		"companies_on_site": _list_site_companies(),
+		"companies_profile_drift": _company_profile_drift(current),
 	}
 
 

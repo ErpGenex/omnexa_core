@@ -15,6 +15,10 @@ from omnexa_core.omnexa_core.app_visibility import (
 	get_hidden_desk_apps,
 	get_user_company_activity,
 )
+from omnexa_core.omnexa_core.company_activity_utils import (
+	company_strict_activity_filtering_enabled,
+	first_company_activity_value,
+)
 from omnexa_core.omnexa_core.app_visibility import PLATFORM_APP_SLUGS as _PLATFORM_APP_SLUGS
 
 # Always kept on site: Frappe, core, backup, theme, cross-industry platform stack.
@@ -137,19 +141,109 @@ def _uninstall_order(remove: set[str]) -> list[str]:
 	return order
 
 
-def _set_default_company_activity(company_activity: str) -> str | None:
-	company = frappe.defaults.get_user_default("Company")
-	if not company:
-		company = frappe.db.get_single_value("Global Defaults", "default_company")
-	if not company or not frappe.db.exists("Company", company):
-		return None
+def _list_site_companies() -> list[str]:
+	companies = frappe.get_all("Company", pluck="name", order_by="creation asc")
+	if companies:
+		return companies
+	default_company = frappe.db.get_single_value("Global Defaults", "default_company")
+	return [default_company] if default_company else []
+
+
+def _company_profile_drift(target_activity: str) -> list[dict]:
+	"""Companies whose activity or strict desk flag does not match the target scope."""
+	activity = _normalize_company_activity(target_activity)
+	drift: list[dict] = []
+	for company in _list_site_companies():
+		if not company or not frappe.db.exists("Company", company):
+			continue
+		current = _normalize_company_activity(first_company_activity_value(company))
+		strict = company_strict_activity_filtering_enabled(company)
+		if current != activity or not strict:
+			drift.append(
+				{
+					"company": company,
+					"business_activity": current,
+					"strict_activity_menu_filtering": int(strict),
+				}
+			)
+	return drift
+
+
+def _apply_all_companies_activity(company_activity: str) -> list[str]:
+	"""Set business activity + strict menu filtering on every Company on this site."""
+	from omnexa_core.install import _apply_company_profile_fields
+
 	activity = _normalize_company_activity(company_activity)
-	if frappe.db.has_column("Company", "business_activity"):
-		frappe.db.set_value("Company", company, "business_activity", activity, update_modified=True)
-	elif frappe.db.has_column("Company", "custom_business_activity"):
-		frappe.db.set_value("Company", company, "custom_business_activity", activity, update_modified=True)
-	frappe.db.commit()
-	return company
+	updated: list[str] = []
+	for company in _list_site_companies():
+		if not company or not frappe.db.exists("Company", company):
+			continue
+		_apply_company_profile_fields(company, activity, activity)
+		if frappe.db.has_column("Company", "strict_activity_menu_filtering"):
+			frappe.db.set_value(
+				"Company",
+				company,
+				"strict_activity_menu_filtering",
+				1,
+				update_modified=False,
+			)
+		updated.append(company)
+	if updated:
+		frappe.db.commit()
+	return updated
+
+
+def _installed_out_of_scope(keep: set[str]) -> list[str]:
+	installed = set(frappe.get_installed_apps() or [])
+	return sorted(
+		app
+		for app in installed
+		if app not in keep and not is_mandatory_site_app(app)
+	)
+
+
+def _vertical_apps_status(activity: str) -> dict:
+	from omnexa_core.omnexa_core.activity_registry import get_activity
+
+	spec = get_activity(activity)
+	installed = set(frappe.get_installed_apps() or [])
+	expected = list(spec.vertical_apps)
+	missing = [app for app in expected if app not in installed]
+	present = [app for app in expected if app in installed]
+	return {
+		"vertical_apps_expected": expected,
+		"vertical_apps_present": present,
+		"vertical_apps_missing": missing,
+	}
+
+
+def _reconcile_desk_hidden_for_activity(keep: set[str]) -> list[str]:
+	"""Persist Desk hide for installed apps that remain outside the activity keep-set."""
+	out = _installed_out_of_scope(keep)
+	if not out:
+		return []
+	_ensure_settings_doc()
+	hidden = get_hidden_desk_apps() | set(out)
+	frappe.db.set_single_value(
+		"Omnexa Marketplace Settings",
+		"desk_hidden_apps",
+		frappe.as_json(sorted(hidden)),
+	)
+	clear_desk_visibility_cache()
+	return out
+
+
+def _sync_desk_after_scope(activity: str) -> dict:
+	stats: dict = {}
+	try:
+		from omnexa_core.install import run_workspace_desk_sync, sync_vertical_app_workspace_menus
+
+		stats["vertical_menus"] = sync_vertical_app_workspace_menus()
+		run_workspace_desk_sync()
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Activity scope workspace sync")
+	stats["activity"] = _normalize_company_activity(activity)
+	return stats
 
 
 def _prune_desk_hidden(removed: set[str]) -> None:
@@ -176,25 +270,37 @@ def get_activity_scope_plan(company_activity: str) -> dict:
 	order = _uninstall_order(set(remove))
 	current = get_user_company_activity()
 	activity_changed = activity != current
+	profile_drift = _company_profile_drift(activity)
+	out_of_scope_installed = _installed_out_of_scope(keep_set)
+	vertical = _vertical_apps_status(activity)
+	needs_reconcile = bool(remove or activity_changed or profile_drift or out_of_scope_installed)
 
 	return {
 		"company_activity": activity,
 		"current_company_activity": current,
 		"activity_changed": activity_changed,
+		"companies_on_site": _list_site_companies(),
+		"companies_profile_drift": profile_drift,
 		"allowed_activity_labels": sorted(_allowed_labels_for_company(activity)),
 		"mandatory_apps": sorted(MANDATORY_INFRA_APPS | _PLATFORM_APP_SLUGS),
 		"apps_to_keep": keep,
 		"apps_to_remove": remove,
+		"apps_out_of_scope_still_installed": out_of_scope_installed,
 		"apps_skipped_dependency": skipped,
 		"uninstall_order": order,
 		"blocked": blocked,
-		"can_apply": not blocked and bool(remove or activity_changed),
-		"already_scoped": not blocked and not remove and not activity_changed,
+		"can_apply": not blocked and needs_reconcile,
+		"already_scoped": not blocked and not needs_reconcile,
+		"strict_menu_filtering_on_apply": True,
+		**vertical,
 		"warning": frappe._(
 			"This uninstalls every app that does not match the selected business activity. "
+			"All companies on this site get the same business activity and strict desk menu filtering. "
 			"Platform apps (Accounting, HR, Core, Theme, Backup, etc.) stay installed. "
+			"Apps that cannot be uninstalled stay hidden on Desk. "
 			"A database backup runs first unless disabled in site config."
-		)}
+		),
+	}
 
 
 def apply_activity_scope(company_activity: str, confirm: int = 0) -> dict:
@@ -214,8 +320,8 @@ def apply_activity_scope(company_activity: str, confirm: int = 0) -> dict:
 		return {
 			"applied": False,
 			"message": "already_scoped",
-			"company_activity": plan["company_activity"]
-	}
+			"company_activity": plan["company_activity"],
+		}
 
 	from omnexa_core.omnexa_core.marketplace import (
 		_elevate_to_administrator_for_uninstall,
@@ -227,6 +333,10 @@ def apply_activity_scope(company_activity: str, confirm: int = 0) -> dict:
 	from frappe.utils.backups import new_backup
 
 	no_backup = _is_truthy(frappe.conf.get("omnexa_marketplace_uninstall_no_backup"))
+	if not (plan.get("apps_to_remove") or []) and not _is_truthy(
+		frappe.conf.get("omnexa_activity_scope_backup_when_no_uninstall")
+	):
+		no_backup = True
 	backup_ok = True
 	if not no_backup:
 		try:
@@ -269,24 +379,22 @@ def apply_activity_scope(company_activity: str, confirm: int = 0) -> dict:
 		_restore_frappe_session_snapshot(session_snap)
 
 	_prune_desk_hidden(set(uninstalled))
-	_set_default_company_activity(activity)
+	companies_updated = _apply_all_companies_activity(activity)
+	desk_hidden = _reconcile_desk_hidden_for_activity(set(plan["apps_to_keep"]))
 	frappe.db.set_single_value("Omnexa Marketplace Settings", "filter_desk_by_company_activity", 1)
 	clear_desk_visibility_cache()
-
-	try:
-		from omnexa_core.install import run_workspace_desk_sync
-
-		run_workspace_desk_sync()
-	except Exception:
-		pass
+	desk_sync = _sync_desk_after_scope(activity)
 
 	frappe.clear_cache()
 	_finalize_uninstall_session()
 	return {
 		"applied": True,
 		"company_activity": activity,
+		"companies_updated": companies_updated,
 		"uninstalled": uninstalled,
 		"failed": failed,
 		"apps_kept": plan["apps_to_keep"],
-		"backup_ok": backup_ok
+		"desk_hidden_out_of_scope": desk_hidden,
+		"desk_sync": desk_sync,
+		"backup_ok": backup_ok,
 	}
