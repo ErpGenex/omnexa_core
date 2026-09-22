@@ -19,6 +19,18 @@
 			const bare = stripLeadingEmoji(key);
 			if (bare) set.add(bare);
 		}
+		const f = filterState();
+		const act = String(f.company_activity || "");
+		if (f.active && act && act !== "Financial Services") {
+			const platform = new Set((frappe.boot.omnexa_platform_workspace_keys || []).map(String));
+			for (const key of frappe.boot.omnexa_finance_workspace_keys || []) {
+				const s = String(key);
+				if (platform.has(s)) continue;
+				set.add(s);
+				const bare = stripLeadingEmoji(s);
+				if (bare) set.add(bare);
+			}
+		}
 		return set;
 	}
 
@@ -58,13 +70,6 @@
 
 		const denied = deniedWorkspaceKeys();
 		const sectors = sectorParents();
-		if (!denied.size) {
-			$(".sidebar-item-container.omnexa-activity-hidden")
-				.removeClass("omnexa-activity-hidden")
-				.removeAttr("hidden")
-				.show();
-			return;
-		}
 
 		const $sidebar = $(".desk-sidebar");
 		if (!$sidebar.length) return;

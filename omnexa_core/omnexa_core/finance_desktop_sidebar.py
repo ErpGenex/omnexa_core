@@ -57,8 +57,12 @@ def organize_by_business_categories(result: dict) -> dict:
 	return result
 
 
-@frappe.whitelist()
-def get_workspace_sidebar_items():
+def get_raw_workspace_sidebar_items():
 	from frappe.desk.desktop import get_workspace_sidebar_items as _orig
 
-	return filter_workspace_sidebar(_orig())
+	return _orig()
+
+
+@frappe.whitelist()
+def get_workspace_sidebar_items():
+	return filter_workspace_sidebar(get_raw_workspace_sidebar_items())

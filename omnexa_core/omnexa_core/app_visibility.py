@@ -163,12 +163,82 @@ def _activity_filter_applies_to_user(user: str | None = None) -> bool:
 	if not company:
 		return False
 	if not company_strict_activity_filtering_enabled(company):
+		from omnexa_core.omnexa_core.session_context import get_activity_menu_scope
+
+		return get_activity_menu_scope(user) == "company"
+
+	# Strict company: always filter (ignore "All activities" and SM exempt on tenant desks).
+	user_roles = set(frappe.get_roles(user))
+	if user_roles & _activity_filter_exempt_roles():
+		from omnexa_core.omnexa_core.session_context import get_activity_menu_scope
+
+		return get_activity_menu_scope(user) == "company"
+	return True
+
+
+def _activity_always_visible_workspace_keys() -> frozenset[str]:
+	"""Desks that stay visible for every business activity (platform ERP)."""
+	try:
+		from omnexa_core.omnexa_core.finance_demo.finance_group_sidebar import CORE_PLATFORM_WORKSPACES
+	except Exception:
+		CORE_PLATFORM_WORKSPACES = frozenset({"Accounting", "E-Invoice"})
+	keys = set(CORE_PLATFORM_WORKSPACES)
+	for label in (
+		"Marketplace",
+		"Home",
+		"Dashboard",
+		"Settings",
+		"Build",
+		"Tools",
+		"Users",
+		"Healthcare",
+		"Education",
+		"Construction",
+		"Trading",
+	):
+		keys.add(label)
+	return frozenset(keys)
+
+
+def _company_activity_allows_finance_desks() -> bool:
+	return _normalize_company_activity(get_user_company_activity()) == "Financial Services"
+
+
+def _page_keys_for_workspace(page: dict) -> tuple[str, str, str, str]:
+	name = (page.get("name") or "").strip()
+	title = (page.get("title") or name).strip()
+	bare_name = _strip_leading_workspace_emoji(name)
+	bare_title = _strip_leading_workspace_emoji(title)
+	return name, title, bare_name, bare_title
+
+
+def _workspace_is_platform_desk(page: dict) -> bool:
+	allow = _activity_always_visible_workspace_keys()
+	_, title, bare_name, bare_title = _page_keys_for_workspace(page)
+	return any(k in allow for k in (title, bare_name, bare_title, page.get("name") or ""))
+
+
+def _workspace_is_finance_group_desk(page: dict) -> bool:
+	"""Finance vertical shortcut workspaces (live under Omnexa Core without apps installed)."""
+	if _workspace_is_platform_desk(page):
 		return False
+	name, title, bare_name, bare_title = _page_keys_for_workspace(page)
+	finance_keys = _finance_activity_workspace_keys()
+	if any(k in finance_keys for k in (name, title, bare_name, bare_title)):
+		return True
+	try:
+		from omnexa_core.omnexa_core.app_uninstall_groups import get_group_apps
 
-	from omnexa_core.omnexa_core.session_context import get_activity_menu_scope
-
-	# Scope drives filtering for every company: company = filter by activity, all = show everything.
-	return get_activity_menu_scope(user) == "company"
+		finance_apps = set(get_group_apps("finance"))
+		owner = _workspace_app_slug(page)
+		if owner and owner in finance_apps:
+			return True
+	except Exception:
+		pass
+	module = (page.get("module") or page.get("module_name") or "").strip()
+	if module in {"Omnexa ALM", "Omnexa Credit Risk", "Omnexa Finance Engine"}:
+		return True
+	return False
 
 
 def _finance_activity_workspace_keys() -> frozenset[str]:
@@ -505,6 +575,10 @@ def _workspace_app_slug(page: dict) -> str | None:
 
 
 def _workspace_owned_by_hidden_app(page: dict, hidden: set[str]) -> bool:
+	if _activity_filter_applies_to_user() and not _company_activity_allows_finance_desks():
+		if _workspace_is_finance_group_desk(page):
+			return True
+
 	app = _workspace_app_slug(page)
 	if app and app in hidden:
 		return True
@@ -518,35 +592,27 @@ def _workspace_owned_by_hidden_app(page: dict, hidden: set[str]) -> bool:
 		and not app_matches_company_activity(app)
 	):
 		return True
-	if not hidden and not app:
-		return False
+
+	name, title, bare_name, bare_title = _page_keys_for_workspace(page)
 	finance_keys = _finance_activity_workspace_keys()
-	name = (page.get("name") or "").strip()
-	title = (page.get("title") or name).strip()
-	bare_name = _strip_leading_workspace_emoji(name)
-	bare_title = _strip_leading_workspace_emoji(title)
-	if (
-		name in finance_keys
-		or title in finance_keys
-		or bare_name in finance_keys
-		or bare_title in finance_keys
-	):
-		for key in (name, title, bare_name, bare_title):
-			if not key:
-				continue
-			owner = _finance_workspace_aliases().get(key) or _workspace_app_slug(
-				{"name": key, "title": key, "module": ""}
+	if not any(k in finance_keys for k in (name, title, bare_name, bare_title)):
+		return False
+	for key in (name, title, bare_name, bare_title):
+		if not key:
+			continue
+		owner = _finance_workspace_aliases().get(key) or _workspace_app_slug(
+			{"name": key, "title": key, "module": ""}
+		)
+		if owner and (
+			owner in hidden
+			or (
+				owner not in INFRA_DESK_APPS
+				and owner not in PLATFORM_APP_SLUGS
+				and _activity_filter_applies_to_user()
+				and not app_matches_company_activity(owner)
 			)
-			if owner and (
-				owner in hidden
-				or (
-					owner not in INFRA_DESK_APPS
-					and owner not in PLATFORM_APP_SLUGS
-					and _activity_filter_applies_to_user()
-					and not app_matches_company_activity(owner)
-				)
-			):
-				return True
+		):
+			return True
 	return False
 
 
@@ -661,11 +727,16 @@ def _workspace_pages_for_boot_filter(bootinfo) -> list[dict]:
 	if pages:
 		return pages
 	try:
-		from frappe.desk.desktop import get_workspace_sidebar_items as frappe_sidebar
+		from omnexa_core.omnexa_core.finance_desktop_sidebar import get_raw_workspace_sidebar_items
 
-		return frappe_sidebar().get("pages") or []
+		return get_raw_workspace_sidebar_items().get("pages") or []
 	except Exception:
-		return []
+		try:
+			from frappe.desk.desktop import get_workspace_sidebar_items as frappe_sidebar
+
+			return frappe_sidebar().get("pages") or []
+		except Exception:
+			return []
 
 
 def inject_desk_visibility_boot(bootinfo) -> None:
@@ -683,15 +754,22 @@ def inject_desk_visibility_boot(bootinfo) -> None:
 	if filter_active and not hidden:
 		hidden = get_activity_hidden_apps(get_user_company_activity(user))
 
+	company_activity = get_user_company_activity(user)
 	bootinfo.omnexa_activity_filter = {
 		"active": filter_active,
 		"company": company,
-		"company_activity": get_user_company_activity(user),
+		"company_activity": company_activity,
 		"strict_company_filtering": strict_filtering,
 		"can_set_activity_menu_scope": user_can_set_activity_menu_scope(user),
 		"activity_menu_scope": menu_scope,
 		"hidden_apps": sorted(set(hidden) - INFRA_DESK_APPS) if filter_active else [],
 	}
+	if filter_active and not _company_activity_allows_finance_desks():
+		bootinfo["omnexa_finance_workspace_keys"] = sorted(_finance_activity_workspace_keys())
+		bootinfo["omnexa_platform_workspace_keys"] = sorted(_activity_always_visible_workspace_keys())
+	else:
+		bootinfo["omnexa_finance_workspace_keys"] = []
+		bootinfo["omnexa_platform_workspace_keys"] = sorted(_activity_always_visible_workspace_keys())
 	try:
 		from omnexa_core.omnexa_core.isolation_middleware import isolation_context_for_boot
 
